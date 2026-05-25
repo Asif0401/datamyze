@@ -1,0 +1,657 @@
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import api from '../hooks/useApi';
+import { Blobs, Particles } from '../components/Background';
+
+/* ── Password strength ─────────────────────────────── */
+function pwStrength(p) {
+  let s = 0;
+  if (p.length >= 8) s++;
+  if (/[A-Z]/.test(p)) s++;
+  if (/[0-9]/.test(p)) s++;
+  if (/[^a-zA-Z0-9]/.test(p)) s++;
+  return s;
+}
+const strColors = ['#eee', '#E24B4A', '#BA7517', '#1D9E75', '#7F77DD'];
+const strLabels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+
+/* ── SQL database logo SVG ──────────────────────────── */
+const SqlLogo = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+    {/* Cylinder body */}
+    <path d="M4 7v10c0 1.657 3.582 3 8 3s8-1.343 8-3V7" fill="rgba(0,119,190,0.15)" stroke="#0077BE" strokeWidth="1.45" strokeLinejoin="round"/>
+    {/* Second data-layer arc */}
+    <path d="M4 12c0 1.657 3.582 3 8 3s8-1.343 8-3" fill="none" stroke="#0077BE" strokeWidth="1" opacity="0.5"/>
+    {/* Third data-layer arc */}
+    <path d="M4 15.5c0 1.05 3.582 2 8 2s8-.95 8-2" fill="none" stroke="#0077BE" strokeWidth="0.8" opacity="0.3"/>
+    {/* Top ellipse (lid) — brightest */}
+    <ellipse cx="12" cy="7" rx="8" ry="3" fill="rgba(0,149,237,0.28)" stroke="#0095ED" strokeWidth="1.45"/>
+    {/* "SQL" label inside top ellipse */}
+    <text x="12" y="8.4" textAnchor="middle" fontFamily="'Courier New', Courier, monospace"
+      fontWeight="900" fontSize="4.8" fill="#7dd3fc" letterSpacing="0.8">SQL</text>
+  </svg>
+);
+
+/* ── Python logo SVG ────────────────────────────────── */
+const PythonLogo = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+    {/* Blue snake — top half */}
+    <path d="M11.914 2c-4.638 0-4.344 2.017-4.344 2.017v2.09h4.413v.626H6.34S3.287 6.386 3.287 10.994c0 4.609 2.697 4.447 2.697 4.447h1.613V13.23s-.088-2.697 2.654-2.697h4.368s2.552.041 2.552-2.467V3.855S17.562 2 11.914 2zm-2.316 1.51c.466 0 .843.377.843.843a.844.844 0 1 1-1.687 0c0-.466.378-.843.844-.843z" fill="#3776AB"/>
+    {/* Yellow snake — bottom half */}
+    <path d="M12.086 22c4.638 0 4.344-2.017 4.344-2.017v-2.09H12v-.626h5.643s3.053.347 3.053-4.261c0-4.609-2.697-4.447-2.697-4.447h-1.613v2.216s.088 2.697-2.654 2.697H9.364s-2.552-.041-2.552 2.467v4.211S6.422 22 12.086 22zm2.316-1.509a.844.844 0 1 1 0-1.687c.466 0 .843.377.843.843a.844.844 0 0 1-.843.844z" fill="#FFD343"/>
+  </svg>
+);
+
+/* ── Hero data ─────────────────────────────────────── */
+const HERO_FEATURES = [
+  { icon: <SqlLogo />,    label: '100+ SQL Problems',  desc: 'Window functions, CTEs, real interview patterns' },
+  { icon: <PythonLogo />, label: 'Python & Pandas',    desc: 'Data wrangling, EDA, GroupBy deep-dives' },
+  { icon: '🎙️',          label: 'Live Mock Interviews',desc: 'Real sessions with our mentor — recorded feedback' },
+  { icon: '💼',           label: 'Curated Job Board',  desc: '18+ hand-picked data analytics roles' },
+  { icon: '📄',           label: 'Resume Review',      desc: 'ATS-optimised expert feedback in 48 hours' },
+  { icon: '🗺️',           label: '12-Week Roadmap',    desc: 'Structured path from zero to first offer' },
+];
+const HERO_STATS = [
+  { val: '500+', lbl: 'Students'        },
+  { val: '100+', lbl: 'Problems'        },
+  { val: '48h',  lbl: 'Resume Feedback' },
+  { val: '4.9★', lbl: 'Mentor Rating'  },
+];
+const TESTIMONIALS = [
+  {
+    initials: 'PS', color: 'linear-gradient(135deg,#4A90D9,#a78bfa)',
+    text: '"Got placed at Meesho as Data Analyst after 2 months on Datamyze. The mock interviews and resume review made all the difference."',
+    name: 'Priya Sharma', role: 'Data Analyst, Meesho',
+  },
+  {
+    initials: 'RK', color: 'linear-gradient(135deg,#5CC8A0,#4A90D9)',
+    text: '"The SQL problem sets are exactly what Flipkart asked in my interview. Cleared round 2 first attempt."',
+    name: 'Rahul Kumar', role: 'Data Analyst, Flipkart',
+  },
+];
+
+/* ══════════════════════════════════════════════════
+   OTP INPUT  — 6 individual boxes
+══════════════════════════════════════════════════ */
+function OtpInput({ value, onChange }) {
+  const inputs = useRef([]);
+  const digits = value.split('').concat(Array(6).fill('')).slice(0, 6);
+
+  function handleKey(i, e) {
+    if (e.key === 'Backspace') {
+      const next = digits.slice(); next[i] = '';
+      onChange(next.join(''));
+      if (i > 0) inputs.current[i - 1]?.focus();
+    } else if (/^\d$/.test(e.key)) {
+      const next = digits.slice(); next[i] = e.key;
+      onChange(next.join(''));
+      if (i < 5) inputs.current[i + 1]?.focus();
+    }
+  }
+
+  function handlePaste(e) {
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (pasted) { onChange(pasted.padEnd(6, '').slice(0, 6)); inputs.current[Math.min(pasted.length, 5)]?.focus(); }
+    e.preventDefault();
+  }
+
+  return (
+    <div style={{ display: 'flex', gap: 10, justifyContent: 'center', margin: '1.2rem 0' }}>
+      {digits.map((d, i) => (
+        <input
+          key={i}
+          ref={el => { inputs.current[i] = el; }}
+          type="text"
+          inputMode="numeric"
+          maxLength={1}
+          value={d}
+          onKeyDown={e => handleKey(i, e)}
+          onPaste={handlePaste}
+          onChange={() => {}}
+          style={{
+            width: 46, height: 52, textAlign: 'center', fontSize: 20, fontWeight: 800,
+            borderRadius: 12, border: `1.5px solid ${d ? 'rgba(74,144,217,0.60)' : 'rgba(255,255,255,0.12)'}`,
+            background: d ? 'rgba(74,144,217,0.12)' : 'rgba(255,255,255,0.05)',
+            color: '#fff', outline: 'none', transition: 'all 0.15s',
+            fontFamily: 'JetBrains Mono, monospace',
+          }}
+          onFocus={e => { e.target.style.borderColor = 'rgba(74,144,217,0.70)'; e.target.style.boxShadow = '0 0 0 3px rgba(74,144,217,0.15)'; }}
+          onBlur={e => { e.target.style.borderColor = d ? 'rgba(74,144,217,0.60)' : 'rgba(255,255,255,0.12)'; e.target.style.boxShadow = 'none'; }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   MAIN AUTH PAGE
+══════════════════════════════════════════════════ */
+export default function AuthPage({ mode: initialMode }) {
+  const [panel, setPanel]   = useState(initialMode || 'login'); // 'login' | 'signup'
+  const [loginType, setLoginType] = useState('email');           // 'email' | 'phone'
+  const [tIdx, setTIdx]     = useState(0);
+  const { login } = useAuth();
+  const navigate  = useNavigate();
+  const t = TESTIMONIALS[tIdx];
+
+  return (
+    <div className="auth-wrap">
+      <Blobs />
+      <Particles />
+
+      {/* ═══ LEFT HERO ═══ */}
+      <div className="auth-hero">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1.5rem', animation: 'fadeInUp 0.5s ease both' }}>
+          <div className="auth-logo-icon">
+            <svg viewBox="0 0 22 22" fill="none" width="20" height="20">
+              <defs>
+                <linearGradient id="ab1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="white" stopOpacity="0.7"/><stop offset="100%" stopColor="white" stopOpacity="0.1"/></linearGradient>
+                <linearGradient id="ab2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="white" stopOpacity="0.85"/><stop offset="100%" stopColor="white" stopOpacity="0.12"/></linearGradient>
+                <linearGradient id="ab3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#67e8f9" stopOpacity="0.9"/><stop offset="100%" stopColor="#67e8f9" stopOpacity="0.12"/></linearGradient>
+                <linearGradient id="ab4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#22d3ee" stopOpacity="1"/><stop offset="100%" stopColor="#22d3ee" stopOpacity="0.18"/></linearGradient>
+                <filter id="aglow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <line x1="1" y1="21.5" x2="23" y2="21.5" stroke="rgba(255,255,255,0.1)" strokeWidth="0.8"/>
+              <rect x="1.5" y="17"  width="3.5" height="4.5" rx="1.3" fill="url(#ab1)"/>
+              <rect x="6.5" y="13"  width="3.5" height="8.5" rx="1.3" fill="url(#ab2)"/>
+              <rect x="11.5" y="9"  width="3.5" height="12.5" rx="1.3" fill="url(#ab3)"/>
+              <rect x="16.5" y="5"  width="3.5" height="16.5" rx="1.3" fill="url(#ab4)"/>
+              <line x1="3.25" y1="16.5" x2="18.25" y2="4.5" stroke="#22d3ee" strokeWidth="1.8" strokeLinecap="round" filter="url(#aglow)" opacity="0.95"/>
+              <path d="M18.25,2 L19.6,4.5 L18.25,7 L16.9,4.5 Z" fill="#22d3ee" filter="url(#aglow)"/>
+            </svg>
+          </div>
+          <div>
+            <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.3px', lineHeight: 1.1 }}>
+              <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>Data</span><span style={{ color: '#fff', fontWeight: 900 }}>myze</span>
+            </div>
+            <div style={{ fontSize: 8, fontWeight: 700, letterSpacing: '1.2px', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', marginTop: 2 }}>MASTER DATA. MASTER YOUR FUTURE.</div>
+          </div>
+          <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 9px', borderRadius: 20, background: 'rgba(92,200,160,0.15)', border: '1px solid rgba(92,200,160,0.30)', color: '#5CC8A0', letterSpacing: '0.5px' }}>BETA</span>
+        </div>
+
+        <div style={{ animation: 'fadeInUp 0.55s 0.06s ease both' }}>
+          <div className="auth-hero-headline">
+            Done just preparing.<br />Start getting <span className="auth-gradient-text">hired.</span>
+          </div>
+          <div className="auth-hero-sub">
+            India's most practical data analytics platform — real SQL &amp; Python problems, live mock interviews, expert resume review, and a curated job board. Everything between you and your first ₹12 LPA offer.
+          </div>
+        </div>
+
+        <div className="auth-features" style={{ animation: 'fadeInUp 0.55s 0.12s ease both' }}>
+          {HERO_FEATURES.slice(0, 4).map(f => (
+            <div key={f.label} className="auth-feature-chip">
+              <span style={{ fontSize: 17, flexShrink: 0, marginTop: 1, display: 'flex', alignItems: 'center' }}>{f.icon}</span>
+              <div>
+                <div style={{ fontSize: 11.5, fontWeight: 700, color: '#e2e8f0', marginBottom: 1 }}>{f.label}</div>
+                <div style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.37)', lineHeight: 1.35 }}>{f.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="auth-stats-row" style={{ animation: 'fadeInUp 0.55s 0.18s ease both' }}>
+          {HERO_STATS.map((s, i) => (
+            <div key={s.lbl} className="auth-stat-cell" style={{ borderRight: i < HERO_STATS.length - 1 ? '1px solid rgba(255,255,255,0.07)' : 'none' }}>
+              <div className="auth-stat-val">{s.val}</div>
+              <div className="auth-stat-lbl">{s.lbl}</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ animation: 'fadeInUp 0.55s 0.24s ease both' }}>
+          <div className="auth-testimonial">
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+              <div style={{ width: 38, height: 38, borderRadius: '50%', background: t.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: '#fff', flexShrink: 0 }}>{t.initials}</div>
+              <div style={{ flex: 1 }}>
+                <div className="auth-testimonial-text">{t.text}</div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: '#4A90D9' }}>{t.name}</span>
+                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginLeft: 6 }}>· {t.role}</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: 5 }}>
+                    {TESTIMONIALS.map((_, i) => (
+                      <button key={i} onClick={() => setTIdx(i)} style={{ width: i === tIdx ? 18 : 6, height: 6, borderRadius: 10, background: i === tIdx ? '#4A90D9' : 'rgba(255,255,255,0.20)', border: 'none', padding: 0, cursor: 'pointer', transition: 'all 0.25s' }} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="auth-trust-strip">
+            <span className="auth-trust-label">Students placed at</span>
+            {['Meesho', 'Flipkart', 'Swiggy', 'Razorpay', 'Zepto', 'CRED'].map(c => (
+              <span key={c} className="auth-trust-chip">{c}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ═══ RIGHT PANEL ═══ */}
+      <div className="auth-right">
+        <div className="auth-card">
+          <div className="auth-logo-wrap">
+            <div className="auth-logo-icon">
+              <svg viewBox="0 0 22 22" fill="none" width="20" height="20">
+                <line x1="1" y1="20.5" x2="21" y2="20.5" stroke="rgba(255,255,255,0.18)" strokeWidth="1" strokeLinecap="round"/>
+                <rect x="2" y="15" width="4" height="5.5" rx="1.2" fill="white" fillOpacity="0.55"/>
+                <rect x="8.5" y="10.5" width="4" height="10" rx="1.2" fill="white" fillOpacity="0.78"/>
+                <rect x="15" y="6.5" width="4" height="14" rx="1.2" fill="white" fillOpacity="0.97"/>
+                <polyline points="4,14.5 10.5,10 17,6" fill="none" stroke="rgba(34,211,238,0.95)" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+                <circle cx="17" cy="6" r="1.8" fill="rgba(34,211,238,1)"/>
+              </svg>
+            </div>
+            <div>
+              <h1 className="auth-title"><span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>Data</span><span style={{ fontWeight: 900 }}>myze</span></h1>
+              <div style={{ fontSize: 8, fontWeight: 700, letterSpacing: '1px', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', marginTop: 1 }}>MASTER DATA. MASTER YOUR FUTURE.</div>
+            </div>
+          </div>
+
+          {/* Panel switcher */}
+          <div className="auth-tabs">
+            <button className={`auth-tab ${panel === 'login'  ? 'active' : ''}`} onClick={() => setPanel('login')}>Login</button>
+            <button className={`auth-tab ${panel === 'signup' ? 'active' : ''}`} onClick={() => setPanel('signup')}>Register</button>
+          </div>
+
+          {panel === 'login'  && <LoginForm loginType={loginType} setLoginType={setLoginType} onSuccess={(tok, usr) => { login(tok, usr); navigate('/'); }} switchToSignup={() => setPanel('signup')} />}
+          {panel === 'signup' && <SignupForm onSuccess={(tok, usr) => { login(tok, usr); navigate('/'); }} switchToLogin={() => setPanel('login')} />}
+
+          <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: 11, color: 'rgba(255,255,255,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+            <span>🔒</span><span>Your data is secure &amp; never shared</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   LOGIN FORM
+══════════════════════════════════════════════════ */
+function LoginForm({ loginType, setLoginType, onSuccess, switchToSignup }) {
+  const [email,    setEmail]    = useState('');
+  const [password, setPassword] = useState('');
+  const [phone,    setPhone]    = useState('');
+  const [otp,      setOtp]      = useState('');
+  const [otpSent,  setOtpSent]  = useState(false);
+  const [devOtp,   setDevOtp]   = useState('');
+  const [error,    setError]    = useState('');
+  const [loading,  setLoading]  = useState(false);
+  const [timer,    setTimer]    = useState(0);
+
+  useEffect(() => {
+    if (timer <= 0) return;
+    const id = setTimeout(() => setTimer(t => t - 1), 1000);
+    return () => clearTimeout(id);
+  }, [timer]);
+
+  async function sendPhoneOtp() {
+    if (!phone.trim()) { setError('Enter your phone number'); return; }
+    setLoading(true); setError('');
+    try {
+      const r = await api.post('/auth/login-phone', { phone: phone.trim() });
+      setOtpSent(true);
+      setTimer(60);
+      if (r.data.dev_otp) setDevOtp(r.data.dev_otp);
+    } catch (e) { setError(e.response?.data?.error || 'Error sending OTP'); }
+    finally { setLoading(false); }
+  }
+
+  async function submitPhoneLogin() {
+    if (otp.length !== 6) { setError('Enter the 6-digit OTP'); return; }
+    setLoading(true); setError('');
+    try {
+      const r = await api.post('/auth/login-phone', { phone: phone.trim(), otp_code: otp });
+      onSuccess(r.data.token, r.data.user);
+    } catch (e) { setError(e.response?.data?.error || 'Invalid OTP'); }
+    finally { setLoading(false); }
+  }
+
+  async function submitEmailLogin(e) {
+    e.preventDefault();
+    if (!email || !password) { setError('Email and password required'); return; }
+    setLoading(true); setError('');
+    try {
+      const r = await api.post('/auth/login', { email, password });
+      onSuccess(r.data.token, r.data.user);
+    } catch (e) { setError(e.response?.data?.error || 'Invalid credentials'); }
+    finally { setLoading(false); }
+  }
+
+  return (
+    <div>
+      <div style={{ textAlign: 'center', marginBottom: '1.4rem' }}>
+        <div style={{ fontSize: 17, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Welcome back 👋</div>
+        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)' }}>Sign in to continue your journey</div>
+      </div>
+
+      {/* Login method toggle */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: '1.4rem' }}>
+        {[
+          { id: 'email', label: '✉️ Email'   },
+          { id: 'phone', label: '📱 Phone OTP' },
+        ].map(m => (
+          <button key={m.id} onClick={() => { setLoginType(m.id); setError(''); setOtpSent(false); setOtp(''); }} style={{
+            flex: 1, padding: '9px 0', borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: 'pointer', transition: 'all 0.15s',
+            border: loginType === m.id ? '1px solid rgba(74,144,217,0.50)' : '1px solid rgba(255,255,255,0.10)',
+            background: loginType === m.id ? 'rgba(74,144,217,0.14)' : 'rgba(255,255,255,0.04)',
+            color: loginType === m.id ? '#4A90D9' : 'rgba(255,255,255,0.45)',
+          }}>{m.label}</button>
+        ))}
+      </div>
+
+      {error && <div style={{ background: 'rgba(240,123,106,0.12)', border: '1px solid rgba(240,123,106,0.30)', borderRadius: 8, padding: '9px 13px', color: '#F07B6A', fontSize: 13, marginBottom: '1rem', fontWeight: 500 }}>⚠ {error}</div>}
+
+      {/* ── Email login ── */}
+      {loginType === 'email' && (
+        <form onSubmit={submitEmailLogin}>
+          <div className="field">
+            <label>Email Address</label>
+            <input type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} />
+          </div>
+          <div className="field">
+            <label>Password</label>
+            <input type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} />
+          </div>
+          <button className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 15, marginTop: 4 }} disabled={loading}>
+            {loading ? 'Logging in…' : 'Login →'}
+          </button>
+        </form>
+      )}
+
+      {/* ── Phone OTP login ── */}
+      {loginType === 'phone' && (
+        <div>
+          <div className="field">
+            <label>Phone Number</label>
+            <input type="tel" placeholder="+91 98765 43210" value={phone}
+              onChange={e => { setPhone(e.target.value); setError(''); }}
+              disabled={otpSent}
+              style={{ fontFamily: 'JetBrains Mono, monospace' }}
+            />
+          </div>
+
+          {!otpSent ? (
+            <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={sendPhoneOtp} disabled={loading}>
+              {loading ? 'Sending…' : '📱 Send OTP'}
+            </button>
+          ) : (
+            <>
+              <div style={{ textAlign: 'center', marginBottom: 4 }}>
+                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 2 }}>
+                  OTP sent to <strong style={{ color: '#e2e8f0' }}>{phone}</strong>
+                </div>
+                {devOtp && (
+                  <div style={{ fontSize: 12, background: 'rgba(232,168,56,0.12)', border: '1px solid rgba(232,168,56,0.25)', borderRadius: 8, padding: '5px 10px', color: '#E8A838', fontFamily: 'monospace', display: 'inline-block' }}>
+                    Dev OTP: <strong>{devOtp}</strong>
+                  </div>
+                )}
+              </div>
+              <OtpInput value={otp} onChange={setOtp} />
+              <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={submitPhoneLogin} disabled={loading || otp.length !== 6}>
+                {loading ? 'Verifying…' : '✓ Verify & Login'}
+              </button>
+              <div style={{ textAlign: 'center', marginTop: 8, fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>
+                {timer > 0
+                  ? `Resend in ${timer}s`
+                  : <button onClick={() => { setOtp(''); sendPhoneOtp(); }} style={{ background: 'none', border: 'none', color: '#4A90D9', fontWeight: 600, cursor: 'pointer', fontSize: 12 }}>Resend OTP</button>
+                }
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      <div className="auth-footer" style={{ marginTop: '1.2rem' }}>
+        Don't have an account? <button onClick={switchToSignup}>Register free</button>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   SIGNUP FORM  — 3 steps
+══════════════════════════════════════════════════ */
+function SignupForm({ onSuccess, switchToLogin }) {
+  const [step, setStep]         = useState(1); // 1 = identity, 2 = otp, 3 = password
+  const [identType, setIdentType] = useState('email'); // 'email' | 'phone'
+  const [name,      setName]      = useState('');
+  const [ident,     setIdent]     = useState('');
+  const [regPhone,  setRegPhone]  = useState('');
+  const [otp,       setOtp]       = useState('');
+  const [devOtp,    setDevOtp]    = useState('');
+  const [password,  setPassword]  = useState('');
+  const [confirm,   setConfirm]   = useState('');
+  const [error,     setError]     = useState('');
+  const [loading,   setLoading]   = useState(false);
+  const [timer,     setTimer]     = useState(0);
+  const str = pwStrength(password);
+
+  useEffect(() => {
+    if (timer <= 0) return;
+    const id = setTimeout(() => setTimer(t => t - 1), 1000);
+    return () => clearTimeout(id);
+  }, [timer]);
+
+  async function sendOtp() {
+    if (!name.trim() || name.trim().length < 2) { setError('Enter your full name (at least 2 chars)'); return; }
+    if (!ident.trim()) { setError(`Enter your ${identType}`); return; }
+    if (identType === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ident))  { setError('Enter a valid email'); return; }
+    if (identType === 'email') {
+      const digits = regPhone.replace(/\D/g, '');
+      if (!regPhone.trim()) { setError('Phone number is required'); return; }
+      if (digits.length < 10) { setError('Enter a valid 10-digit phone number'); return; }
+    }
+    setLoading(true); setError('');
+    try {
+      const r = await api.post('/auth/send-otp', { identifier: ident.trim(), type: identType, purpose: 'signup' });
+      setDevOtp(r.data.dev_otp || '');
+      setStep(2);
+      setTimer(60);
+    } catch (e) { setError(e.response?.data?.error || 'Error sending OTP'); }
+    finally { setLoading(false); }
+  }
+
+  async function verifyOtp() {
+    if (otp.length !== 6) { setError('Enter the 6-digit OTP'); return; }
+    setError('');
+    setStep(3);
+  }
+
+  async function createAccount() {
+    if (password.length < 8) { setError('Password must be at least 8 characters'); return; }
+    if (password !== confirm) { setError('Passwords do not match'); return; }
+    setLoading(true); setError('');
+    try {
+      const r = await api.post('/auth/signup', {
+        name: name.trim(),
+        identifier: ident.trim(),
+        type: identType,
+        otp_code: otp,
+        password,
+        phone: identType === 'email' ? regPhone.trim() : ident.trim(),
+      });
+      onSuccess(r.data.token, r.data.user);
+    } catch (e) { setError(e.response?.data?.error || 'Registration failed'); }
+    finally { setLoading(false); }
+  }
+
+  async function resendOtp() {
+    setLoading(true); setError('');
+    try {
+      const r = await api.post('/auth/send-otp', { identifier: ident.trim(), type: identType, purpose: 'signup' });
+      setDevOtp(r.data.dev_otp || '');
+      setOtp('');
+      setTimer(60);
+    } catch (e) { setError(e.response?.data?.error || 'Error resending'); }
+    finally { setLoading(false); }
+  }
+
+  /* Step progress indicator */
+  const STEPS = ['Identity', 'Verify', 'Password'];
+
+  return (
+    <div>
+      <div style={{ textAlign: 'center', marginBottom: '1.4rem' }}>
+        <div style={{ fontSize: 17, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Start your journey 🚀</div>
+        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)' }}>Join 500+ analysts learning SQL, Python & more</div>
+      </div>
+
+      {/* Step indicator */}
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1.4rem' }}>
+        {STEPS.map((s, i) => {
+          const num  = i + 1;
+          const done = step > num;
+          const curr = step === num;
+          return (
+            <div key={s} style={{ display: 'flex', alignItems: 'center', flex: i < STEPS.length - 1 ? 1 : 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+                <div style={{ width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800, transition: 'all 0.3s',
+                  background: done ? '#5CC8A0' : curr ? 'rgba(74,144,217,0.80)' : 'rgba(255,255,255,0.08)',
+                  color: done || curr ? '#fff' : 'rgba(255,255,255,0.35)',
+                  border: curr ? '2px solid rgba(74,144,217,0.50)' : 'none',
+                  boxShadow: curr ? '0 0 10px rgba(74,144,217,0.35)' : 'none',
+                }}>
+                  {done ? '✓' : num}
+                </div>
+                <span style={{ fontSize: 11, fontWeight: 600, color: done || curr ? 'rgba(255,255,255,0.70)' : 'rgba(255,255,255,0.30)' }}>{s}</span>
+              </div>
+              {i < STEPS.length - 1 && (
+                <div style={{ flex: 1, height: 1.5, margin: '0 8px', background: done ? '#5CC8A0' : 'rgba(255,255,255,0.10)', transition: 'background 0.3s' }} />
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {error && <div style={{ background: 'rgba(240,123,106,0.12)', border: '1px solid rgba(240,123,106,0.30)', borderRadius: 8, padding: '9px 13px', color: '#F07B6A', fontSize: 13, marginBottom: '1rem', fontWeight: 500 }}>⚠ {error}</div>}
+
+      {/* ── Step 1: Name + identifier ── */}
+      {step === 1 && (
+        <div>
+          <div className="field">
+            <label>Full Name</label>
+            <input type="text" placeholder="Ravi Kumar" value={name} onChange={e => { setName(e.target.value); setError(''); }} />
+          </div>
+
+          {/* Email / Phone toggle */}
+          <div style={{ display: 'flex', gap: 8, marginBottom: '0.8rem' }}>
+            {[{ id: 'email', label: '✉️ Email' }, { id: 'phone', label: '📱 Phone' }].map(m => (
+              <button key={m.id} onClick={() => { setIdentType(m.id); setIdent(''); setError(''); }} style={{
+                flex: 1, padding: '8px 0', borderRadius: 10, fontWeight: 700, fontSize: 12, cursor: 'pointer', transition: 'all 0.15s',
+                border: identType === m.id ? '1px solid rgba(74,144,217,0.50)' : '1px solid rgba(255,255,255,0.10)',
+                background: identType === m.id ? 'rgba(74,144,217,0.14)' : 'rgba(255,255,255,0.04)',
+                color: identType === m.id ? '#4A90D9' : 'rgba(255,255,255,0.45)',
+              }}>{m.label}</button>
+            ))}
+          </div>
+
+          <div className="field">
+            <label>{identType === 'email' ? 'Email Address' : 'Phone Number'}</label>
+            <input
+              type={identType === 'email' ? 'email' : 'tel'}
+              placeholder={identType === 'email' ? 'you@example.com' : '+91 98765 43210'}
+              value={ident}
+              onChange={e => { setIdent(e.target.value); setError(''); }}
+              style={identType === 'phone' ? { fontFamily: 'JetBrains Mono, monospace' } : {}}
+            />
+          </div>
+
+          {/* Phone field — mandatory for email signups */}
+          {identType === 'email' && (
+            <div className="field">
+              <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                📱 Phone Number
+                <span style={{ fontSize: 10, fontWeight: 700, background: 'rgba(240,123,106,0.15)', border: '1px solid rgba(240,123,106,0.3)', color: '#F07B6A', borderRadius: 5, padding: '1px 6px', letterSpacing: '0.3px' }}>REQUIRED</span>
+              </label>
+              <input
+                type="tel"
+                placeholder="+91 98765 43210"
+                value={regPhone}
+                onChange={e => { setRegPhone(e.target.value); setError(''); }}
+                style={{ fontFamily: 'JetBrains Mono, monospace' }}
+              />
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>
+                Used for account recovery and important updates
+              </div>
+            </div>
+          )}
+
+          <button className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 15 }} onClick={sendOtp} disabled={loading}>
+            {loading ? 'Sending OTP…' : `Send OTP to my ${identType} →`}
+          </button>
+        </div>
+      )}
+
+      {/* ── Step 2: OTP verification ── */}
+      {step === 2 && (
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 36, marginBottom: '0.6rem' }}>📬</div>
+          <div style={{ fontWeight: 700, fontSize: 15, color: '#fff', marginBottom: 4 }}>Enter the verification code</div>
+          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 4 }}>
+            Sent to <strong style={{ color: '#e2e8f0' }}>{ident}</strong>
+          </div>
+          {devOtp && (
+            <div style={{ fontSize: 12, background: 'rgba(232,168,56,0.12)', border: '1px solid rgba(232,168,56,0.25)', borderRadius: 8, padding: '5px 10px', color: '#E8A838', fontFamily: 'monospace', display: 'inline-block', marginBottom: 4 }}>
+              Dev OTP: <strong>{devOtp}</strong>
+            </div>
+          )}
+
+          <OtpInput value={otp} onChange={v => { setOtp(v); setError(''); }} />
+
+          <button className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 15 }} onClick={verifyOtp} disabled={otp.length !== 6 || loading}>
+            ✓ Verify Code →
+          </button>
+
+          <div style={{ marginTop: '0.8rem', fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>
+            {timer > 0
+              ? `Resend in ${timer}s`
+              : <button onClick={resendOtp} disabled={loading} style={{ background: 'none', border: 'none', color: '#4A90D9', fontWeight: 600, cursor: 'pointer', fontSize: 12 }}>Resend OTP</button>
+            }
+          </div>
+          <button onClick={() => { setStep(1); setOtp(''); setError(''); }} style={{ marginTop: 6, background: 'none', border: 'none', color: 'rgba(255,255,255,0.35)', fontSize: 12, cursor: 'pointer' }}>
+            ← Change {identType}
+          </button>
+        </div>
+      )}
+
+      {/* ── Step 3: Set password ── */}
+      {step === 3 && (
+        <div>
+          <div style={{ background: 'rgba(92,200,160,0.08)', border: '1px solid rgba(92,200,160,0.20)', borderRadius: 10, padding: '9px 14px', fontSize: 13, color: '#5CC8A0', marginBottom: '1.2rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span>✅</span> {identType === 'email' ? 'Email' : 'Phone'} verified — {ident}
+          </div>
+
+          <div className="field">
+            <label>Create Password</label>
+            <input type="password" placeholder="Min 8 characters" value={password} onChange={e => { setPassword(e.target.value); setError(''); }} />
+            {password && (
+              <>
+                <div className="strength-bar"><div className="strength-fill" style={{ width: `${str * 25}%`, background: strColors[str] }} /></div>
+                <div style={{ fontSize: 11, color: strColors[str], marginTop: 3, fontWeight: 600 }}>{strLabels[str]}</div>
+              </>
+            )}
+          </div>
+
+          <div className="field">
+            <label>Confirm Password</label>
+            <input type="password" placeholder="••••••••" value={confirm} onChange={e => { setConfirm(e.target.value); setError(''); }} />
+            {confirm && password !== confirm && <div className="field-error">⚠ Passwords do not match</div>}
+          </div>
+
+          <button className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 15 }}
+            onClick={createAccount}
+            disabled={loading || password.length < 8 || password !== confirm}>
+            {loading ? 'Creating account…' : '🚀 Create My Account →'}
+          </button>
+        </div>
+      )}
+
+      <div className="auth-footer" style={{ marginTop: '1.2rem' }}>
+        Already have an account? <button onClick={switchToLogin}>Login</button>
+      </div>
+    </div>
+  );
+}

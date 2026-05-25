@@ -1,0 +1,2514 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import api from '../hooks/useApi';
+
+const UPI_ID = 'asifjupiterr@ybl';
+const AMOUNT  = 149;
+const QR_URL  = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${UPI_ID}&pn=Datamyze&am=${AMOUNT}&cu=INR&tn=Datamyze%20Premium`)}`;
+
+/* ── Interview Q&A data ──────────────────────────────── */
+const INTERVIEW_DATA = {
+  SQL: [
+    { q: 'What is the difference between WHERE and HAVING?', a: 'WHERE filters rows before grouping; HAVING filters groups after GROUP BY. WHERE cannot reference aggregate functions, HAVING can.', level: 'Easy' },
+    { q: 'Explain the difference between INNER JOIN, LEFT JOIN, and FULL OUTER JOIN.', a: 'INNER JOIN: returns only matching rows from both tables.\nLEFT JOIN: returns all rows from left table + matched rows from right (NULLs for no match).\nFULL OUTER JOIN: returns all rows from both tables, NULLs where no match exists.', level: 'Easy' },
+    { q: 'What are window functions? Give an example.', a: 'Window functions perform calculations across a set of rows related to the current row without collapsing them.\nExample: ROW_NUMBER() OVER (PARTITION BY dept ORDER BY salary DESC) — ranks employees within each department.', level: 'Medium' },
+    { q: 'How would you find the second highest salary in a table?', a: 'SELECT MAX(salary) FROM employees WHERE salary < (SELECT MAX(salary) FROM employees);\n-- Or using DENSE_RANK:\nSELECT salary FROM (SELECT salary, DENSE_RANK() OVER (ORDER BY salary DESC) AS rnk FROM employees) WHERE rnk = 2;', level: 'Medium' },
+    { q: 'What is the difference between RANK(), DENSE_RANK(), and ROW_NUMBER()?', a: 'ROW_NUMBER(): Assigns unique sequential integers. No ties.\nRANK(): Same rank for ties, skips next ranks (1,2,2,4).\nDENSE_RANK(): Same rank for ties, no gaps (1,2,2,3).', level: 'Medium' },
+    { q: 'How do you calculate month-over-month growth in SQL?', a: 'Use LAG() window function:\nSELECT month, revenue,\n  LAG(revenue) OVER (ORDER BY month) AS prev_revenue,\n  ROUND((revenue - LAG(revenue) OVER (ORDER BY month)) * 100.0 / LAG(revenue) OVER (ORDER BY month), 2) AS mom_growth\nFROM monthly_sales;', level: 'Hard' },
+    { q: 'What is a CTE and when would you use it?', a: 'A Common Table Expression (WITH clause) creates a temporary named result set. Use it to:\n1. Break complex queries into readable steps\n2. Avoid repeating subqueries\n3. Enable recursive queries (hierarchical data)', level: 'Medium' },
+    { q: 'Explain indexes and when NOT to use them.', a: 'Indexes speed up SELECT queries by creating a lookup structure. Avoid indexes when:\n1. Table is small (full scan is faster)\n2. Column has low cardinality (e.g. boolean)\n3. Table has heavy INSERT/UPDATE loads (indexes slow writes)', level: 'Hard' },
+  ],
+  Python: [
+    { q: 'What is the difference between .loc and .iloc in Pandas?', a: '.loc uses label-based indexing (row/column names).\n.iloc uses integer position-based indexing (0-indexed).\nExample: df.loc["row1", "col1"] vs df.iloc[0, 0]', level: 'Easy' },
+    { q: 'How do you handle missing values in a DataFrame?', a: 'Detection: df.isnull().sum()\nDrop: df.dropna() or df.dropna(subset=["col"])\nFill: df.fillna(0) or df["col"].fillna(df["col"].median())\nForward fill: df.fillna(method="ffill")', level: 'Easy' },
+    { q: 'Explain groupby().agg() with an example.', a: 'df.groupby("category").agg(\n    total_sales=("amount", "sum"),\n    avg_order=("amount", "mean"),\n    order_count=("id", "count")\n).reset_index()\n\nThis groups by category and calculates multiple aggregations in one step.', level: 'Easy' },
+    { q: 'How do you detect and remove outliers using IQR?', a: 'Q1 = df["col"].quantile(0.25)\nQ3 = df["col"].quantile(0.75)\nIQR = Q3 - Q1\nlower = Q1 - 1.5 * IQR\nupper = Q3 + 1.5 * IQR\ndf_clean = df[(df["col"] >= lower) & (df["col"] <= upper)]', level: 'Medium' },
+    { q: 'What is the difference between apply(), map(), and applymap()?', a: 'map(): Element-wise on a Series. Great for value replacement.\napply(): Applies function along axis (row/col) on DataFrame or Series.\napplymap(): Element-wise on entire DataFrame (deprecated in newer Pandas — use map()).', level: 'Medium' },
+    { q: 'How do you merge two DataFrames and what are the join types?', a: 'pd.merge(df1, df2, on="id", how="inner")  # Only matching\npd.merge(df1, df2, on="id", how="left")   # All left + matched right\npd.merge(df1, df2, on="id", how="outer")  # All rows from both', level: 'Easy' },
+    { q: 'How would you create a pivot table in Pandas?', a: 'df.pivot_table(\n    values="sales",\n    index="region",\n    columns="category",\n    aggfunc="sum",\n    fill_value=0\n)\n\nEquivalent to Excel pivot tables — reshapes data from long to wide format.', level: 'Medium' },
+  ],
+  CaseStudy: [
+    { q: 'Swiggy\'s order volume dropped 15% last week. How would you investigate?', a: '1. Segment: Is it all cities or specific ones? All categories or specific cuisines?\n2. Check supply side: Restaurant availability, delivery partner supply\n3. Check demand side: Pricing changes, discount withdrawal, app issues\n4. Check external: Competitor campaigns, weather, local events\n5. Timeline: Did it happen suddenly (tech issue) or gradually (product change)?', level: 'Hard' },
+    { q: 'How would you define and measure "user engagement" for an e-learning platform?', a: 'Key metrics:\n• DAU/MAU ratio (stickiness)\n• Lesson completion rate\n• Time spent per session\n• Streak maintenance rate\n• Problem submission rate\n\nNorth Star Metric: "Weekly Active Learners" who complete ≥1 lesson.', level: 'Medium' },
+    { q: 'A/B test shows feature X increases CTR by 10% but decreases revenue by 5%. Ship it?', a: 'Do NOT ship immediately. Questions to ask:\n1. What\'s the statistical significance of both metrics?\n2. What\'s the absolute revenue impact?\n3. Is there a long-term vs short-term trade-off?\n4. Can we segment — does X help new users but hurt power users?\nConclusion: Depends on company\'s growth vs revenue stage. Likely investigate more.', level: 'Hard' },
+    { q: 'How would you build a churn prediction model for a SaaS product?', a: 'Features: Login frequency, feature usage, support tickets, plan type, contract age\nApproach:\n1. Define churn (e.g. no login for 30 days)\n2. Label historical data\n3. Train classifier (XGBoost/Logistic Regression)\n4. Evaluate with Precision/Recall (cost of false negative > false positive)\n5. Act: trigger retention campaign for high-risk users', level: 'Hard' },
+  ],
+  HR: [
+    { q: 'Tell me about yourself.', a: 'Structure: Present → Past → Future\nExample: "I\'m a data analyst with [X] years working with SQL and Python. I\'ve built dashboards and models at [company]. I\'m now looking to move into a more senior role where I can own end-to-end analytics."\n\nKeep it under 90 seconds. Focus on relevant experience.', level: 'Easy' },
+    { q: 'Why do you want to work as a Data Analyst?', a: 'Highlight: Curiosity for data, impact of insights on business decisions, specific projects or moments that drew you to analytics.\nAvoid: "It pays well" or generic answers.\nGood answer: Connect personal interest + a specific example + alignment with the role.', level: 'Easy' },
+    { q: 'Describe a time you found an insight that impacted a business decision.', a: 'Use STAR: Situation → Task → Action → Result\nExample: "In my previous role, I noticed our repeat purchase rate was dropping. I dug into cohort data and found a specific product category was driving churn. I presented this to the PM team — they changed the recommendation algorithm and repeat purchases recovered 12% in 6 weeks."', level: 'Medium' },
+  ],
+};
+
+const ROADMAP_DATA = [
+  {
+    phase: 1, week: 'Week 1–2', title: 'Core Foundations', color: '#4A90D9',
+    icon: '🏗️',
+    topics: [
+      { name: 'Excel & Google Sheets', skills: ['VLOOKUP, XLOOKUP, HLOOKUP', 'Pivot Tables & Charts', 'IF, COUNTIF, SUMIF functions', 'Data validation & cleaning in Excel'] },
+      { name: 'Basic Statistics', skills: ['Mean, Median, Mode, Range', 'Standard deviation & variance', 'Percentiles & quartiles', 'Normal distribution basics'] },
+      { name: 'SQL Fundamentals', skills: ['SELECT, WHERE, ORDER BY', 'GROUP BY, HAVING, DISTINCT', 'JOINs (INNER, LEFT, RIGHT)', 'Aggregate functions: SUM, COUNT, AVG'] },
+    ],
+    resources: ['Complete the SQL for Data Analysis course', 'Solve 10 Easy SQL problems on Datamyze', 'Build one Excel dashboard from scratch'],
+  },
+  {
+    phase: 2, week: 'Week 3–4', title: 'Python for Analytics', color: '#5CC8A0',
+    icon: '🐍',
+    topics: [
+      { name: 'Python Basics', skills: ['Variables, loops, functions, OOP basics', 'List comprehensions & dictionaries', 'File I/O — reading CSV/JSON', 'Error handling with try/except'] },
+      { name: 'NumPy & Pandas', skills: ['ndarray operations, broadcasting', 'DataFrame creation, indexing (.loc/.iloc)', 'Merging, joining, concatenating DataFrames', 'Groupby, aggregate, pivot_table'] },
+      { name: 'Dev Environment', skills: ['Jupyter Notebooks workflow', 'Git basics: commit, push, pull', 'Virtual environments (venv)', 'VS Code for data science'] },
+    ],
+    resources: ['Complete the Python for Analytics course', 'Solve GroupBy + Null Handling problems', 'Build a mini project: clean a raw CSV dataset'],
+  },
+  {
+    phase: 3, week: 'Week 5–6', title: 'Data Wrangling & EDA', color: '#E8A838',
+    icon: '🔍',
+    topics: [
+      { name: 'Data Cleaning', skills: ['Handling missing values (fillna, dropna)', 'Removing duplicates', 'Fixing data types (astype, to_datetime)', 'Outlier detection with IQR & Z-score'] },
+      { name: 'Exploratory Data Analysis', skills: ['Univariate & bivariate analysis', 'Correlation matrices (heatmaps)', 'Distribution plots (histograms, box plots)', 'Descriptive statistics with .describe()'] },
+      { name: 'Feature Engineering', skills: ['Creating derived columns', 'Binning & encoding categorical data', 'Date feature extraction (month, weekday)', 'Normalisation & standardisation'] },
+    ],
+    resources: ['Complete the Data Wrangling module', 'Solve Outlier + Aggregation problems', 'EDA on a Kaggle dataset — publish on GitHub'],
+  },
+  {
+    phase: 4, week: 'Week 7–8', title: 'Visualisation & Reporting', color: '#a78bfa',
+    icon: '📊',
+    topics: [
+      { name: 'Python Visualisation', skills: ['Matplotlib: line, bar, scatter, pie', 'Seaborn: heatmap, pairplot, violin', 'Plotly for interactive charts', 'Choosing the right chart type'] },
+      { name: 'BI Tools', skills: ['Tableau Desktop basics (free trial)', 'Power BI Desktop — connecting data', 'Creating calculated fields & measures', 'Publishing dashboards'] },
+      { name: 'Storytelling with Data', skills: ['The SCQA framework', 'Designing executive summaries', 'Annotation and highlighting insights', 'Slide decks for data findings'] },
+    ],
+    resources: ['Build a Tableau Public dashboard (portfolio)', 'Complete a Power BI project with real data', 'Create a 5-slide data story presentation'],
+  },
+  {
+    phase: 5, week: 'Week 9–10', title: 'Advanced SQL & Analytics', color: '#F07B6A',
+    icon: '⚡',
+    topics: [
+      { name: 'Advanced SQL', skills: ['Window functions: ROW_NUMBER, RANK, LAG, LEAD', 'CTEs (WITH clause) & recursive queries', 'Subqueries & correlated subqueries', 'Query optimisation & indexes'] },
+      { name: 'Business Analytics', skills: ['Cohort analysis', 'Funnel analysis & drop-off', 'Month-over-month & YoY growth', 'Retention & churn metrics'] },
+      { name: 'A/B Testing', skills: ['Hypothesis testing (t-test, chi-square)', 'p-values & statistical significance', 'Sample size calculation', 'Interpreting A/B test results'] },
+    ],
+    resources: ['Solve all Hard SQL problems on Datamyze', 'Complete the Statistics & Probability module', 'Analyse a real business dataset with SQL'],
+  },
+  {
+    phase: 6, week: 'Week 11', title: 'Portfolio & Applications', color: '#38bdf8',
+    icon: '🚀',
+    topics: [
+      { name: 'Portfolio Projects', skills: ['2–3 end-to-end projects on GitHub', 'Project README with business context', 'Hosted dashboards (Tableau Public, Streamlit)', 'Medium / LinkedIn post about your project'] },
+      { name: 'Job Applications', skills: ['ATS-optimised resume keywords', 'LinkedIn: About, Experience, Skills sections', 'Cold messaging recruiters on LinkedIn', 'Using Datamyze Job Board'] },
+    ],
+    resources: ['Submit resume for expert review (Datamyze Premium)', 'Apply to 5 jobs/day from the Job Board', 'Publish at least 1 project on GitHub'],
+  },
+  {
+    phase: 7, week: 'Week 12', title: 'Interview Mastery', color: '#E8A838',
+    icon: '🎓',
+    topics: [
+      { name: 'Technical Interview Prep', skills: ['SQL live coding (StrataScratch, LeetCode)', 'Python/Pandas problem solving', 'Case study frameworks (MECE, SCQA)', 'Explain ML concepts in simple terms'] },
+      { name: 'HR & Behavioural', skills: ['STAR method for behavioural questions', 'Tell me about yourself (90-second pitch)', 'Why data analytics? — authentic answer', 'Questions to ask the interviewer'] },
+      { name: 'Offer & Negotiation', skills: ['Research market salary (Glassdoor, Levels.fyi)', 'Negotiation scripts: counter-offer language', 'Evaluating offer: CTC vs take-home', 'Joining formalities & notice period'] },
+    ],
+    resources: ['Complete all Mock Interview questions on Datamyze', 'Book a 1:1 mock interview with us', 'Negotiate your first offer confidently'],
+  },
+];
+
+const STUDY_MATERIALS = [
+  {
+    id: 'sql', icon: '🗄️', title: 'SQL Interview Mastery', tag: 'PDF Guide', color: '#4A90D9',
+    desc: 'Top 50 SQL questions from Google, Amazon & Flipkart hiring rounds with answers',
+    pages: 24, level: 'All Levels',
+    content: `# SQL Interview Mastery Guide
+## Top 50 Questions for Data Analyst Roles
+
+### SECTION 1: BASICS (Questions 1–10)
+
+**Q1. What is the difference between WHERE and HAVING?**
+WHERE filters rows BEFORE grouping. HAVING filters groups AFTER GROUP BY.
+Rule: WHERE cannot use aggregate functions; HAVING can.
+Interview tip: Always mention this distinction — it comes up in 80% of SQL rounds.
+
+**Q2. Write a query to find duplicate emails in a users table.**
+\`\`\`sql
+SELECT email, COUNT(*) AS count
+FROM users
+GROUP BY email
+HAVING COUNT(*) > 1
+ORDER BY count DESC;
+\`\`\`
+
+**Q3. What is the difference between DELETE, TRUNCATE, and DROP?**
+- DELETE: Removes specific rows (WHERE condition), logged, rollback possible
+- TRUNCATE: Removes all rows, faster, cannot be rolled back (DDL)
+- DROP: Deletes the entire table structure + data permanently
+
+**Q4. Explain JOINs with a real-world example.**
+INNER JOIN: Orders that have matching customers (excludes orphan records)
+LEFT JOIN: All customers, even those without orders (NULLs for no match)
+RIGHT JOIN: All orders, even with missing customer data
+FULL OUTER JOIN: All customers + all orders, NULLs where no match
+
+\`\`\`sql
+-- Find all customers and their order totals (including customers with no orders)
+SELECT c.name, COALESCE(SUM(o.amount), 0) AS total_spent
+FROM customers c
+LEFT JOIN orders o ON c.id = o.customer_id
+GROUP BY c.id, c.name
+ORDER BY total_spent DESC;
+\`\`\`
+
+### SECTION 2: INTERMEDIATE (Questions 11–25)
+
+**Q11. What are window functions? Name 5 commonly used ones.**
+Window functions perform calculations across a related set of rows WITHOUT collapsing them (unlike GROUP BY).
+Common ones: ROW_NUMBER(), RANK(), DENSE_RANK(), LAG(), LEAD(), SUM() OVER, AVG() OVER, NTILE()
+
+**Q12. Find the top 3 products by sales in each category.**
+\`\`\`sql
+SELECT category, product, total_sales FROM (
+  SELECT category, product, SUM(amount) AS total_sales,
+    RANK() OVER (PARTITION BY category ORDER BY SUM(amount) DESC) AS rnk
+  FROM sales GROUP BY category, product
+) ranked WHERE rnk <= 3;
+\`\`\`
+
+**Q13. Calculate month-over-month growth.**
+\`\`\`sql
+SELECT month, revenue,
+  LAG(revenue) OVER (ORDER BY month) AS prev_month,
+  ROUND((revenue - LAG(revenue) OVER (ORDER BY month)) * 100.0 /
+        LAG(revenue) OVER (ORDER BY month), 2) AS mom_growth_pct
+FROM monthly_sales;
+\`\`\`
+
+**Q14. What is a CTE? When to use it vs subquery?**
+CTE (WITH clause) = named temporary result set.
+Use CTE when: query is referenced multiple times, readability matters, recursive queries needed.
+Use subquery when: one-time use, performance-critical (subqueries sometimes optimize better).
+
+### SECTION 3: ADVANCED (Questions 26–40)
+
+**Q26. Explain EXPLAIN ANALYZE and query optimization.**
+EXPLAIN ANALYZE shows the query execution plan — how PostgreSQL executes your query.
+Optimization tips:
+1. Add indexes on columns used in WHERE, JOIN, ORDER BY
+2. Avoid SELECT * — specify columns
+3. Use EXISTS instead of IN for large subqueries
+4. Partition large tables for range queries
+
+**Q27. Write a cohort retention query.**
+\`\`\`sql
+WITH cohorts AS (
+  SELECT user_id,
+    DATE_TRUNC('month', signup_date) AS cohort_month
+  FROM users
+),
+activity AS (
+  SELECT user_id, DATE_TRUNC('month', activity_date) AS active_month
+  FROM user_activity
+)
+SELECT c.cohort_month,
+  COUNT(DISTINCT c.user_id) AS cohort_size,
+  COUNT(DISTINCT a.user_id) AS retained,
+  ROUND(COUNT(DISTINCT a.user_id) * 100.0 / COUNT(DISTINCT c.user_id), 1) AS retention_pct
+FROM cohorts c
+LEFT JOIN activity a ON c.user_id = a.user_id
+  AND a.active_month = c.cohort_month + INTERVAL '1 month'
+GROUP BY c.cohort_month ORDER BY c.cohort_month;
+\`\`\`
+
+### SECTION 4: CRACK THE INTERVIEW (Tips)
+
+1. Think aloud — interviewers want to see your reasoning
+2. Ask clarifying questions before writing SQL
+3. Start with the simplest query, then optimize
+4. Know your NULL handling (IS NULL, COALESCE, IFNULL)
+5. Practice on StrataScratch, LeetCode, HackerRank daily`
+  },
+  {
+    id: 'python', icon: '🐍', title: 'Python & Pandas Handbook', tag: 'Cheatsheet', color: '#5CC8A0',
+    desc: 'Complete reference for Pandas, NumPy, and data manipulation with interview patterns',
+    pages: 18, level: 'Beginner → Advanced',
+    content: `# Python & Pandas Data Analyst Handbook
+
+## PANDAS ESSENTIALS
+
+### DataFrame Creation
+\`\`\`python
+import pandas as pd
+import numpy as np
+
+# From dict
+df = pd.DataFrame({'name': ['Alice','Bob'], 'age': [25, 30], 'city': ['Delhi','Mumbai']})
+
+# From CSV
+df = pd.read_csv('data.csv', parse_dates=['date'], index_col='id')
+
+# Quick checks (always run these first!)
+df.shape          # (rows, cols)
+df.dtypes         # data types per column
+df.info()         # non-null counts + dtypes
+df.describe()     # statistical summary
+df.head(10)       # first 10 rows
+df.isnull().sum() # missing values per column
+\`\`\`
+
+### Selecting Data
+\`\`\`python
+# .loc — label-based
+df.loc[0]                    # row by index label
+df.loc[0:5, 'name':'city']   # row range + col range
+df.loc[df['age'] > 25]       # boolean filter
+
+# .iloc — position-based
+df.iloc[0]                   # first row
+df.iloc[0:5, 0:2]            # first 5 rows, first 2 cols
+df.iloc[-1]                  # last row
+
+# Interview Tip: .loc is inclusive of endpoint; .iloc is exclusive
+\`\`\`
+
+### Data Cleaning Patterns
+\`\`\`python
+# Handle missing values
+df.isnull().sum()                          # count nulls
+df.dropna(subset=['critical_col'])         # drop rows where critical col is null
+df['col'].fillna(df['col'].median())       # fill with median
+df.fillna(method='ffill')                 # forward fill
+
+# Remove duplicates
+df.duplicated().sum()                      # count duplicates
+df.drop_duplicates(subset=['email'])       # dedupe by email
+
+# Fix data types
+df['date'] = pd.to_datetime(df['date'])
+df['amount'] = pd.to_numeric(df['amount'], errors='coerce')
+df['category'] = df['category'].astype('category')  # memory efficient
+
+# Strip whitespace from strings
+df['name'] = df['name'].str.strip().str.title()
+\`\`\`
+
+### GroupBy & Aggregation
+\`\`\`python
+# Basic groupby
+df.groupby('category')['amount'].sum()
+
+# Multiple aggregations (most asked in interviews!)
+result = df.groupby('category').agg(
+    total_sales=('amount', 'sum'),
+    avg_order=('amount', 'mean'),
+    order_count=('id', 'count'),
+    max_order=('amount', 'max')
+).reset_index()
+
+# Groupby multiple columns
+df.groupby(['region', 'category'])['revenue'].sum().unstack()
+\`\`\`
+
+### Outlier Detection (IQR Method)
+\`\`\`python
+def remove_outliers_iqr(df, col):
+    Q1 = df[col].quantile(0.25)
+    Q3 = df[col].quantile(0.75)
+    IQR = Q3 - Q1
+    lower = Q1 - 1.5 * IQR
+    upper = Q3 + 1.5 * IQR
+    print(f"Removing {((df[col] < lower) | (df[col] > upper)).sum()} outliers")
+    return df[(df[col] >= lower) & (df[col] <= upper)]
+
+df_clean = remove_outliers_iqr(df, 'revenue')
+\`\`\`
+
+### Merging DataFrames
+\`\`\`python
+# Like SQL JOINs
+pd.merge(df1, df2, on='id', how='inner')   # INNER JOIN
+pd.merge(df1, df2, on='id', how='left')    # LEFT JOIN
+pd.merge(df1, df2, on='id', how='outer')   # FULL OUTER JOIN
+
+# Multiple keys
+pd.merge(orders, customers, left_on='customer_id', right_on='id')
+\`\`\`
+
+## INTERVIEW PATTERNS
+
+**Pattern 1: Month-over-month analysis**
+\`\`\`python
+df['month'] = df['date'].dt.to_period('M')
+monthly = df.groupby('month')['revenue'].sum().reset_index()
+monthly['prev_revenue'] = monthly['revenue'].shift(1)
+monthly['mom_growth'] = (monthly['revenue'] - monthly['prev_revenue']) / monthly['prev_revenue'] * 100
+\`\`\`
+
+**Pattern 2: Cohort analysis**
+\`\`\`python
+df['cohort'] = df.groupby('user_id')['date'].transform('min').dt.to_period('M')
+df['order_month'] = df['date'].dt.to_period('M')
+df['period'] = (df['order_month'] - df['cohort']).apply(lambda x: x.n)
+cohort_table = df.groupby(['cohort', 'period'])['user_id'].nunique().unstack()
+\`\`\`
+
+**Pattern 3: Running totals**
+\`\`\`python
+df['running_total'] = df.sort_values('date')['amount'].cumsum()
+df['7d_rolling_avg'] = df['revenue'].rolling(window=7, min_periods=1).mean()
+\`\`\``
+  },
+  {
+    id: 'stats', icon: '📐', title: 'Statistics for Data Analysts', tag: 'Study Guide', color: '#E8A838',
+    desc: 'Essential statistics, probability, and hypothesis testing for analyst interviews',
+    pages: 16, level: 'Intermediate',
+    content: `# Statistics for Data Analysts
+
+## WHY STATISTICS MATTERS IN INTERVIEWS
+
+Every FAANG-style data analyst interview includes at least 1–2 statistics questions. These can make or break your offer.
+
+## SECTION 1: DESCRIPTIVE STATISTICS
+
+### Measures of Central Tendency
+- **Mean**: Sum / Count. Sensitive to outliers. Use for normally distributed data.
+- **Median**: Middle value. Robust to outliers. Use for skewed distributions (salaries, house prices).
+- **Mode**: Most frequent value. Useful for categorical data.
+
+**Interview Q**: "A product has 100 reviews. 90 are 5-star, 10 are 1-star. Which is a better measure — mean or median rating?"
+Answer: Median, because the distribution is bimodal and mean is pulled by extremes.
+
+### Measures of Spread
+- **Standard Deviation**: Average distance from the mean. σ for population, s for sample.
+- **Variance**: σ² — harder to interpret (different units)
+- **IQR (Interquartile Range)**: Q3 - Q1. Robust outlier measure.
+- **Coefficient of Variation**: (SD/Mean) × 100 — compares variability across different scales
+
+### Distributions
+- **Normal Distribution**: Bell curve, mean=median=mode, 68-95-99.7 rule
+- **Right-skewed**: Long tail on right (income, revenue). Mean > Median.
+- **Left-skewed**: Long tail on left (age at retirement). Mean < Median.
+- **Uniform**: Equal probability for all values
+
+## SECTION 2: PROBABILITY
+
+### Key Concepts
+- **P(A)**: Probability of event A = favourable outcomes / total outcomes
+- **P(A∩B)**: Joint probability — P(A) × P(B) if independent
+- **P(A∪B)**: Union — P(A) + P(B) - P(A∩B)
+- **P(A|B)**: Conditional probability — P(A∩B) / P(B)
+- **Bayes' Theorem**: P(A|B) = P(B|A) × P(A) / P(B)
+
+**Interview Q**: "A model identifies 95% of fraudulent transactions (recall). But 80% of its 'fraud' alerts are actually legitimate (precision = 20%). How do you balance this?"
+Answer: Use F1-Score = 2×(Precision×Recall)/(Precision+Recall). Tune threshold based on business cost of false positives vs false negatives.
+
+## SECTION 3: HYPOTHESIS TESTING
+
+### The Framework
+1. State H₀ (null) and H₁ (alternative)
+2. Choose significance level α (usually 0.05)
+3. Calculate test statistic and p-value
+4. Reject H₀ if p-value < α
+
+### Common Tests
+| Test | When to Use |
+|------|-------------|
+| One-sample t-test | Compare sample mean to known value |
+| Two-sample t-test | Compare means of two independent groups |
+| Paired t-test | Before/after same group |
+| Chi-square | Independence of categorical variables |
+| ANOVA | Compare means of 3+ groups |
+
+### A/B Testing (Most Asked!)
+**Setup**: Control (A) vs Treatment (B). Randomly assign users.
+**Metrics**: Primary metric (conversion rate) + guardrail metrics (revenue, churn)
+**Sample Size**: Calculated before running — based on MDE, α, and power (1-β)
+**Duration**: Run for complete business cycles (min. 1–2 weeks)
+
+\`\`\`python
+from scipy import stats
+
+# Two-sample t-test
+control = [0.05, 0.04, 0.06, 0.05, 0.07]   # conversion rates
+treatment = [0.06, 0.07, 0.08, 0.06, 0.09]
+
+t_stat, p_value = stats.ttest_ind(control, treatment)
+print(f"p-value: {p_value:.4f}")
+print("Significant!" if p_value < 0.05 else "Not significant")
+\`\`\`
+
+**Interview Q**: "Your A/B test shows p=0.04. Is this result significant? Should you ship?"
+A: p=0.04 < 0.05, so statistically significant. But ALSO check:
+- Effect size (is 0.5% CTR lift meaningful for the business?)
+- Sample size adequacy
+- Whether test ran long enough
+- Segment-level effects (novelty effect, Simpson's paradox?)
+
+## SECTION 4: REGRESSION
+
+### Linear Regression
+y = β₀ + β₁x₁ + β₂x₂ + ε
+- **R²**: % variance explained by the model (higher = better, max 1.0)
+- **Adjusted R²**: R² penalised for extra variables (use this for multiple regression)
+- **p-values for coefficients**: Are individual predictors significant?
+- **Residuals**: Should be normally distributed, no pattern vs fitted values
+
+### Interview Tips
+- "Assumptions of linear regression?" → Linearity, independence, normality of errors, homoscedasticity, no multicollinearity
+- "What's the difference between correlation and causation?" → Classic question. Correlation is association; causation requires controlled experiments or causal inference methods.`
+  },
+  {
+    id: 'excel', icon: '📊', title: 'Excel Power User Guide', tag: 'Cheatsheet', color: '#a78bfa',
+    desc: 'Advanced Excel formulas, pivot tables, and dashboard techniques for analysts',
+    pages: 12, level: 'Beginner → Advanced',
+    content: `# Excel Power User Guide for Data Analysts
+
+## MUST-KNOW FORMULAS
+
+### Lookup Functions
+\`\`\`
+VLOOKUP(lookup_value, table_array, col_index, [exact_match])
+=VLOOKUP(A2, CustomerTable, 3, FALSE)  -- 3rd column, exact match
+
+XLOOKUP(lookup, lookup_array, return_array, [if_not_found])  -- Excel 365+
+=XLOOKUP(A2, B:B, C:C, "Not Found")   -- more flexible than VLOOKUP
+
+INDEX-MATCH (legacy but universal):
+=INDEX(return_range, MATCH(lookup_value, lookup_range, 0))
+\`\`\`
+
+### Conditional Formulas
+\`\`\`
+COUNTIF:  =COUNTIF(A:A, ">100")
+COUNTIFS: =COUNTIFS(A:A, ">100", B:B, "North")  -- multiple criteria
+SUMIF:    =SUMIF(region_col, "North", sales_col)
+SUMIFS:   =SUMIFS(sales, region, "North", year, 2024)
+AVERAGEIFS, MAXIFS, MINIFS (same pattern)
+\`\`\`
+
+### Text Functions
+\`\`\`
+=LEFT(A2, 5)          -- first 5 characters
+=RIGHT(A2, 3)         -- last 3 characters
+=MID(A2, 3, 4)        -- 4 chars starting at position 3
+=LEN(A2)              -- length
+=TRIM(A2)             -- remove extra spaces
+=UPPER/LOWER/PROPER   -- case conversion
+=CONCATENATE(A2," ",B2) or =A2&" "&B2
+=TEXT(A2, "DD-MMM-YYYY") -- format as text
+\`\`\`
+
+### Date Functions
+\`\`\`
+=TODAY()              -- current date
+=YEAR(A2), =MONTH(A2), =DAY(A2)
+=EOMONTH(A2, 0)       -- last day of month
+=DATEDIF(start, end, "M")  -- months between dates
+=NETWORKDAYS(start, end)   -- working days (excludes weekends)
+=WEEKDAY(A2, 2)       -- 1=Monday, 7=Sunday (mode 2)
+\`\`\`
+
+## PIVOT TABLES
+
+### Quick Setup
+1. Click anywhere in data → Insert → PivotTable
+2. Drag fields: Rows (categories), Columns (secondary split), Values (numbers), Filters (global filter)
+3. Right-click value → Summarize by → Sum/Count/Average
+4. Show Values As → % of Total, Running Total, Difference From...
+
+### Pro Tips
+- **Calculated Fields**: Analyze tab → Fields, Items & Sets → Calculated Field (e.g., Margin = Revenue - Cost)
+- **Grouping Dates**: Right-click a date → Group → choose Month/Quarter/Year
+- **Slicers**: Insert → Slicer — interactive filters that update pivot and charts
+- **Timeline**: Insert → Timeline — filter by date ranges visually
+
+## CHARTS & DASHBOARDS
+
+### Choosing the Right Chart
+| Data Type | Best Chart |
+|-----------|-----------|
+| Trend over time | Line chart |
+| Comparison (few items) | Bar/Column chart |
+| Part of a whole | Pie (≤5 segments) or 100% stacked bar |
+| Distribution | Histogram |
+| Correlation | Scatter plot |
+| Ranking | Horizontal bar |
+
+### Dashboard Tips
+1. Use a single consistent color palette (2–3 colors)
+2. Lead with the KPI numbers (big, bold)
+3. Use sparklines for space-efficient trends
+4. Name ranges → formulas become readable
+5. Protect sheets to prevent accidental changes
+6. Use slicers linked to multiple charts
+
+## DATA CLEANING IN EXCEL
+
+\`\`\`
+Remove duplicates: Data tab → Remove Duplicates
+Flash Fill: Ctrl+E — pattern-based fill
+Text to Columns: Split on delimiter (comma, space)
+Find & Replace: Ctrl+H — bulk replace, including blank cells
+Filter then delete: Filter → select blanks → delete visible rows
+\`\`\`
+
+## POWER QUERY (Game Changer)
+
+Power Query (Data → Get Data) handles:
+- Merging multiple CSV files from a folder
+- Pivoting/unpivoting data
+- Custom column transformations (M language)
+- Connecting to SQL databases, APIs
+- Refreshable data pipelines
+
+**Interview tip**: Knowing Power Query puts you ahead of 90% of candidates. Mention it.`
+  },
+  {
+    id: 'casestudies', icon: '🏢', title: 'Analytics Case Study Bank', tag: 'Case Studies', color: '#F07B6A',
+    desc: '20 real cases from Swiggy, Zomato, Flipkart, Meesho & CRED with full frameworks',
+    pages: 28, level: 'Intermediate → Hard',
+    content: `# Analytics Case Study Bank
+## 20 Cases from Top Indian Tech Companies
+
+### HOW TO APPROACH ANY CASE STUDY
+
+**The SCQA Framework:**
+- **S**ituation: What's the business context?
+- **C**omplication: What's the problem/change?
+- **Q**uestion: What do we need to find out?
+- **A**nswer: Your structured solution
+
+**4-Step Answer Structure:**
+1. Clarify the question (ask 2–3 good questions)
+2. Break down the problem (segments, metrics, hypotheses)
+3. Deep-dive with data approach
+4. Recommend action + success metrics
+
+---
+
+### CASE 1: Swiggy Order Drop
+
+**Scenario**: Swiggy's order volume dropped 15% in the last 7 days. CEO asks you to investigate. You have access to all data.
+
+**Step 1 — Clarifying Questions to Ask:**
+- Is the drop in all cities or specific ones?
+- All food categories or specific cuisines?
+- Is the app working correctly (no crashes)?
+- Did any pricing/discount changes happen?
+- Is a competitor running a campaign?
+
+**Step 2 — Breakdown Framework:**
+Supply side: Restaurant availability ↓ → fewer options shown
+Demand side: CTR drop → conversion drop → basket size drop
+External: Weather, local holidays, competitor promotions, app store reviews
+
+**Step 3 — Analysis Approach:**
+\`\`\`sql
+-- Check by city
+SELECT city,
+  SUM(CASE WHEN order_date >= CURRENT_DATE - 7 THEN 1 END) AS last_7d,
+  SUM(CASE WHEN order_date BETWEEN CURRENT_DATE - 14 AND CURRENT_DATE - 7 THEN 1 END) AS prior_7d,
+  ROUND((SUM(CASE WHEN order_date >= CURRENT_DATE - 7 THEN 1 END) -
+         SUM(CASE WHEN order_date BETWEEN CURRENT_DATE-14 AND CURRENT_DATE-7 THEN 1 END)) * 100.0 /
+        SUM(CASE WHEN order_date BETWEEN CURRENT_DATE-14 AND CURRENT_DATE-7 THEN 1 END), 1) AS pct_change
+FROM orders
+GROUP BY city ORDER BY pct_change;
+\`\`\`
+
+**Step 4 — Recommendation:**
+If city-specific: investigate local supply, weather, event
+If all cities: check app performance, recent product changes, competitor activity
+Metric to watch: Daily Active Users → App Opens → Search → Add to Cart → Order Placed (funnel)
+
+---
+
+### CASE 2: Define North Star Metric for an E-Learning Platform
+
+**Q**: "You've just joined Datamyze as their first data analyst. Define the North Star Metric."
+
+**Framework:**
+North Star = the single metric that best captures the value delivered to users AND drives revenue.
+
+**Bad NSMs**: Revenue (lags), DAU (vanity), # courses enrolled (does not = learning)
+
+**Good candidates:**
+- Weekly Active Learners who complete ≥1 lesson (engagement + learning)
+- Lessons completed per week (activity quality)
+
+**Recommendation**: "Weekly Lesson Completions" — captures habit formation, learning progress, and correlates with premium conversion.
+
+**Supporting metrics (health metrics):**
+- Completion rate per course (content quality signal)
+- Streak maintenance rate (habit signal)
+- Problem submission rate (active learning signal)
+- NPS / CSAT (satisfaction signal)
+
+---
+
+### CASE 3: A/B Test — 10% CTR Increase But 5% Revenue Drop
+
+**Q**: "Feature X boosts header banner CTR by 10% but revenue is down 5%. Do you ship?"
+
+**Analysis Before Deciding:**
+1. Is the revenue drop statistically significant? (run t-test)
+2. What's the absolute impact? 10% CTR on 1M users = 100k more clicks. 5% revenue on ₹10Cr = ₹50L loss.
+3. Is there a lag effect? Users may be exploring before converting.
+4. Segment analysis: Does X help new users but hurt power users?
+5. Duration: Run test for ≥2 full business cycles
+
+**Decision Framework:**
+- If revenue drop is significant AND absolute loss > CTR gain value → Don't ship
+- If revenue drop is not significant → Run longer, then decide
+- If only new users affected negatively → Ship with personalization (exclude new users initially)
+
+**Answer**: "I would NOT ship immediately. I'd extend the test, run segment analysis, and quantify the absolute revenue impact before making a final recommendation to the PM team."
+
+---
+
+### CASE 4: Churn Prediction Model for a SaaS Product
+
+**Define Churn**: No login for 30 consecutive days (adjust based on product usage frequency)
+
+**Features to Engineer:**
+| Feature | Signal |
+|---------|--------|
+| Logins in last 14 days | Recency |
+| Feature X usage frequency | Depth |
+| Support tickets opened | Frustration |
+| Days since last payment | Engagement |
+| Plan type (free/paid) | Value tier |
+
+**Modelling Approach:**
+1. Label: 1 = churned (no login for 30d), 0 = retained
+2. Train XGBoost or Logistic Regression (explain to stakeholder: "logistic regression is interpretable")
+3. Evaluate with Precision-Recall curve (care more about recall — don't miss churners)
+4. Set threshold at F1-optimised point
+
+**Action**: Email campaign for users with churn probability > 0.7. Offer 30% discount. Track recovery rate.
+
+---
+
+*...16 more cases available in the full guide covering:*
+*Flipkart search ranking, CRED reward strategy, Meesho seller churn, Zomato restaurant scoring, Urban Company demand forecasting, PhonePe fraud detection, and more.*`
+  },
+  {
+    id: 'viz', icon: '📈', title: 'Data Visualisation Bible', tag: 'Design Guide', color: '#38bdf8',
+    desc: 'Chart selection, dashboard design, Tableau & Power BI tips for analyst portfolios',
+    pages: 14, level: 'All Levels',
+    content: `# Data Visualisation Bible for Data Analysts
+
+## THE GOLDEN RULE: Every chart should answer ONE question
+
+## SECTION 1: CHOOSING THE RIGHT CHART
+
+### Decision Tree
+\`\`\`
+What do you want to show?
+├── Change over time → Line chart (multiple series = multiple lines)
+├── Comparison
+│   ├── Few categories (≤7) → Bar/Column chart
+│   └── Many categories → Dot plot or Horizontal bar (sorted)
+├── Distribution
+│   ├── Single variable → Histogram
+│   ├── Two variables → Scatter plot
+│   └── Multiple groups → Box plot
+├── Part of a whole
+│   ├── ≤5 slices, values very different → Pie chart
+│   └── ≥5 slices OR similar values → 100% Stacked bar
+├── Correlation → Scatter plot (add trend line)
+└── Geography → Choropleth map (colour-coded regions)
+\`\`\`
+
+## SECTION 2: DESIGN PRINCIPLES
+
+### The 5 Second Rule
+If a chart doesn't communicate its insight within 5 seconds, redesign it.
+
+### Colour Rules
+1. Use ONE colour for a single variable (varying shades for magnitude)
+2. Use contrasting colours for categories (max 7 distinct colours)
+3. Red = bad/negative, Green = good/positive (universal)
+4. Grey out unimportant data points — make the insight pop in colour
+
+### Common Mistakes to Avoid
+❌ 3D charts — distort perception
+❌ Pie charts with >5 slices
+❌ Dual-axis charts without clear labelling
+❌ Starting the Y-axis at a non-zero value (misleading)
+❌ Too many colours on one chart
+❌ Chartjunk — unnecessary gridlines, borders, backgrounds
+
+## SECTION 3: TABLEAU ESSENTIALS
+
+### Must-Know Calculated Fields
+\`\`\`
+// Running total
+RUNNING_SUM(SUM([Sales]))
+
+// Year-over-year growth
+(SUM([Revenue]) - LOOKUP(SUM([Revenue]), -1)) / ABS(LOOKUP(SUM([Revenue]), -1))
+
+// Rank within group
+RANK(SUM([Sales]))  -- use PARTITION for within-category rank
+\`\`\`
+
+### Dashboard Best Practices
+1. **Z-pattern layout**: Top-left to top-right (headline KPIs) → bottom-left to bottom-right (details)
+2. **Use containers**: Horizontal + Vertical for responsive layout
+3. **Action filters**: Click one chart → filter related charts
+4. **Parameters**: User-controlled inputs (date range, metric toggle)
+5. **Mobile layout**: Always create a separate mobile view
+
+## SECTION 4: POWER BI
+
+### DAX Basics
+\`\`\`dax
+// Total Revenue
+Total Revenue = SUM(Sales[Amount])
+
+// Running Total
+Running Total = CALCULATE([Total Revenue], FILTER(ALL(Sales[Date]), Sales[Date] <= MAX(Sales[Date])))
+
+// MoM Growth %
+MoM Growth = DIVIDE([Total Revenue] - CALCULATE([Total Revenue], PREVIOUSMONTH(Calendar[Date])),
+             CALCULATE([Total Revenue], PREVIOUSMONTH(Calendar[Date])))
+
+// Rank
+Sales Rank = RANKX(ALL(Products[Category]), [Total Revenue])
+\`\`\`
+
+### Star Schema (Critical concept for BI interviews)
+Fact Table: transactional data (orders, events) — large, numeric
+Dimension Tables: descriptive data (customers, products, dates) — smaller, categorical
+Relationship: Fact.customer_id → Customers.id (many-to-one)
+
+## SECTION 5: PORTFOLIO ADVICE
+
+### What Makes a Great Analyst Portfolio
+1. **End-to-end projects**: Raw data → cleaning → analysis → dashboard → insights
+2. **Business framing**: Every project answers a real business question
+3. **Hosted online**: Tableau Public, GitHub Pages, Streamlit
+4. **README**: Problem statement, approach, key findings (3 bullets)
+5. **Variety**: 1 SQL project, 1 Python EDA, 1 BI dashboard minimum
+
+### Project Ideas
+- Customer segmentation with RFM analysis (any e-commerce dataset)
+- Zomato restaurant analysis (Kaggle dataset)
+- Stock price EDA with Python
+- COVID data dashboard in Tableau
+- Cricket IPL analysis with SQL`
+  },
+  {
+    id: 'resume', icon: '📝', title: 'Resume & LinkedIn Playbook', tag: 'Career Guide', color: '#E8A838',
+    desc: 'ATS-optimised resume template, LinkedIn keywords, and cold messaging scripts',
+    pages: 10, level: 'All Levels',
+    content: `# Resume & LinkedIn Playbook for Data Analysts
+
+## THE REALITY: Recruiters spend 6 seconds on your resume
+
+## SECTION 1: THE ATS-OPTIMISED RESUME
+
+### Format Rules
+- **Length**: 1 page for <3 years experience, 2 pages max for >3 years
+- **Font**: Arial 10–11pt, Calibri, or Garamond. NO fancy fonts.
+- **Margins**: 0.5–0.75 inches
+- **File format**: PDF (preserves formatting) unless asked for Word
+- **File name**: FirstName_LastName_DataAnalyst_Resume.pdf
+
+### The 4-Part Structure
+\`\`\`
+1. CONTACT INFO
+Name | Email | Phone | LinkedIn URL | GitHub (if relevant) | City, State
+(No photo, no date of birth, no address)
+
+2. PROFESSIONAL SUMMARY (3 lines, optional for freshers)
+"Data Analyst with 2 years of experience in SQL, Python, and Tableau.
+Reduced reporting time by 40% through automated dashboards at XYZ Corp.
+Seeking Senior Analyst role in a product-first company."
+
+3. SKILLS SECTION (put this high — ATS scans here first)
+SQL: Advanced (window functions, CTEs, query optimisation)
+Python: Pandas, NumPy, Matplotlib, Seaborn, Scikit-learn
+BI Tools: Tableau (Public certified), Power BI, Looker, Metabase
+Other: Excel (Advanced), Git, Airflow, Jupyter, Databricks
+
+4. EXPERIENCE (reverse chronological)
+Company Name | Role | City | Month Year – Month Year
+• [Action verb] + [what you did] + [quantified impact]
+Example: "Built an automated churn prediction model using XGBoost, reducing
+customer churn by 12% and saving ₹45L in annual revenue."
+\`\`\`
+
+### The Impact Formula
+Every bullet = VERB + ACTION + NUMBER
+❌ "Worked on customer analytics"
+✅ "Analysed 2M+ customer transactions in SQL to identify top 100 at-risk accounts, enabling targeted campaigns that recovered ₹8.2L in revenue"
+
+### ATS Keywords to Include (2024)
+SQL, Python, Pandas, Tableau, Power BI, Data Visualisation,
+A/B Testing, Statistical Analysis, Data Cleaning, ETL,
+Business Intelligence, Data Pipeline, Cohort Analysis,
+Excel, Dashboard, Stakeholder Management, Data Storytelling
+
+## SECTION 2: LINKEDIN OPTIMISATION
+
+### 5 Profile Sections That Get Recruiter Attention
+
+**1. Headline** (most visible part)
+❌ "Data Analyst | IIT Delhi 2023"
+✅ "Data Analyst | SQL · Python · Tableau | Helped 3 companies reduce churn by 15%+"
+
+**2. About Section** (2–3 short paragraphs)
+- Para 1: Who you are + your specialty
+- Para 2: Key accomplishments with numbers
+- Para 3: What you're looking for
+
+**3. Featured Section**
+- Pin your best project (Tableau Public dashboard, GitHub project, Medium article)
+- This is the first thing recruiters click — make it count
+
+**4. Skills Section**
+Add 10–20 skills, starting with your strongest. Ask connections to endorse.
+
+**5. Open to Work** (Green banner)
+Set to "Hiring Managers Only" (not everyone) to avoid current employer seeing it.
+
+## SECTION 3: COLD MESSAGING THAT WORKS
+
+### The Formula for Recruiter Outreach
+\`\`\`
+Subject: Data Analyst opening at [Company]
+
+Hi [Name],
+
+I noticed [Company] is hiring a Data Analyst for the [team] team.
+
+Quick background: I'm a data analyst with [X] years experience in
+[SQL/Python/Tableau]. Recently [one specific achievement — 1 line].
+
+I'd love to learn more about the role. Would you be open to a
+5-minute call this week?
+
+[Your name]
+\`\`\`
+
+### Connection Request Note (300 chars max)
+"Hi [Name], I came across your profile while researching [Company].
+I'm a data analyst with strong SQL & Tableau skills exploring opportunities.
+Would love to connect and learn from your journey at [Company]."
+
+**Response rate if you do this**: 30–40% (vs <5% for bulk applications)`
+  },
+  {
+    id: 'salary', icon: '🎯', title: 'Salary Negotiation Scripts', tag: 'Negotiation', color: '#5CC8A0',
+    desc: 'Exact scripts, market benchmarks, and negotiation tactics for data analyst offers in India',
+    pages: 8, level: 'All Levels',
+    content: `# Salary Negotiation Scripts for Data Analysts in India
+
+## MARKET BENCHMARKS (2024, India)
+
+### Fresher → 1 Year Experience
+| Company Type | Base CTC |
+|-------------|----------|
+| Startup (Seed/Series A) | ₹4–7 LPA |
+| Startup (Series B+) | ₹6–10 LPA |
+| Mid-size tech company | ₹5–9 LPA |
+| FAANG/top product co. | ₹12–20 LPA |
+| Consulting (Big 4) | ₹4–7 LPA |
+
+### 2–4 Years Experience
+| Company Type | Base CTC |
+|-------------|----------|
+| Startup | ₹10–18 LPA |
+| Top product company | ₹18–35 LPA |
+| FAANG | ₹30–60 LPA |
+
+**Golden rule**: Always have 2 competing offers. It's the best leverage.
+
+## THE 4 RULES OF NEGOTIATION
+
+**Rule 1**: Never give a number first
+"I'm open to discussing compensation — what's the budgeted range for this role?"
+
+**Rule 2**: Always negotiate (even if you're happy with the offer)
+Companies expect it. 90% will go up at least 10–15%.
+
+**Rule 3**: Negotiate the total package, not just base
+Stock options/ESOPs, joining bonus, variable pay, WFH policy, learning budget — all negotiable.
+
+**Rule 4**: Silence is your superpower
+After stating your number, stop talking. Let them respond.
+
+## THE EXACT SCRIPTS
+
+### Script 1: Responding to an Offer (Phone Call)
+"Thank you so much for the offer — I'm genuinely excited about this opportunity and the team.
+I've been doing some market research and looking at my experience with [specific skills],
+I was expecting something closer to ₹[X].
+Is there flexibility to move towards that range?"
+
+### Script 2: When They Say "This Is Our Maximum"
+"I understand there may be budget constraints. Could we explore other components?
+For example, a joining bonus, additional ESOPs, or an earlier performance review
+at 6 months instead of a year?"
+
+### Script 3: Competing Offer Leverage
+"I want to be transparent with you — I do have another offer at ₹[X].
+[Company] is my first choice because of [specific reason].
+If you can come close to that number, I'm ready to sign today."
+
+### Script 4: Email Follow-up After Verbal Offer
+Subject: Re: Job Offer — Data Analyst Role
+
+Dear [Name],
+
+Thank you for the offer. I'm very excited about joining [Company].
+
+After reviewing the offer and considering my market research and
+[2-3 years/specific skill] experience, I'd like to respectfully
+request a base CTC of ₹[X].
+
+I'm confident I'll add significant value to the team and am
+prepared to commit fully. Please let me know if this is feasible.
+
+Looking forward to your response.
+[Your name]
+
+## NEGOTIATION CHECKLIST
+
+Before accepting ANY offer, ask about:
+☐ Exact base CTC (in-hand calculation after PF/tax)
+☐ Variable/bonus structure (realistic vs. promised)
+☐ ESOP cliff and vesting schedule
+☐ Joining bonus (especially if leaving current company early)
+☐ Annual increment cycle (when and how much?)
+☐ WFH/hybrid policy (commute cost matters!)
+☐ Learning & development budget (₹20–50k/year is reasonable)
+☐ Health insurance coverage (self + family?)
+☐ Notice period flexibility
+
+## WHEN TO WALK AWAY
+
+Walk away if:
+- Offer is >20% below your market value AND they won't budge
+- Company says "take it or leave it" on first offer (red flag for culture)
+- Role description keeps changing
+- No clarity on growth path after 1–2 years`
+  },
+];
+
+/* ═══════════════════════════════════════════════════
+   MAIN COMPONENT
+═══════════════════════════════════════════════════ */
+export default function Premium() {
+  const { user } = useAuth();
+  const [status, setStatus]     = useState(null);
+  const [loading, setLoading]   = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [step, setStep]         = useState(1);
+  const [utr, setUtr]           = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [copied, setCopied]     = useState(false);
+  const [toast, setToast]       = useState('');
+
+  useEffect(() => {
+    api.get('/premium/status').then(r => setStatus(r.data)).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  async function submitUTR(receiptFilename = null, receiptOriginal = null) {
+    if (!utr.trim() || utr.trim().length < 6) { setToast('Enter a valid UTR / Transaction ID'); return; }
+    setSubmitting(true);
+    try {
+      await api.post('/premium/subscribe', { utr_number: utr.trim(), receipt_filename: receiptFilename, receipt_original: receiptOriginal });
+      const r = await api.get('/premium/status');
+      setStatus(r.data);
+      setShowModal(false); setUtr(''); setStep(1);
+      setToast('✅ Payment submitted! Your account will be activated within 2 hours.');
+    } catch (e) {
+      setToast(e.response?.data?.error || 'Something went wrong.');
+    } finally {
+      setSubmitting(false); setTimeout(() => setToast(''), 4000);
+    }
+  }
+
+  function copyUPI() {
+    navigator.clipboard.writeText(UPI_ID).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); });
+  }
+
+  if (loading) return <div className="loading"><div className="spinner" />Loading...</div>;
+
+  const isPremium = status?.is_premium === 1;
+  const isPending = status?.latest_subscription?.status === 'pending';
+
+  /* ── Premium member hub ─────────────────────────── */
+  if (isPremium) {
+    return <PremiumHub status={status} user={user} />;
+  }
+
+  /* ── Upgrade page (non-premium) ─────────────────── */
+  return (
+    <UpgradePage
+      isPending={isPending} status={status}
+      showModal={showModal} setShowModal={setShowModal}
+      step={step} setStep={setStep}
+      utr={utr} setUtr={setUtr}
+      submitting={submitting} submitUTR={submitUTR}
+      copied={copied} copyUPI={copyUPI}
+      toast={toast}
+    />
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   PREMIUM HUB (what paying members see)
+═══════════════════════════════════════════════════ */
+const HUB_TABS = [
+  { id: 'overview',   icon: '🏠', label: 'Overview'       },
+  { id: 'session',    icon: '📅', label: '1:1 Sessions'    },
+  { id: 'resume',     icon: '📄', label: 'Resume Review'   },
+  { id: 'interview',  icon: '🎓', label: 'Mock Interviews' },
+  { id: 'roadmap',    icon: '🗺️', label: 'Roadmap'         },
+  { id: 'resources',  icon: '📚', label: 'Resources'       },
+  { id: 'support',    icon: '⭐', label: 'Support'         },
+];
+
+function PremiumHub({ status, user }) {
+  const [tab, setTab]               = useState('overview');
+  const [sessions, setSessions]     = useState([]);
+  const [reviews, setReviews]       = useState([]);
+  const [mockCount, setMockCount]   = useState(0);
+  const [toast, setToast]           = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    api.get('/premium/sessions').then(r => setSessions(r.data.sessions || [])).catch(() => {});
+    api.get('/premium/resume').then(r => setReviews(r.data.reviews || [])).catch(() => {});
+    api.get('/premium/mock-interview').then(r => setMockCount((r.data.interviews || []).length)).catch(() => {});
+  }, []);
+
+  const expiryDate = status?.premium_expires_at
+    ? new Date(status.premium_expires_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
+    : null;
+
+  return (
+    <div className="page" style={{ maxWidth: 1100 }}>
+      {/* Premium header */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: '1.8rem', padding: '1.2rem 1.5rem', background: 'rgba(255,255,255,0.055)', backdropFilter: 'blur(18px)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 18, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, #E8A838, #4A90D9, #5CC8A0)' }} />
+        <div style={{ width: 52, height: 52, borderRadius: 14, background: 'linear-gradient(135deg, rgba(232,168,56,0.25), rgba(240,123,106,0.20))', border: '1px solid rgba(232,168,56,0.30)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>👑</div>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 3 }}>
+            <span style={{ fontWeight: 800, fontSize: 17, color: '#fff' }}>Pro Member</span>
+            <span className="premium-badge">👑 Active</span>
+          </div>
+          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>
+            Welcome back, <strong style={{ color: 'rgba(255,255,255,0.80)' }}>{user?.name?.split(' ')[0]}</strong>
+            {expiryDate && <span> · Valid until {expiryDate}</span>}
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 20, flexShrink: 0 }}>
+          {[
+            { val: sessions.length, lbl: 'Sessions' },
+            { val: reviews.length,  lbl: 'Reviews'  },
+            { val: mockCount,       lbl: 'Interviews' },
+          ].map(s => (
+            <div key={s.lbl} style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 22, fontWeight: 800, color: '#fff' }}>{s.val}</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{s.lbl}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Tab nav */}
+      <div style={{ display: 'flex', gap: 4, marginBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.07)', overflowX: 'auto', paddingBottom: 0 }}>
+        {HUB_TABS.map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)} style={{
+            padding: '9px 16px', background: tab === t.id ? 'rgba(74,144,217,0.12)' : 'none',
+            border: 'none', borderRadius: '8px 8px 0 0',
+            borderBottom: tab === t.id ? '2px solid #4A90D9' : '2px solid transparent',
+            color: tab === t.id ? '#4A90D9' : 'rgba(255,255,255,0.40)',
+            fontWeight: 600, fontSize: 13, cursor: 'pointer',
+            whiteSpace: 'nowrap', transition: 'all 0.15s',
+            display: 'flex', alignItems: 'center', gap: 6,
+          }}>
+            <span>{t.icon}</span>{t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab content */}
+      {tab === 'overview'  && <OverviewTab sessions={sessions} reviews={reviews} navigate={navigate} setTab={setTab} />}
+      {tab === 'session'   && <SessionTab sessions={sessions} setSessions={setSessions} setToast={setToast} />}
+      {tab === 'resume'    && <ResumeTab reviews={reviews} setReviews={setReviews} setToast={setToast} />}
+      {tab === 'interview' && <InterviewTab />}
+      {tab === 'roadmap'   && <RoadmapTab />}
+      {tab === 'resources' && <ResourcesTab />}
+      {tab === 'support'   && <SupportTab setToast={setToast} user={user} />}
+
+      {toast && <div className="toast">{toast}</div>}
+    </div>
+  );
+}
+
+/* ── Overview tab ──────────────────────────────────── */
+function OverviewTab({ sessions, reviews, navigate, setTab }) {
+  const quick = [
+    { icon: '💼', title: 'Browse Job Board', sub: '18+ live data analytics roles', color: '#5CC8A0', action: () => navigate('/jobs') },
+    { icon: '📅', title: 'Book a 1:1 Session', sub: 'With us — 30 min, any topic', color: '#4A90D9', action: () => setTab('session') },
+    { icon: '🎓', title: 'Practice Interviews', sub: 'SQL, Python, Case Studies & HR', color: '#a78bfa', action: () => setTab('interview') },
+    { icon: '📄', title: 'Submit Resume', sub: 'Get expert feedback in 48h', color: '#E8A838', action: () => setTab('resume') },
+    { icon: '🗺️', title: 'View 12-Week Roadmap', sub: 'Step-by-step to getting hired', color: '#F07B6A', action: () => setTab('roadmap') },
+    { icon: '📚', title: 'Download Resources', sub: 'Guides, cheatsheets, templates', color: '#38bdf8', action: () => setTab('resources') },
+  ];
+
+  return (
+    <div>
+      {/* Quick action cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
+        {quick.map(q => (
+          <div key={q.title} onClick={q.action} style={{ background: 'rgba(255,255,255,0.055)', backdropFilter: 'blur(18px)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 16, padding: '1.2rem', cursor: 'pointer', transition: 'all 0.2s', position: 'relative', overflow: 'hidden' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = q.color + '50'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = `0 12px 32px ${q.color}20`; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.10)'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${q.color}, transparent)` }} />
+            <div style={{ fontSize: 28, marginBottom: '0.6rem' }}>{q.icon}</div>
+            <div style={{ fontWeight: 700, fontSize: 14, color: '#fff', marginBottom: 3 }}>{q.title}</div>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.40)' }}>{q.sub}</div>
+            <div style={{ marginTop: '0.8rem', fontSize: 12, color: q.color, fontWeight: 600 }}>Open →</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Recent activity */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div className="card">
+          <div className="card-title">📅 Recent Sessions ({sessions.length})</div>
+          {sessions.length === 0
+            ? <div style={{ color: 'rgba(255,255,255,0.30)', fontSize: 13, textAlign: 'center', padding: '1.5rem 0' }}>No sessions booked yet</div>
+            : sessions.slice(0, 3).map(s => (
+              <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(74,144,217,0.15)', border: '1px solid rgba(74,144,217,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>📅</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600, fontSize: 13, color: '#e2e8f0' }}>{s.preferred_date} · {s.preferred_time}</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{s.topic || 'General discussion'}</div>
+                </div>
+                <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 12, background: s.status === 'confirmed' ? 'rgba(92,200,160,0.15)' : 'rgba(232,168,56,0.15)', color: s.status === 'confirmed' ? '#5CC8A0' : '#E8A838', border: `1px solid ${s.status === 'confirmed' ? 'rgba(92,200,160,0.25)' : 'rgba(232,168,56,0.25)'}` }}>{s.status}</span>
+              </div>
+            ))}
+        </div>
+        <div className="card">
+          <div className="card-title">📄 Resume Reviews ({reviews.length})</div>
+          {reviews.length === 0
+            ? <div style={{ color: 'rgba(255,255,255,0.30)', fontSize: 13, textAlign: 'center', padding: '1.5rem 0' }}>No reviews submitted yet</div>
+            : reviews.slice(0, 3).map(r => (
+              <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(232,168,56,0.15)', border: '1px solid rgba(232,168,56,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>📄</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600, fontSize: 13, color: '#e2e8f0' }}>{r.job_target || 'General Review'}</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{r.current_role} · {r.experience_years}y exp</div>
+                </div>
+                <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 12, background: r.status === 'reviewed' ? 'rgba(92,200,160,0.15)' : 'rgba(232,168,56,0.15)', color: r.status === 'reviewed' ? '#5CC8A0' : '#E8A838', border: `1px solid ${r.status === 'reviewed' ? 'rgba(92,200,160,0.25)' : 'rgba(232,168,56,0.25)'}` }}>{r.status}</span>
+              </div>
+            ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Session booking tab ────────────────────────────── */
+function SessionTab({ sessions, setSessions, setToast }) {
+  const [form, setForm] = useState({ preferred_date: '', preferred_time: '', topic: '', notes: '' });
+  const [saving, setSaving] = useState(false);
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  async function book() {
+    if (!form.preferred_date || !form.preferred_time) { setToast('Please pick a date and time'); return; }
+    setSaving(true);
+    try {
+      await api.post('/premium/sessions', form);
+      const r = await api.get('/premium/sessions');
+      setSessions(r.data.sessions || []);
+      setForm({ preferred_date: '', preferred_time: '', topic: '', notes: '' });
+      setToast('✅ Session requested! You\'ll receive confirmation within 24 hours.');
+    } catch (e) { setToast(e.response?.data?.error || 'Error booking session'); }
+    finally { setSaving(false); setTimeout(() => setToast(''), 4000); }
+  }
+
+  const TIMES = ['9:00 AM','10:00 AM','11:00 AM','12:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM','6:00 PM','7:00 PM','8:00 PM'];
+  const TOPICS = ['Career roadmap & goal setting', 'SQL query review & optimisation', 'Python / Pandas code review', 'Portfolio & project feedback', 'Interview preparation', 'Job application strategy', 'Salary negotiation advice', 'Other (specify below)'];
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+      {/* Booking form */}
+      <div className="card">
+        <div className="card-title">📅 Book a 1:1 Session</div>
+        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
+          30-minute live video call with our mentor. Bring your questions, code, resume, or job hunt challenges.
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div className="field">
+            <label>Date</label>
+            <input type="date" value={form.preferred_date} min={new Date().toISOString().split('T')[0]}
+              onChange={e => set('preferred_date', e.target.value)} />
+          </div>
+          <div className="field">
+            <label>Time Slot</label>
+            <select value={form.preferred_time} onChange={e => set('preferred_time', e.target.value)}>
+              <option value="">Select time</option>
+              {TIMES.map(t => <option key={t} value={t}>{t}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <div className="field">
+          <label>Session Topic</label>
+          <select value={form.topic} onChange={e => set('topic', e.target.value)}>
+            <option value="">Select a topic</option>
+            {TOPICS.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </div>
+
+        <div className="field">
+          <label>Additional Context (optional)</label>
+          <textarea rows={3} value={form.notes} onChange={e => set('notes', e.target.value)}
+            placeholder="Share any specific questions, your code snippets, or what you'd like to get out of this session..." style={{ resize: 'vertical' }} />
+        </div>
+
+        <button className="btn-primary" onClick={book} disabled={saving} style={{ width: '100%', justifyContent: 'center' }}>
+          {saving ? 'Booking…' : '📅 Request Session'}
+        </button>
+      </div>
+
+      {/* Past sessions */}
+      <div className="card">
+        <div className="card-title">📋 My Sessions ({sessions.length})</div>
+        {sessions.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '2rem 0', color: 'rgba(255,255,255,0.30)' }}>
+            <div style={{ fontSize: 36, marginBottom: '0.8rem' }}>📅</div>
+            Book your first session!
+          </div>
+        ) : sessions.map(s => (
+          <div key={s.id} style={{ padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+              <span style={{ fontWeight: 600, fontSize: 14, color: '#fff' }}>{s.preferred_date}</span>
+              <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 12,
+                background: s.status === 'confirmed' ? 'rgba(92,200,160,0.15)' : s.status === 'completed' ? 'rgba(74,144,217,0.15)' : 'rgba(232,168,56,0.15)',
+                color: s.status === 'confirmed' ? '#5CC8A0' : s.status === 'completed' ? '#4A90D9' : '#E8A838',
+                border: `1px solid ${s.status === 'confirmed' ? 'rgba(92,200,160,0.25)' : s.status === 'completed' ? 'rgba(74,144,217,0.25)' : 'rgba(232,168,56,0.25)'}` }}>
+                {s.status}
+              </span>
+            </div>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>{s.preferred_time} · {s.topic || 'General'}</div>
+            {s.meeting_link && <a href={s.meeting_link} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: '#4A90D9', marginTop: 4, display: 'block' }}>🔗 Join Meeting →</a>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Resume review tab ──────────────────────────────── */
+function ResumeTab({ reviews, setReviews, setToast }) {
+  const [form, setForm] = useState({ linkedin_url: '', job_target: '', experience_years: 0, current_role: '' });
+  const [saving, setSaving] = useState(false);
+  const [file, setFile] = useState(null);
+  const [dragOver, setDragOver] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = { current: null };
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  function handleFile(f) {
+    if (!f) return;
+    if (!/\.(pdf|doc|docx)$/i.test(f.name)) { setToast('Only PDF, DOC, or DOCX files allowed'); return; }
+    if (f.size > 5 * 1024 * 1024) { setToast('File must be under 5MB'); return; }
+    setFile(f);
+  }
+
+  function onDrop(e) {
+    e.preventDefault(); setDragOver(false);
+    handleFile(e.dataTransfer.files[0]);
+  }
+
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
+  async function submit() {
+    setSaving(true);
+    try {
+      let resume_filename = null;
+      let resume_original = null;
+      if (file) {
+        setUploading(true);
+        const fd = new FormData();
+        fd.append('resume', file);
+        const token = localStorage.getItem('token');
+        const up = await fetch('/api/premium/resume/upload', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          body: fd,
+        });
+        const upData = await up.json();
+        setUploading(false);
+        if (!up.ok) throw new Error(upData.error || 'Upload failed');
+        resume_filename = upData.filename;
+        resume_original = upData.originalname;
+      }
+      await api.post('/premium/resume', { ...form, resume_filename, resume_original });
+      const r = await api.get('/premium/resume');
+      setReviews(r.data.reviews || []);
+      setForm({ linkedin_url: '', job_target: '', experience_years: 0, current_role: '' });
+      setFile(null);
+      setToast('✅ Submitted! Feedback within 48 hours.');
+    } catch (e) { setToast(e.response?.data?.error || e.message || 'Error'); }
+    finally { setSaving(false); setUploading(false); setTimeout(() => setToast(''), 4000); }
+  }
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+      <div className="card">
+        <div className="card-title">📄 Submit for Review</div>
+        <div style={{ background: 'rgba(74,144,217,0.08)', border: '1px solid rgba(74,144,217,0.18)', borderRadius: 10, padding: '10px 14px', marginBottom: '1.2rem', fontSize: 13, color: 'rgba(255,255,255,0.60)', lineHeight: 1.6 }}>
+          💡 <strong style={{ color: '#4A90D9' }}>What you get:</strong> Detailed line-by-line feedback, ATS keyword optimisation, impact statement rewrites, and LinkedIn profile suggestions — tailored to your target role.
+        </div>
+
+        {/* Drag-and-drop upload zone */}
+        <div
+          onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={onDrop}
+          onClick={() => fileRef.current && fileRef.current.click()}
+          style={{
+            border: '1px dashed rgba(74,144,217,0.40)',
+            background: dragOver ? 'rgba(74,144,217,0.12)' : 'rgba(74,144,217,0.06)',
+            borderRadius: 14, padding: 24, textAlign: 'center',
+            cursor: 'pointer', marginBottom: '1.2rem',
+            transition: 'background 0.15s',
+          }}
+        >
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            style={{ display: 'none' }}
+            ref={el => { fileRef.current = el; }}
+            onChange={e => handleFile(e.target.files[0])}
+          />
+          {!file ? (
+            <>
+              <div style={{ fontSize: 32, marginBottom: 8 }}>📄</div>
+              <div style={{ fontWeight: 600, fontSize: 14, color: 'rgba(255,255,255,0.75)', marginBottom: 4 }}>
+                Drag &amp; drop your resume here
+              </div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>PDF, DOC, DOCX · Max 5MB</div>
+            </>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center' }} onClick={e => e.stopPropagation()}>
+              <span style={{ fontSize: 22, color: '#5CC8A0' }}>✓</span>
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ fontWeight: 600, fontSize: 13, color: '#e2e8f0' }}>{file.name}</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.40)' }}>{formatSize(file.size)}</div>
+              </div>
+              <button
+                onClick={e => { e.stopPropagation(); setFile(null); }}
+                style={{ background: 'rgba(240,123,106,0.15)', border: '1px solid rgba(240,123,106,0.30)', borderRadius: 8, color: '#F07B6A', fontSize: 12, fontWeight: 600, padding: '4px 10px', cursor: 'pointer', marginLeft: 8 }}
+              >
+                ✕ Remove
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div className="field">
+            <label>LinkedIn Profile URL</label>
+            <input value={form.linkedin_url} onChange={e => set('linkedin_url', e.target.value)} placeholder="linkedin.com/in/yourprofile" />
+          </div>
+          <div className="field">
+            <label>Current Role</label>
+            <input value={form.current_role} onChange={e => set('current_role', e.target.value)} placeholder="Fresher / Software Engineer..." />
+          </div>
+          <div className="field">
+            <label>Target Role</label>
+            <input value={form.job_target} onChange={e => set('job_target', e.target.value)} placeholder="Data Analyst at Swiggy..." />
+          </div>
+          <div className="field">
+            <label>Years of Experience</label>
+            <select value={form.experience_years} onChange={e => set('experience_years', +e.target.value)}>
+              <option value={0}>Fresher</option>
+              <option value={1}>1 year</option>
+              <option value={2}>2 years</option>
+              <option value={3}>3 years</option>
+              <option value={5}>4–5 years</option>
+              <option value={7}>6+ years</option>
+            </select>
+          </div>
+        </div>
+        <button className="btn-primary" onClick={submit} disabled={saving || uploading} style={{ width: '100%', justifyContent: 'center' }}>
+          {uploading ? 'Uploading file…' : saving ? 'Submitting…' : '📤 Submit for Review'}
+        </button>
+      </div>
+
+      <div className="card">
+        <div className="card-title">📋 My Reviews ({reviews.length})</div>
+        {reviews.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '2rem 0', color: 'rgba(255,255,255,0.30)' }}>
+            <div style={{ fontSize: 36, marginBottom: '0.8rem' }}>📄</div>
+            No reviews yet — submit your profile!
+          </div>
+        ) : reviews.map(r => (
+          <div key={r.id} style={{ padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+              <span style={{ fontWeight: 600, fontSize: 14, color: '#fff' }}>{r.job_target || 'General Review'}</span>
+              <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 12,
+                background: r.status === 'reviewed' ? 'rgba(92,200,160,0.15)' : 'rgba(232,168,56,0.15)',
+                color: r.status === 'reviewed' ? '#5CC8A0' : '#E8A838',
+                border: `1px solid ${r.status === 'reviewed' ? 'rgba(92,200,160,0.25)' : 'rgba(232,168,56,0.25)'}` }}>
+                {r.status}
+              </span>
+            </div>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>{r.current_role} · {r.experience_years}y exp</div>
+            {r.resume_original && (
+              <a
+                href={`/api/premium/resume/file/${r.resume_filename}`}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 5, fontSize: 12, color: '#4A90D9', textDecoration: 'none', fontWeight: 600 }}
+              >
+                📎 {r.resume_original}
+              </a>
+            )}
+            {r.feedback && (
+              <div style={{ marginTop: 8, background: 'rgba(92,200,160,0.08)', border: '1px solid rgba(92,200,160,0.18)', borderRadius: 8, padding: '10px 12px', fontSize: 13, color: '#5CC8A0', lineHeight: 1.6 }}>
+                {r.feedback}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Mock Interview tab ─────────────────────────────── */
+function InterviewTab() {
+  const [subTab, setSubTab] = useState('bank');
+
+  // ── Question Bank state ──
+  const [cat, setCat]     = useState('SQL');
+  const [open, setOpen]   = useState(null);
+  const [level, setLevel] = useState('All');
+  const cats = ['SQL', 'Python', 'CaseStudy', 'HR'];
+  const questions = INTERVIEW_DATA[cat] || [];
+  const filtered  = level === 'All' ? questions : questions.filter(q => q.level === level);
+
+  // ── Booking state ──
+  const INTERVIEW_TYPES = [
+    { id: 'SQL Technical',       icon: '🗄️', color: '#4A90D9', desc: 'Window functions, CTEs, aggregations, real queries' },
+    { id: 'Python Technical',    icon: '🐍', color: '#5CC8A0', desc: 'Pandas, GroupBy, data cleaning, EDA problems' },
+    { id: 'Case Study',          icon: '📊', color: '#E8A838', desc: 'Product metrics, root cause analysis, A/B testing' },
+    { id: 'Full Analytics Round', icon: '🎓', color: '#a78bfa', desc: 'SQL + Python + Case study — complete interview simulation' },
+  ];
+  const TIMES = ['9:00 AM','10:00 AM','11:00 AM','12:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM','6:00 PM','7:00 PM','8:00 PM'];
+  const DIFFICULTIES = [
+    { id: 'Easy',   color: '#5CC8A0', desc: 'Fresher to 1 year' },
+    { id: 'Medium', color: '#E8A838', desc: '1–3 years experience' },
+    { id: 'Hard',   color: '#F07B6A', desc: '3+ years / senior roles' },
+  ];
+
+  const [form, setForm] = useState({ interview_type: '', difficulty: 'Medium', preferred_date: '', preferred_time: '', notes: '' });
+  const [saving, setSaving] = useState(false);
+  const [bookToast, setBookToast] = useState('');
+  const [interviews, setInterviews] = useState([]);
+  const [loadingList, setLoadingList] = useState(true);
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  useEffect(() => {
+    api.get('/premium/mock-interview')
+      .then(r => setInterviews(r.data.interviews || []))
+      .catch(() => {})
+      .finally(() => setLoadingList(false));
+  }, []);
+
+  async function bookInterview() {
+    if (!form.interview_type) { setBookToast('Please select an interview type'); setTimeout(() => setBookToast(''), 3000); return; }
+    if (!form.preferred_date) { setBookToast('Please select a date'); setTimeout(() => setBookToast(''), 3000); return; }
+    if (!form.preferred_time) { setBookToast('Please select a time slot'); setTimeout(() => setBookToast(''), 3000); return; }
+    setSaving(true);
+    try {
+      await api.post('/premium/mock-interview', form);
+      const r = await api.get('/premium/mock-interview');
+      setInterviews(r.data.interviews || []);
+      setForm({ interview_type: '', difficulty: 'Medium', preferred_date: '', preferred_time: '', notes: '' });
+      setBookToast('✅ Mock interview booked! You\'ll receive confirmation within 24 hours.');
+    } catch (e) {
+      setBookToast(e.response?.data?.error || 'Error booking interview');
+    } finally {
+      setSaving(false);
+      setTimeout(() => setBookToast(''), 5000);
+    }
+  }
+
+  const statusColor = (s) => s === 'confirmed' ? '#5CC8A0' : s === 'completed' ? '#4A90D9' : '#E8A838';
+  const statusBg    = (s) => s === 'confirmed' ? 'rgba(92,200,160,0.15)' : s === 'completed' ? 'rgba(74,144,217,0.15)' : 'rgba(232,168,56,0.15)';
+
+  return (
+    <div>
+      {/* Sub-tab switcher */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: '1.5rem' }}>
+        {[
+          { id: 'bank',   icon: '📚', label: 'Question Bank'      },
+          { id: 'book',   icon: '🎙️', label: 'Book Mock Interview' },
+          { id: 'booked', icon: '📋', label: `My Interviews (${interviews.length})` },
+        ].map(t => (
+          <button key={t.id} onClick={() => setSubTab(t.id)} style={{
+            padding: '9px 18px', borderRadius: 12, fontWeight: 700, fontSize: 13, cursor: 'pointer',
+            border: subTab === t.id ? '1px solid rgba(74,144,217,0.50)' : '1px solid rgba(255,255,255,0.10)',
+            background: subTab === t.id ? 'rgba(74,144,217,0.15)' : 'rgba(255,255,255,0.04)',
+            color: subTab === t.id ? '#4A90D9' : 'rgba(255,255,255,0.45)',
+            display: 'flex', alignItems: 'center', gap: 7, transition: 'all 0.15s',
+          }}>
+            <span>{t.icon}</span>{t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* ── Question Bank ── */}
+      {subTab === 'bank' && (
+        <div>
+          <div style={{ display: 'flex', gap: 8, marginBottom: '1.2rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            {cats.map(c => (
+              <button key={c} onClick={() => { setCat(c); setOpen(null); }}
+                className={cat === c ? 'filter-chip active' : 'filter-chip'}
+                style={{ fontWeight: 700 }}>
+                {c === 'CaseStudy' ? '📊 Case Studies' : c === 'HR' ? '🧑 HR / Behavioural' : c === 'SQL' ? '🗄️ SQL' : '🐍 Python'}
+              </button>
+            ))}
+            <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
+              {['All', 'Easy', 'Medium', 'Hard'].map(l => (
+                <button key={l} onClick={() => setLevel(l)}
+                  className={level === l ? 'filter-chip active' : 'filter-chip'}
+                  style={{ fontSize: 12 }}>{l}</button>
+              ))}
+            </div>
+          </div>
+          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', marginBottom: '1rem' }}>
+            {filtered.length} questions · Click any to reveal the model answer
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            {filtered.map((q, i) => {
+              const isOpen = open === i;
+              const lvlColor = q.level === 'Easy' ? '#5CC8A0' : q.level === 'Medium' ? '#E8A838' : '#F07B6A';
+              const lvlBg    = q.level === 'Easy' ? 'rgba(92,200,160,0.12)' : q.level === 'Medium' ? 'rgba(232,168,56,0.12)' : 'rgba(240,123,106,0.12)';
+              return (
+                <div key={i} style={{ background: 'rgba(255,255,255,0.055)', backdropFilter: 'blur(14px)', border: `1px solid ${isOpen ? 'rgba(74,144,217,0.30)' : 'rgba(255,255,255,0.09)'}`, borderRadius: 14, overflow: 'hidden', transition: 'border-color 0.2s' }}>
+                  <div onClick={() => setOpen(isOpen ? null : i)} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px', cursor: 'pointer', userSelect: 'none' }}>
+                    <div style={{ width: 28, height: 28, borderRadius: 8, background: lvlBg, border: `1px solid ${lvlColor}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: lvlColor, flexShrink: 0 }}>
+                      {i + 1}
+                    </div>
+                    <div style={{ flex: 1, fontWeight: 600, fontSize: 14, color: '#e2e8f0', lineHeight: 1.4 }}>{q.q}</div>
+                    <span style={{ background: lvlBg, color: lvlColor, border: `1px solid ${lvlColor}40`, fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 12, flexShrink: 0 }}>{q.level}</span>
+                    <span style={{ color: 'rgba(255,255,255,0.30)', fontSize: 18, transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>⌄</span>
+                  </div>
+                  {isOpen && (
+                    <div style={{ padding: '0 18px 16px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                      <div style={{ marginTop: 12, fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.30)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 8 }}>✅ Model Answer</div>
+                      <pre style={{ margin: 0, fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: '#a6e3a1', whiteSpace: 'pre-wrap', lineHeight: 1.7, background: 'rgba(0,0,0,0.35)', borderRadius: 10, padding: '12px 14px', border: '1px solid rgba(255,255,255,0.07)' }}>
+                        {q.a}
+                      </pre>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ marginTop: '1.2rem', padding: '12px 16px', background: 'rgba(167,139,250,0.08)', border: '1px solid rgba(167,139,250,0.18)', borderRadius: 12, fontSize: 13, color: 'rgba(255,255,255,0.55)', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: 20 }}>🎙️</span>
+            <div>Ready to test yourself live? <button onClick={() => setSubTab('book')} style={{ background: 'none', border: 'none', color: '#a78bfa', fontWeight: 700, cursor: 'pointer', fontSize: 13, padding: 0 }}>Book a mock interview →</button></div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Book Mock Interview ── */}
+      {subTab === 'book' && (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+          <div className="card" style={{ position: 'relative' }}>
+            <div className="card-title">🎙️ Book a Mock Interview</div>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
+              Live 45-min session with our mentor. Get real-time feedback on your answers, thinking process and communication.
+            </p>
+
+            {/* Interview Type selection */}
+            <div style={{ marginBottom: '1.4rem' }}>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.50)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 10 }}>Interview Type</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                {INTERVIEW_TYPES.map(t => {
+                  const active = form.interview_type === t.id;
+                  return (
+                    <div key={t.id} onClick={() => set('interview_type', t.id)} style={{
+                      padding: '12px 14px', borderRadius: 12, cursor: 'pointer',
+                      border: `1px solid ${active ? t.color + '55' : 'rgba(255,255,255,0.09)'}`,
+                      background: active ? t.color + '14' : 'rgba(255,255,255,0.03)',
+                      transition: 'all 0.15s', position: 'relative', overflow: 'hidden',
+                    }}
+                    onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = t.color + '35'; e.currentTarget.style.background = t.color + '08'; }}}
+                    onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.09)'; e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; }}}
+                    >
+                      {active && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${t.color}, transparent)` }} />}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                        <span style={{ fontSize: 16 }}>{t.icon}</span>
+                        <span style={{ fontWeight: 700, fontSize: 12, color: active ? t.color : '#e2e8f0' }}>{t.id}</span>
+                        {active && <span style={{ marginLeft: 'auto', width: 16, height: 16, borderRadius: '50%', background: t.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: '#000', fontWeight: 800 }}>✓</span>}
+                      </div>
+                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', lineHeight: 1.4 }}>{t.desc}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Difficulty */}
+            <div style={{ marginBottom: '1.4rem' }}>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.50)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 10 }}>Difficulty Level</label>
+              <div style={{ display: 'flex', gap: 8 }}>
+                {DIFFICULTIES.map(d => {
+                  const active = form.difficulty === d.id;
+                  return (
+                    <div key={d.id} onClick={() => set('difficulty', d.id)} style={{
+                      flex: 1, padding: '10px 12px', borderRadius: 12, cursor: 'pointer', textAlign: 'center',
+                      border: `1px solid ${active ? d.color + '55' : 'rgba(255,255,255,0.09)'}`,
+                      background: active ? d.color + '14' : 'rgba(255,255,255,0.03)',
+                      transition: 'all 0.15s',
+                    }}
+                    onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = d.color + '35'; }}}
+                    onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.09)'; }}}
+                    >
+                      <div style={{ fontWeight: 700, fontSize: 13, color: active ? d.color : '#e2e8f0', marginBottom: 2 }}>{d.id}</div>
+                      <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>{d.desc}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Date picker */}
+            <div className="field">
+              <label>Preferred Date</label>
+              <input type="date" value={form.preferred_date}
+                min={new Date().toISOString().split('T')[0]}
+                onChange={e => set('preferred_date', e.target.value)} />
+            </div>
+
+            {/* Time slot grid */}
+            <div style={{ marginBottom: '1.2rem' }}>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.50)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 10 }}>Time Slot (IST)</label>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 7 }}>
+                {TIMES.map(t => {
+                  const active = form.preferred_time === t;
+                  return (
+                    <button key={t} onClick={() => set('preferred_time', t)} style={{
+                      padding: '8px 4px', borderRadius: 10, cursor: 'pointer', fontWeight: 700, fontSize: 12,
+                      border: `1px solid ${active ? 'rgba(74,144,217,0.55)' : 'rgba(255,255,255,0.09)'}`,
+                      background: active ? 'rgba(74,144,217,0.18)' : 'rgba(255,255,255,0.03)',
+                      color: active ? '#4A90D9' : 'rgba(255,255,255,0.55)',
+                      transition: 'all 0.12s',
+                    }}
+                    onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = 'rgba(74,144,217,0.28)'; e.currentTarget.style.color = 'rgba(255,255,255,0.80)'; }}}
+                    onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.09)'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)'; }}}
+                    >{t}</button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Notes */}
+            <div className="field">
+              <label>Notes for us (optional)</label>
+              <textarea rows={3} value={form.notes} onChange={e => set('notes', e.target.value)}
+                placeholder="Your experience level, specific areas to focus on, company you're preparing for..."
+                style={{ resize: 'vertical' }} />
+            </div>
+
+            <button className="btn-primary" onClick={bookInterview} disabled={saving} style={{ width: '100%', justifyContent: 'center' }}>
+              {saving ? 'Booking…' : '🎙️ Request Mock Interview'}
+            </button>
+
+            {bookToast && (
+              <div style={{ marginTop: 10, padding: '10px 14px', borderRadius: 10, fontSize: 13,
+                background: bookToast.startsWith('✅') ? 'rgba(92,200,160,0.12)' : 'rgba(240,123,106,0.12)',
+                border: `1px solid ${bookToast.startsWith('✅') ? 'rgba(92,200,160,0.25)' : 'rgba(240,123,106,0.25)'}`,
+                color: bookToast.startsWith('✅') ? '#5CC8A0' : '#F07B6A' }}>
+                {bookToast}
+              </div>
+            )}
+          </div>
+
+          {/* Info panel */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {/* What to expect */}
+            <div className="card">
+              <div style={{ fontWeight: 700, fontSize: 14, color: '#fff', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(167,139,250,0.15)', border: '1px solid rgba(167,139,250,0.30)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>💡</span>
+                What to Expect
+              </div>
+              {[
+                { icon: '🕐', title: '45 min live session', desc: 'Via Google Meet or Zoom' },
+                { icon: '💬', title: 'Real-time feedback', desc: 'Our mentor comments on your approach, speed & accuracy' },
+                { icon: '📝', title: 'Written summary', desc: 'Post-session notes on strengths and areas to improve' },
+                { icon: '🎯', title: 'Tailored difficulty', desc: 'Questions matched to your experience level' },
+                { icon: '📅', title: 'Confirmation in 24h', desc: 'You\'ll get a meeting link on your registered email' },
+              ].map(item => (
+                <div key={item.title} style={{ display: 'flex', gap: 12, padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>{item.icon}</span>
+                  <div>
+                    <div style={{ fontWeight: 600, fontSize: 13, color: '#e2e8f0', marginBottom: 2 }}>{item.title}</div>
+                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)' }}>{item.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* How to prepare */}
+            <div className="card">
+              <div style={{ fontWeight: 700, fontSize: 14, color: '#fff', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(92,200,160,0.15)', border: '1px solid rgba(92,200,160,0.30)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>🚀</span>
+                How to Prepare
+              </div>
+              {[
+                'Revise the Question Bank before your session',
+                'Have your editor / SQL IDE open and ready',
+                'Keep your resume handy — our mentor may ask about projects',
+                'Note 2–3 companies you\'re targeting',
+                'Join the meeting link 2 minutes early',
+              ].map((tip, i) => (
+                <div key={i} style={{ display: 'flex', gap: 8, fontSize: 13, color: 'rgba(255,255,255,0.60)', marginBottom: 7, lineHeight: 1.5 }}>
+                  <span style={{ color: '#5CC8A0', flexShrink: 0, fontWeight: 700 }}>{i + 1}.</span>
+                  {tip}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── My Bookings ── */}
+      {subTab === 'booked' && (
+        <div>
+          {loadingList ? (
+            <div style={{ textAlign: 'center', padding: '3rem', color: 'rgba(255,255,255,0.30)' }}>
+              <div className="spinner" style={{ margin: '0 auto 1rem' }} />Loading your interviews…
+            </div>
+          ) : interviews.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+              <div style={{ fontSize: 48, marginBottom: '1rem' }}>🎙️</div>
+              <div style={{ fontWeight: 700, fontSize: 16, color: '#e2e8f0', marginBottom: 6 }}>No mock interviews booked yet</div>
+              <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.40)', marginBottom: '1.5rem' }}>Book your first session with us to practice with real interview conditions</div>
+              <button onClick={() => setSubTab('book')} className="btn-primary" style={{ margin: '0 auto' }}>🎙️ Book a Mock Interview</button>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+              {interviews.map(iv => {
+                const typeData = INTERVIEW_TYPES.find(t => t.id === iv.interview_type) || INTERVIEW_TYPES[0];
+                const diffColor = iv.difficulty === 'Easy' ? '#5CC8A0' : iv.difficulty === 'Medium' ? '#E8A838' : '#F07B6A';
+                return (
+                  <div key={iv.id} style={{ background: 'rgba(255,255,255,0.055)', backdropFilter: 'blur(18px)', border: `1px solid ${statusColor(iv.status)}22`, borderRadius: 16, padding: '1.1rem 1.3rem', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 3, background: typeData.color, borderRadius: '0 3px 3px 0' }} />
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, flexWrap: 'wrap' }}>
+                      <div style={{ width: 44, height: 44, borderRadius: 12, background: typeData.color + '18', border: `1px solid ${typeData.color}35`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>{typeData.icon}</div>
+                      <div style={{ flex: 1, minWidth: 160 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+                          <span style={{ fontWeight: 700, fontSize: 14, color: '#fff' }}>{iv.interview_type}</span>
+                          <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10, background: diffColor + '18', color: diffColor, border: `1px solid ${diffColor}35` }}>{iv.difficulty}</span>
+                          <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 12, background: statusBg(iv.status), color: statusColor(iv.status), border: `1px solid ${statusColor(iv.status)}40`, marginLeft: 'auto' }}>{iv.status}</span>
+                        </div>
+                        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                          <span>📅 {iv.preferred_date}</span>
+                          <span>🕐 {iv.preferred_time}</span>
+                          <span>🕑 Booked {new Date(iv.created_at).toLocaleDateString('en-IN')}</span>
+                        </div>
+                        {iv.notes && <div style={{ marginTop: 6, fontSize: 12, color: 'rgba(255,255,255,0.38)', fontStyle: 'italic' }}>"{iv.notes}"</div>}
+                        {iv.meeting_link && (
+                          <a href={iv.meeting_link} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 8, fontSize: 12, color: '#4A90D9', fontWeight: 700, textDecoration: 'none', background: 'rgba(74,144,217,0.10)', border: '1px solid rgba(74,144,217,0.25)', borderRadius: 8, padding: '4px 10px' }}>
+                            🔗 Join Meeting →
+                          </a>
+                        )}
+                        {iv.feedback && (
+                          <div style={{ marginTop: 10, background: 'rgba(92,200,160,0.08)', border: '1px solid rgba(92,200,160,0.18)', borderRadius: 10, padding: '10px 12px', fontSize: 13, color: '#5CC8A0', lineHeight: 1.6 }}>
+                            <span style={{ fontWeight: 700, display: 'block', marginBottom: 4, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Mentor's Feedback</span>
+                            {iv.feedback}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Roadmap tab ────────────────────────────────────── */
+function RoadmapTab() {
+  const [view, setView] = useState('timeline');
+  const [expanded, setExpanded] = useState(null);
+
+  const allSkillsByCategory = {
+    'SQL': [], 'Python': [], 'Excel / Sheets': [], 'Statistics': [],
+    'Visualisation': [], 'BI Tools': [], 'Career': [],
+  };
+  const categoryMap = {
+    'Excel & Google Sheets': 'Excel / Sheets',
+    'Basic Statistics': 'Statistics',
+    'SQL Fundamentals': 'SQL',
+    'Python Basics': 'Python',
+    'NumPy & Pandas': 'Python',
+    'Dev Environment': 'Career',
+    'Data Cleaning': 'Python',
+    'Exploratory Data Analysis': 'Statistics',
+    'Feature Engineering': 'Python',
+    'Python Visualisation': 'Visualisation',
+    'BI Tools': 'BI Tools',
+    'Storytelling with Data': 'Career',
+    'Advanced SQL': 'SQL',
+    'Business Analytics': 'Career',
+    'A/B Testing': 'Statistics',
+    'Portfolio Projects': 'Career',
+    'Job Applications': 'Career',
+    'Technical Interview Prep': 'Career',
+    'HR & Behavioural': 'Career',
+    'Offer & Negotiation': 'Career',
+  };
+  ROADMAP_DATA.forEach(phase => {
+    phase.topics.forEach(topic => {
+      const cat = categoryMap[topic.name] || 'Career';
+      topic.skills.forEach(skill => {
+        if (!allSkillsByCategory[cat].includes(skill)) allSkillsByCategory[cat].push(skill);
+      });
+    });
+  });
+
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <div style={{ fontWeight: 700, fontSize: 17, color: '#fff', marginBottom: 4 }}>🗺️ 12-Week Data Analyst Roadmap</div>
+          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>A proven plan to go from beginner to hired in 3 months</div>
+        </div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {[{ id: 'timeline', label: '📅 Timeline' }, { id: 'skilltree', label: '🌳 Skill Tree' }].map(v => (
+            <button key={v.id} onClick={() => setView(v.id)}
+              className={view === v.id ? 'filter-chip active' : 'filter-chip'}
+              style={{ fontWeight: 700, fontSize: 13 }}>
+              {v.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {view === 'timeline' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+          {ROADMAP_DATA.map((phase) => {
+            const isExp = expanded === phase.phase;
+            return (
+              <div key={phase.phase} style={{ background: 'rgba(255,255,255,0.055)', backdropFilter: 'blur(18px)', border: `1px solid ${isExp ? phase.color + '40' : 'rgba(255,255,255,0.09)'}`, borderRadius: 16, overflow: 'hidden', transition: 'border-color 0.2s' }}>
+                {/* Card header */}
+                <div
+                  onClick={() => setExpanded(isExp ? null : phase.phase)}
+                  style={{ display: 'flex', gap: 18, padding: '1.1rem 1.3rem', cursor: 'pointer', position: 'relative' }}
+                >
+                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 3, background: phase.color, borderRadius: '0 3px 3px 0' }} />
+                  <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 72 }}>
+                    <div style={{ width: 44, height: 44, borderRadius: 12, background: phase.color + '20', border: `1px solid ${phase.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 5 }}>{phase.icon}</div>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: phase.color, lineHeight: 1.3 }}>{phase.week}</div>
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5 }}>
+                      <span style={{ fontWeight: 700, fontSize: 15, color: '#fff' }}>Phase {phase.phase}: {phase.title}</span>
+                      <span style={{ background: phase.color + '20', color: phase.color, border: `1px solid ${phase.color}40`, fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 12 }}>{phase.topics.length} topics</span>
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                      {phase.topics.map(t => (
+                        <span key={t.name} style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', background: 'rgba(255,255,255,0.06)', padding: '2px 8px', borderRadius: 8 }}>{t.name}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <span style={{ color: 'rgba(255,255,255,0.30)', fontSize: 18, alignSelf: 'center', transform: isExp ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }}>⌄</span>
+                </div>
+
+                {/* Expanded content */}
+                {isExp && (
+                  <div style={{ padding: '0 1.3rem 1.3rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.8rem', marginTop: '1rem' }}>
+                      {phase.topics.map(topic => (
+                        <div key={topic.name} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '0.9rem' }}>
+                          <div style={{ fontWeight: 700, fontSize: 13, color: phase.color, marginBottom: '0.5rem' }}>{topic.name}</div>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                            {topic.skills.map(skill => (
+                              <span key={skill} style={{ fontSize: 11, color: 'rgba(255,255,255,0.60)', background: phase.color + '12', border: `1px solid ${phase.color}25`, padding: '3px 8px', borderRadius: 8 }}>{skill}</span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ marginTop: '1rem' }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.30)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 8 }}>Action Items</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                        {phase.resources.map((res, j) => (
+                          <div key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: 'rgba(255,255,255,0.60)' }}>
+                            <span style={{ color: phase.color, flexShrink: 0, marginTop: 1 }}>☐</span>{res}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {view === 'skilltree' && (
+        <div>
+          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', marginBottom: '1.2rem' }}>All skills you'll master across the 12-week program, grouped by category.</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+            {Object.entries(allSkillsByCategory).filter(([, skills]) => skills.length > 0).map(([cat, skills]) => {
+              const catColor = { 'SQL': '#4A90D9', 'Python': '#5CC8A0', 'Excel / Sheets': '#a78bfa', 'Statistics': '#E8A838', 'Visualisation': '#38bdf8', 'BI Tools': '#F07B6A', 'Career': '#5CC8A0' }[cat] || '#4A90D9';
+              return (
+                <div key={cat} style={{ background: 'rgba(255,255,255,0.055)', backdropFilter: 'blur(18px)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 16, padding: '1.1rem', position: 'relative', overflow: 'hidden' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${catColor}, transparent)` }} />
+                  <div style={{ fontWeight: 700, fontSize: 14, color: catColor, marginBottom: '0.7rem' }}>{cat}</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                    {skills.map(skill => (
+                      <span key={skill} style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)', background: catColor + '12', border: `1px solid ${catColor}25`, padding: '3px 8px', borderRadius: 8 }}>{skill}</span>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Resources tab ──────────────────────────────────── */
+function ResourcesTab() {
+  const [preview, setPreview] = useState(null);
+  const [toast, setToastLocal] = useState('');
+
+  function showToast(msg) { setToastLocal(msg); setTimeout(() => setToastLocal(''), 3500); }
+
+  function renderContent(content) {
+    const lines = content.split('\n');
+    const elements = [];
+    let inCode = false;
+    let codeLines = [];
+    let codeLang = '';
+
+    lines.forEach((line, i) => {
+      if (line.startsWith('```')) {
+        if (!inCode) { inCode = true; codeLang = line.slice(3); codeLines = []; }
+        else {
+          elements.push(
+            <pre key={`code-${i}`} style={{ background: 'rgba(0,0,0,0.45)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '12px 14px', fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#a6e3a1', whiteSpace: 'pre-wrap', lineHeight: 1.7, margin: '0.6rem 0', overflowX: 'auto' }}>
+              <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', display: 'block', marginBottom: 6 }}>{codeLang || 'code'}</span>
+              {codeLines.join('\n')}
+            </pre>
+          );
+          inCode = false; codeLines = [];
+        }
+        return;
+      }
+      if (inCode) { codeLines.push(line); return; }
+
+      if (line.startsWith('# ')) {
+        elements.push(<div key={i} style={{ fontWeight: 800, fontSize: 18, color: '#fff', margin: '1.2rem 0 0.5rem', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: 6 }}>{line.slice(2)}</div>);
+      } else if (line.startsWith('## ')) {
+        elements.push(<div key={i} style={{ fontWeight: 700, fontSize: 15, color: '#e2e8f0', margin: '1rem 0 0.4rem' }}>{line.slice(3)}</div>);
+      } else if (line.startsWith('### ')) {
+        elements.push(<div key={i} style={{ fontWeight: 700, fontSize: 13, color: '#94a3b8', margin: '0.8rem 0 0.3rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{line.slice(4)}</div>);
+      } else if (line.startsWith('| ') && line.endsWith(' |')) {
+        if (line.includes('---')) return;
+        const cells = line.split('|').filter(c => c.trim());
+        const isHeader = lines[i + 1]?.includes('---');
+        elements.push(
+          <div key={i} style={{ display: 'flex', gap: 0, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+            {cells.map((cell, ci) => (
+              <div key={ci} style={{ flex: 1, padding: '5px 10px', fontSize: 12, color: isHeader ? '#e2e8f0' : 'rgba(255,255,255,0.65)', fontWeight: isHeader ? 700 : 400, background: isHeader ? 'rgba(255,255,255,0.04)' : 'transparent' }}>
+                {cell.trim()}
+              </div>
+            ))}
+          </div>
+        );
+      } else if (line.startsWith('- ') || line.startsWith('• ')) {
+        elements.push(<div key={i} style={{ display: 'flex', gap: 8, fontSize: 13, color: 'rgba(255,255,255,0.70)', margin: '2px 0', paddingLeft: 8 }}><span style={{ color: '#4A90D9', flexShrink: 0 }}>•</span><span dangerouslySetInnerHTML={{ __html: line.slice(2).replace(/\*\*(.*?)\*\*/g, '<strong style="color:#e2e8f0">$1</strong>') }} /></div>);
+      } else if (line.startsWith('**') && line.endsWith('**') && line.length > 4) {
+        elements.push(<div key={i} style={{ fontWeight: 700, fontSize: 13, color: '#e2e8f0', margin: '0.5rem 0 0.2rem' }}>{line.slice(2, -2)}</div>);
+      } else if (line.trim() === '') {
+        elements.push(<div key={i} style={{ height: 6 }} />);
+      } else {
+        elements.push(<div key={i} style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, margin: '2px 0' }} dangerouslySetInnerHTML={{ __html: line.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#e2e8f0">$1</strong>').replace(/`(.*?)`/g, '<code style="background:rgba(0,0,0,0.35);padding:1px 5px;border-radius:4px;font-family:monospace;font-size:12px;color:#a6e3a1">$1</code>') }} />);
+      }
+    });
+    return elements;
+  }
+
+  return (
+    <div>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <div style={{ fontWeight: 700, fontSize: 17, color: '#fff', marginBottom: 4 }}>📚 Pro Study Materials</div>
+        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>Exclusive guides, cheatsheets, and playbooks for pro members</div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
+        {STUDY_MATERIALS.map((mat) => (
+          <div key={mat.id} style={{ background: 'rgba(255,255,255,0.055)', backdropFilter: 'blur(18px)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 16, overflow: 'hidden', transition: 'all 0.2s', display: 'flex', flexDirection: 'column' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = mat.color + '50'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = `0 12px 32px ${mat.color}18`; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.09)'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}>
+            <div style={{ height: 4, background: `linear-gradient(90deg, ${mat.color}, transparent)` }} />
+            <div style={{ padding: '1.1rem', flex: 1 }}>
+              <div style={{ fontSize: 28, marginBottom: '0.6rem' }}>{mat.icon}</div>
+              <div style={{ fontWeight: 700, fontSize: 13, color: '#fff', marginBottom: 5, lineHeight: 1.4 }}>{mat.title}</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.40)', marginBottom: '0.7rem', lineHeight: 1.5 }}>{mat.desc}</div>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: '0.7rem' }}>
+                <span style={{ background: mat.color + '20', color: mat.color, border: `1px solid ${mat.color}40`, fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>{mat.tag}</span>
+                <span style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.08)', fontSize: 10, padding: '2px 8px', borderRadius: 10 }}>{mat.pages}p</span>
+                <span style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.08)', fontSize: 10, padding: '2px 8px', borderRadius: 10 }}>{mat.level}</span>
+              </div>
+            </div>
+            <div style={{ padding: '0 1.1rem 1.1rem', display: 'flex', gap: 6 }}>
+              <button
+                onClick={() => setPreview(mat)}
+                style={{ flex: 1, background: mat.color + '15', border: `1px solid ${mat.color}35`, borderRadius: 9, color: mat.color, fontSize: 12, fontWeight: 700, padding: '7px 0', cursor: 'pointer', transition: 'background 0.15s' }}
+                onMouseEnter={e => e.currentTarget.style.background = mat.color + '28'}
+                onMouseLeave={e => e.currentTarget.style.background = mat.color + '15'}
+              >
+                📖 Preview
+              </button>
+              <button
+                onClick={() => { setPreview(mat); setTimeout(() => { window.print(); }, 300); showToast("Use 'Save as PDF' in your print dialog"); }}
+                style={{ flex: 1, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 9, color: 'rgba(255,255,255,0.65)', fontSize: 12, fontWeight: 700, padding: '7px 0', cursor: 'pointer', transition: 'background 0.15s' }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.10)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
+              >
+                ⬇️ Download
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ marginTop: '1.5rem', background: 'rgba(74,144,217,0.08)', border: '1px solid rgba(74,144,217,0.18)', borderRadius: 14, padding: '1rem 1.5rem', fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6 }}>
+        🆕 <strong style={{ color: '#4A90D9' }}>New resources added monthly</strong> · Request a topic via the Support tab
+      </div>
+
+      {/* Preview Modal */}
+      {preview && (
+        <div className="modal-backdrop" onClick={e => e.target === e.currentTarget && setPreview(null)}>
+          <style>{`@media print { body > *:not(.print-content) { display: none !important; } .print-content { display: block !important; position: fixed; top: 0; left: 0; width: 100%; background: white; color: black; padding: 24px; z-index: 99999; } }`}</style>
+          <div className="modal print-content" style={{ maxWidth: 760, maxHeight: '88vh', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: '1rem', flexShrink: 0 }}>
+              <span style={{ fontSize: 24 }}>{preview.icon}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 800, fontSize: 16, color: '#fff' }}>{preview.title}</div>
+                <span style={{ background: preview.color + '20', color: preview.color, border: `1px solid ${preview.color}40`, fontSize: 11, fontWeight: 700, padding: '2px 9px', borderRadius: 10 }}>{preview.tag}</span>
+              </div>
+              <button
+                onClick={() => window.print()}
+                style={{ background: 'rgba(74,144,217,0.15)', border: '1px solid rgba(74,144,217,0.30)', borderRadius: 9, color: '#4A90D9', fontSize: 12, fontWeight: 700, padding: '7px 14px', cursor: 'pointer', flexShrink: 0 }}
+              >
+                🖨️ Print / Save as PDF
+              </button>
+              <button className="modal-close" style={{ position: 'static', flexShrink: 0 }} onClick={() => setPreview(null)}>✕</button>
+            </div>
+            <div style={{ overflowY: 'auto', flex: 1, paddingRight: 4 }}>
+              {renderContent(preview.content)}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {toast && <div className="toast">{toast}</div>}
+    </div>
+  );
+}
+
+/* ── Priority support tab ───────────────────────────── */
+function SupportTab({ setToast, user }) {
+  const [msg, setMsg]     = useState('');
+  const [type, setType]   = useState('question');
+  const [sending, setSending] = useState(false);
+
+  async function send() {
+    if (!msg.trim()) { setToast('Please write your message'); return; }
+    setSending(true);
+    // Simulate send (in production, wire to email/Slack)
+    await new Promise(r => setTimeout(r, 1000));
+    setMsg('');
+    setSending(false);
+    setToast('✅ Message sent! We\'ll reply within 6 hours.');
+    setTimeout(() => setToast(''), 4000);
+  }
+
+  return (
+    <div style={{ maxWidth: 640 }}>
+      <div className="card">
+        <div className="card-title">⭐ Priority Support</div>
+        <div style={{ background: 'rgba(92,200,160,0.08)', border: '1px solid rgba(92,200,160,0.18)', borderRadius: 10, padding: '10px 14px', marginBottom: '1.5rem', fontSize: 13, color: '#5CC8A0', lineHeight: 1.6 }}>
+          As a pro member you get <strong>6-hour response time</strong> — faster than public support. We personally read every message.
+        </div>
+
+        <div className="field">
+          <label>Type of Request</label>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {[
+              { id: 'question', label: '❓ Technical Question' },
+              { id: 'career',   label: '🎯 Career Advice'      },
+              { id: 'bug',      label: '🐛 Bug Report'         },
+              { id: 'request',  label: '💡 Feature Request'    },
+            ].map(t => (
+              <button key={t.id} onClick={() => setType(t.id)}
+                className={type === t.id ? 'filter-chip active' : 'filter-chip'}
+                style={{ fontSize: 12 }}>{t.label}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="field">
+          <label>Your Message</label>
+          <textarea rows={5} value={msg} onChange={e => setMsg(e.target.value)}
+            placeholder="Describe your question or issue in detail. The more context, the better the answer..."
+            style={{ resize: 'vertical' }} />
+        </div>
+
+        <button className="btn-primary" onClick={send} disabled={sending} style={{ width: '100%', justifyContent: 'center' }}>
+          {sending ? 'Sending…' : '📨 Send Message'}
+        </button>
+
+        <div style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+          {[
+            { icon: '✉️', label: 'Email', val: 'asif@dataquest.in' },
+            { icon: '⏱', label: 'Response time', val: 'Within 6 hours' },
+          ].map(c => (
+            <div key={c.label} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '10px 14px', fontSize: 13 }}>
+              <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, marginBottom: 3 }}>{c.icon} {c.label}</div>
+              <div style={{ color: '#e2e8f0', fontWeight: 600 }}>{c.val}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   UPGRADE PAGE (non-premium users)
+═══════════════════════════════════════════════════ */
+const FEATURES = [
+  { icon: '🎯', label: 'Placement Assistance',    desc: 'Personalised guidance on resume, LinkedIn, and job strategy.',                    bg: 'rgba(74,144,217,0.14)',  border: 'rgba(74,144,217,0.25)'  },
+  { icon: '💼', label: 'Curated Job Board',        desc: '18+ hand-picked data analytics jobs from top Indian companies.',                  bg: 'rgba(92,200,160,0.14)',  border: 'rgba(92,200,160,0.25)'  },
+  { icon: '👤', label: '1:1 Mentorship Sessions',  desc: 'Book 30-min live sessions with our mentor for career advice and code review.',    bg: 'rgba(232,168,56,0.14)',  border: 'rgba(232,168,56,0.25)'  },
+  { icon: '📄', label: 'Resume Review',            desc: 'Expert feedback within 48 hours. ATS-optimised and role-specific.',              bg: 'rgba(240,123,106,0.14)', border: 'rgba(240,123,106,0.25)' },
+  { icon: '🎙️', label: 'Live Mock Interviews',     desc: 'Schedule a real mock interview with our team — SQL, Python, or full analytics round.', bg: 'rgba(168,139,250,0.14)', border: 'rgba(168,139,250,0.25)' },
+  { icon: '📚', label: 'Interview Question Bank',  desc: '80+ curated SQL, Python and case-study questions with model answers.',            bg: 'rgba(56,189,248,0.14)',  border: 'rgba(56,189,248,0.25)'  },
+  { icon: '⭐', label: 'Priority Support',         desc: '6-hour response time from us directly.',                                         bg: 'rgba(92,200,160,0.14)',  border: 'rgba(92,200,160,0.25)'  },
+];
+
+function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep, utr, setUtr, submitting, submitUTR, copied, copyUPI, toast }) {
+  const [payMethod, setPayMethod] = useState('upi');
+  const [card, setCard] = useState({ number: '', expiry: '', cvv: '', name: '' });
+  const [cardToast, setCardToast] = useState('');
+  const [receipt, setReceipt] = useState(null); // { file, preview, name }
+  const [uploadingReceipt, setUploadingReceipt] = useState(false);
+  const receiptRef = { current: null };
+  const setC = (k, v) => setCard(c => ({ ...c, [k]: v }));
+
+  async function handleSubmitWithReceipt() {
+    let receiptFilename = null, receiptOriginal = null;
+    if (receipt?.file) {
+      setUploadingReceipt(true);
+      try {
+        const fd = new FormData();
+        fd.append('receipt', receipt.file);
+        const r = await api.post('/premium/receipt/upload', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+        receiptFilename = r.data.filename;
+        receiptOriginal = r.data.originalname;
+      } catch (e) { /* continue without receipt if upload fails */ }
+      finally { setUploadingReceipt(false); }
+    }
+    submitUTR(receiptFilename, receiptOriginal);
+  }
+
+  function handleReceiptFile(f) {
+    if (!f) return;
+    if (f.size > 10 * 1024 * 1024) { alert('File must be under 10MB'); return; }
+    const preview = f.type.startsWith('image/') ? URL.createObjectURL(f) : null;
+    setReceipt({ file: f, preview, name: f.name });
+  }
+
+  function formatCardNumber(val) {
+    return val.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim();
+  }
+  function formatExpiry(val) {
+    const d = val.replace(/\D/g, '').slice(0, 4);
+    return d.length > 2 ? d.slice(0, 2) + '/' + d.slice(2) : d;
+  }
+  function cardBrand(num) {
+    const n = num.replace(/\s/g, '');
+    if (/^4/.test(n)) return 'VISA';
+    if (/^5[1-5]/.test(n)) return 'MC';
+    return '';
+  }
+
+  function handleCardPay() {
+    setCardToast('⚙️ Card payments require Razorpay API key configuration. Use UPI for instant payment.');
+    setTimeout(() => setCardToast(''), 4000);
+  }
+
+  return (
+    <div className="page">
+      {isPending && (
+        <div className="status-banner pending">
+          <span style={{ fontSize: 24 }}>⏳</span>
+          <div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>Payment Under Review</div>
+            <div style={{ fontSize: 12 }}>We'll activate your account within 2 hours. UTR: {status.latest_subscription?.utr_number}</div>
+          </div>
+        </div>
+      )}
+
+      <div className="premium-hero">
+        <span className="premium-hero-crown">👑</span>
+        <div className="premium-hero-title">Go Pro. Get Hired.</div>
+        <div className="premium-hero-sub">Everything you need to go from learner to hired — in one Pro membership</div>
+        <div className="premium-hero-price">
+          <span className="premium-price-amount">₹{AMOUNT}</span>
+          <span className="premium-price-period">lifetime</span>
+        </div>
+        {!isPending && (
+          <div style={{ marginTop: '1.5rem' }}>
+            <button className="btn-gold" onClick={() => setShowModal(true)}><span>⚡</span> Get Pro Now</button>
+          </div>
+        )}
+        <div className="premium-hero-stats">
+          <div className="premium-stat"><div className="premium-stat-val">200+</div><div className="premium-stat-lbl">Students</div></div>
+          <div className="premium-stat"><div className="premium-stat-val">18+</div><div className="premium-stat-lbl">Live Jobs</div></div>
+          <div className="premium-stat"><div className="premium-stat-val">48h</div><div className="premium-stat-lbl">Resume Feedback</div></div>
+          <div className="premium-stat"><div className="premium-stat-val">4.9★</div><div className="premium-stat-lbl">Mentor Rating</div></div>
+        </div>
+      </div>
+
+      <div className="page-header">
+        <div className="page-title">Everything in Premium</div>
+        <div className="page-sub">Six high-impact benefits to accelerate your data career</div>
+      </div>
+      <div className="features-grid">
+        {FEATURES.map(f => (
+          <div key={f.label} className="feature-card">
+            <div className="feature-icon" style={{ background: f.bg, border: `1px solid ${f.border}` }}>
+              <span style={{ fontSize: 22 }}>{f.icon}</span>
+            </div>
+            <div className="feature-title">{f.label}</div>
+            <div className="feature-desc">{f.desc}</div>
+          </div>
+        ))}
+      </div>
+
+      {!isPending && (
+        <div className="pricing-card">
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.40)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Simple Pricing</div>
+          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 4, marginBottom: '0.3rem' }}>
+            <span style={{ fontSize: 56, fontWeight: 900, letterSpacing: -2, color: '#fff' }}>₹{AMOUNT}</span>
+            <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: 18 }}>lifetime</span>
+          </div>
+          <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 13, marginBottom: '0.5rem' }}>One-time payment • Lifetime access</div>
+          <ul className="pricing-checklist">
+            {FEATURES.map(f => <li key={f.label}>{f.label}</li>)}
+          </ul>
+          <button className="btn-gold" style={{ width: '100%', justifyContent: 'center' }} onClick={() => setShowModal(true)}>
+            <span>👑</span> Get Pro — ₹{AMOUNT} lifetime
+          </button>
+          <div style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12, marginTop: '1rem' }}>Powered by PhonePe UPI • Secure payment</div>
+        </div>
+      )}
+
+      {showModal && (
+        <div className="modal-backdrop" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
+          <div className="modal" style={{ maxWidth: 460 }}>
+            <button className="modal-close" onClick={() => { setShowModal(false); setStep(1); }}>✕</button>
+
+            {/* Payment method toggle */}
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: '1.2rem' }}>
+              {[{ id: 'upi', label: '📱 UPI' }, { id: 'card', label: '💳 Card / NetBanking' }].map(m => (
+                <button key={m.id} onClick={() => setPayMethod(m.id)}
+                  style={{
+                    padding: '9px 20px', borderRadius: 12, fontWeight: 700, fontSize: 13, cursor: 'pointer',
+                    border: payMethod === m.id ? '1px solid rgba(74,144,217,0.50)' : '1px solid rgba(255,255,255,0.12)',
+                    background: payMethod === m.id ? 'rgba(74,144,217,0.15)' : 'rgba(255,255,255,0.05)',
+                    color: payMethod === m.id ? '#4A90D9' : 'rgba(255,255,255,0.50)',
+                    transition: 'all 0.15s',
+                  }}>
+                  {m.label}
+                </button>
+              ))}
+            </div>
+
+            {payMethod === 'upi' && (
+              <>
+                {step === 1 ? (
+                  <div className="payment-step">
+                    <div className="phonepe-logo">💜</div>
+                    <h2 style={{ fontWeight: 800, marginBottom: 4 }}>Pay via PhonePe / UPI</h2>
+                    <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: '1rem' }}>Scan QR or copy the UPI ID</p>
+                    <div className="qr-container"><img src={QR_URL} alt="UPI QR" width={200} height={200} style={{ display: 'block' }} /></div>
+                    <div style={{ fontWeight: 700, fontSize: 22, color: '#4A90D9', margin: '0.5rem 0 0.3rem' }}>₹{AMOUNT}</div>
+                    <div className="upi-id-box">
+                      <span>{UPI_ID}</span>
+                      <button className="copy-btn" onClick={copyUPI}>{copied ? '✓ Copied' : 'Copy'}</button>
+                    </div>
+                    <div className="payment-divider">or open app directly</div>
+                    <a href={`upi://pay?pa=${UPI_ID}&pn=Datamyze&am=${AMOUNT}&cu=INR`} style={{ display: 'block', marginBottom: '0.8rem' }}>
+                      <button className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 15 }}>📱 Open PhonePe / GPay / BHIM</button>
+                    </a>
+                    <ol className="payment-steps">
+                      <li>Open any UPI app and scan the QR or pay to UPI ID</li>
+                      <li>Enter ₹{AMOUNT} and complete payment</li>
+                      <li>Note the Transaction / UTR ID shown after payment</li>
+                    </ol>
+                    {/* NetBanking/Wallet extra option */}
+                    <div style={{ marginTop: '0.6rem', padding: '8px 12px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, fontSize: 12, color: 'rgba(255,255,255,0.40)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span>🏦</span>
+                      <span>NetBanking / Wallet — use your bank's UPI handle or scan QR above</span>
+                    </div>
+                    <button className="btn-teal" style={{ width: '100%', justifyContent: 'center', marginTop: '0.8rem' }} onClick={() => setStep(2)}>
+                      ✅ I've Paid — Enter UTR →
+                    </button>
+                  </div>
+                ) : (
+                  <div className="payment-step">
+                    <div style={{ fontSize: 36, marginBottom: '0.8rem' }}>🧾</div>
+                    <h2 style={{ fontWeight: 800, marginBottom: 4 }}>Confirm Your Payment</h2>
+                    <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: '1.5rem' }}>Enter your UTR and upload the payment screenshot for faster verification</p>
+
+                    {/* UTR field */}
+                    <div className="field" style={{ textAlign: 'left' }}>
+                      <label>UTR / Transaction ID <span style={{ color: 'rgba(255,255,255,0.35)', fontWeight: 400 }}>(required)</span></label>
+                      <input value={utr} onChange={e => setUtr(e.target.value)} placeholder="e.g. 402911684521"
+                        style={{ fontFamily: 'JetBrains Mono, monospace', letterSpacing: '1px' }} onKeyDown={e => e.key === 'Enter' && handleSubmitWithReceipt()} />
+                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)', marginTop: 4 }}>Find this in your PhonePe / GPay / bank SMS after payment</div>
+                    </div>
+
+                    {/* Receipt upload */}
+                    <div className="field" style={{ textAlign: 'left', marginTop: '0.8rem' }}>
+                      <label>Payment Screenshot / Receipt <span style={{ color: 'rgba(255,255,255,0.35)', fontWeight: 400 }}>(recommended)</span></label>
+                      {receipt ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: 'rgba(92,200,160,0.08)', border: '1px solid rgba(92,200,160,0.28)', borderRadius: 10 }}>
+                          {receipt.preview
+                            ? <img src={receipt.preview} alt="receipt" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 7, border: '1px solid rgba(255,255,255,0.12)', flexShrink: 0 }} />
+                            : <div style={{ width: 48, height: 48, borderRadius: 7, background: 'rgba(74,144,217,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>📄</div>
+                          }
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: 13, fontWeight: 600, color: '#5CC8A0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>✅ {receipt.name}</div>
+                            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{receipt.file ? (receipt.file.size / 1024).toFixed(0) + ' KB' : ''}</div>
+                          </div>
+                          <button onClick={() => setReceipt(null)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.40)', cursor: 'pointer', fontSize: 18, padding: '4px 6px', borderRadius: 6, lineHeight: 1 }}>✕</button>
+                        </div>
+                      ) : (
+                        <div
+                          onClick={() => receiptRef.current?.click()}
+                          onDragOver={e => { e.preventDefault(); e.currentTarget.style.background = 'rgba(74,144,217,0.12)'; }}
+                          onDragLeave={e => { e.currentTarget.style.background = 'rgba(74,144,217,0.05)'; }}
+                          onDrop={e => { e.preventDefault(); e.currentTarget.style.background = 'rgba(74,144,217,0.05)'; handleReceiptFile(e.dataTransfer.files[0]); }}
+                          style={{ padding: '16px 12px', border: '1.5px dashed rgba(74,144,217,0.38)', borderRadius: 12, textAlign: 'center', cursor: 'pointer', background: 'rgba(74,144,217,0.05)', transition: 'background 0.2s' }}>
+                          <div style={{ fontSize: 26, marginBottom: 4 }}>📷</div>
+                          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', fontWeight: 600 }}>Click or drag your payment screenshot here</div>
+                          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', marginTop: 3 }}>JPG, PNG, PDF · Max 10MB</div>
+                        </div>
+                      )}
+                      <input
+                        ref={el => { receiptRef.current = el; }}
+                        type="file" accept=".jpg,.jpeg,.png,.pdf,.webp,.heic"
+                        style={{ display: 'none' }}
+                        onChange={e => handleReceiptFile(e.target.files[0])}
+                      />
+                    </div>
+
+                    <button className="btn-gold" style={{ width: '100%', justifyContent: 'center', marginTop: '1rem' }} onClick={handleSubmitWithReceipt} disabled={submitting || uploadingReceipt}>
+                      {uploadingReceipt ? '⬆️ Uploading receipt...' : submitting ? 'Submitting...' : '🚀 Submit for Verification'}
+                    </button>
+                    <button className="btn-secondary" style={{ width: '100%', justifyContent: 'center', marginTop: 8 }} onClick={() => setStep(1)}>← Back</button>
+                  </div>
+                )}
+              </>
+            )}
+
+            {payMethod === 'card' && (
+              <div className="payment-step">
+                <div style={{ fontSize: 36, marginBottom: '0.5rem' }}>💳</div>
+                <h2 style={{ fontWeight: 800, marginBottom: 4 }}>Card / NetBanking</h2>
+                <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: '1.2rem' }}>Powered by Razorpay — secure 256-bit encryption</p>
+
+                {/* Card Number */}
+                <div className="field" style={{ textAlign: 'left', position: 'relative' }}>
+                  <label>Card Number</label>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      value={card.number}
+                      onChange={e => setC('number', formatCardNumber(e.target.value))}
+                      placeholder="XXXX XXXX XXXX XXXX"
+                      maxLength={19}
+                      style={{ fontFamily: 'JetBrains Mono, monospace', letterSpacing: '2px', paddingRight: 60 }}
+                    />
+                    {cardBrand(card.number) && (
+                      <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 11, fontWeight: 800, color: cardBrand(card.number) === 'VISA' ? '#1a1f71' : '#eb001b', background: cardBrand(card.number) === 'VISA' ? '#e8eaf6' : '#fff', padding: '2px 7px', borderRadius: 5 }}>
+                        {cardBrand(card.number)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Expiry + CVV */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <div className="field" style={{ textAlign: 'left' }}>
+                    <label>Expiry (MM/YY)</label>
+                    <input value={card.expiry} onChange={e => setC('expiry', formatExpiry(e.target.value))} placeholder="MM/YY" maxLength={5} style={{ fontFamily: 'JetBrains Mono, monospace' }} />
+                  </div>
+                  <div className="field" style={{ textAlign: 'left' }}>
+                    <label>CVV</label>
+                    <input value={card.cvv} onChange={e => setC('cvv', e.target.value.replace(/\D/g, '').slice(0, 4))} placeholder="•••" maxLength={4} type="password" style={{ fontFamily: 'JetBrains Mono, monospace' }} />
+                  </div>
+                </div>
+
+                {/* Name on card */}
+                <div className="field" style={{ textAlign: 'left' }}>
+                  <label>Name on Card</label>
+                  <input value={card.name} onChange={e => setC('name', e.target.value)} placeholder="As printed on card" />
+                </div>
+
+                {/* Info box */}
+                <div style={{ background: 'rgba(74,144,217,0.08)', border: '1px solid rgba(74,144,217,0.20)', borderRadius: 10, padding: '10px 14px', fontSize: 12, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, marginBottom: '1rem', textAlign: 'left' }}>
+                  🔒 Card payments powered by Razorpay. To enable live card payments, add your <code style={{ background: 'rgba(0,0,0,0.30)', padding: '1px 5px', borderRadius: 4, fontFamily: 'monospace' }}>RAZORPAY_KEY_ID</code> to the backend <code style={{ background: 'rgba(0,0,0,0.30)', padding: '1px 5px', borderRadius: 4, fontFamily: 'monospace' }}>.env</code> file.
+                </div>
+
+                <button
+                  className="btn-primary"
+                  style={{ width: '100%', justifyContent: 'center', fontSize: 15 }}
+                  onClick={handleCardPay}
+                >
+                  🔒 Pay ₹{AMOUNT} Securely →
+                </button>
+
+                {cardToast && <div style={{ marginTop: 10, background: 'rgba(232,168,56,0.15)', border: '1px solid rgba(232,168,56,0.30)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#E8A838', textAlign: 'left' }}>{cardToast}</div>}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      {toast && <div className="toast">{toast}</div>}
+    </div>
+  );
+}
