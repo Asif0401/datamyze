@@ -29,6 +29,9 @@ npm-debug.log*
 uploads/avatars/*
 uploads/resumes/*
 uploads/receipts/*
+uploads/instructor/*
 !uploads/avatars/.gitkeep
 !uploads/resumes/.gitkeep
 !uploads/receipts/.gitkeep
+!uploads/instructor/.gitkeep
+.claude/

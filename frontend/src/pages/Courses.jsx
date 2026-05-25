@@ -708,7 +708,12 @@ export default function Courses() {
   useEffect(load, []);
 
   const difficulties = ['All', 'Beginner', 'Intermediate', 'Advanced'];
-  const filtered = filter === 'All' ? courses : courses.filter(c => c.difficulty === filter);
+  const baseFiltered = filter === 'All' ? courses : courses.filter(c => c.difficulty === filter);
+  // Sort coming-soon courses to the bottom
+  const filtered = [
+    ...baseFiltered.filter(c => !c.is_coming_soon),
+    ...baseFiltered.filter(c => c.is_coming_soon),
+  ];
 
   if (loading) return <div className="loading"><div className="spinner" />Loading courses…</div>;
 
@@ -736,6 +741,56 @@ export default function Courses() {
         {filtered.map(c => {
           const prog  = c.progress?.progress_percent || 0;
           const logos = TECH_LOGOS[c.title] || [];
+
+          /* ── Coming Soon card ── */
+          if (c.is_coming_soon) {
+            return (
+              <div
+                key={c.id}
+                className="course-card"
+                style={{ position: 'relative', opacity: 0.62, filter: 'grayscale(0.45)', cursor: 'default', pointerEvents: 'none' }}
+              >
+                {/* Lock overlay */}
+                <div style={{
+                  position: 'absolute', inset: 0, zIndex: 10,
+                  background: 'linear-gradient(160deg, rgba(10,10,20,0.72) 0%, rgba(10,10,30,0.55) 100%)',
+                  borderRadius: 'inherit',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6,
+                }}>
+                  <div style={{ fontSize: 28 }}>🔒</div>
+                  <div style={{
+                    fontSize: 11, fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase',
+                    color: 'rgba(255,255,255,0.75)',
+                    background: 'rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(255,255,255,0.18)',
+                    borderRadius: 20, padding: '3px 12px',
+                  }}>Coming Soon</div>
+                </div>
+
+                <div className="course-thumb" style={{ background: c.color + '14' }}>
+                  <div style={{ fontSize: 38, lineHeight: 1 }}>{c.icon}</div>
+                </div>
+                <div className="course-body">
+                  <div style={{ display: 'flex', gap: 5, marginBottom: 6, flexWrap: 'wrap' }}>
+                    <span className={`pill ${c.difficulty === 'Beginner' ? 'pill-teal' : c.difficulty === 'Intermediate' ? 'pill-amber' : 'pill-coral'}`}>{c.difficulty}</span>
+                    <span style={{
+                      fontSize: 10, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase',
+                      background: 'rgba(139,92,246,0.18)', color: '#a78bfa',
+                      border: '1px solid rgba(139,92,246,0.35)',
+                      padding: '2px 8px', borderRadius: 20,
+                    }}>COMING SOON</span>
+                  </div>
+                  <div className="course-name">{c.title}</div>
+                  <div className="course-meta" style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4, lineHeight: 1.5 }}>{c.description}</div>
+                  <div style={{ marginTop: 10, padding: '7px 12px', borderRadius: 8, background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', fontSize: 12, color: '#a78bfa', fontWeight: 600, textAlign: 'center' }}>
+                    🚀 Launching Soon
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          /* ── Regular course card ── */
           return (
             <div key={c.id} className="course-card" onClick={() => setSelected(c)}>
               <div className="course-thumb" style={{ background: c.color + '14' }}>

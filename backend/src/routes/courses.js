@@ -91,11 +91,15 @@ router.post('/:courseId/lessons/:lessonId/complete', authMiddleware, (req, res) 
   run(db, 'UPDATE users SET xp = xp + 20 WHERE id = ?', [req.user.id]);
 
   if (pct === 100) {
-    const cert = get(db, 'SELECT id FROM certificates WHERE user_id = ? AND course_id = ?', [req.user.id, courseId]);
-    if (!cert) {
-      const credId = 'DQ-' + new Date().getFullYear() + '-' + Math.random().toString(36).slice(2, 8).toUpperCase();
-      try { run(db, 'INSERT INTO certificates (id, user_id, course_id, credential_id) VALUES (?, ?, ?, ?)', [uuidv4(), req.user.id, courseId, credId]); } catch(e) {}
-      run(db, 'UPDATE users SET xp = xp + 500 WHERE id = ?', [req.user.id]);
+    const certUser = get(db, 'SELECT is_premium, premium_expires_at FROM users WHERE id = ?', [req.user.id]);
+    const isPremium = certUser?.is_premium === 1 && (!certUser.premium_expires_at || new Date(certUser.premium_expires_at) > new Date());
+    if (isPremium) {
+      const cert = get(db, 'SELECT id FROM certificates WHERE user_id = ? AND course_id = ?', [req.user.id, courseId]);
+      if (!cert) {
+        const credId = 'DQ-' + new Date().getFullYear() + '-' + Math.random().toString(36).slice(2, 8).toUpperCase();
+        try { run(db, 'INSERT INTO certificates (id, user_id, course_id, credential_id) VALUES (?, ?, ?, ?)', [uuidv4(), req.user.id, courseId, credId]); } catch(e) {}
+        run(db, 'UPDATE users SET xp = xp + 500 WHERE id = ?', [req.user.id]);
+      }
     }
   }
 

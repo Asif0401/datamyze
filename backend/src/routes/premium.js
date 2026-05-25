@@ -2,6 +2,27 @@ const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const { run, get, all } = require('../db/database');
 const authMiddleware = require('../middleware/auth');
+
+// Grant certificates for all 100%-complete courses a user doesn't already have
+function grantPendingCertificates(db, userId) {
+  const completed = all(db,
+    "SELECT course_id FROM user_course_progress WHERE user_id = ? AND progress_percent = 100",
+    [userId]);
+  let granted = 0;
+  completed.forEach(row => {
+    const existing = get(db, 'SELECT id FROM certificates WHERE user_id = ? AND course_id = ?', [userId, row.course_id]);
+    if (!existing) {
+      const credId = 'DQ-' + new Date().getFullYear() + '-' + Math.random().toString(36).slice(2, 8).toUpperCase();
+      try {
+        run(db, 'INSERT INTO certificates (id, user_id, course_id, credential_id) VALUES (?, ?, ?, ?)',
+          [uuidv4(), userId, row.course_id, credId]);
+        run(db, 'UPDATE users SET xp = xp + 500 WHERE id = ?', [userId]);
+        granted++;
+      } catch (e) {}
+    }
+  });
+  return granted;
+}
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
@@ -121,6 +142,82 @@ router.get('/resume/file/:filename', authMiddleware, (req, res) => {
   res.download(file);
 });
 
+// ── Cashfree: Create Payment Order ──────────────────────────────────
+router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
+  try {
+    const db = req.app.locals.db;
+    const user = get(db, 'SELECT id, name, email, phone FROM users WHERE id = ?', [req.user.id]);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const existing = get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
+    if (existing?.is_premium === 1) return res.status(409).json({ error: 'Already a premium member!' });
+
+    const { Cashfree, CFEnvironment } = require('cashfree-pg');
+    const cfEnv = process.env.CASHFREE_ENV === 'PRODUCTION' ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
+    const cfInstance = new Cashfree(cfEnv, process.env.CASHFREE_APP_ID, process.env.CASHFREE_SECRET_KEY);
+
+    const orderId = `DQ-${req.user.id.replace(/-/g,'').slice(0,8)}-${Date.now()}`;
+    const orderRequest = {
+      order_id:       orderId,
+      order_amount:   149,
+      order_currency: 'INR',
+      customer_details: {
+        customer_id:    user.id.replace(/-/g, '').slice(0, 50),
+        customer_email: user.email,
+        customer_phone: user.phone || '9999999999',
+        customer_name:  user.name,
+      },
+      order_meta: {
+        return_url: `${process.env.FRONTEND_URL}/premium?order_id=${orderId}&cf_status={order_status}`,
+        notify_url: `${process.env.BACKEND_URL}/api/premium/cashfree/webhook`,
+      },
+      order_note: 'Datamyze Pro — Lifetime Access',
+    };
+
+    const response = await cfInstance.PGCreateOrder(orderRequest);
+    const { payment_session_id } = response.data;
+
+    // Persist pending order (utr_number column reused to store orderId for lookup)
+    run(db, `INSERT INTO premium_subscriptions (id, user_id, amount, utr_number, status, expires_at)
+             VALUES (?, ?, 149, ?, 'cashfree_pending', ?)`,
+      [uuidv4(), user.id, orderId, new Date(Date.now() + 365*24*60*60*1000).toISOString()]);
+
+    res.json({ payment_session_id, order_id: orderId, cf_env: process.env.CASHFREE_ENV === 'PRODUCTION' ? 'production' : 'sandbox' });
+  } catch (err) {
+    console.error('Cashfree create-order error:', err?.response?.data || err.message);
+    res.status(500).json({ error: 'Could not create payment order. Please try again.' });
+  }
+});
+
+// ── Cashfree: Verify Payment (called after return-URL redirect) ──────
+router.get('/cashfree/verify/:orderId', authMiddleware, async (req, res) => {
+  try {
+    const { Cashfree, CFEnvironment } = require('cashfree-pg');
+    const cfEnv = process.env.CASHFREE_ENV === 'PRODUCTION' ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
+    const cfInstance = new Cashfree(cfEnv, process.env.CASHFREE_APP_ID, process.env.CASHFREE_SECRET_KEY);
+    const response = await cfInstance.PGFetchOrder(req.params.orderId);
+    const orderStatus = response.data?.order_status;
+
+    if (orderStatus === 'PAID') {
+      const db = req.app.locals.db;
+      const sub = get(db, "SELECT * FROM premium_subscriptions WHERE utr_number = ?", [req.params.orderId]);
+      if (sub && sub.user_id === req.user.id && sub.status !== 'active') {
+        const expiresAt = new Date(Date.now() + 365*24*60*60*1000).toISOString();
+        run(db, "UPDATE premium_subscriptions SET status='active', activated_at=datetime('now'), expires_at=? WHERE utr_number=?",
+          [expiresAt, req.params.orderId]);
+        run(db, 'UPDATE users SET is_premium=1, premium_expires_at=? WHERE id=?', [expiresAt, sub.user_id]);
+        grantPendingCertificates(db, sub.user_id);
+        console.log(`✅ Cashfree verify: premium activated for ${sub.user_id}`);
+      }
+    }
+
+    res.json({ status: orderStatus });
+  } catch (err) {
+    console.error('Cashfree verify error:', err?.response?.data || err.message);
+    res.status(500).json({ error: 'Could not verify payment' });
+  }
+});
+
 // Admin: activate premium for any user
 router.post('/activate/:userId', authMiddleware, (req, res) => {
   const db = req.app.locals.db;
@@ -130,7 +227,8 @@ router.post('/activate/:userId', authMiddleware, (req, res) => {
   const expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
   run(db, 'UPDATE users SET is_premium = 1, premium_expires_at = ? WHERE id = ?', [expiresAt, userId]);
   run(db, "UPDATE premium_subscriptions SET status = 'active', activated_at = datetime('now') WHERE user_id = ? AND status = 'pending'", [userId]);
-  res.json({ message: 'Premium activated' });
+  const granted = grantPendingCertificates(db, userId);
+  res.json({ message: 'Premium activated', certificates_granted: granted });
 });
 
 // Self-activate (owner/dev setup — activates premium for the currently logged-in user)
@@ -139,7 +237,8 @@ router.post('/self-activate', authMiddleware, (req, res) => {
   const expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
   run(db, 'UPDATE users SET is_premium = 1, premium_expires_at = ?, role = ? WHERE id = ?',
     [expiresAt, 'admin', req.user.id]);
-  res.json({ message: 'Premium + admin activated', expires: expiresAt });
+  const granted = grantPendingCertificates(db, req.user.id);
+  res.json({ message: 'Premium + admin activated', expires: expiresAt, certificates_granted: granted });
 });
 
 // Book a mock interview (premium only)

@@ -999,18 +999,89 @@ Walk away if:
 ═══════════════════════════════════════════════════ */
 export default function Premium() {
   const { user } = useAuth();
-  const [status, setStatus]     = useState(null);
-  const [loading, setLoading]   = useState(true);
+  const [status, setStatus]       = useState(null);
+  const [loading, setLoading]     = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [step, setStep]         = useState(1);
-  const [utr, setUtr]           = useState('');
+  const [step, setStep]           = useState(1);
+  const [utr, setUtr]             = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [copied, setCopied]     = useState(false);
-  const [toast, setToast]       = useState('');
+  const [copied, setCopied]       = useState(false);
+  const [toast, setToast]         = useState('');
+  const [cfLoading, setCfLoading] = useState(false);
 
   useEffect(() => {
     api.get('/premium/status').then(r => setStatus(r.data)).catch(() => {}).finally(() => setLoading(false));
   }, []);
+
+  // Handle return from Cashfree redirect (fallback if modal closes)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const orderId  = params.get('order_id');
+    const cfStatus = params.get('cf_status');
+    if (orderId) {
+      window.history.replaceState({}, '', '/premium');
+      api.get(`/premium/cashfree/verify/${orderId}`)
+        .then(r => {
+          if (r.data.status === 'PAID') {
+            api.get('/premium/status').then(sr => setStatus(sr.data));
+            setToast('🎉 Payment successful! Premium activated.');
+          } else if (cfStatus === 'ACTIVE') {
+            setToast('⏳ Payment is being processed. Your account will be activated shortly.');
+          }
+        })
+        .catch(() => {});
+    }
+  }, []);
+
+  async function handleCashfreePay() {
+    setCfLoading(true);
+    setToast('');
+    try {
+      // Create order on backend
+      const r = await api.post('/premium/cashfree/create-order');
+      const { payment_session_id, order_id, cf_env } = r.data;
+
+      // Load Cashfree JS SDK if not already loaded
+      if (!window.Cashfree) {
+        await new Promise((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
+          s.onload = resolve;
+          s.onerror = reject;
+          document.head.appendChild(s);
+        });
+      }
+
+      const cashfree = window.Cashfree({ mode: cf_env || 'production' });
+      const result = await cashfree.checkout({
+        paymentSessionId: payment_session_id,
+        redirectTarget: '_modal',
+      });
+
+      if (result?.error) {
+        setToast('Payment failed: ' + (result.error.message || 'Please try again.'));
+        return;
+      }
+
+      // Payment completed — verify with backend
+      setToast('Verifying payment…');
+      const verify = await api.get(`/premium/cashfree/verify/${order_id}`);
+      if (verify.data.status === 'PAID') {
+        const sr = await api.get('/premium/status');
+        setStatus(sr.data);
+        setShowModal(false);
+        setToast('🎉 Welcome to Pro! Your premium is now active.');
+      } else {
+        setToast('⏳ Payment is being processed. Refresh in a moment.');
+      }
+    } catch (e) {
+      const msg = e.response?.data?.error || e.message || 'Something went wrong.';
+      setToast('❌ ' + msg);
+    } finally {
+      setCfLoading(false);
+      setTimeout(() => setToast(''), 6000);
+    }
+  }
 
   async function submitUTR(receiptFilename = null, receiptOriginal = null) {
     if (!utr.trim() || utr.trim().length < 6) { setToast('Enter a valid UTR / Transaction ID'); return; }
@@ -1052,6 +1123,7 @@ export default function Premium() {
       submitting={submitting} submitUTR={submitUTR}
       copied={copied} copyUPI={copyUPI}
       toast={toast}
+      cfLoading={cfLoading} handleCashfreePay={handleCashfreePay}
     />
   );
 }
@@ -2218,8 +2290,8 @@ const FEATURES = [
   { icon: '⭐', label: 'Priority Support',         desc: '6-hour response time from us directly.',                                         bg: 'rgba(92,200,160,0.14)',  border: 'rgba(92,200,160,0.25)'  },
 ];
 
-function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep, utr, setUtr, submitting, submitUTR, copied, copyUPI, toast }) {
-  const [payMethod, setPayMethod] = useState('upi');
+function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep, utr, setUtr, submitting, submitUTR, copied, copyUPI, toast, cfLoading, handleCashfreePay }) {
+  const [payMethod, setPayMethod] = useState('cashfree');
   const [card, setCard] = useState({ number: '', expiry: '', cvv: '', name: '' });
   const [cardToast, setCardToast] = useState('');
   const [receipt, setReceipt] = useState(null); // { file, preview, name }
@@ -2295,9 +2367,9 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
           </div>
         )}
         <div className="premium-hero-stats">
-          <div className="premium-stat"><div className="premium-stat-val">200+</div><div className="premium-stat-lbl">Students</div></div>
+          <div className="premium-stat"><div className="premium-stat-val">1:1</div><div className="premium-stat-lbl">Mentor Session</div></div>
           <div className="premium-stat"><div className="premium-stat-val">18+</div><div className="premium-stat-lbl">Live Jobs</div></div>
-          <div className="premium-stat"><div className="premium-stat-val">48h</div><div className="premium-stat-lbl">Resume Feedback</div></div>
+          <div className="premium-stat"><div className="premium-stat-val">24h</div><div className="premium-stat-lbl">Resume Feedback</div></div>
           <div className="premium-stat"><div className="premium-stat-val">4.9★</div><div className="premium-stat-lbl">Mentor Rating</div></div>
         </div>
       </div>
@@ -2338,12 +2410,12 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
 
       {showModal && (
         <div className="modal-backdrop" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
-          <div className="modal" style={{ maxWidth: 460 }}>
-            <button className="modal-close" onClick={() => { setShowModal(false); setStep(1); }}>✕</button>
+          <div className="modal" style={{ maxWidth: 420 }}>
+            <button className="modal-close" onClick={() => { setShowModal(false); setStep(1); setPayMethod('cashfree'); }}>✕</button>
 
             {/* Payment method toggle */}
             <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: '1.2rem' }}>
-              {[{ id: 'upi', label: '📱 UPI' }, { id: 'card', label: '💳 Card / NetBanking' }].map(m => (
+              {[{ id: 'cashfree', label: '⚡ Pay Online' }, { id: 'upi', label: '📱 UPI Manual' }].map(m => (
                 <button key={m.id} onClick={() => setPayMethod(m.id)}
                   style={{
                     padding: '9px 20px', borderRadius: 12, fontWeight: 700, fontSize: 13, cursor: 'pointer',
@@ -2356,6 +2428,42 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
                 </button>
               ))}
             </div>
+
+            {payMethod === 'cashfree' && (
+              <div className="payment-step" style={{ textAlign: 'center' }}>
+                {/* Amount */}
+                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 4 }}>One-time payment · Lifetime access</div>
+                <div style={{ fontSize: 42, fontWeight: 900, color: '#fff', letterSpacing: '-1.5px', marginBottom: 2 }}>
+                  ₹149
+                </div>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.30)', marginBottom: '1.6rem' }}>Datamyze Pro</div>
+
+                {/* Pay button */}
+                <button
+                  className="btn-gold"
+                  style={{ width: '100%', justifyContent: 'center', fontSize: 17, padding: '14px 24px', opacity: cfLoading ? 0.7 : 1 }}
+                  onClick={handleCashfreePay}
+                  disabled={cfLoading}
+                >
+                  {cfLoading
+                    ? <><span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite', marginRight: 10 }} />Processing…</>
+                    : <><span>⚡</span> Pay ₹149 Now</>
+                  }
+                </button>
+
+                {/* Accepted methods */}
+                <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
+                  {['UPI', 'PhonePe', 'GPay', 'Paytm', 'Cards', 'NetBanking'].map(m => (
+                    <span key={m} style={{ fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.45)' }}>{m}</span>
+                  ))}
+                </div>
+
+                {/* Trust line */}
+                <div style={{ marginTop: '1.2rem', fontSize: 12, color: 'rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  <span>🔒</span> Secured by Cashfree Payments · 256-bit SSL
+                </div>
+              </div>
+            )}
 
             {payMethod === 'upi' && (
               <>
@@ -2446,65 +2554,6 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
               </>
             )}
 
-            {payMethod === 'card' && (
-              <div className="payment-step">
-                <div style={{ fontSize: 36, marginBottom: '0.5rem' }}>💳</div>
-                <h2 style={{ fontWeight: 800, marginBottom: 4 }}>Card / NetBanking</h2>
-                <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: '1.2rem' }}>Powered by Razorpay — secure 256-bit encryption</p>
-
-                {/* Card Number */}
-                <div className="field" style={{ textAlign: 'left', position: 'relative' }}>
-                  <label>Card Number</label>
-                  <div style={{ position: 'relative' }}>
-                    <input
-                      value={card.number}
-                      onChange={e => setC('number', formatCardNumber(e.target.value))}
-                      placeholder="XXXX XXXX XXXX XXXX"
-                      maxLength={19}
-                      style={{ fontFamily: 'JetBrains Mono, monospace', letterSpacing: '2px', paddingRight: 60 }}
-                    />
-                    {cardBrand(card.number) && (
-                      <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 11, fontWeight: 800, color: cardBrand(card.number) === 'VISA' ? '#1a1f71' : '#eb001b', background: cardBrand(card.number) === 'VISA' ? '#e8eaf6' : '#fff', padding: '2px 7px', borderRadius: 5 }}>
-                        {cardBrand(card.number)}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Expiry + CVV */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                  <div className="field" style={{ textAlign: 'left' }}>
-                    <label>Expiry (MM/YY)</label>
-                    <input value={card.expiry} onChange={e => setC('expiry', formatExpiry(e.target.value))} placeholder="MM/YY" maxLength={5} style={{ fontFamily: 'JetBrains Mono, monospace' }} />
-                  </div>
-                  <div className="field" style={{ textAlign: 'left' }}>
-                    <label>CVV</label>
-                    <input value={card.cvv} onChange={e => setC('cvv', e.target.value.replace(/\D/g, '').slice(0, 4))} placeholder="•••" maxLength={4} type="password" style={{ fontFamily: 'JetBrains Mono, monospace' }} />
-                  </div>
-                </div>
-
-                {/* Name on card */}
-                <div className="field" style={{ textAlign: 'left' }}>
-                  <label>Name on Card</label>
-                  <input value={card.name} onChange={e => setC('name', e.target.value)} placeholder="As printed on card" />
-                </div>
-
-                {/* Info box */}
-                <div style={{ background: 'rgba(74,144,217,0.08)', border: '1px solid rgba(74,144,217,0.20)', borderRadius: 10, padding: '10px 14px', fontSize: 12, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, marginBottom: '1rem', textAlign: 'left' }}>
-                  🔒 Card payments powered by Razorpay. To enable live card payments, add your <code style={{ background: 'rgba(0,0,0,0.30)', padding: '1px 5px', borderRadius: 4, fontFamily: 'monospace' }}>RAZORPAY_KEY_ID</code> to the backend <code style={{ background: 'rgba(0,0,0,0.30)', padding: '1px 5px', borderRadius: 4, fontFamily: 'monospace' }}>.env</code> file.
-                </div>
-
-                <button
-                  className="btn-primary"
-                  style={{ width: '100%', justifyContent: 'center', fontSize: 15 }}
-                  onClick={handleCardPay}
-                >
-                  🔒 Pay ₹{AMOUNT} Securely →
-                </button>
-
-                {cardToast && <div style={{ marginTop: 10, background: 'rgba(232,168,56,0.15)', border: '1px solid rgba(232,168,56,0.30)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#E8A838', textAlign: 'left' }}>{cardToast}</div>}
-              </div>
-            )}
           </div>
         </div>
       )}

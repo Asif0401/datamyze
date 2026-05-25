@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import api from '../hooks/useApi';
 
-const TABS = ['Overview', 'Users', 'Payments', 'Courses', 'Problems', 'Submissions', 'Activity'];
+const TABS = ['Overview', 'Users', 'Payments', 'Courses', 'Problems', 'Submissions', 'Activity', 'Instructor'];
 
 const STAT_COLORS = {
   blue:   { bg: 'rgba(74,144,217,0.14)',  border: 'rgba(74,144,217,0.35)',  text: '#4A90D9',  glow: 'rgba(74,144,217,0.20)' },
@@ -413,6 +413,143 @@ function PaymentsTab({ data, reload }) {
   );
 }
 
+/* ─────────────────────────────────────────────
+   Instructor Profile Tab
+───────────────────────────────────────────── */
+function InstructorTab() {
+  const [profile, setProfile] = useState({ name: '', title: '', bio: '', location: '', linkedin_url: '', github_url: '' });
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [photoFile, setPhotoFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState('');
+  const fileRef = useRef(null);
+
+  useEffect(() => {
+    api.get('/admin/instructor').then(r => {
+      const d = r.data;
+      setProfile({ name: d.name || '', title: d.title || '', bio: d.bio || '', location: d.location || '', linkedin_url: d.linkedin_url || '', github_url: d.github_url || '' });
+      if (d.photo_url) setPhotoPreview(d.photo_url + '?t=' + Date.now());
+    }).catch(() => {});
+  }, []);
+
+  function handleFileChange(f) {
+    if (!f) return;
+    if (f.size > 5 * 1024 * 1024) { setToast('File must be under 5MB'); return; }
+    setPhotoFile(f);
+    setPhotoPreview(URL.createObjectURL(f));
+  }
+
+  async function uploadPhoto() {
+    if (!photoFile) return;
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('photo', photoFile);
+      const r = await api.post('/admin/instructor/photo', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+      setPhotoPreview(r.data.photo_url + '?t=' + Date.now());
+      setPhotoFile(null);
+      showToast('✅ Photo uploaded successfully!');
+    } catch (e) { showToast('❌ Upload failed'); }
+    finally { setUploading(false); }
+  }
+
+  async function saveProfile() {
+    setSaving(true);
+    try {
+      await api.put('/admin/instructor', profile);
+      showToast('✅ Profile saved!');
+    } catch (e) { showToast('❌ Save failed'); }
+    finally { setSaving(false); }
+  }
+
+  function showToast(msg) { setToast(msg); setTimeout(() => setToast(''), 3500); }
+
+  const initials = profile.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'AK';
+
+  return (
+    <div style={{ maxWidth: 680 }}>
+      <div style={{ fontWeight: 800, fontSize: 18, marginBottom: '0.4rem' }}>Instructor Profile</div>
+      <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', marginBottom: '2rem' }}>This information appears on the Instructor page visible to all students.</div>
+
+      {/* Photo section */}
+      <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem' }}>
+        <div style={{ fontWeight: 700, fontSize: 14, marginBottom: '1.2rem', color: 'rgba(255,255,255,0.7)' }}>Profile Photo</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+          {/* Avatar preview */}
+          <div style={{ flexShrink: 0 }}>
+            {photoPreview
+              ? <img src={photoPreview} alt="Instructor" style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'cover', border: '3px solid rgba(127,119,221,0.5)' }} onError={() => setPhotoPreview(null)} />
+              : <div style={{ width: 100, height: 100, borderRadius: '50%', background: 'linear-gradient(135deg,#7F77DD,#4A90D9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, fontWeight: 800, color: '#fff', border: '3px solid rgba(127,119,221,0.5)' }}>{initials}</div>
+            }
+          </div>
+
+          {/* Upload controls */}
+          <div style={{ flex: 1 }}>
+            <div
+              onClick={() => fileRef.current?.click()}
+              onDragOver={e => { e.preventDefault(); e.currentTarget.style.borderColor = 'rgba(127,119,221,0.6)'; }}
+              onDragLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
+              onDrop={e => { e.preventDefault(); e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; handleFileChange(e.dataTransfer.files[0]); }}
+              style={{ padding: '14px 20px', border: '1.5px dashed rgba(255,255,255,0.15)', borderRadius: 12, textAlign: 'center', cursor: 'pointer', background: 'rgba(127,119,221,0.04)', transition: 'border-color 0.15s', marginBottom: 10 }}>
+              <div style={{ fontSize: 22, marginBottom: 4 }}>📷</div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', fontWeight: 600 }}>
+                {photoFile ? `Selected: ${photoFile.name}` : 'Click or drag to upload photo'}
+              </div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', marginTop: 3 }}>JPG, PNG, WEBP · Max 5MB</div>
+            </div>
+            <input ref={fileRef} type="file" accept=".jpg,.jpeg,.png,.webp,.heic" style={{ display: 'none' }} onChange={e => handleFileChange(e.target.files[0])} />
+            {photoFile && (
+              <button className="btn-primary" onClick={uploadPhoto} disabled={uploading} style={{ fontSize: 13, padding: '8px 20px' }}>
+                {uploading ? '⬆️ Uploading…' : '⬆️ Upload Photo'}
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Profile info */}
+      <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem' }}>
+        <div style={{ fontWeight: 700, fontSize: 14, marginBottom: '1.2rem', color: 'rgba(255,255,255,0.7)' }}>Profile Info</div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          {[
+            { key: 'name',        label: 'Full Name',    placeholder: 'Asif Khan' },
+            { key: 'title',       label: 'Title / Role', placeholder: 'Lead Instructor · Data Scientist' },
+            { key: 'location',    label: 'Location',     placeholder: 'Mumbai, India' },
+            { key: 'linkedin_url',label: 'LinkedIn URL', placeholder: 'https://linkedin.com/in/...' },
+            { key: 'github_url',  label: 'GitHub URL',   placeholder: 'https://github.com/...' },
+          ].map(f => (
+            <div key={f.key} className="field" style={{ textAlign: 'left', marginBottom: 0 }}>
+              <label style={{ fontSize: 12 }}>{f.label}</label>
+              <input
+                value={profile[f.key] || ''}
+                onChange={e => setProfile(p => ({ ...p, [f.key]: e.target.value }))}
+                placeholder={f.placeholder}
+                style={{ fontSize: 13 }}
+              />
+            </div>
+          ))}
+        </div>
+        <div className="field" style={{ textAlign: 'left', marginTop: '1rem', marginBottom: 0 }}>
+          <label style={{ fontSize: 12 }}>Bio</label>
+          <textarea
+            value={profile.bio || ''}
+            onChange={e => setProfile(p => ({ ...p, bio: e.target.value }))}
+            placeholder="Write a short bio about yourself..."
+            rows={4}
+            style={{ fontSize: 13, resize: 'vertical', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: '10px 14px', color: '#fff', width: '100%', fontFamily: 'inherit' }}
+          />
+        </div>
+        <button className="btn-gold" onClick={saveProfile} disabled={saving} style={{ marginTop: '1.2rem', fontSize: 13, padding: '10px 24px' }}>
+          {saving ? 'Saving…' : '💾 Save Profile'}
+        </button>
+      </div>
+
+      {toast && <div className="toast">{toast}</div>}
+    </div>
+  );
+}
+
 export default function Admin() {
   const [tab, setTab] = useState('Overview');
   const [data, setData] = useState({});
@@ -483,6 +620,7 @@ export default function Admin() {
             {tab === 'Problems'    && <ProblemsTab    data={data.problems} />}
             {tab === 'Submissions' && <SubmissionsTab data={data.submissions} />}
             {tab === 'Activity'    && <ActivityTab    data={data.activity} />}
+            {tab === 'Instructor'  && <InstructorTab />}
           </div>
         )
       }

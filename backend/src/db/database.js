@@ -253,6 +253,11 @@ async function initDb() {
     )
   `);
 
+  // Migrations for quiz tables
+  try { database.run('ALTER TABLE quiz_questions ADD COLUMN course_id TEXT'); } catch(e) {}
+  try { database.run("ALTER TABLE quiz_questions ADD COLUMN topic TEXT DEFAULT 'General'"); } catch(e) {}
+  try { database.run('ALTER TABLE quizzes ADD COLUMN course_id TEXT'); } catch(e) {}
+
   // Migrations for users table
   try { database.run('ALTER TABLE users ADD COLUMN is_premium INTEGER DEFAULT 0'); } catch(e) {}
   try { database.run('ALTER TABLE users ADD COLUMN premium_expires_at TEXT'); } catch(e) {}
@@ -277,6 +282,7 @@ async function initDb() {
   try { database.run('ALTER TABLE users ADD COLUMN target_role TEXT'); } catch(e) {}
   try { database.run('ALTER TABLE users ADD COLUMN avatar_url TEXT'); } catch(e) {}
   try { database.run('ALTER TABLE users ADD COLUMN profile_completed INTEGER DEFAULT 0'); } catch(e) {}
+  try { database.run('ALTER TABLE courses ADD COLUMN is_coming_soon INTEGER DEFAULT 0'); } catch(e) {}
 
   // OTP table for signup & phone login verification
   database.run(`
@@ -316,6 +322,25 @@ async function initDb() {
       user_id TEXT NOT NULL,
       voted_at TEXT DEFAULT (datetime('now')),
       UNIQUE(course_id, user_id)
+    )
+  `);
+
+  database.run(`
+    CREATE TABLE IF NOT EXISTS case_studies (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      company TEXT NOT NULL,
+      company_logo TEXT DEFAULT '🏢',
+      difficulty TEXT DEFAULT 'Medium',
+      tags TEXT DEFAULT '[]',
+      summary TEXT,
+      problem TEXT,
+      data_overview TEXT,
+      approach TEXT,
+      key_insights TEXT,
+      outcome TEXT,
+      is_free INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now'))
     )
   `);
 

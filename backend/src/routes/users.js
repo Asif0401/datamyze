@@ -38,6 +38,9 @@ router.get('/dashboard', authMiddleware, (req, res) => {
 
 router.get('/certificates', authMiddleware, (req, res) => {
   const db = req.app.locals.db;
+  const user = get(db, 'SELECT is_premium, premium_expires_at FROM users WHERE id = ?', [req.user.id]);
+  const isPremium = user?.is_premium === 1 && (!user.premium_expires_at || new Date(user.premium_expires_at) > new Date());
+  if (!isPremium) return res.status(403).json({ error: 'premium_required', message: 'Certificates are available for Pro members only.' });
   const certs = all(db, `
     SELECT cert.id, cert.credential_id, cert.issued_at,
            c.title AS course_title, c.icon AS course_icon

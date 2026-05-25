@@ -4,6 +4,80 @@ const { run, get, all } = require('../db/database');
 const authMiddleware = require('../middleware/auth');
 const router = express.Router();
 
+// GET courses that have quiz questions
+router.get('/courses', authMiddleware, (req, res) => {
+  const db = req.app.locals.db;
+  const courses = all(db, `
+    SELECT c.id, c.title, c.icon, c.color,
+           COUNT(DISTINCT qq.topic) as topic_count,
+           COUNT(qq.id) as question_count
+    FROM courses c
+    JOIN quiz_questions qq ON qq.course_id = c.id
+    GROUP BY c.id
+    ORDER BY c.rowid
+  `);
+  res.json({ courses });
+});
+
+// GET topics for a course
+router.get('/topics/:courseId', authMiddleware, (req, res) => {
+  const db = req.app.locals.db;
+  const topics = all(db, `
+    SELECT topic, COUNT(*) as question_count
+    FROM quiz_questions
+    WHERE course_id = ?
+    GROUP BY topic
+    ORDER BY topic
+  `, [req.params.courseId]);
+  res.json({ topics });
+});
+
+// GET questions for a course+topic (quiz session)
+router.get('/questions', authMiddleware, (req, res) => {
+  const db = req.app.locals.db;
+  const { course_id, topic, limit = 5 } = req.query;
+  if (!course_id) return res.status(400).json({ error: 'course_id required' });
+
+  let qs;
+  if (topic && topic !== 'All') {
+    qs = all(db, 'SELECT id, question, options, explanation, correct_index FROM quiz_questions WHERE course_id = ? AND topic = ? ORDER BY RANDOM() LIMIT ?', [course_id, topic, parseInt(limit)]);
+  } else {
+    qs = all(db, 'SELECT id, question, options, explanation, correct_index FROM quiz_questions WHERE course_id = ? ORDER BY RANDOM() LIMIT ?', [course_id, parseInt(limit)]);
+  }
+
+  // Send correct_index to frontend for instant feedback
+  res.json({ questions: qs.map(q => ({ ...q, options: JSON.parse(q.options) })) });
+});
+
+// Submit quiz results
+router.post('/submit', authMiddleware, (req, res) => {
+  const db = req.app.locals.db;
+  const { course_id, topic, answers, question_ids } = req.body;
+  if (!answers || !question_ids) return res.status(400).json({ error: 'answers and question_ids required' });
+
+  const questions = question_ids.map(id => get(db, 'SELECT * FROM quiz_questions WHERE id = ?', [id])).filter(Boolean);
+  let score = 0;
+  questions.forEach(q => {
+    if (answers[q.id] === q.correct_index) score++;
+  });
+
+  const xpEarned = score * 30;
+  // Find or create a quiz record for this course
+  let quiz = get(db, 'SELECT id FROM quizzes WHERE course_id = ?', [course_id]);
+  if (!quiz) {
+    const qId = uuidv4();
+    run(db, 'INSERT OR IGNORE INTO quizzes (id, title, course_id) VALUES (?, ?, ?)', [qId, topic || 'Quiz', course_id]);
+    quiz = { id: qId };
+  }
+
+  run(db, 'INSERT INTO user_quiz_attempts (id, user_id, quiz_id, score, total, xp_earned) VALUES (?, ?, ?, ?, ?, ?)',
+    [uuidv4(), req.user.id, quiz.id, score, questions.length, xpEarned]);
+  run(db, 'UPDATE users SET xp = xp + ? WHERE id = ?', [xpEarned, req.user.id]);
+
+  res.json({ score, total: questions.length, xp_earned: xpEarned });
+});
+
+// Legacy routes for backward compatibility
 router.get('/', authMiddleware, (req, res) => {
   const db = req.app.locals.db;
   res.json({ quizzes: all(db, 'SELECT * FROM quizzes') });

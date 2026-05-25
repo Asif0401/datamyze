@@ -202,8 +202,14 @@ export default function Instructor() {
   const [photoError, setPhotoError] = useState(false);
   const statsRef = useRef(null);
   const [heroVisible, setHeroVisible] = useState(false);
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
+    // Fetch dynamic instructor profile from admin API
+    import('../hooks/useApi').then(m => {
+      m.default.get('/admin/instructor').then(r => setProfile(r.data)).catch(() => {});
+    });
+
     // Hero entrance
     const t = setTimeout(() => setHeroVisible(true), 100);
 
@@ -213,6 +219,11 @@ export default function Instructor() {
 
     return () => { clearTimeout(t); obs.disconnect(); };
   }, []);
+
+  // Derive dynamic values (fall back to static defaults)
+  const instructorName  = profile?.name  || 'Asif Khan';
+  const instructorTitle = profile?.title || 'Lead Instructor · Data Scientist';
+  const instructorPhoto = profile?.photo_url || null;
 
   const SKILLS = [
     { label: 'SQL', icon: '🗄️', color: '#7F77DD' },
@@ -261,10 +272,10 @@ export default function Instructor() {
             opacity: 0.7,
           }} />
           <div style={{ position: 'absolute', inset: -3, borderRadius: '50%', background: '#0d1117' }} />
-          {!photoError ? (
+          {(instructorPhoto && !photoError) ? (
             <img
-              src="/uploads/instructor/asif.jpg"
-              alt="Datamyze Instructor"
+              src={instructorPhoto}
+              alt={instructorName}
               onError={() => setPhotoError(true)}
               style={{
                 width: 140, height: 140, borderRadius: '50%', objectFit: 'cover',
@@ -280,7 +291,7 @@ export default function Instructor() {
               fontSize: 48, fontWeight: 800, color: '#fff',
               position: 'relative', zIndex: 1,
               border: '3px solid rgba(255,255,255,0.1)',
-            }}>AK</div>
+            }}>{instructorName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase()}</div>
           )}
         </div>
 

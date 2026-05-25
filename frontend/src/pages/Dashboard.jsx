@@ -218,6 +218,8 @@ const PRO_PERKS = [
   { icon: '🗺️', label: '12-Week Roadmap',          desc: 'Zero to first offer' },
   { icon: '📜', label: 'Verified Certificates',   desc: 'LinkedIn-ready credentials' },
   { icon: '⚡', label: 'Priority Support',         desc: 'Faster answers, always' },
+  { icon: '🤝', label: 'Referral Program',         desc: 'Get referred by our alumni network' },
+  { icon: '✉️', label: 'Cold Email to HRs',        desc: 'Templates & scripts that get replies' },
 ];
 
 function ProWelcomeBanner({ user, onDismiss, navigate }) {

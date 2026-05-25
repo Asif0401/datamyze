@@ -95,17 +95,52 @@ const CertLogo = () => (
 export default function Certificates() {
   const { user }    = useAuth();
   const navigate    = useNavigate();
-  const [certs, setCerts]     = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [toast, setToast]     = useState('');
+  const [certs, setCerts]         = useState([]);
+  const [loading, setLoading]     = useState(true);
+  const [isPremium, setIsPremium] = useState(false);
+  const [toast, setToast]         = useState('');
 
   useEffect(() => {
-    api.get('/users/certificates').then(r => setCerts(r.data.certificates)).finally(() => setLoading(false));
+    api.get('/users/certificates')
+      .then(r => { setCerts(r.data.certificates); setIsPremium(true); })
+      .catch(e => { if (e.response?.data?.error === 'premium_required') setIsPremium(false); })
+      .finally(() => setLoading(false));
   }, []);
 
   function showToast(msg) { setToast(msg); setTimeout(() => setToast(''), 2800); }
 
   if (loading) return <div className="loading"><div className="spinner" />Loading certificates...</div>;
+
+  /* ── Premium gate ── */
+  if (!isPremium) return (
+    <div className="page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '70vh' }}>
+      <div style={{ textAlign: 'center', maxWidth: 460 }}>
+        <div style={{ fontSize: 72, marginBottom: '1rem', filter: 'grayscale(0.3)' }}>🎓</div>
+        <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: '0.6rem', letterSpacing: '-0.4px' }}>
+          Certificates are a <span style={{ background: 'linear-gradient(135deg,#E8A838,#f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Pro</span> feature
+        </div>
+        <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, marginBottom: '2rem' }}>
+          Complete courses and earn verified, LinkedIn-ready certificates — exclusive to Pro members. Upgrade to unlock yours.
+        </div>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <button className="btn-primary" onClick={() => navigate('/premium')}
+            style={{ background: 'linear-gradient(135deg,#E8A838,#f59e0b)', border: 'none', fontSize: 15, padding: '12px 28px' }}>
+            👑 Upgrade to Pro
+          </button>
+          <button onClick={() => navigate('/courses')}
+            style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.7)', borderRadius: 12, fontSize: 14, padding: '12px 24px' }}>
+            Browse Courses
+          </button>
+        </div>
+        {/* Feature highlights */}
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: '2rem', flexWrap: 'wrap' }}>
+          {['LinkedIn-ready', 'Verified credential ID', 'Shareable link'].map(f => (
+            <span key={f} style={{ fontSize: 12, fontWeight: 600, padding: '5px 12px', borderRadius: 20, background: 'rgba(232,168,56,0.10)', border: '1px solid rgba(232,168,56,0.25)', color: '#E8A838' }}>✓ {f}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="page">
@@ -118,7 +153,7 @@ export default function Certificates() {
         <div className="card" style={{ textAlign: 'center', maxWidth: 500 }}>
           <div style={{ fontSize: 52, marginBottom: '1rem' }}>🎓</div>
           <div style={{ fontWeight: 700, fontSize: 16, marginBottom: '0.5rem' }}>No certificates yet</div>
-          <div style={{ color: 'var(--muted)', marginBottom: '1.5rem' }}>Complete any course to earn a verified certificate</div>
+          <div style={{ color: 'var(--muted)', marginBottom: '1.5rem' }}>Complete any course to earn your verified Pro certificate</div>
           <button className="btn-primary" onClick={() => navigate('/courses')}>Browse Courses →</button>
         </div>
       ) : (

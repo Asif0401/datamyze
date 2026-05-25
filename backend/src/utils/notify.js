@@ -14,19 +14,21 @@ function getTransport() {
   });
 }
 
-async function sendNotification(subject, html) {
+async function sendNotification(subject, html, replyTo = null) {
   const transport = getTransport();
   if (!transport) {
     console.log(`[Email] SMTP not configured — notification skipped:\n${subject}`);
     return;
   }
   try {
-    await transport.sendMail({
-      from: `"DataLift Alerts" <${process.env.SMTP_USER}>`,
+    const mailOptions = {
+      from: `"Datamyze Alerts" <${process.env.SMTP_USER}>`,
       to: NOTIFY_TO,
       subject,
       html,
-    });
+    };
+    if (replyTo) mailOptions.replyTo = replyTo;
+    await transport.sendMail(mailOptions);
     console.log(`[Email] Notification sent: ${subject}`);
   } catch (e) {
     console.error('[Email] Failed to send:', e.message);

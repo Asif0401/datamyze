@@ -250,4 +250,156 @@ function seedJobs(db) {
   console.log('✅ Jobs seed complete!');
 }
 
-module.exports = { seed, seedVideos, seedJobs };
+function seedComingSoonCourses(db) {
+  const { all: dbAll } = require('./database');
+  const existing = dbAll(db, "SELECT COUNT(*) as count FROM courses WHERE title = 'AI in Analytics'");
+  if (existing[0]?.count > 0) {
+    console.log('✅ Coming soon courses already seeded, skipping.');
+    return;
+  }
+  console.log('🌱 Seeding coming soon courses...');
+
+  const comingSoon = [
+    {
+      id: uuidv4(),
+      title: 'AI in Analytics',
+      description: 'Learn to integrate ChatGPT, Copilot, and AI tools into your analytics workflow — from prompt engineering to automated insights.',
+      icon: '🤖',
+      color: '#8B5CF6',
+      difficulty: 'Intermediate',
+      duration: '10h',
+      total_lessons: 0,
+    },
+    {
+      id: uuidv4(),
+      title: 'Machine Learning for Analysts',
+      description: 'Build predictive models with scikit-learn. Regression, classification, clustering — hands-on with real business datasets.',
+      icon: '🧠',
+      color: '#EC4899',
+      difficulty: 'Advanced',
+      duration: '15h',
+      total_lessons: 0,
+    },
+    {
+      id: uuidv4(),
+      title: 'Data Engineering Fundamentals',
+      description: 'ETL pipelines, dbt, Airflow, and cloud data warehouses. Learn how data moves from source to dashboard.',
+      icon: '⚙️',
+      color: '#F59E0B',
+      difficulty: 'Advanced',
+      duration: '12h',
+      total_lessons: 0,
+    },
+  ];
+
+  comingSoon.forEach(c => {
+    run(db, `INSERT INTO courses (id, title, description, icon, color, difficulty, duration, total_lessons, is_coming_soon) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+      [c.id, c.title, c.description, c.icon, c.color, c.difficulty, c.duration, c.total_lessons]);
+  });
+
+  console.log('✅ Coming soon courses seeded!');
+}
+
+function seedCaseStudies(db) {
+  const { all: dbAll } = require('./database');
+  const existing = dbAll(db, 'SELECT COUNT(*) as count FROM case_studies');
+  if (existing[0]?.count > 0) return;
+
+  console.log('🌱 Seeding case studies...');
+
+  const cases = [
+    {
+      company: 'Swiggy',
+      company_logo: '🍕',
+      title: 'Reducing Delivery Time by 23% with Route Optimization',
+      difficulty: 'Medium',
+      tags: JSON.stringify(['SQL', 'Python', 'Operations']),
+      summary: "How Swiggy's data team used clustering algorithms and real-time route analysis to reduce average delivery time from 38 to 29 minutes.",
+      problem: 'Average delivery times had increased by 15% over 6 months as order volume scaled, leading to poor ratings and customer churn.',
+      data_overview: '6 months of delivery data: 2.3M orders, 45,000 delivery partners, GPS coordinates, restaurant prep times, traffic data.',
+      approach: 'Used K-means clustering to group delivery zones, built regression model to predict prep time, redesigned dispatch algorithm.',
+      key_insights: 'Top 3 findings: (1) 34% of delays from restaurant prep variance, (2) Hotspot zones needed 2x partner density, (3) Time-of-day batching reduced avg distance by 18%.',
+      outcome: '23% reduction in delivery time, NPS score improved by 12 points, ₹2.1Cr monthly saving.',
+      is_free: 1,
+    },
+    {
+      company: 'Flipkart',
+      company_logo: '🛒',
+      title: 'Cart Abandonment Analysis — ₹180Cr Recovery',
+      difficulty: 'Medium',
+      tags: JSON.stringify(['SQL', 'Funnel Analysis', 'A/B Testing']),
+      summary: "Flipkart's growth team identified the exact funnel drop-off points causing ₹180Cr in monthly lost revenue and ran targeted interventions.",
+      problem: 'Cart abandonment rate hit 73% during non-sale periods. Mobile checkout had 81% abandonment vs 61% on desktop.',
+      data_overview: 'Clickstream data from 14M monthly active users, session recordings, payment failure logs, A/B test results.',
+      approach: 'Built cohort-based funnel analysis in SQL, segmented by device/user tier/category, ran 3 simultaneous A/B tests on checkout flow.',
+      key_insights: '(1) Payment page had 43% drop — too many steps. (2) Price-sensitive users needed EMI nudge at cart. (3) Push notification at 2hr abandonment = 18% recovery.',
+      outcome: 'Reduced mobile abandonment by 14%, recovered ₹180Cr/month equivalent GMV.',
+      is_free: 1,
+    },
+    {
+      company: 'Amazon',
+      company_logo: '📦',
+      title: 'Prime Churn Prediction Model — 91% Accuracy',
+      difficulty: 'Hard',
+      tags: JSON.stringify(['Machine Learning', 'Python', 'Retention']),
+      summary: "Amazon India's retention team built a churn prediction model that identifies at-risk Prime members 30 days before cancellation.",
+      problem: 'Prime renewal rate dropped 8% YoY. Reactive retention (post-cancellation) had <12% win-back rate.',
+      data_overview: '3 years of Prime member data: usage patterns, purchase frequency, streaming hours, support tickets, price sensitivity signals.',
+      approach: 'Feature engineering on 47 behavioral signals, XGBoost model with SHAP explainability, deployed in real-time scoring pipeline.',
+      key_insights: '(1) Members who don\'t use video for 45+ days are 3.4x more likely to churn. (2) Last 3 orders being returns = strong churn signal. (3) Price increase notification = 2-week churn spike.',
+      outcome: '91% accuracy, 34% reduction in Prime churn, $2.1M ARR impact.',
+      is_free: 0,
+    },
+    {
+      company: 'Zomato',
+      company_logo: '🍽️',
+      title: 'Dynamic Pricing for Surge Demand — Revenue +28%',
+      difficulty: 'Hard',
+      tags: JSON.stringify(['Python', 'Pricing', 'Real-time Analytics']),
+      summary: 'How Zomato built a real-time dynamic pricing engine that balances demand, supply, and customer satisfaction.',
+      problem: 'During peak hours, order fulfillment rate dropped to 67% while delivery partners earned sub-optimal. Static pricing failed to manage demand.',
+      data_overview: 'Real-time order stream (50K orders/hour peak), partner GPS data, restaurant capacity, weather API, event calendar data.',
+      approach: 'Multi-armed bandit algorithm for pricing, real-time Kafka stream processing, gradual rollout with holdout group.',
+      key_insights: '(1) Weather + events = 2.8x demand multiplier. (2) ₹15 surge reduces demand by 22% but increases fulfillment to 94%. (3) Partner earnings up 31% during surge.',
+      outcome: 'Revenue increased 28% during peak hours, fulfillment rate 67%→91%, partner satisfaction NPS +18.',
+      is_free: 0,
+    },
+    {
+      company: 'CRED',
+      company_logo: '💳',
+      title: 'Credit Score Segmentation for Targeted Offers',
+      difficulty: 'Medium',
+      tags: JSON.stringify(['SQL', 'Segmentation', 'Python']),
+      summary: "CRED's analytics team built a 5-tier member segmentation model that increased offer redemption by 3.2x.",
+      problem: 'Generic cashback offers had 8% redemption rate. High CAC with low LTV for certain user segments.',
+      data_overview: 'Payment behaviour of 8M members, CIBIL score proxies, spend categories, app engagement, referral data.',
+      approach: 'RFM segmentation extended with credit behaviour signals, K-means clustering into 5 tiers, personalised offer engine.',
+      key_insights: '(1) Tier-1 users (CIBIL 780+) prefer travel rewards 4x over cashback. (2) Tier-3 churn 60% faster when given generic offers. (3) Bill payment reminders increase retention by 24%.',
+      outcome: 'Offer redemption 8%→26%, CAC reduced 34%, LTV increased 2.1x for Tier 1-2 segments.',
+      is_free: 0,
+    },
+    {
+      company: 'Meesho',
+      company_logo: '🏪',
+      title: 'Supplier Quality Score — Reducing Returns by 31%',
+      difficulty: 'Medium',
+      tags: JSON.stringify(['SQL', 'Scoring Model', 'Operations']),
+      summary: 'Meesho built a supplier quality scoring system that reduced return rates from 18% to 12.4% in 90 days.',
+      problem: 'Return rate of 18% was 2x industry average, primarily from 340 high-volume suppliers with inconsistent quality.',
+      data_overview: '18 months of supplier performance data: 12M orders, product listings, return reasons, customer ratings, dispute history.',
+      approach: 'Built composite quality score (returns 40%, ratings 30%, dispute rate 20%, fulfilment speed 10%), automated tier badges, penalisation system.',
+      key_insights: '(1) Top 12% of suppliers caused 67% of quality returns. (2) Category-specific score thresholds needed. (3) Supplier dashboard visibility alone improved scores 15%.',
+      outcome: 'Return rate 18%→12.4%, supplier NPS improved 22 points, ₹8Cr monthly logistics cost saving.',
+      is_free: 0,
+    },
+  ];
+
+  cases.forEach(c => {
+    run(db, `INSERT INTO case_studies (id, title, company, company_logo, difficulty, tags, summary, problem, data_overview, approach, key_insights, outcome, is_free) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [uuidv4(), c.title, c.company, c.company_logo, c.difficulty, c.tags, c.summary, c.problem, c.data_overview, c.approach, c.key_insights, c.outcome, c.is_free]);
+  });
+
+  console.log('✅ Case studies seed complete!');
+}
+
+module.exports = { seed, seedVideos, seedJobs, seedComingSoonCourses, seedCaseStudies };

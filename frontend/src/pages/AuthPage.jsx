@@ -43,6 +43,118 @@ const PythonLogo = () => (
   </svg>
 );
 
+/* ── Animated icons ─────────────────────────────────── */
+const AnimatedBars = () => (
+  <svg width="30" height="28" viewBox="0 0 30 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <style>{`
+      @keyframes bar1 { 0%,100%{height:8px;y:20px} 50%{height:16px;y:12px} }
+      @keyframes bar2 { 0%,100%{height:14px;y:14px} 50%{height:8px;y:20px} }
+      @keyframes bar3 { 0%,100%{height:20px;y:8px} 50%{height:24px;y:4px} }
+      @keyframes bar4 { 0%,100%{height:10px;y:18px} 50%{height:18px;y:10px} }
+      .b1{animation:bar1 1.4s ease-in-out infinite}
+      .b2{animation:bar2 1.4s ease-in-out infinite 0.2s}
+      .b3{animation:bar3 1.4s ease-in-out infinite 0.4s}
+      .b4{animation:bar4 1.4s ease-in-out infinite 0.6s}
+    `}</style>
+    <rect className="b1" x="1"  y="20" width="5" height="8"  rx="1.5" fill="#38bdf8" opacity="0.7"/>
+    <rect className="b2" x="8"  y="14" width="5" height="14" rx="1.5" fill="#38bdf8" opacity="0.85"/>
+    <rect className="b3" x="15" y="8"  width="5" height="20" rx="1.5" fill="#38bdf8"/>
+    <rect className="b4" x="22" y="18" width="5" height="10" rx="1.5" fill="#38bdf8" opacity="0.75"/>
+  </svg>
+);
+
+const AnimatedProLogo = () => (
+  <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="ringG" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stopColor="#f59e0b"/>
+        <stop offset="40%"  stopColor="#fde68a"/>
+        <stop offset="70%"  stopColor="#c084fc"/>
+        <stop offset="100%" stopColor="#e879f9"/>
+      </linearGradient>
+      <linearGradient id="crownG" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%"   stopColor="#fef9c3"/>
+        <stop offset="100%" stopColor="#f59e0b"/>
+      </linearGradient>
+      <filter id="glow3" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="1.8" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <style>{`
+      @keyframes spin3 { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+      @keyframes pulse3 {
+        0%,100%{opacity:1;transform:scale(1)}
+        50%{opacity:0.85;transform:scale(0.96)}
+      }
+      @keyframes crownBob3 {
+        0%,100%{transform:translateY(0)}
+        50%{transform:translateY(-1.5px)}
+      }
+      .ring3{animation:spin3 4s linear infinite;transform-origin:22px 22px}
+      .inner3{animation:pulse3 2.5s ease-in-out infinite}
+      .crown3{animation:crownBob3 2s ease-in-out infinite;transform-origin:22px 22px}
+    `}</style>
+
+    {/* Rotating outer ring */}
+    <g className="ring3">
+      <circle cx="22" cy="22" r="20" stroke="url(#ringG)" strokeWidth="2.5"
+        fill="none" strokeDasharray="28 6" strokeLinecap="round"/>
+    </g>
+
+    {/* Inner dark circle */}
+    <g className="inner3">
+      <circle cx="22" cy="22" r="16.5" fill="#0c1729"/>
+      <circle cx="22" cy="22" r="16.5" fill="none"
+        stroke="rgba(245,158,11,0.18)" strokeWidth="1"/>
+    </g>
+
+    {/* Crown — clean minimal */}
+    <g className="crown3" filter="url(#glow3)">
+      <path d="M13 27 L13 19 L17.5 22.5 L22 15 L26.5 22.5 L31 19 L31 27 Z"
+        fill="url(#crownG)" strokeWidth="0"/>
+      <rect x="13" y="26" width="18" height="3.5" rx="1" fill="url(#crownG)"/>
+      <circle cx="22" cy="15.5" r="1.4" fill="#fff9c4"/>
+      <circle cx="13.2" cy="19.5" r="1"   fill="#fff9c4" opacity="0.8"/>
+      <circle cx="30.8" cy="19.5" r="1"   fill="#fff9c4" opacity="0.8"/>
+    </g>
+  </svg>
+);
+
+/* ── Track cards ───────────────────────────────────── */
+const TRACK_CARDS = [
+  {
+    emoji: <AnimatedBars />,
+    title: 'Analytics Starter',
+    sub: 'Free · Beginner Friendly',
+    color: '#38bdf8',
+    items: ['SQL & Python Problems', '12-Week Roadmap', 'Practice Assessments', 'Community Access'],
+  },
+  {
+    emoji: <AnimatedProLogo />,
+    title: 'Pro Track',
+    sub: 'Premium · Career Fast-Track',
+    color: '#a78bfa',
+    items: ['Curated Job Board', '1-on-1 Mock Interviews', 'Resume Review (24h)', 'Verified Certificates'],
+  },
+];
+
+/* ── Ticker data ───────────────────────────────────── */
+const TICKER_ROW1 = [
+  { icon: '🗄️', label: 'SQL & Python',    color: '#38bdf8' },
+  { icon: '🎙️', label: 'Mock Interviews', color: '#a78bfa' },
+  { icon: '💼',  label: 'Job Board',       color: '#5CC8A0' },
+  { icon: '📄',  label: 'Resume Review',   color: '#f9a825' },
+  { icon: '🗺️', label: '12-Week Roadmap', color: '#f87171' },
+];
+const TICKER_ROW2 = [
+  { icon: '📜',  label: 'Certificates',    color: '#e879f9' },
+  { icon: '🤝',  label: 'Referral Network',color: '#38bdf8' },
+  { icon: '✉️',  label: 'Cold Email HRs',  color: '#5CC8A0' },
+  { icon: '⚡',  label: 'Priority Support', color: '#a78bfa' },
+  { icon: '🎯',  label: 'Career Roadmap',  color: '#f9a825' },
+];
+
 /* ── Hero data ─────────────────────────────────────── */
 const HERO_FEATURES = [
   { icon: <SqlLogo />,    label: '100+ SQL Problems',  desc: 'Window functions, CTEs, real interview patterns' },
@@ -53,9 +165,9 @@ const HERO_FEATURES = [
   { icon: '🗺️',           label: '12-Week Roadmap',    desc: 'Structured path from zero to first offer' },
 ];
 const HERO_STATS = [
-  { val: '500+', lbl: 'Students'        },
+  { val: '1:1',  lbl: 'Mentor Session'  },
   { val: '100+', lbl: 'Problems'        },
-  { val: '48h',  lbl: 'Resume Feedback' },
+  { val: '24h',  lbl: 'Resume Feedback' },
   { val: '4.9★', lbl: 'Mentor Rating'  },
 ];
 const TESTIMONIALS = [
@@ -130,10 +242,8 @@ function OtpInput({ value, onChange }) {
 export default function AuthPage({ mode: initialMode }) {
   const [panel, setPanel]   = useState(initialMode || 'login'); // 'login' | 'signup'
   const [loginType, setLoginType] = useState('email');           // 'email' | 'phone'
-  const [tIdx, setTIdx]     = useState(0);
   const { login } = useAuth();
   const navigate  = useNavigate();
-  const t = TESTIMONIALS[tIdx];
 
   return (
     <div className="auth-wrap">
@@ -142,123 +252,130 @@ export default function AuthPage({ mode: initialMode }) {
 
       {/* ═══ LEFT HERO ═══ */}
       <div className="auth-hero">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1.5rem', animation: 'fadeInUp 0.5s ease both' }}>
-          <div className="auth-logo-icon">
-            <svg viewBox="0 0 22 22" fill="none" width="20" height="20">
+
+        {/* ── TOP: Logo ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, animation: 'fadeInUp 0.4s ease both' }}>
+          <div className="auth-logo-icon" style={{ width: 46, height: 46, borderRadius: 13, boxShadow: '0 0 20px rgba(34,211,238,0.4), 0 4px 16px rgba(0,0,0,0.4)' }}>
+            <svg viewBox="0 0 22 22" fill="none" width="24" height="24">
               <defs>
                 <linearGradient id="ab1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="white" stopOpacity="0.7"/><stop offset="100%" stopColor="white" stopOpacity="0.1"/></linearGradient>
-                <linearGradient id="ab2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="white" stopOpacity="0.85"/><stop offset="100%" stopColor="white" stopOpacity="0.12"/></linearGradient>
-                <linearGradient id="ab3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#67e8f9" stopOpacity="0.9"/><stop offset="100%" stopColor="#67e8f9" stopOpacity="0.12"/></linearGradient>
                 <linearGradient id="ab4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#22d3ee" stopOpacity="1"/><stop offset="100%" stopColor="#22d3ee" stopOpacity="0.18"/></linearGradient>
                 <filter id="aglow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
               </defs>
-              <line x1="1" y1="21.5" x2="23" y2="21.5" stroke="rgba(255,255,255,0.1)" strokeWidth="0.8"/>
-              <rect x="1.5" y="17"  width="3.5" height="4.5" rx="1.3" fill="url(#ab1)"/>
-              <rect x="6.5" y="13"  width="3.5" height="8.5" rx="1.3" fill="url(#ab2)"/>
-              <rect x="11.5" y="9"  width="3.5" height="12.5" rx="1.3" fill="url(#ab3)"/>
-              <rect x="16.5" y="5"  width="3.5" height="16.5" rx="1.3" fill="url(#ab4)"/>
-              <line x1="3.25" y1="16.5" x2="18.25" y2="4.5" stroke="#22d3ee" strokeWidth="1.8" strokeLinecap="round" filter="url(#aglow)" opacity="0.95"/>
+              <rect x="1.5" y="17" width="3.5" height="4.5" rx="1.3" fill="url(#ab1)"/>
+              <rect x="6.5" y="13" width="3.5" height="8.5" rx="1.3" fill="url(#ab1)"/>
+              <rect x="11.5" y="9" width="3.5" height="12.5" rx="1.3" fill="url(#ab1)"/>
+              <rect x="16.5" y="5" width="3.5" height="16.5" rx="1.3" fill="url(#ab4)"/>
+              <line x1="3.25" y1="16.5" x2="18.25" y2="4.5" stroke="#22d3ee" strokeWidth="1.8" strokeLinecap="round" filter="url(#aglow)" opacity="0.9"/>
               <path d="M18.25,2 L19.6,4.5 L18.25,7 L16.9,4.5 Z" fill="#22d3ee" filter="url(#aglow)"/>
             </svg>
           </div>
-          <div>
-            <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.3px', lineHeight: 1.1 }}>
-              <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>Data</span><span style={{ color: '#fff', fontWeight: 900 }}>myze</span>
-            </div>
-            <div style={{ fontSize: 8, fontWeight: 700, letterSpacing: '1.2px', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', marginTop: 2 }}>MASTER DATA. MASTER YOUR FUTURE.</div>
-          </div>
-          <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 9px', borderRadius: 20, background: 'rgba(92,200,160,0.15)', border: '1px solid rgba(92,200,160,0.30)', color: '#5CC8A0', letterSpacing: '0.5px' }}>BETA</span>
+          <span style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.5px', filter: 'drop-shadow(0 0 12px rgba(34,211,238,0.35))' }}>
+            <span style={{ color: 'rgba(255,255,255,0.72)', fontWeight: 600 }}>Data</span>
+            <span style={{
+              background: 'linear-gradient(135deg, #fff 0%, #22d3ee 60%, #a78bfa 100%)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+              fontWeight: 900,
+            }}>myze</span>
+          </span>
+          <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 9px', borderRadius: 20, background: 'rgba(92,200,160,0.15)', border: '1px solid rgba(92,200,160,0.35)', color: '#5CC8A0', boxShadow: '0 0 8px rgba(92,200,160,0.2)' }}>BETA</span>
         </div>
 
-        <div style={{ animation: 'fadeInUp 0.55s 0.06s ease both' }}>
+        {/* ── MIDDLE: Headline + cards + ticker ── */}
+        <div style={{ animation: 'fadeInUp 0.45s 0.06s ease both' }}>
           <div className="auth-hero-headline">
-            Done just preparing.<br />Start getting <span className="auth-gradient-text">hired.</span>
+            Prepare. Get mentored.<br />
+            <span className="auth-gradient-text">Start getting hired.</span>
           </div>
           <div className="auth-hero-sub">
-            India's most practical data analytics platform — real SQL &amp; Python problems, live mock interviews, expert resume review, and a curated job board. Everything between you and your first ₹12 LPA offer.
+            India's most practical analytics platform — SQL &amp; Python problems, 1-on-1 mock interviews, resume review, and a curated job board. Everything for your first ₹12 LPA offer.
+          </div>
+
+          {/* Track cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: '1.2rem' }}>
+            {TRACK_CARDS.map(t => (
+              <div key={t.title} className="auth-track-card" style={{ '--tc': t.color }}>
+                <div style={{ fontSize: 26, lineHeight: 1, marginBottom: 8 }}>{t.emoji}</div>
+                <div style={{ fontSize: 14, fontWeight: 800, color: '#fff', marginBottom: 3, letterSpacing: '-0.3px' }}>{t.title}</div>
+                <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--tc)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 12 }}>{t.sub}</div>
+                {t.items.map(item => (
+                  <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 7, marginBottom: 5 }}>
+                    <span style={{ color: 'var(--tc)', fontSize: 11, fontWeight: 800, marginTop: 1, flexShrink: 0 }}>✓</span>
+                    <span style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.52)', lineHeight: 1.35 }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          {/* Scrolling feature ticker */}
+          <div style={{
+            marginTop: '1.3rem',
+            display: 'flex', flexDirection: 'column', gap: 10,
+            overflow: 'hidden',
+            maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+          }}>
+            <div className="auth-ticker-track">
+              {[...TICKER_ROW1, ...TICKER_ROW1, ...TICKER_ROW1].map((f, i) => (
+                <span key={i} className="auth-ticker-chip" style={{ '--tc': f.color }}>
+                  <span style={{ fontSize: 14 }}>{f.icon}</span>{f.label}
+                </span>
+              ))}
+            </div>
+            <div className="auth-ticker-track auth-ticker-reverse">
+              {[...TICKER_ROW2, ...TICKER_ROW2, ...TICKER_ROW2].map((f, i) => (
+                <span key={i} className="auth-ticker-chip" style={{ '--tc': f.color }}>
+                  <span style={{ fontSize: 14 }}>{f.icon}</span>{f.label}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="auth-features" style={{ animation: 'fadeInUp 0.55s 0.12s ease both' }}>
-          {HERO_FEATURES.slice(0, 4).map(f => (
-            <div key={f.label} className="auth-feature-chip">
-              <span style={{ fontSize: 17, flexShrink: 0, marginTop: 1, display: 'flex', alignItems: 'center' }}>{f.icon}</span>
-              <div>
-                <div style={{ fontSize: 11.5, fontWeight: 700, color: '#e2e8f0', marginBottom: 1 }}>{f.label}</div>
-                <div style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.37)', lineHeight: 1.35 }}>{f.desc}</div>
+        {/* ── BOTTOM: Stats ── */}
+        <div style={{ animation: 'fadeInUp 0.5s 0.18s ease both' }}>
+          <div style={{ display: 'flex', gap: 0, borderTop: '1px solid rgba(255,255,255,0.07)', borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '1rem 0' }}>
+            {[
+              { val: 'Live',  lbl: '1-on-1 Mentor'  },
+              { val: '100+', lbl: 'Problems'        },
+              { val: '24h',  lbl: 'Resume Feedback' },
+              { val: '4.9★', lbl: 'Mentor Rating'  },
+            ].map((s, i) => (
+              <div key={s.lbl} style={{ flex: 1, textAlign: 'center', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.07)' : 'none' }}>
+                <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.5px', marginBottom: 2 }}>{s.val}</div>
+                <div style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{s.lbl}</div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="auth-stats-row" style={{ animation: 'fadeInUp 0.55s 0.18s ease both' }}>
-          {HERO_STATS.map((s, i) => (
-            <div key={s.lbl} className="auth-stat-cell" style={{ borderRight: i < HERO_STATS.length - 1 ? '1px solid rgba(255,255,255,0.07)' : 'none' }}>
-              <div className="auth-stat-val">{s.val}</div>
-              <div className="auth-stat-lbl">{s.lbl}</div>
-            </div>
-          ))}
-        </div>
-
-        <div style={{ animation: 'fadeInUp 0.55s 0.24s ease both' }}>
-          <div className="auth-testimonial">
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-              <div style={{ width: 38, height: 38, borderRadius: '50%', background: t.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: '#fff', flexShrink: 0 }}>{t.initials}</div>
-              <div style={{ flex: 1 }}>
-                <div className="auth-testimonial-text">{t.text}</div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: '#4A90D9' }}>{t.name}</span>
-                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginLeft: 6 }}>· {t.role}</span>
-                  </div>
-                  <div style={{ display: 'flex', gap: 5 }}>
-                    {TESTIMONIALS.map((_, i) => (
-                      <button key={i} onClick={() => setTIdx(i)} style={{ width: i === tIdx ? 18 : 6, height: 6, borderRadius: 10, background: i === tIdx ? '#4A90D9' : 'rgba(255,255,255,0.20)', border: 'none', padding: 0, cursor: 'pointer', transition: 'all 0.25s' }} />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="auth-trust-strip">
-            <span className="auth-trust-label">Students placed at</span>
-            {['Meesho', 'Flipkart', 'Swiggy', 'Razorpay', 'Zepto', 'CRED'].map(c => (
-              <span key={c} className="auth-trust-chip">{c}</span>
             ))}
           </div>
         </div>
+
       </div>
 
-      {/* ═══ RIGHT PANEL ═══ */}
+      {/* ═══ RIGHT CARD ═══ */}
       <div className="auth-right">
         <div className="auth-card">
-          <div className="auth-logo-wrap">
-            <div className="auth-logo-icon">
-              <svg viewBox="0 0 22 22" fill="none" width="20" height="20">
-                <line x1="1" y1="20.5" x2="21" y2="20.5" stroke="rgba(255,255,255,0.18)" strokeWidth="1" strokeLinecap="round"/>
-                <rect x="2" y="15" width="4" height="5.5" rx="1.2" fill="white" fillOpacity="0.55"/>
-                <rect x="8.5" y="10.5" width="4" height="10" rx="1.2" fill="white" fillOpacity="0.78"/>
-                <rect x="15" y="6.5" width="4" height="14" rx="1.2" fill="white" fillOpacity="0.97"/>
-                <polyline points="4,14.5 10.5,10 17,6" fill="none" stroke="rgba(34,211,238,0.95)" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
-                <circle cx="17" cy="6" r="1.8" fill="rgba(34,211,238,1)"/>
-              </svg>
-            </div>
-            <div>
-              <h1 className="auth-title"><span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>Data</span><span style={{ fontWeight: 900 }}>myze</span></h1>
-              <div style={{ fontSize: 8, fontWeight: 700, letterSpacing: '1px', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', marginTop: 1 }}>MASTER DATA. MASTER YOUR FUTURE.</div>
-            </div>
+
+          {/* Underline tabs */}
+          <div className="auth-underline-tabs">
+            <button className={`auth-underline-tab${panel === 'login'  ? ' active' : ''}`} onClick={() => setPanel('login')}>Sign in</button>
+            <button className={`auth-underline-tab${panel === 'signup' ? ' active' : ''}`} onClick={() => setPanel('signup')}>Create account</button>
           </div>
 
-          {/* Panel switcher */}
-          <div className="auth-tabs">
-            <button className={`auth-tab ${panel === 'login'  ? 'active' : ''}`} onClick={() => setPanel('login')}>Login</button>
-            <button className={`auth-tab ${panel === 'signup' ? 'active' : ''}`} onClick={() => setPanel('signup')}>Register</button>
+          {/* Heading */}
+          <div style={{ marginBottom: '1.4rem' }}>
+            <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.4px', marginBottom: 4 }}>
+              {panel === 'login' ? 'Welcome back 👋' : 'Start your journey 🚀'}
+            </div>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>
+              {panel === 'login' ? 'Sign in to continue your journey' : 'Free to join — no credit card needed'}
+            </div>
           </div>
 
           {panel === 'login'  && <LoginForm loginType={loginType} setLoginType={setLoginType} onSuccess={(tok, usr) => { login(tok, usr); navigate('/'); }} switchToSignup={() => setPanel('signup')} />}
           {panel === 'signup' && <SignupForm onSuccess={(tok, usr) => { login(tok, usr); navigate('/'); }} switchToLogin={() => setPanel('login')} />}
 
-          <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: 11, color: 'rgba(255,255,255,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+          <div style={{ marginTop: '1rem', fontSize: 11, color: 'rgba(255,255,255,0.20)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
             <span>🔒</span><span>Your data is secure &amp; never shared</span>
           </div>
         </div>
@@ -322,13 +439,8 @@ function LoginForm({ loginType, setLoginType, onSuccess, switchToSignup }) {
 
   return (
     <div>
-      <div style={{ textAlign: 'center', marginBottom: '1.4rem' }}>
-        <div style={{ fontSize: 17, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Welcome back 👋</div>
-        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)' }}>Sign in to continue your journey</div>
-      </div>
-
       {/* Login method toggle */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: '1.4rem' }}>
+      <div style={{ display: 'flex', gap: 7, marginBottom: '1rem' }}>
         {[
           { id: 'email', label: '✉️ Email'   },
           { id: 'phone', label: '📱 Phone OTP' },
@@ -494,13 +606,8 @@ function SignupForm({ onSuccess, switchToLogin }) {
 
   return (
     <div>
-      <div style={{ textAlign: 'center', marginBottom: '1.4rem' }}>
-        <div style={{ fontSize: 17, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Start your journey 🚀</div>
-        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)' }}>Join 500+ analysts learning SQL, Python & more</div>
-      </div>
-
       {/* Step indicator */}
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1.4rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
         {STEPS.map((s, i) => {
           const num  = i + 1;
           const done = step > num;

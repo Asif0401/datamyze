@@ -65,6 +65,18 @@ const Icons = {
       <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
     </svg>
   ),
+  CaseStudies: () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+    </svg>
+  ),
+  Help: () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+      <line x1="12" y1="17" x2="12.01" y2="17"/>
+    </svg>
+  ),
   SignOut: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -85,13 +97,15 @@ const NAV = [
   { to: '/problems',    Icon: Icons.Problems,     label: 'Problems' },
   { to: '/quiz',        Icon: Icons.Quiz,         label: 'Quiz' },
   { to: '/leaderboard', Icon: Icons.Leaderboard,  label: 'Leaderboard' },
-  { to: '/certificates',Icon: Icons.Certificates, label: 'Certificates' },
+  { to: '/certificates',  Icon: Icons.Certificates,  label: 'Certificates' },
+  { to: '/case-studies',  Icon: Icons.CaseStudies,   label: 'Case Studies' },
+  { to: '/help',          Icon: Icons.Help,           label: 'Help & Support' },
 ];
 
 const PREMIUM_NAV = [
-  { to: '/premium',    Icon: Icons.Premium,    label: 'Go Pro ✨',       className: 'nav-premium-item' },
-  { to: '/jobs',       Icon: Icons.Jobs,       label: 'Job Board 💼',    className: 'nav-premium-item' },
-  { to: '/instructor', Icon: Icons.Instructor, label: 'Your Instructor', className: 'nav-instructor-item' },
+  { to: '/premium',    Icon: Icons.Premium,    label: 'Pro Hub',            className: 'nav-premium-item' },
+  { to: '/jobs',       Icon: Icons.Jobs,       label: 'Job Board',          className: 'nav-premium-item' },
+  { to: '/instructor', Icon: Icons.Instructor, label: 'Your Instructor',    className: 'nav-instructor-item' },
 ];
 
 export default function Layout() {
@@ -238,7 +252,7 @@ export default function Layout() {
             <NavLink key={to} to={to}
               className={({ isActive }) => `nav-item ${className || ''}${isActive ? ' active' : ''}`}>
               <span className="nav-icon"><Icon /></span>
-              {to === '/premium' && isPremium ? '👑 Pro Hub' : label}
+              {label}
             </NavLink>
           ))}
 

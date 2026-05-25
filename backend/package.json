@@ -7,9 +7,13 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "@types/better-sqlite3": "^7.6.13",
     "bcryptjs": "^2.4.3",
+    "cashfree-pg": "^6.0.4",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
