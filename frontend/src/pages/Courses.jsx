@@ -746,22 +746,101 @@ export default function Courses() {
       </div>
 
       <style>{`
-        @keyframes cardFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
-        .course-card-v4 { transition: transform .22s cubic-bezier(.34,1.3,.64,1), box-shadow .22s ease, border-color .2s ease; }
+        /* ── Keyframes ── */
+        @keyframes floatDot {
+          0%   { transform: translateY(0px)  scale(1);    opacity: 0;   }
+          18%  { opacity: 0.9; }
+          80%  { opacity: 0.35; }
+          100% { transform: translateY(-72px) scale(0.25); opacity: 0;   }
+        }
+        @keyframes shimmerSweep {
+          from { transform: translateX(-280%) skewX(-18deg); }
+          to   { transform: translateX(520%)  skewX(-18deg); }
+        }
+        @keyframes cardEnter {
+          from { opacity: 0; transform: translateY(22px) scale(0.96); }
+          to   { opacity: 1; transform: translateY(0)    scale(1);    }
+        }
+        @keyframes blobDrift {
+          0%,100% { transform: translate(-50%,-50%) scale(1);    }
+          33%     { transform: translate(-44%,-56%) scale(1.08); }
+          66%     { transform: translate(-56%,-44%) scale(0.94); }
+        }
+        @keyframes pulseRing {
+          0%   { transform: scale(1);    opacity: 0.65; }
+          100% { transform: scale(2.1);  opacity: 0;    }
+        }
+        @keyframes tagPop {
+          from { opacity: 0; transform: translateY(5px) scale(0.88); }
+          to   { opacity: 1; transform: translateY(0)   scale(1);    }
+        }
+        @keyframes gridDrift {
+          from { background-position: 0px 0px; }
+          to   { background-position: 26px 26px; }
+        }
+
+        /* ── Card base ── */
+        .course-card-v4 {
+          animation: cardEnter .55s cubic-bezier(.22,1,.36,1) both;
+          transition: transform .22s cubic-bezier(.34,1.2,.64,1), box-shadow .22s ease, border-color .2s ease;
+        }
         .course-card-v4:hover { transform: translateY(-5px) !important; }
-        .course-card-v4 .card-cta { opacity:0; transform:translateY(4px); transition: opacity .18s ease, transform .18s ease; }
-        .course-card-v4:hover .card-cta { opacity:1; transform:translateY(0); }
-        .course-card-v4 .card-icon-wrap { transition: transform .22s cubic-bezier(.34,1.3,.64,1), box-shadow .22s ease; }
-        .course-card-v4:hover .card-icon-wrap { transform: scale(1.08) !important; }
+
+        /* ── Shimmer ── */
+        .course-card-v4 .card-shimmer {
+          position: absolute; inset: 0; overflow: hidden;
+          pointer-events: none; z-index: 8; border-radius: 20px;
+        }
+        .course-card-v4 .card-shimmer::after {
+          content: '';
+          position: absolute; top: -100%; left: 0;
+          width: 26%; height: 300%;
+          background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.07) 50%, transparent 100%);
+          transform: skewX(-18deg) translateX(-300%);
+        }
+        .course-card-v4:hover .card-shimmer::after {
+          animation: shimmerSweep .8s cubic-bezier(.4,0,.2,1) forwards;
+        }
+
+        /* ── Icon + CTA ── */
+        .course-card-v4 .card-icon-wrap {
+          transition: transform .25s cubic-bezier(.34,1.4,.64,1), box-shadow .22s ease;
+        }
+        .course-card-v4:hover .card-icon-wrap { transform: scale(1.12) !important; }
+        .course-card-v4 .card-cta {
+          opacity: 0; transform: translateY(5px);
+          transition: opacity .2s ease, transform .2s ease;
+        }
+        .course-card-v4:hover .card-cta { opacity: 1; transform: translateY(0); }
+
+        /* ── Tech tags ── */
+        .course-card-v4 .tech-tag {
+          animation: tagPop .38s cubic-bezier(.34,1.3,.64,1) both;
+        }
+
+        /* ── Grid drift on hover ── */
+        .course-card-v4 .card-grid-bg { animation: none; }
+        .course-card-v4:hover .card-grid-bg {
+          animation: gridDrift 3s linear infinite;
+        }
       `}</style>
 
       <div className="course-grid">
-        {filtered.map(c => {
+        {filtered.map((c, cardIdx) => {
           const prog  = c.progress?.progress_percent || 0;
           const logos = TECH_LOGOS[c.title] || [];
           const PrimaryLogo = logos[0]?.component;
           const techNames   = logos.map(l => l.alt);
           const isHov       = hoveredCard === c.id;
+
+          /* floating-dot configs (stable, per-card colour applied inline) */
+          const DOTS = [
+            { x: 10, y: 76, sz: 2.5, delay: '0s',   dur: '3.2s' },
+            { x: 84, y: 82, sz: 2,   delay: '1.1s',  dur: '2.7s' },
+            { x: 30, y: 87, sz: 3,   delay: '0.5s',  dur: '3.5s' },
+            { x: 93, y: 68, sz: 2,   delay: '1.8s',  dur: '2.9s' },
+            { x: 57, y: 84, sz: 3.5, delay: '0.9s',  dur: '3.8s' },
+          ];
 
           /* ── Coming Soon card ── */
           if (c.is_coming_soon) {
@@ -819,7 +898,10 @@ export default function Courses() {
                 border: `1px solid ${isHov ? c.color + '60' : 'rgba(255,255,255,0.08)'}`,
                 borderRadius: 20, overflow: 'hidden', cursor: 'pointer',
                 display: 'flex', flexDirection: 'column',
-                boxShadow: isHov ? `0 20px 50px rgba(0,0,0,0.55), 0 0 0 1px ${c.color}25, 0 0 40px ${c.color}15` : '0 2px 8px rgba(0,0,0,0.2)',
+                boxShadow: isHov
+                  ? `0 22px 52px rgba(0,0,0,0.58), 0 0 0 1px ${c.color}28, 0 0 44px ${c.color}18`
+                  : '0 2px 8px rgba(0,0,0,0.2)',
+                animationDelay: `${cardIdx * 0.07}s`,
               }}
             >
               {/* ── 3-px colour top stripe ── */}
@@ -831,8 +913,9 @@ export default function Courses() {
                 background: `linear-gradient(145deg, ${c.color}38 0%, ${c.color}18 45%, rgba(4,8,20,0.88) 100%)`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
               }}>
-                {/* Grid-line texture */}
-                <div style={{
+
+                {/* Drifting grid-line texture (animates on hover via CSS) */}
+                <div className="card-grid-bg" style={{
                   position: 'absolute', inset: 0,
                   backgroundImage: `linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)`,
                   backgroundSize: '26px 26px',
@@ -841,14 +924,34 @@ export default function Courses() {
                   pointerEvents: 'none',
                 }} />
 
-                {/* Colour bloom */}
+                {/* Animated colour blob (always drifting) */}
                 <div style={{
-                  position: 'absolute', width: 160, height: 160,
-                  top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
+                  position: 'absolute', width: 170, height: 170,
+                  top: '50%', left: '50%',
                   borderRadius: '50%',
-                  background: `radial-gradient(circle, ${c.color}50 0%, transparent 65%)`,
-                  pointerEvents: 'none', opacity: isHov ? 1 : 0.75, transition: 'opacity .2s',
+                  background: `radial-gradient(circle, ${c.color}55 0%, transparent 65%)`,
+                  pointerEvents: 'none',
+                  animation: 'blobDrift 6s ease-in-out infinite',
+                  opacity: isHov ? 1 : 0.72,
+                  transition: 'opacity .25s',
                 }} />
+
+                {/* Floating data particles */}
+                {DOTS.map((dot, di) => (
+                  <div key={di} style={{
+                    position: 'absolute',
+                    left: `${dot.x}%`, top: `${dot.y}%`,
+                    width: dot.sz, height: dot.sz,
+                    borderRadius: '50%',
+                    background: c.color,
+                    boxShadow: `0 0 ${dot.sz * 3}px ${c.color}`,
+                    animation: `floatDot ${dot.dur} ${dot.delay} ease-in-out infinite`,
+                    pointerEvents: 'none', zIndex: 1,
+                  }} />
+                ))}
+
+                {/* Shimmer sweep overlay */}
+                <div className="card-shimmer" />
 
                 {/* Glassmorphism icon container */}
                 <div className="card-icon-wrap" style={{
@@ -865,8 +968,19 @@ export default function Courses() {
                   }
                 </div>
 
-                {/* Difficulty — top right */}
-                <div style={{ position: 'absolute', top: 12, right: 12, zIndex: 3 }}>
+                {/* Pulse ring on hover */}
+                {isHov && (
+                  <div style={{
+                    position: 'absolute', width: 72, height: 72,
+                    borderRadius: 22,
+                    border: `1.5px solid ${c.color}`,
+                    animation: 'pulseRing 1s ease forwards',
+                    pointerEvents: 'none', zIndex: 3,
+                  }} />
+                )}
+
+                {/* Difficulty badge — top right */}
+                <div style={{ position: 'absolute', top: 12, right: 12, zIndex: 4 }}>
                   <span className={`pill ${c.difficulty === 'Beginner' ? 'pill-teal' : c.difficulty === 'Intermediate' ? 'pill-amber' : 'pill-coral'}`} style={{ fontSize: 10 }}>
                     {c.difficulty}
                   </span>
@@ -874,14 +988,10 @@ export default function Courses() {
 
                 {/* Top-left status badge */}
                 {prog === 100 && (
-                  <div style={{ position: 'absolute', top: 12, left: 12, zIndex: 3, background: 'rgba(92,200,160,0.18)', border: '1px solid rgba(92,200,160,0.4)', borderRadius: 20, padding: '2px 10px', fontSize: 10, fontWeight: 700, color: '#5CC8A0' }}>
-                    ✓ Done
-                  </div>
+                  <div style={{ position: 'absolute', top: 12, left: 12, zIndex: 4, background: 'rgba(92,200,160,0.18)', border: '1px solid rgba(92,200,160,0.4)', borderRadius: 20, padding: '2px 10px', fontSize: 10, fontWeight: 700, color: '#5CC8A0' }}>✓ Done</div>
                 )}
                 {prog > 0 && prog < 100 && (
-                  <div style={{ position: 'absolute', top: 12, left: 12, zIndex: 3, background: c.color + '22', border: `1px solid ${c.color}44`, borderRadius: 20, padding: '2px 10px', fontSize: 10, fontWeight: 700, color: c.color }}>
-                    {prog}% done
-                  </div>
+                  <div style={{ position: 'absolute', top: 12, left: 12, zIndex: 4, background: c.color + '22', border: `1px solid ${c.color}44`, borderRadius: 20, padding: '2px 10px', fontSize: 10, fontWeight: 700, color: c.color }}>{prog}% done</div>
                 )}
 
                 {/* Bottom fade */}
@@ -901,11 +1011,17 @@ export default function Courses() {
                   {c.description}
                 </div>
 
-                {/* Tech name tags (colour-matched to course) */}
+                {/* Tech tags — staggered pop-in */}
                 {techNames.length > 0 && (
                   <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                    {techNames.map(name => (
-                      <span key={name} style={{ fontSize: 10, fontWeight: 600, color: c.color, background: c.color + '18', border: `1px solid ${c.color}30`, padding: '2px 9px', borderRadius: 7 }}>
+                    {techNames.map((name, ti) => (
+                      <span key={name} className="tech-tag" style={{
+                        fontSize: 10, fontWeight: 600,
+                        color: c.color, background: c.color + '18',
+                        border: `1px solid ${c.color}30`,
+                        padding: '2px 9px', borderRadius: 7,
+                        animationDelay: `${cardIdx * 0.07 + ti * 0.06 + 0.18}s`,
+                      }}>
                         {name}
                       </span>
                     ))}
@@ -928,16 +1044,17 @@ export default function Courses() {
                     <div style={{
                       height: '100%', borderRadius: 99,
                       width: `${prog}%`,
-                      background: prog === 100 ? 'linear-gradient(90deg,#5CC8A0,#38bdf8)' : `linear-gradient(90deg, ${c.color}99, ${c.color})`,
+                      background: prog === 100
+                        ? 'linear-gradient(90deg,#5CC8A0,#38bdf8)'
+                        : `linear-gradient(90deg, ${c.color}99, ${c.color})`,
                       boxShadow: prog > 0 ? `0 0 10px ${c.color}99` : 'none',
-                      transition: 'width .7s ease',
+                      transition: 'width .8s cubic-bezier(.22,1,.36,1)',
                     }} />
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 6 }}>
                     <span style={{ fontSize: 11, color: prog === 100 ? '#5CC8A0' : prog > 0 ? c.color : 'rgba(255,255,255,0.28)', fontWeight: prog > 0 ? 600 : 400 }}>
                       {prog === 0 ? 'Not started' : prog === 100 ? '✅ Completed' : 'In progress'}
                     </span>
-                    {/* Hover CTA */}
                     <span className="card-cta" style={{ fontSize: 11, fontWeight: 700, color: c.color }}>
                       {prog === 0 ? 'Enroll →' : prog === 100 ? 'Review →' : 'Continue →'}
                     </span>
