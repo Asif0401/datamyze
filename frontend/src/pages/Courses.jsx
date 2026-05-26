@@ -704,10 +704,11 @@ function CourseModal({ course, onClose, onEnroll }) {
 
 /* ── Main Courses page ──────────────────────────────── */
 export default function Courses() {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(null);
-  const [filter,   setFilter]   = useState('All');
+  const [courses,     setCourses]     = useState([]);
+  const [loading,     setLoading]     = useState(true);
+  const [selected,    setSelected]    = useState(null);
+  const [filter,      setFilter]      = useState('All');
+  const [hoveredCard, setHoveredCard] = useState(null);
 
   function load() {
     api.get('/courses').then(r => setCourses(r.data.courses)).finally(() => setLoading(false));
@@ -744,201 +745,202 @@ export default function Courses() {
         </span>
       </div>
 
+      <style>{`
+        @keyframes cardFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+        .course-card-v4 { transition: transform .22s cubic-bezier(.34,1.3,.64,1), box-shadow .22s ease, border-color .2s ease; }
+        .course-card-v4:hover { transform: translateY(-5px) !important; }
+        .course-card-v4 .card-cta { opacity:0; transform:translateY(4px); transition: opacity .18s ease, transform .18s ease; }
+        .course-card-v4:hover .card-cta { opacity:1; transform:translateY(0); }
+        .course-card-v4 .card-icon-wrap { transition: transform .22s cubic-bezier(.34,1.3,.64,1), box-shadow .22s ease; }
+        .course-card-v4:hover .card-icon-wrap { transform: scale(1.08) !important; }
+      `}</style>
+
       <div className="course-grid">
         {filtered.map(c => {
           const prog  = c.progress?.progress_percent || 0;
           const logos = TECH_LOGOS[c.title] || [];
+          const PrimaryLogo = logos[0]?.component;
+          const techNames   = logos.map(l => l.alt);
+          const isHov       = hoveredCard === c.id;
 
           /* ── Coming Soon card ── */
           if (c.is_coming_soon) {
             return (
-              <div key={c.id} style={{
-                position: 'relative', cursor: 'default',
-                background: 'linear-gradient(135deg, rgba(139,92,246,0.08) 0%, rgba(10,10,20,0.6) 100%)',
-                border: '1.5px dashed rgba(139,92,246,0.35)',
-                borderRadius: 16, overflow: 'hidden', padding: '24px 20px',
-                display: 'flex', flexDirection: 'column', gap: 12,
-                backdropFilter: 'blur(8px)',
-              }}>
-                {/* Top badge */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{
-                    fontSize: 10, fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase',
-                    background: 'linear-gradient(90deg,#7c3aed,#a78bfa)',
-                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                  }}>Coming Soon</span>
-                  <span className={`pill ${c.difficulty === 'Beginner' ? 'pill-teal' : c.difficulty === 'Intermediate' ? 'pill-amber' : 'pill-coral'}`} style={{ opacity: 0.7 }}>{c.difficulty}</span>
-                </div>
-
-                {/* Icon */}
-                <div style={{ fontSize: 40, lineHeight: 1 }}>{c.icon}</div>
-
-                {/* Title & description */}
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 16, color: '#fff', marginBottom: 6 }}>{c.title}</div>
-                  <div style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.6 }}>{c.description}</div>
-                </div>
-
-                {/* Bottom bar */}
-                <div style={{
-                  marginTop: 'auto', padding: '8px 14px', borderRadius: 10,
-                  background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.25)',
-                  fontSize: 12, color: '#c4b5fd', fontWeight: 600, textAlign: 'center',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+              <div key={c.id} className="course-card-v4"
+                style={{
+                  cursor: 'default',
+                  background: 'rgba(139,92,246,0.05)',
+                  border: '1.5px dashed rgba(139,92,246,0.3)',
+                  borderRadius: 20, overflow: 'hidden',
+                  display: 'flex', flexDirection: 'column',
                 }}>
-                  <span style={{ fontSize: 14 }}>🚀</span> Launching Soon — Stay tuned!
+                {/* Top accent */}
+                <div style={{ height: 3, background: 'linear-gradient(90deg,#7c3aed,#a78bfa88)', flexShrink: 0 }} />
+
+                {/* Banner */}
+                <div style={{
+                  height: 150, position: 'relative',
+                  background: 'linear-gradient(145deg, rgba(139,92,246,0.18) 0%, rgba(5,8,20,0.8) 100%)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
+                }}>
+                  <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '28px 28px', maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 10%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 10%, transparent 100%)', pointerEvents: 'none' }} />
+                  <div style={{ position: 'absolute', width: 130, height: 130, top: '50%', left: '50%', transform: 'translate(-50%,-50%)', borderRadius: '50%', background: 'radial-gradient(circle, rgba(139,92,246,0.35) 0%, transparent 65%)', pointerEvents: 'none' }} />
+                  <div style={{ width: 68, height: 68, borderRadius: 20, background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36, position: 'relative', zIndex: 2, boxShadow: '0 8px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)' }}>
+                    {c.icon}
+                  </div>
+                  <div style={{ position: 'absolute', top: 12, right: 12 }}>
+                    <span className={`pill ${c.difficulty === 'Beginner' ? 'pill-teal' : c.difficulty === 'Intermediate' ? 'pill-amber' : 'pill-coral'}`} style={{ fontSize: 10, opacity: 0.7 }}>{c.difficulty}</span>
+                  </div>
+                  <div style={{ position: 'absolute', top: 12, left: 12, background: 'linear-gradient(90deg,rgba(124,58,237,0.3),rgba(167,139,250,0.3))', border: '1px solid rgba(139,92,246,0.4)', borderRadius: 20, padding: '2px 10px', fontSize: 9, fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: '#c4b5fd' }}>Coming Soon</div>
+                </div>
+
+                {/* Body */}
+                <div style={{ padding: '16px 18px 18px', flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: 'rgba(255,255,255,0.65)', lineHeight: 1.3 }}>{c.title}</div>
+                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{c.description}</div>
+                  <div style={{ marginTop: 'auto', padding: '8px 12px', borderRadius: 10, background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', fontSize: 11, color: '#a78bfa', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span>🚀</span> Launching Soon — Stay tuned!
+                  </div>
                 </div>
               </div>
             );
           }
 
-          /* ── Regular course card (redesigned) ── */
-          const PrimaryLogo = logos[0]?.component;
-          const secondaryLogos = logos.slice(1);
-
+          /* ── Regular course card ── */
           return (
             <div
               key={c.id}
+              className="course-card-v4"
               onClick={() => setSelected(c)}
+              onMouseEnter={() => setHoveredCard(c.id)}
+              onMouseLeave={() => setHoveredCard(null)}
               style={{
-                background: 'var(--card)',
-                border: '1px solid var(--border)',
-                borderRadius: 18,
-                overflow: 'hidden',
-                cursor: 'pointer',
-                transition: 'transform .18s, box-shadow .18s, border-color .18s',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translateY(-3px)';
-                e.currentTarget.style.boxShadow = `0 12px 36px rgba(0,0,0,0.45), 0 0 0 1px ${c.color}44`;
-                e.currentTarget.style.borderColor = c.color + '55';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-                e.currentTarget.style.borderColor = 'var(--border)';
+                background: 'rgba(255,255,255,0.03)',
+                border: `1px solid ${isHov ? c.color + '60' : 'rgba(255,255,255,0.08)'}`,
+                borderRadius: 20, overflow: 'hidden', cursor: 'pointer',
+                display: 'flex', flexDirection: 'column',
+                boxShadow: isHov ? `0 20px 50px rgba(0,0,0,0.55), 0 0 0 1px ${c.color}25, 0 0 40px ${c.color}15` : '0 2px 8px rgba(0,0,0,0.2)',
               }}
             >
+              {/* ── 3-px colour top stripe ── */}
+              <div style={{ height: 3, background: `linear-gradient(90deg, ${c.color}, ${c.color}55)`, flexShrink: 0 }} />
+
               {/* ── Banner ── */}
               <div style={{
-                position: 'relative',
-                height: 130,
-                background: `linear-gradient(145deg, ${c.color}28 0%, ${c.color}0d 70%, rgba(0,0,0,0.08) 100%)`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                overflow: 'hidden',
+                position: 'relative', height: 158,
+                background: `linear-gradient(145deg, ${c.color}38 0%, ${c.color}18 45%, rgba(4,8,20,0.88) 100%)`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
               }}>
-                {/* Radial glow behind logo */}
+                {/* Grid-line texture */}
                 <div style={{
-                  position: 'absolute',
-                  width: 110, height: 110,
-                  borderRadius: '50%',
-                  background: `radial-gradient(circle, ${c.color}35 0%, transparent 72%)`,
+                  position: 'absolute', inset: 0,
+                  backgroundImage: `linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)`,
+                  backgroundSize: '26px 26px',
+                  maskImage: 'radial-gradient(ellipse 88% 88% at 50% 50%, black 15%, transparent 100%)',
+                  WebkitMaskImage: 'radial-gradient(ellipse 88% 88% at 50% 50%, black 15%, transparent 100%)',
                   pointerEvents: 'none',
                 }} />
 
-                {/* Single primary logo — large */}
-                {PrimaryLogo
-                  ? <PrimaryLogo />
-                  : <div style={{ fontSize: 48, lineHeight: 1, filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.4))' }}>{c.icon}</div>
-                }
+                {/* Colour bloom */}
+                <div style={{
+                  position: 'absolute', width: 160, height: 160,
+                  top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
+                  borderRadius: '50%',
+                  background: `radial-gradient(circle, ${c.color}50 0%, transparent 65%)`,
+                  pointerEvents: 'none', opacity: isHov ? 1 : 0.75, transition: 'opacity .2s',
+                }} />
 
-                {/* Difficulty pill — top right */}
-                <div style={{ position: 'absolute', top: 10, right: 10 }}>
-                  <span
-                    className={`pill ${c.difficulty === 'Beginner' ? 'pill-teal' : c.difficulty === 'Intermediate' ? 'pill-amber' : 'pill-coral'}`}
-                    style={{ fontSize: 10, padding: '2px 9px' }}
-                  >
+                {/* Glassmorphism icon container */}
+                <div className="card-icon-wrap" style={{
+                  width: 72, height: 72, borderRadius: 22,
+                  background: 'rgba(255,255,255,0.10)',
+                  border: '1px solid rgba(255,255,255,0.20)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: `0 8px 28px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.14), 0 0 0 1px ${c.color}30`,
+                  position: 'relative', zIndex: 2, backdropFilter: 'blur(10px)',
+                }}>
+                  {PrimaryLogo
+                    ? <PrimaryLogo />
+                    : <span style={{ fontSize: 38 }}>{c.icon}</span>
+                  }
+                </div>
+
+                {/* Difficulty — top right */}
+                <div style={{ position: 'absolute', top: 12, right: 12, zIndex: 3 }}>
+                  <span className={`pill ${c.difficulty === 'Beginner' ? 'pill-teal' : c.difficulty === 'Intermediate' ? 'pill-amber' : 'pill-coral'}`} style={{ fontSize: 10 }}>
                     {c.difficulty}
                   </span>
                 </div>
 
-                {/* Secondary tech mini-chips — bottom left */}
-                {secondaryLogos.length > 0 && (
-                  <div style={{
-                    position: 'absolute', bottom: 10, left: 12,
-                    display: 'flex', gap: 5, alignItems: 'center',
-                  }}>
-                    {secondaryLogos.map((logo, idx) => {
-                      const L = logo.component;
-                      return (
-                        <div
-                          key={idx}
-                          title={logo.alt}
-                          style={{
-                            width: 22, height: 22,
-                            borderRadius: 6,
-                            overflow: 'hidden',
-                            boxShadow: '0 2px 6px rgba(0,0,0,0.5)',
-                            flexShrink: 0,
-                            background: 'rgba(0,0,0,0.25)',
-                          }}
-                        >
-                          {/* Scale 42→22: 22/42 ≈ 0.524 */}
-                          <div style={{ transform: 'scale(0.524)', transformOrigin: 'top left', pointerEvents: 'none' }}>
-                            <L />
-                          </div>
-                        </div>
-                      );
-                    })}
+                {/* Top-left status badge */}
+                {prog === 100 && (
+                  <div style={{ position: 'absolute', top: 12, left: 12, zIndex: 3, background: 'rgba(92,200,160,0.18)', border: '1px solid rgba(92,200,160,0.4)', borderRadius: 20, padding: '2px 10px', fontSize: 10, fontWeight: 700, color: '#5CC8A0' }}>
+                    ✓ Done
+                  </div>
+                )}
+                {prog > 0 && prog < 100 && (
+                  <div style={{ position: 'absolute', top: 12, left: 12, zIndex: 3, background: c.color + '22', border: `1px solid ${c.color}44`, borderRadius: 20, padding: '2px 10px', fontSize: 10, fontWeight: 700, color: c.color }}>
+                    {prog}% done
                   </div>
                 )}
 
-                {/* Completed check mark — top left */}
-                {prog === 100 && (
-                  <div style={{
-                    position: 'absolute', top: 10, left: 12,
-                    width: 24, height: 24, borderRadius: '50%',
-                    background: 'rgba(92,200,160,0.2)', border: '1.5px solid #5CC8A0',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 12, color: '#5CC8A0', fontWeight: 800,
-                  }}>✓</div>
-                )}
+                {/* Bottom fade */}
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 48, background: 'linear-gradient(to bottom, transparent, rgba(4,8,20,0.55))', pointerEvents: 'none' }} />
               </div>
 
               {/* ── Card Body ── */}
-              <div style={{ padding: '14px 16px 16px', display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
-                {/* Meta chips */}
-                <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: 10, background: 'rgba(255,255,255,0.06)', color: 'var(--muted)', padding: '2px 8px', borderRadius: 20, display: 'flex', alignItems: 'center', gap: 3 }}>
-                    📝 {c.total_lessons} lessons
-                  </span>
-                  <span style={{ fontSize: 10, background: 'rgba(255,255,255,0.06)', color: 'var(--muted)', padding: '2px 8px', borderRadius: 20, display: 'flex', alignItems: 'center', gap: 3 }}>
-                    ⏱ {c.duration}
-                  </span>
-                </div>
+              <div style={{ padding: '15px 18px 17px', display: 'flex', flexDirection: 'column', gap: 9, flex: 1 }}>
 
                 {/* Title */}
-                <div style={{
-                  fontWeight: 700, fontSize: 14.5, lineHeight: 1.35,
-                  color: 'var(--text)',
-                  overflow: 'hidden', display: '-webkit-box',
-                  WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
-                }}>
+                <div style={{ fontWeight: 700, fontSize: 15.5, lineHeight: 1.3, color: 'rgba(255,255,255,0.92)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                   {c.title}
                 </div>
 
-                {/* Sub-meta */}
-                <div style={{ fontSize: 11.5, color: 'var(--muted)' }}>🎥 Video per topic</div>
+                {/* Description */}
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)', lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  {c.description}
+                </div>
 
-                {/* Progress — pushed to bottom */}
-                <div style={{ marginTop: 'auto', paddingTop: 8 }}>
+                {/* Tech name tags (colour-matched to course) */}
+                {techNames.length > 0 && (
+                  <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+                    {techNames.map(name => (
+                      <span key={name} style={{ fontSize: 10, fontWeight: 600, color: c.color, background: c.color + '18', border: `1px solid ${c.color}30`, padding: '2px 9px', borderRadius: 7 }}>
+                        {name}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Divider */}
+                <div style={{ height: 1, background: 'rgba(255,255,255,0.06)' }} />
+
+                {/* Meta row */}
+                <div style={{ display: 'flex', gap: 12, fontSize: 11, color: 'rgba(255,255,255,0.32)' }}>
+                  <span>📝 {c.total_lessons} lessons</span>
+                  <span>⏱ {c.duration}</span>
+                  <span>🎥 Video</span>
+                </div>
+
+                {/* Progress — pinned to bottom */}
+                <div style={{ marginTop: 'auto' }}>
                   <div style={{ height: 4, borderRadius: 99, background: 'rgba(255,255,255,0.07)', overflow: 'hidden' }}>
                     <div style={{
                       height: '100%', borderRadius: 99,
                       width: `${prog}%`,
-                      background: prog === 100
-                        ? '#5CC8A0'
-                        : `linear-gradient(90deg, ${c.color}cc, ${c.color})`,
-                      transition: 'width .6s ease',
-                      boxShadow: prog > 0 ? `0 0 8px ${c.color}88` : 'none',
+                      background: prog === 100 ? 'linear-gradient(90deg,#5CC8A0,#38bdf8)' : `linear-gradient(90deg, ${c.color}99, ${c.color})`,
+                      boxShadow: prog > 0 ? `0 0 10px ${c.color}99` : 'none',
+                      transition: 'width .7s ease',
                     }} />
                   </div>
-                  <div style={{ fontSize: 11, color: prog === 100 ? '#5CC8A0' : 'var(--muted)', marginTop: 5, fontWeight: prog === 100 ? 700 : 400 }}>
-                    {prog === 0 ? 'Not started' : prog === 100 ? '✅ Completed' : `${prog}% complete`}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 6 }}>
+                    <span style={{ fontSize: 11, color: prog === 100 ? '#5CC8A0' : prog > 0 ? c.color : 'rgba(255,255,255,0.28)', fontWeight: prog > 0 ? 600 : 400 }}>
+                      {prog === 0 ? 'Not started' : prog === 100 ? '✅ Completed' : 'In progress'}
+                    </span>
+                    {/* Hover CTA */}
+                    <span className="card-cta" style={{ fontSize: 11, fontWeight: 700, color: c.color }}>
+                      {prog === 0 ? 'Enroll →' : prog === 100 ? 'Review →' : 'Continue →'}
+                    </span>
                   </div>
                 </div>
               </div>
