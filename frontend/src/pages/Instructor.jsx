@@ -315,7 +315,7 @@ export default function Instructor() {
             background: 'linear-gradient(135deg, #f1f5f9 30%, #a78bfa 70%, #38bdf8)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
-          }}>Your Instructor</h1>
+          }}>{instructorName}</h1>
 
           <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', margin: '0 0 16px', lineHeight: 1.6, maxWidth: 480 }}>
             Product & Growth Analyst at PagarBook · Ex-CRED · Masters in Data Science (VIT Vellore) · Teaching real-world analytics that gets you hired.
@@ -399,7 +399,7 @@ export default function Instructor() {
             fontSize: 14, fontWeight: 800, color: '#fff',
           }}>AK</div>
           <div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#f1f5f9' }}>Datamyze Instructor</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#f1f5f9' }}>{instructorName}</div>
             <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>Product & Growth Analyst, PagarBook</div>
           </div>
         </div>
