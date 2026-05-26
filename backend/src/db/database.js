@@ -257,6 +257,18 @@ async function initDb() {
   try { await c.execute('ALTER TABLE problems ADD COLUMN hint TEXT'); } catch(e) {}
   try { await c.execute("UPDATE problems SET starter_code = '' WHERE starter_code IS NOT NULL"); } catch(e) {}
 
+  // Replace Dashboard Design with Tableau & Power BI courses
+  try {
+    await c.execute(`UPDATE courses SET title='Tableau for Analysts', description='Build interactive dashboards and data stories using Tableau Desktop and Tableau Public.', icon='📊', color='#E8762D', duration='6h', total_lessons=4 WHERE title='Dashboard Design'`);
+  } catch(e) {}
+  try {
+    const pbi = await c.execute(`SELECT id FROM courses WHERE title='Power BI'`);
+    if (!pbi.rows.length) {
+      const { v4: uuidv4 } = require('uuid');
+      await c.execute({ sql: `INSERT INTO courses (id, title, description, icon, color, difficulty, duration, total_lessons) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, args: [uuidv4(), 'Power BI', 'Create stunning reports and dashboards with Microsoft Power BI — from data modeling to DAX.', '💡', '#F2C811', 'Beginner', '6h', 4] });
+    }
+  } catch(e) {}
+
   // OTP table for signup & phone login verification
   await c.execute(`
     CREATE TABLE IF NOT EXISTS otps (

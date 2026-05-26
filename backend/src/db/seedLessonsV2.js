@@ -1206,7 +1206,7 @@ rating might not increase revenue — the true driver is app quality.
     },
   ],
 
-  'Dashboard Design': [
+  'Tableau for Analysts': [
     {
       title: 'Why Dashboards Matter',
       content: `# Why Dashboards Matter
@@ -1524,6 +1524,323 @@ KPI vs target:         Bullet chart / gauge
 💡 **Interview Tip:** If asked to critique a dashboard in a case round, use this structure: (1) Is the audience clear? (2) Is the key question answered in 5 seconds? (3) Are charts appropriate for the data type? (4) Is there unnecessary clutter? Structured critique shows design thinking — a skill that differentiates senior analysts.`,
       video_url: 'VaNUOVnULkI',
       dur: 20,
+    },
+    {
+      title: 'Tableau Fundamentals',
+      content: `# Tableau Fundamentals
+
+Tableau is the most widely used data visualisation tool in Indian analytics teams — Flipkart, Swiggy, Razorpay, and Zomato all use it daily.
+
+## Tableau Product Family
+| Product | Use Case |
+|---------|----------|
+| Tableau Desktop | Build & publish workbooks |
+| Tableau Public | Free — share with the world |
+| Tableau Server/Cloud | Org-wide sharing |
+
+## Core Concepts
+- **Dimensions** — Categorical fields (City, Category, Product Name) — shown in blue
+- **Measures** — Numerical fields (Revenue, Orders, Profit) — shown in green
+- **Marks** — Visual encodings: Color, Size, Shape, Label, Tooltip
+- **Shelves** — Rows, Columns, Filters, Pages
+
+## Your First Tableau Chart (Step by Step)
+\`\`\`
+1. Connect → Excel / CSV / SQL Server / Google Sheets
+2. Drag "City" to Columns shelf
+3. Drag "Revenue" to Rows shelf → bar chart auto-appears
+4. Drag "Category" to Color mark → grouped bars
+5. Sort descending by Revenue
+6. Format title: "Revenue by City & Category"
+\`\`\`
+
+## Show Me! Panel
+Tableau's **Show Me** recommends the best chart type based on selected fields:
+- 1 Dimension → Bar chart
+- 1 Dimension + 1 Measure → Horizontal bar
+- 2 Dimensions → Heat map / crosstab
+- 1 Date + 1 Measure → Line chart
+- Lat/Long → Map
+
+💡 **Interview Tip:** Most analyst roles list "Tableau experience" as a requirement. Being able to build a sales dashboard live in an interview is a huge differentiator.`,
+      video_url: 'TPMlZxRRaBQ',
+      dur: 25,
+    },
+    {
+      title: 'Building a Sales Dashboard in Tableau',
+      content: `# Building a Sales Dashboard in Tableau
+
+Let's build a real analytics dashboard step by step — the kind you'd build on Day 1 at a startup.
+
+## Dashboard Blueprint
+We'll build 4 charts:
+1. **KPI Tiles** — Total Revenue, Orders, Avg Order Value
+2. **Monthly Trend** — Revenue line chart with targets
+3. **Top 5 Cities** — Horizontal bar chart
+4. **Category Mix** — Donut / pie chart
+
+## Step 1 — KPI Tiles
+\`\`\`
+1. New sheet → Drag Revenue to Text mark
+2. Add a Reference Line at your target (e.g. ₹10L)
+3. Use Calculated Field: IF SUM([Revenue]) >= 1000000 THEN "✅ On Track" ELSE "⚠ Behind" END
+\`\`\`
+
+## Step 2 — Monthly Trend Line
+\`\`\`
+1. Drag Order Date to Columns → right-click → Month (continuous)
+2. Drag Revenue to Rows
+3. Drag Target to Rows → dual axis → synchronise axes
+4. Format: solid line for actual, dashed for target
+\`\`\`
+
+## Step 3 — Calculated Fields (Essential!)
+\`\`\`tableau
+// Month-over-Month Growth %
+(SUM([Revenue]) - LOOKUP(SUM([Revenue]), -1))
+/ ABS(LOOKUP(SUM([Revenue]), -1))
+
+// Profit Margin
+SUM([Profit]) / SUM([Revenue])
+
+// Running Total
+RUNNING_SUM(SUM([Revenue]))
+\`\`\`
+
+## Dashboard Layout Tips
+- Use **containers** (horizontal/vertical) for responsive layout
+- Set fixed dashboard size: 1200 × 800 px for desktop
+- Add **filter actions**: clicking a city filters all charts
+- Add **highlight actions**: hovering highlights related marks
+
+💡 **Interview Tip:** When presenting a Tableau dashboard, always start by stating "This dashboard answers one question: [X]." It shows data storytelling instincts.`,
+      video_url: 'TPMlZxRRaBQ',
+      dur: 30,
+    },
+  ],
+
+  'Power BI': [
+    {
+      title: 'Power BI Basics',
+      content: `# Power BI Basics
+
+Microsoft Power BI is the leading BI tool in corporate India — banks, MNCs, and large enterprises use it everywhere. It's free to start with Power BI Desktop.
+
+## Power BI Ecosystem
+| Component | Role |
+|-----------|------|
+| Power BI Desktop | Build reports (free download) |
+| Power BI Service | Cloud publishing & sharing |
+| Power BI Mobile | View reports on phone |
+| Power Query | ETL — clean & transform data |
+| DAX | Data Analysis Expressions — formulas |
+
+## The 3-Step Workflow
+\`\`\`
+1. GET DATA → Connect to Excel, SQL, API, SharePoint
+2. TRANSFORM → Power Query Editor (clean, merge, unpivot)
+3. VISUALISE → Drag fields onto canvas, choose chart types
+\`\`\`
+
+## Key Panels in Power BI Desktop
+- **Data pane** — All tables and fields
+- **Visualizations pane** — 30+ chart types + custom visuals
+- **Filters pane** — Page / Visual / Report level filters
+- **Report view** — Canvas for building pages
+
+## Connecting to Data Sources
+\`\`\`
+Home → Get Data →
+  - Excel Workbook
+  - SQL Server
+  - Web (REST API)
+  - Google Analytics
+  - SharePoint List
+\`\`\`
+
+💡 **Interview Tip:** Many analyst JDs in banks and IT companies say "Power BI preferred." Even knowing the basics (data import, simple DAX, publish to service) puts you ahead of 80% of candidates.`,
+      video_url: 'ykvAWKML9Zg',
+      dur: 20,
+    },
+    {
+      title: 'Power Query — Data Transformation',
+      content: `# Power Query — Data Transformation
+
+Power Query is Power BI's built-in ETL engine. Before you visualise, your data needs to be clean and structured.
+
+## Opening Power Query Editor
+\`\`\`
+Home → Transform Data → Power Query Editor opens
+\`\`\`
+
+## Essential Transformations
+### 1. Remove Duplicates & Nulls
+\`\`\`
+Right-click column → Remove Duplicates
+Right-click column → Remove Errors
+Home → Remove Rows → Remove Blank Rows
+\`\`\`
+
+### 2. Change Data Types
+\`\`\`
+Click column header icon (ABC / 123 / 📅)
+Date columns: change to Date type (not Text!)
+Revenue columns: change to Decimal Number
+\`\`\`
+
+### 3. Split & Merge Columns
+\`\`\`
+// Split "First Last" into two columns
+Transform → Split Column → By Delimiter (Space)
+
+// Merge City + State into one
+Add Column → Merge Columns → Separator: ", "
+\`\`\`
+
+### 4. Unpivot (Wide → Long format)
+\`\`\`
+// Before: Jan_Sales | Feb_Sales | Mar_Sales (wide)
+// After:  Month | Sales (long — what charts need)
+Select month columns → Transform → Unpivot Columns
+\`\`\`
+
+### 5. Append & Merge Queries
+\`\`\`
+// Append = stack tables vertically (UNION ALL)
+Home → Append Queries
+
+// Merge = JOIN tables
+Home → Merge Queries → choose join key and type
+\`\`\`
+
+## M Language (Advanced)
+Power Query uses M language under the hood:
+\`\`\`m
+= Table.SelectRows(Source, each [Revenue] > 0)
+= Table.AddColumn(#"Previous Step", "Margin", each [Profit] / [Revenue])
+\`\`\`
+
+💡 **Interview Tip:** Knowing Power Query separates you from people who just drag fields. Being able to clean messy Excel data and explain your transformation steps shows maturity.`,
+      video_url: 'ykvAWKML9Zg',
+      dur: 25,
+    },
+    {
+      title: 'DAX — Data Analysis Expressions',
+      content: `# DAX — Data Analysis Expressions
+
+DAX is the formula language of Power BI. It's what makes Power BI powerful — think of it as SQL + Excel formulas combined.
+
+## Two Types of DAX Calculations
+
+### Measures (Dynamic — recalculates with filters)
+\`\`\`dax
+Total Revenue = SUM(Sales[Amount])
+
+Order Count = COUNTROWS(Orders)
+
+Avg Order Value = DIVIDE([Total Revenue], [Order Count])
+
+Revenue LY = CALCULATE([Total Revenue], SAMEPERIODLASTYEAR('Date'[Date]))
+
+YoY Growth % = DIVIDE([Total Revenue] - [Revenue LY], [Revenue LY])
+\`\`\`
+
+### Calculated Columns (Static — computed row by row)
+\`\`\`dax
+Profit Margin = Sales[Revenue] - Sales[Cost]
+
+City Category = Sales[City] & " - " & Sales[Category]
+
+Is High Value = IF(Sales[Amount] > 10000, "High", "Standard")
+\`\`\`
+
+## CALCULATE — The Most Important DAX Function
+CALCULATE changes the filter context:
+\`\`\`dax
+// Revenue for Mumbai only
+Mumbai Revenue = CALCULATE([Total Revenue], Sales[City] = "Mumbai")
+
+// Revenue excluding returns
+Net Revenue = CALCULATE([Total Revenue], Orders[Status] <> "Returned")
+
+// MTD Revenue
+MTD Revenue = CALCULATE([Total Revenue], DATESMTD('Date'[Date]))
+\`\`\`
+
+## Time Intelligence Functions
+\`\`\`dax
+MTD = CALCULATE([Revenue], DATESMTD('Date'[Date]))
+QTD = CALCULATE([Revenue], DATESQTD('Date'[Date]))
+YTD = CALCULATE([Revenue], DATESYTD('Date'[Date]))
+Last 30 Days = CALCULATE([Revenue], DATESINPERIOD('Date'[Date], TODAY(), -30, DAY))
+\`\`\`
+
+💡 **Interview Tip:** CALCULATE is asked in almost every Power BI interview. Memorise: "CALCULATE evaluates an expression in a modified filter context." Then give an example.`,
+      video_url: 'ykvAWKML9Zg',
+      dur: 30,
+    },
+    {
+      title: 'Building Your First Power BI Dashboard',
+      content: `# Building Your First Power BI Dashboard
+
+Let's build a real business dashboard — a Sales Performance Report.
+
+## Data Model (Star Schema)
+\`\`\`
+         [Date Table]
+               |
+[Products] — [Sales Fact] — [Customers]
+               |
+          [Stores/Regions]
+\`\`\`
+Always use a **star schema** — one fact table surrounded by dimension tables.
+
+## Step 1 — Create Date Table
+\`\`\`dax
+Date Table = CALENDAR(DATE(2023,1,1), DATE(2025,12,31))
+
+// Add columns:
+Year = YEAR('Date Table'[Date])
+Month = FORMAT('Date Table'[Date], "MMM")
+Quarter = "Q" & QUARTER('Date Table'[Date])
+\`\`\`
+
+## Step 2 — Build Key Measures
+\`\`\`dax
+Total Revenue = SUM(Sales[Amount])
+Target = SUM(Targets[Monthly_Target])
+Achievement % = DIVIDE([Total Revenue], [Target], 0)
+Gap to Target = [Target] - [Total Revenue]
+\`\`\`
+
+## Step 3 — Choose the Right Visuals
+| Question | Best Visual |
+|----------|------------|
+| Trend over time | Line chart |
+| Comparison across categories | Clustered bar |
+| Part of a whole | Donut chart |
+| Two metrics correlation | Scatter plot |
+| Geographical data | Map / Filled map |
+| Single KPI + target | Card + Gauge |
+
+## Step 4 — Add Slicers & Interactions
+\`\`\`
+Insert → Slicer → Drag Date field (get a date range picker)
+Insert → Slicer → Drag Region → list slicer for filtering
+Format → Edit Interactions → control which visuals filter each other
+\`\`\`
+
+## Publishing & Sharing
+\`\`\`
+1. File → Publish → Power BI Service
+2. Service → Create Dashboard → Pin visuals
+3. Share → Enter email addresses (needs Pro license for recipients)
+4. Schedule Refresh → set daily/hourly data refresh
+\`\`\`
+
+💡 **Interview Tip:** Build a portfolio project: connect Power BI to a public dataset (Kaggle sales data), build a 3-page report (Overview, Products, Geography), publish to Power BI Public, and share the link in your resume. This alone gets callbacks.`,
+      video_url: 'ykvAWKML9Zg',
+      dur: 35,
     },
   ],
 

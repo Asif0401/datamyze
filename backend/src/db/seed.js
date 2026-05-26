@@ -13,7 +13,8 @@ async function seed(db) {
     { id: uuidv4(), title: 'SQL for Data Analysis', description: 'Master SQL from basics to advanced window functions, CTEs, and performance tuning.', icon: '🗄️', color: '#7F77DD', difficulty: 'Beginner', duration: '8h', total_lessons: 6 },
     { id: uuidv4(), title: 'Python for Analytics', description: 'Learn pandas, numpy, and matplotlib for end-to-end data analysis workflows.', icon: '🐍', color: '#1D9E75', difficulty: 'Intermediate', duration: '14h', total_lessons: 4 },
     { id: uuidv4(), title: 'Statistics & Probability', description: 'Build statistical intuition with hands-on problems and real datasets.', icon: '📊', color: '#BA7517', difficulty: 'Beginner', duration: '7h', total_lessons: 3 },
-    { id: uuidv4(), title: 'Dashboard Design', description: 'Create impactful dashboards with Tableau, Power BI, and best practices.', icon: '📈', color: '#D85A30', difficulty: 'Beginner', duration: '5h', total_lessons: 3 },
+    { id: uuidv4(), title: 'Tableau for Analysts', description: 'Build interactive dashboards and data stories using Tableau Desktop and Tableau Public.', icon: '📊', color: '#E8762D', difficulty: 'Beginner', duration: '6h', total_lessons: 4 },
+    { id: uuidv4(), title: 'Power BI', description: 'Create stunning reports and dashboards with Microsoft Power BI — from data modeling to DAX.', icon: '💡', color: '#F2C811', difficulty: 'Beginner', duration: '6h', total_lessons: 4 },
     { id: uuidv4(), title: 'Advanced SQL', description: 'Deep dive into query optimization, indexing, and analytics patterns.', icon: '⚡', color: '#534AB7', difficulty: 'Advanced', duration: '11h', total_lessons: 3 },
     { id: uuidv4(), title: 'Excel & Google Sheets', description: 'Power user techniques: XLOOKUP, PivotTables, data validation, and automation.', icon: '📋', color: '#1D9E75', difficulty: 'Beginner', duration: '6h', total_lessons: 3 },
   ];
