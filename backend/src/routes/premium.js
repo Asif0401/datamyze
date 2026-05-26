@@ -3,6 +3,13 @@ const { v4: uuidv4 } = require('uuid');
 const { run, get, all } = require('../db/database');
 const authMiddleware = require('../middleware/auth');
 
+// Admin is always treated as a Pro user
+const ADMIN_EMAIL = 'ak384837@gmail.com';
+async function isAdminOrPro(db, userId) {
+  const user = await get(db, 'SELECT email, is_premium FROM users WHERE id = ?', [userId]);
+  return user?.email === ADMIN_EMAIL || user?.is_premium === 1;
+}
+
 // Grant certificates for all 100%-complete courses a user doesn't already have
 async function grantPendingCertificates(db, userId) {
   const completed = await all(db,
@@ -56,9 +63,14 @@ const uploadReceipt = multer({ storage: receiptStorage, limits: { fileSize: 10*1
 // Get premium status
 router.get('/status', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const user = await get(db, 'SELECT is_premium, premium_expires_at FROM users WHERE id = ?', [req.user.id]);
+  const user = await get(db, 'SELECT email, is_premium, premium_expires_at FROM users WHERE id = ?', [req.user.id]);
   const sub = await get(db, 'SELECT * FROM premium_subscriptions WHERE user_id = ? ORDER BY created_at DESC LIMIT 1', [req.user.id]);
-  res.json({ is_premium: user?.is_premium || 0, premium_expires_at: user?.premium_expires_at, latest_subscription: sub || null });
+  const isAdmin = user?.email === ADMIN_EMAIL;
+  res.json({
+    is_premium: isAdmin ? 1 : (user?.is_premium || 0),
+    premium_expires_at: isAdmin ? null : user?.premium_expires_at,
+    latest_subscription: sub || null,
+  });
 });
 
 // Submit payment UTR for verification
@@ -82,8 +94,7 @@ router.post('/subscribe', authMiddleware, async (req, res) => {
 // Book 1:1 session (premium only)
 router.post('/sessions', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const user = await get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
-  if (!user?.is_premium) return res.status(403).json({ error: 'Premium membership required' });
+  if (!await isAdminOrPro(db, req.user.id)) return res.status(403).json({ error: 'Premium membership required' });
   const { preferred_date, preferred_time, topic, notes } = req.body;
   if (!preferred_date || !preferred_time) return res.status(400).json({ error: 'Date and time required' });
   await run(db, 'INSERT INTO session_bookings (id, user_id, preferred_date, preferred_time, topic, notes) VALUES (?, ?, ?, ?, ?, ?)',
@@ -101,8 +112,7 @@ router.get('/sessions', authMiddleware, async (req, res) => {
 // Submit resume for review (premium only)
 router.post('/resume', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const user = await get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
-  if (!user?.is_premium) return res.status(403).json({ error: 'Premium membership required' });
+  if (!await isAdminOrPro(db, req.user.id)) return res.status(403).json({ error: 'Premium membership required' });
   const { linkedin_url, job_target, experience_years, current_role, resume_filename, resume_original } = req.body;
   await run(db, 'INSERT INTO resume_reviews (id, user_id, linkedin_url, job_target, experience_years, current_role, resume_filename, resume_original) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
     [uuidv4(), req.user.id, linkedin_url || '', job_target || '', experience_years || 0, current_role || '', resume_filename || null, resume_original || null]);
@@ -244,8 +254,7 @@ router.post('/self-activate', authMiddleware, async (req, res) => {
 // Book a mock interview (premium only)
 router.post('/mock-interview', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const user = await get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
-  if (!user?.is_premium) return res.status(403).json({ error: 'Premium membership required' });
+  if (!await isAdminOrPro(db, req.user.id)) return res.status(403).json({ error: 'Premium membership required' });
   const { interview_type, difficulty, preferred_date, preferred_time, notes } = req.body;
   if (!preferred_date || !preferred_time) return res.status(400).json({ error: 'Date and time required' });
   if (!interview_type) return res.status(400).json({ error: 'Interview type required' });

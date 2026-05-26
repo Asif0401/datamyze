@@ -110,6 +110,16 @@ const SAFE_USER_FIELDS = `
   experience_years, skills, education, target_role, profile_completed
 `;
 
+// Admin account always has Pro access regardless of DB value
+const ADMIN_EMAIL = 'ak384837@gmail.com';
+function ensureAdminPro(user) {
+  if (user && user.email === ADMIN_EMAIL) {
+    user.is_premium = 1;
+    user.premium_expires_at = null; // lifetime
+  }
+  return user;
+}
+
 /* ══════════════════════════════════════════════════
    SEND OTP  –  POST /auth/send-otp
    body: { identifier, type: 'email'|'phone', purpose: 'signup'|'login' }
@@ -266,7 +276,7 @@ router.post('/signup', async (req, res) => {
   );
 
   const token = issueToken({ id, email: clean, name: name.trim() });
-  const user  = await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [id]);
+  const user  = ensureAdminPro(await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [id]));
   res.status(201).json({ token, user });
 });
 
@@ -296,7 +306,7 @@ router.post('/login', async (req, res) => {
   await run(db, 'INSERT OR IGNORE INTO daily_streaks (id, user_id, date) VALUES (?, ?, ?)', [uuidv4(), user.id, today]);
 
   const token = issueToken(user);
-  const safe  = await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [user.id]);
+  const safe  = ensureAdminPro(await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [user.id]));
   safe.streak = newStreak;
   res.json({ token, user: safe });
 });
@@ -359,7 +369,7 @@ router.post('/login-phone', async (req, res) => {
   await run(db, 'INSERT OR IGNORE INTO daily_streaks (id, user_id, date) VALUES (?, ?, ?)', [uuidv4(), user.id, today]);
 
   const token = issueToken(user);
-  const safe  = await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [user.id]);
+  const safe  = ensureAdminPro(await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [user.id]));
   safe.streak = newStreak;
   res.json({ token, user: safe });
 });
@@ -389,7 +399,7 @@ router.post('/complete-profile', authMiddleware, async (req, res) => {
   values.push(req.user.id);
   await run(db, `UPDATE users SET ${updates.join(', ')} WHERE id = ?`, values);
 
-  const user = await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [req.user.id]);
+  const user = ensureAdminPro(await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [req.user.id]));
   res.json({ user, message: 'Profile saved!' });
 });
 
@@ -398,7 +408,7 @@ router.post('/complete-profile', authMiddleware, async (req, res) => {
 ══════════════════════════════════════════════════ */
 router.get('/me', authMiddleware, async (req, res) => {
   const db   = req.app.locals.db;
-  const user = await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [req.user.id]);
+  const user = ensureAdminPro(await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [req.user.id]));
   if (!user) return res.status(404).json({ error: 'User not found' });
   res.json({ user });
 });
@@ -436,7 +446,7 @@ router.patch('/profile', authMiddleware, async (req, res) => {
   values.push(req.user.id);
   await run(db, `UPDATE users SET ${fields.join(', ')} WHERE id = ?`, values);
 
-  const user = await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [req.user.id]);
+  const user = ensureAdminPro(await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [req.user.id]));
   res.json({ user, message: 'Profile updated successfully' });
 });
 
