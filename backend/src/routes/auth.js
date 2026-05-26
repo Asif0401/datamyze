@@ -165,11 +165,11 @@ router.post('/send-otp', async (req, res) => {
   // Email OTP — send via Gmail SMTP
   const { sendNotification } = require('../utils/notify');
   await sendNotification(
-    `Your DataLift verification code is ${code}`,
+    `Your Datamyze verification code is ${code}`,
     `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#0d1117;border-radius:16px">
        <div style="text-align:center;margin-bottom:24px">
          <div style="font-size:32px">📊</div>
-         <h2 style="color:#4A90D9;margin:8px 0 4px;font-size:22px">DataLift</h2>
+         <h2 style="color:#4A90D9;margin:8px 0 4px;font-size:22px">Datamyze</h2>
          <p style="color:#888;font-size:13px;margin:0">Email Verification</p>
        </div>
        <p style="color:#ccc;font-size:15px">Hi there! Use the code below to verify your email address.</p>
@@ -242,7 +242,7 @@ router.post('/signup', async (req, res) => {
     );
   } else {
     // email column is NOT NULL — use a unique placeholder for phone-only signups
-    const emailPlaceholder = `phone_${clean}@datalift.app`;
+    const emailPlaceholder = `phone_${clean}@datamyze.in`;
     await run(db,
       'INSERT INTO users (id, name, email, phone, password_hash, xp, streak, last_active, profile_completed) VALUES (?, ?, ?, ?, ?, 0, 1, ?, 0)',
       [id, name.trim(), emailPlaceholder, clean, passwordHash, today]
@@ -254,7 +254,7 @@ router.post('/signup', async (req, res) => {
   // Email notification
   const ts = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
   sendNotification(
-    `🎉 New DataLift Signup — ${name.trim()}`,
+    `🎉 New Datamyze Signup — ${name.trim()}`,
     `<h2 style="color:#4A90D9">New User Registered!</h2>
      <table style="font-family:sans-serif;font-size:15px;border-collapse:collapse">
        <tr><td style="padding:6px 16px 6px 0;color:#888">Name</td><td><strong>${name.trim()}</strong></td></tr>

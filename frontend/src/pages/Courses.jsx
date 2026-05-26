@@ -745,46 +745,41 @@ export default function Courses() {
           /* ── Coming Soon card ── */
           if (c.is_coming_soon) {
             return (
-              <div
-                key={c.id}
-                className="course-card"
-                style={{ position: 'relative', opacity: 0.62, filter: 'grayscale(0.45)', cursor: 'default', pointerEvents: 'none' }}
-              >
-                {/* Lock overlay */}
-                <div style={{
-                  position: 'absolute', inset: 0, zIndex: 10,
-                  background: 'linear-gradient(160deg, rgba(10,10,20,0.72) 0%, rgba(10,10,30,0.55) 100%)',
-                  borderRadius: 'inherit',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6,
-                }}>
-                  <div style={{ fontSize: 28 }}>🔒</div>
-                  <div style={{
-                    fontSize: 11, fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase',
-                    color: 'rgba(255,255,255,0.75)',
-                    background: 'rgba(255,255,255,0.08)',
-                    border: '1px solid rgba(255,255,255,0.18)',
-                    borderRadius: 20, padding: '3px 12px',
-                  }}>Coming Soon</div>
+              <div key={c.id} style={{
+                position: 'relative', cursor: 'default',
+                background: 'linear-gradient(135deg, rgba(139,92,246,0.08) 0%, rgba(10,10,20,0.6) 100%)',
+                border: '1.5px dashed rgba(139,92,246,0.35)',
+                borderRadius: 16, overflow: 'hidden', padding: '24px 20px',
+                display: 'flex', flexDirection: 'column', gap: 12,
+                backdropFilter: 'blur(8px)',
+              }}>
+                {/* Top badge */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{
+                    fontSize: 10, fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase',
+                    background: 'linear-gradient(90deg,#7c3aed,#a78bfa)',
+                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                  }}>Coming Soon</span>
+                  <span className={`pill ${c.difficulty === 'Beginner' ? 'pill-teal' : c.difficulty === 'Intermediate' ? 'pill-amber' : 'pill-coral'}`} style={{ opacity: 0.7 }}>{c.difficulty}</span>
                 </div>
 
-                <div className="course-thumb" style={{ background: c.color + '14' }}>
-                  <div style={{ fontSize: 38, lineHeight: 1 }}>{c.icon}</div>
+                {/* Icon */}
+                <div style={{ fontSize: 40, lineHeight: 1 }}>{c.icon}</div>
+
+                {/* Title & description */}
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 16, color: '#fff', marginBottom: 6 }}>{c.title}</div>
+                  <div style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.6 }}>{c.description}</div>
                 </div>
-                <div className="course-body">
-                  <div style={{ display: 'flex', gap: 5, marginBottom: 6, flexWrap: 'wrap' }}>
-                    <span className={`pill ${c.difficulty === 'Beginner' ? 'pill-teal' : c.difficulty === 'Intermediate' ? 'pill-amber' : 'pill-coral'}`}>{c.difficulty}</span>
-                    <span style={{
-                      fontSize: 10, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase',
-                      background: 'rgba(139,92,246,0.18)', color: '#a78bfa',
-                      border: '1px solid rgba(139,92,246,0.35)',
-                      padding: '2px 8px', borderRadius: 20,
-                    }}>COMING SOON</span>
-                  </div>
-                  <div className="course-name">{c.title}</div>
-                  <div className="course-meta" style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4, lineHeight: 1.5 }}>{c.description}</div>
-                  <div style={{ marginTop: 10, padding: '7px 12px', borderRadius: 8, background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', fontSize: 12, color: '#a78bfa', fontWeight: 600, textAlign: 'center' }}>
-                    🚀 Launching Soon
-                  </div>
+
+                {/* Bottom bar */}
+                <div style={{
+                  marginTop: 'auto', padding: '8px 14px', borderRadius: 10,
+                  background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.25)',
+                  fontSize: 12, color: '#c4b5fd', fontWeight: 600, textAlign: 'center',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                }}>
+                  <span style={{ fontSize: 14 }}>🚀</span> Launching Soon — Stay tuned!
                 </div>
               </div>
             );
