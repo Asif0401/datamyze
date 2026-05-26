@@ -792,29 +792,154 @@ export default function Courses() {
             );
           }
 
-          /* ── Regular course card ── */
+          /* ── Regular course card (redesigned) ── */
+          const PrimaryLogo = logos[0]?.component;
+          const secondaryLogos = logos.slice(1);
+
           return (
-            <div key={c.id} className="course-card" onClick={() => setSelected(c)}>
-              <div className="course-thumb" style={{ background: c.color + '14' }}>
-                {logos.map((logo, idx) => {
-                  const L = logo.component;
-                  return L
-                    ? <div key={logo.alt} className="course-logo-animated" style={{ animationDelay: `${idx * 0.4}s` }}><L /></div>
-                    : <img key={logo.alt} src={logo.src} alt={logo.alt} className="course-logo" style={{ animationDelay: `${idx * 0.4}s` }} />;
-                })}
+            <div
+              key={c.id}
+              onClick={() => setSelected(c)}
+              style={{
+                background: 'var(--card)',
+                border: '1px solid var(--border)',
+                borderRadius: 18,
+                overflow: 'hidden',
+                cursor: 'pointer',
+                transition: 'transform .18s, box-shadow .18s, border-color .18s',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = 'translateY(-3px)';
+                e.currentTarget.style.boxShadow = `0 12px 36px rgba(0,0,0,0.45), 0 0 0 1px ${c.color}44`;
+                e.currentTarget.style.borderColor = c.color + '55';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.borderColor = 'var(--border)';
+              }}
+            >
+              {/* ── Banner ── */}
+              <div style={{
+                position: 'relative',
+                height: 130,
+                background: `linear-gradient(145deg, ${c.color}28 0%, ${c.color}0d 70%, rgba(0,0,0,0.08) 100%)`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+              }}>
+                {/* Radial glow behind logo */}
+                <div style={{
+                  position: 'absolute',
+                  width: 110, height: 110,
+                  borderRadius: '50%',
+                  background: `radial-gradient(circle, ${c.color}35 0%, transparent 72%)`,
+                  pointerEvents: 'none',
+                }} />
+
+                {/* Single primary logo — large */}
+                {PrimaryLogo
+                  ? <PrimaryLogo />
+                  : <div style={{ fontSize: 48, lineHeight: 1, filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.4))' }}>{c.icon}</div>
+                }
+
+                {/* Difficulty pill — top right */}
+                <div style={{ position: 'absolute', top: 10, right: 10 }}>
+                  <span
+                    className={`pill ${c.difficulty === 'Beginner' ? 'pill-teal' : c.difficulty === 'Intermediate' ? 'pill-amber' : 'pill-coral'}`}
+                    style={{ fontSize: 10, padding: '2px 9px' }}
+                  >
+                    {c.difficulty}
+                  </span>
+                </div>
+
+                {/* Secondary tech mini-chips — bottom left */}
+                {secondaryLogos.length > 0 && (
+                  <div style={{
+                    position: 'absolute', bottom: 10, left: 12,
+                    display: 'flex', gap: 5, alignItems: 'center',
+                  }}>
+                    {secondaryLogos.map((logo, idx) => {
+                      const L = logo.component;
+                      return (
+                        <div
+                          key={idx}
+                          title={logo.alt}
+                          style={{
+                            width: 22, height: 22,
+                            borderRadius: 6,
+                            overflow: 'hidden',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.5)',
+                            flexShrink: 0,
+                            background: 'rgba(0,0,0,0.25)',
+                          }}
+                        >
+                          {/* Scale 42→22: 22/42 ≈ 0.524 */}
+                          <div style={{ transform: 'scale(0.524)', transformOrigin: 'top left', pointerEvents: 'none' }}>
+                            <L />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Completed check mark — top left */}
+                {prog === 100 && (
+                  <div style={{
+                    position: 'absolute', top: 10, left: 12,
+                    width: 24, height: 24, borderRadius: '50%',
+                    background: 'rgba(92,200,160,0.2)', border: '1.5px solid #5CC8A0',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 12, color: '#5CC8A0', fontWeight: 800,
+                  }}>✓</div>
+                )}
               </div>
-              <div className="course-body">
-                <div style={{ display: 'flex', gap: 5, marginBottom: 6, flexWrap: 'wrap' }}>
-                  <span className={`pill ${c.difficulty === 'Beginner' ? 'pill-teal' : c.difficulty === 'Intermediate' ? 'pill-amber' : 'pill-coral'}`}>{c.difficulty}</span>
-                  <span style={{ fontSize: 10, background: 'rgba(255,255,255,0.06)', color: 'var(--muted)', padding: '2px 8px', borderRadius: 20 }}>📝 {c.total_lessons} lessons</span>
+
+              {/* ── Card Body ── */}
+              <div style={{ padding: '14px 16px 16px', display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
+                {/* Meta chips */}
+                <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: 10, background: 'rgba(255,255,255,0.06)', color: 'var(--muted)', padding: '2px 8px', borderRadius: 20, display: 'flex', alignItems: 'center', gap: 3 }}>
+                    📝 {c.total_lessons} lessons
+                  </span>
+                  <span style={{ fontSize: 10, background: 'rgba(255,255,255,0.06)', color: 'var(--muted)', padding: '2px 8px', borderRadius: 20, display: 'flex', alignItems: 'center', gap: 3 }}>
+                    ⏱ {c.duration}
+                  </span>
                 </div>
-                <div className="course-name">{c.title}</div>
-                <div className="course-meta">⏱ {c.duration} · 🎥 Video per topic</div>
-                <div className="progress-bar" style={{ marginTop: 8 }}>
-                  <div className="progress-fill" style={{ width: `${prog}%`, background: c.color }} />
+
+                {/* Title */}
+                <div style={{
+                  fontWeight: 700, fontSize: 14.5, lineHeight: 1.35,
+                  color: 'var(--text)',
+                  overflow: 'hidden', display: '-webkit-box',
+                  WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+                }}>
+                  {c.title}
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>
-                  {prog === 0 ? 'Not started' : prog === 100 ? '✅ Completed' : `${prog}% complete`}
+
+                {/* Sub-meta */}
+                <div style={{ fontSize: 11.5, color: 'var(--muted)' }}>🎥 Video per topic</div>
+
+                {/* Progress — pushed to bottom */}
+                <div style={{ marginTop: 'auto', paddingTop: 8 }}>
+                  <div style={{ height: 4, borderRadius: 99, background: 'rgba(255,255,255,0.07)', overflow: 'hidden' }}>
+                    <div style={{
+                      height: '100%', borderRadius: 99,
+                      width: `${prog}%`,
+                      background: prog === 100
+                        ? '#5CC8A0'
+                        : `linear-gradient(90deg, ${c.color}cc, ${c.color})`,
+                      transition: 'width .6s ease',
+                      boxShadow: prog > 0 ? `0 0 8px ${c.color}88` : 'none',
+                    }} />
+                  </div>
+                  <div style={{ fontSize: 11, color: prog === 100 ? '#5CC8A0' : 'var(--muted)', marginTop: 5, fontWeight: prog === 100 ? 700 : 400 }}>
+                    {prog === 0 ? 'Not started' : prog === 100 ? '✅ Completed' : `${prog}% complete`}
+                  </div>
                 </div>
               </div>
             </div>
