@@ -1,4 +1,5 @@
 const { createClient } = require('@libsql/client');
+const { v4: uuidv4 } = require('uuid');
 
 let client;
 
@@ -264,7 +265,6 @@ async function initDb() {
   try {
     const pbi = await c.execute(`SELECT id FROM courses WHERE title='Power BI'`);
     if (!pbi.rows.length) {
-      const { v4: uuidv4 } = require('uuid');
       await c.execute({ sql: `INSERT INTO courses (id, title, description, icon, color, difficulty, duration, total_lessons) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, args: [uuidv4(), 'Power BI', 'Create stunning reports and dashboards with Microsoft Power BI — from data modeling to DAX.', '💡', '#F2C811', 'Beginner', '6h', 4] });
     }
   } catch(e) {}

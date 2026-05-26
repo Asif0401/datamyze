@@ -1208,45 +1208,56 @@ rating might not increase revenue — the true driver is app quality.
 
   'Tableau for Analysts': [
     {
-      title: 'Why Dashboards Matter',
-      content: `# Why Dashboards Matter
+      title: 'Introduction to Tableau',
+      content: `# Introduction to Tableau
 
-A dashboard is a visual summary of the most important metrics a business needs to monitor and act on. A great dashboard answers the right question before anyone even asks it.
+Tableau is the world's leading data visualisation tool — used by Flipkart, Swiggy, Myntra, CRED, Razorpay, and thousands of Indian analytics teams. It lets you go from raw data to interactive dashboards without writing a single line of code.
 
-**Analogy:** Swiggy's City Head opens the ops dashboard every morning at 9 AM. In 30 seconds she knows: order volume vs yesterday, average delivery time, SLA breach count, top underperforming restaurants. No SQL, no spreadsheets — just decisions.
+## Why Tableau?
+| Feature | What it means for you |
+|---------|----------------------|
+| Drag-and-drop UI | Build charts in seconds, not hours |
+| Live & extract connections | Connect to any data source: SQL, Excel, Google Sheets, S3 |
+| Interactive dashboards | Filters, drill-downs, tooltips — no coding needed |
+| Tableau Public | Free — publish and share your portfolio with employers |
+| Industry standard | Listed in 60%+ of Indian BI/analyst job descriptions |
 
-## The Dashboard Hierarchy
+## Tableau Product Family
+- **Tableau Desktop** — where you build workbooks (14-day free trial)
+- **Tableau Public** — 100% free, save to public cloud, great for portfolio
+- **Tableau Server / Cloud** — enterprise sharing within an org
+
+## The Tableau Interface
 \`\`\`
-Strategic   → C-suite: GMV, revenue, market share (weekly/monthly)
-Operational → Managers: SLA, delivery time, error rates (daily/hourly)
-Analytical  → Analysts: cohorts, funnels, deep-dives (ad hoc)
+┌─────────────────────────────────────────────┐
+│ Data Pane    │      Canvas (Sheet view)      │
+│ ──────────── │  ┌── Columns shelf ─────────┐ │
+│ Dimensions   │  ├── Rows shelf ────────────┤ │
+│  • City      │  │                           │ │
+│  • Category  │  │      Chart appears here   │ │
+│  • Date      │  │                           │ │
+│ ──────────── │  └───────────────────────────┘ │
+│ Measures     │  Marks card: Color Size Label  │
+│  • Revenue   │  Filters pane                  │
+│  • Orders    │                                │
+└─────────────────────────────────────────────┘
 \`\`\`
 
-## What Makes a Dashboard Good?
-| Good Dashboard | Bad Dashboard |
-|---------------|---------------|
-| 1 clear KPI per chart | Multiple metrics crammed together |
-| Action-oriented title ("Revenue Down 12% WoW") | Generic title ("Revenue Chart") |
-| Consistent colour for same metric | Random colour changes per slide |
-| Mobile-friendly layout | Requires 4K monitor to read |
-| Drillable from summary to detail | Flat — only one level |
-
-## Key Dashboard Metrics by Role
+## Connecting to Data
 \`\`\`
-Product Analyst:   DAU/MAU, retention, feature adoption, funnel drop-off
-Growth Analyst:    CAC, LTV, conversion rate, churn rate
-Ops Analyst:       SLA breach%, OTIF, average handle time
-Finance Analyst:   Revenue, burn rate, gross margin, EBITDA
+1. Open Tableau → Connect → To a File → Excel or CSV
+2. Or: Connect → To a Server → MySQL / PostgreSQL / BigQuery
+3. Drag tables to canvas to build a JOIN
+4. Click "Sheet 1" at the bottom to start building
 \`\`\`
 
-## Common Pitfalls
-- **Pie charts with > 5 slices** — use a bar chart instead
-- **Dual-axis charts** — misleading if scales are incompatible
-- **3D charts** — always decorative, never informative
-- **Missing baselines** — always show target or prior period
+## Dimensions vs Measures
+- **Dimensions** (blue pills) — categorical: City, Product, Date, Status
+- **Measures** (green pills) — numerical: Revenue, Orders, Duration, Rating
+- Drag a Dimension to Columns + a Measure to Rows → instant bar chart!
 
-💡 **Interview Tip:** In a "design a dashboard" round at Zomato or Ola, start with: "Who is the audience? What decision will they make from this?" Interviewers are testing whether you think user-first or chart-first. Always define the audience and key question before touching any tool.`,
-      video_url: 'VaNUOVnULkI',
+💡 **Interview Tip:** Many analyst interviews at startups ask you to "show us a Tableau dashboard you've built." Having even one clean viz on Tableau Public with a real dataset puts you in the top 20% of applicants.`,
+      video_url: 'TPMlZxRRaBQ',
       dur: 15,
     },
     {
@@ -1359,211 +1370,6 @@ Building a Top-N Parameter:
 
 💡 **Interview Tip:** "What is a Level of Detail (LOD) expression?" — LOD expressions like FIXED, INCLUDE, EXCLUDE let you compute aggregations at a different granularity than the view. FIXED is the most common: \`{FIXED [Customer ID] : MIN([Order Date])}\` gives the first order date per customer — critical for cohort analysis.`,
       video_url: 'yush1yNz9VM',
-      dur: 25,
-    },
-    {
-      title: 'Power BI: Data Import & Modelling',
-      content: `# Power BI: Data Import & Modelling
-
-Power BI is Microsoft's BI tool — dominant in enterprises, banks, and IT services companies (TCS, Infosys, Wipro). If you're targeting corporate analytics roles, Power BI is non-negotiable.
-
-**Analogy:** HDFC Bank's retail analytics team connects Power BI to their SQL Server — pulling account data, transaction data, branch data — and models them into a star schema. Relationship lines in Power BI replace 20 JOIN statements.
-
-## Power Query — The Data Prep Layer
-\`\`\`
-Home → Transform Data → Power Query Editor
-
-Common transformations:
-• Remove columns: right-click column → Remove
-• Rename column: double-click header
-• Change type: click type icon in header (Abc, 123, 📅)
-• Split column: Transform → Split Column → By Delimiter
-• Merge queries: Home → Merge Queries (= JOIN in SQL)
-• Group By: Transform → Group By (= GROUP BY in SQL)
-• Custom column: Add Column → Custom Column → M formula
-
-M formula examples:
-  = Table.SelectRows(Source, each [Amount] > 1000)
-  = Table.AddColumn(Prev, "Margin", each [Revenue] - [Cost])
-\`\`\`
-
-## Data Modelling — Star Schema
-\`\`\`
-Fact Table (large, transactional):
-  fact_orders: order_id, customer_id, product_id, date_id, amount
-
-Dimension Tables (small, descriptive):
-  dim_customer: customer_id, name, city, segment
-  dim_product:  product_id, name, category, brand
-  dim_date:     date_id, date, month, quarter, year, is_weekend
-
-Relationship: Fact.customer_id → dim_customer.customer_id (Many-to-One)
-\`\`\`
-
-## Model View in Power BI
-\`\`\`
-Model View → drag tables to arrange
-→ Connect fact to each dimension on shared key
-→ Set cardinality: Many-to-One (fact-to-dim)
-→ Cross-filter direction: Single (dim → fact, not both)
-\`\`\`
-
-💡 **Interview Tip:** "What's a star schema vs snowflake schema?" — Star: dimensions are denormalised, flat tables — faster for queries. Snowflake: dimensions are normalised (cities table links to states table) — less storage but slower. Power BI works best with star schema. Mentioning this in an interview at HDFC or TCS signals enterprise analytics maturity.`,
-      video_url: '4ePNrdxWtY0',
-      dur: 30,
-    },
-    {
-      title: 'Power BI: DAX Measures',
-      content: `# Power BI: DAX Measures
-
-DAX (Data Analysis Expressions) is the formula language of Power BI. Mastering DAX is what enables you to build dynamic, context-aware KPIs that respond to slicers and filters — the difference between a static report and a true analytical tool.
-
-**Analogy:** A Reliance Jio analyst needs "Revenue this month vs same month last year" as a card on the dashboard. DAX's time intelligence functions make this a one-liner that updates automatically every month.
-
-## Basic Measures
-\`\`\`dax
-Total Revenue = SUM(fact_orders[amount])
-
-Order Count = COUNTROWS(fact_orders)
-
-Avg Order Value = DIVIDE([Total Revenue], [Order Count], 0)
-
-Profit Margin % =
-    DIVIDE(
-        SUM(fact_orders[profit]),
-        SUM(fact_orders[revenue]),
-        0
-    )
-\`\`\`
-
-## Time Intelligence
-\`\`\`dax
-Revenue LY =
-    CALCULATE(
-        [Total Revenue],
-        SAMEPERIODLASTYEAR(dim_date[date])
-    )
-
-YoY Growth % =
-    DIVIDE([Total Revenue] - [Revenue LY], [Revenue LY], BLANK())
-
-MTD Revenue =
-    CALCULATE([Total Revenue], DATESMTD(dim_date[date]))
-
-QTD Revenue =
-    CALCULATE([Total Revenue], DATESQTD(dim_date[date]))
-\`\`\`
-
-## CALCULATE — The Most Important DAX Function
-\`\`\`dax
-// Revenue only from Bangalore
-Bangalore Revenue =
-    CALCULATE([Total Revenue], dim_customer[city] = "Bangalore")
-
-// Revenue from Premium customers only
-Premium Revenue =
-    CALCULATE([Total Revenue], dim_customer[segment] = "Premium")
-
-// % of total (share of revenue)
-City Revenue Share % =
-    DIVIDE([Total Revenue], CALCULATE([Total Revenue], ALL(dim_customer)))
-\`\`\`
-
-💡 **Interview Tip:** "Explain CALCULATE in plain English." — CALCULATE evaluates a measure but modifies the filter context before doing so. It can add filters, remove filters (ALL), or replace them. It's the DAX equivalent of a SQL CASE WHEN inside an aggregate. Every senior DAX question tests whether you understand filter context vs row context.`,
-      video_url: 'J1kzN3uodZ4',
-      dur: 30,
-    },
-    {
-      title: 'Dashboard Design Principles',
-      content: `# Dashboard Design Principles
-
-Technical skills get you the data. Design skills make it useful. The best analytics teams at Flipkart and Google have dashboards that any stakeholder can understand in under 10 seconds.
-
-**Analogy:** Two analysts present the same revenue data. Analyst A uses a 3D pie chart with 12 slices and no titles. Analyst B uses a clean bar chart with insight-titled headers and red/green delta indicators. Analyst B gets promoted.
-
-## The 5-Second Test
-A dashboard passes the 5-second test if the most important insight is visible without reading any numbers. Use:
-- **Big Number tiles** at the top for key KPIs
-- **Colour** (red/green) for at-a-glance health
-- **Trend arrows** for direction
-- **Comparison** (vs target, vs last period) always visible
-
-## Layout — The F-Pattern
-\`\`\`
-┌─────────────────────────────────────────────┐
-│  KPI 1     │  KPI 2     │  KPI 3     │ KPI 4│  ← Most important, top-left
-├────────────────────────┬────────────────────┤
-│  Main trend chart      │  Top-N table       │  ← Primary analysis
-│  (largest, centre)     │  (ranked list)     │
-├───────────────┬────────┴────────────────────┤
-│ Geographic map│  Funnel / Cohort chart      │  ← Supporting details
-└───────────────┴─────────────────────────────┘
-\`\`\`
-
-## Chart Selection Guide
-\`\`\`
-Trend over time:       Line chart (not bar)
-Part of whole (≤5):    Donut chart
-Part of whole (>5):    Stacked bar chart
-Ranking/comparison:    Horizontal bar chart (sorted)
-Two variables:         Scatter plot
-Distribution:          Histogram / box plot
-Geographic:            Map (choropleth)
-KPI vs target:         Bullet chart / gauge
-\`\`\`
-
-## Colour Rules
-\`\`\`
-• 1 accent colour per chart — use sparingly to highlight
-• Red = bad / below target, Green = good / above target (universal)
-• Sequential palette for continuous data (light → dark)
-• Diverging palette for above/below zero metrics
-• Avoid: red/green together for colourblind users — use blue/orange instead
-\`\`\`
-
-💡 **Interview Tip:** If asked to critique a dashboard in a case round, use this structure: (1) Is the audience clear? (2) Is the key question answered in 5 seconds? (3) Are charts appropriate for the data type? (4) Is there unnecessary clutter? Structured critique shows design thinking — a skill that differentiates senior analysts.`,
-      video_url: 'VaNUOVnULkI',
-      dur: 20,
-    },
-    {
-      title: 'Tableau Fundamentals',
-      content: `# Tableau Fundamentals
-
-Tableau is the most widely used data visualisation tool in Indian analytics teams — Flipkart, Swiggy, Razorpay, and Zomato all use it daily.
-
-## Tableau Product Family
-| Product | Use Case |
-|---------|----------|
-| Tableau Desktop | Build & publish workbooks |
-| Tableau Public | Free — share with the world |
-| Tableau Server/Cloud | Org-wide sharing |
-
-## Core Concepts
-- **Dimensions** — Categorical fields (City, Category, Product Name) — shown in blue
-- **Measures** — Numerical fields (Revenue, Orders, Profit) — shown in green
-- **Marks** — Visual encodings: Color, Size, Shape, Label, Tooltip
-- **Shelves** — Rows, Columns, Filters, Pages
-
-## Your First Tableau Chart (Step by Step)
-\`\`\`
-1. Connect → Excel / CSV / SQL Server / Google Sheets
-2. Drag "City" to Columns shelf
-3. Drag "Revenue" to Rows shelf → bar chart auto-appears
-4. Drag "Category" to Color mark → grouped bars
-5. Sort descending by Revenue
-6. Format title: "Revenue by City & Category"
-\`\`\`
-
-## Show Me! Panel
-Tableau's **Show Me** recommends the best chart type based on selected fields:
-- 1 Dimension → Bar chart
-- 1 Dimension + 1 Measure → Horizontal bar
-- 2 Dimensions → Heat map / crosstab
-- 1 Date + 1 Measure → Line chart
-- Lat/Long → Map
-
-💡 **Interview Tip:** Most analyst roles list "Tableau experience" as a requirement. Being able to build a sales dashboard live in an interview is a huge differentiator.`,
-      video_url: 'TPMlZxRRaBQ',
       dur: 25,
     },
     {

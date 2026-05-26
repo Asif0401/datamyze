@@ -135,7 +135,8 @@ const TECH_LOGOS = {
     { component: PythonLogo, alt: 'Python' },
     { component: RLogo, alt: 'R' },
   ],
-  'Dashboard Design':       [{ component: TableauLogo, alt: 'Tableau' }, { component: PowerBILogo, alt: 'Power BI' }],
+  'Tableau for Analysts':   [{ component: TableauLogo, alt: 'Tableau' }],
+  'Power BI':               [{ component: PowerBILogo, alt: 'Power BI' }],
   'Advanced SQL':           [
     { component: PostgreSQLLogo, alt: 'PostgreSQL' },
     { component: MySQLLogo, alt: 'MySQL' },
@@ -163,11 +164,17 @@ const COURSE_META = {
     jobs: ['Data Scientist','Product Analyst','Growth Analyst'],
     upsell: 'Live stats sessions cover real A/B test case studies from Swiggy and PhonePe.',
   },
-  'Dashboard Design': {
-    outcomes: ['Build executive dashboards in Tableau and Power BI','Follow the 5-second clarity rule','Write DAX measures for KPI cards','Present insights that drive decisions'],
-    prereqs: 'SQL basics recommended before this course.',
+  'Tableau for Analysts': {
+    outcomes: ['Connect data sources and build live dashboards','Master calculated fields and LOD expressions','Build interactive charts, maps and story points','Create polished dashboards that get you hired'],
+    prereqs: 'Basic understanding of data and Excel recommended.',
     jobs: ['BI Developer','Data Analyst','Analytics Consultant'],
-    upsell: 'Pro includes Tableau and Power BI template downloads + live critique sessions.',
+    upsell: 'Pro includes downloadable Tableau workbook templates used in real startups.',
+  },
+  'Power BI': {
+    outcomes: ['Import and transform data with Power Query','Write DAX measures for KPIs and time intelligence','Build multi-page reports with slicers and drill-through','Publish and share dashboards on Power BI Service'],
+    prereqs: 'Basic Excel knowledge is helpful but not required.',
+    jobs: ['BI Developer','Business Analyst','Data Analyst'],
+    upsell: 'Pro includes Power BI report templates and live DAX troubleshooting sessions.',
   },
   'Advanced SQL': {
     outcomes: ['Optimise slow queries with EXPLAIN plans','Design indexes that cut query time 10×','Write recursive CTEs for hierarchy analysis','Solve every window-function pattern asked in interviews'],
