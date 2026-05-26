@@ -224,7 +224,7 @@ export default function Instructor() {
   const instructorName  = profile?.name  || 'Asif Khan';
   const instructorTitle = profile?.title || 'Lead Instructor';
   const linkedinUrl = profile?.linkedin_url || 'https://www.linkedin.com/in/pathan-asif-khan-/';
-  const instructorPhoto = profile?.photo_url || null;
+  const instructorPhoto = profile?.photo_url || '/instructor.jpg';
 
   const SKILLS = [
     { label: 'SQL', icon: '🗄️', color: '#7F77DD' },
