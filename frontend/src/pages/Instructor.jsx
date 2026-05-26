@@ -222,7 +222,7 @@ export default function Instructor() {
 
   // Derive dynamic values (fall back to static defaults)
   const instructorName  = profile?.name  || 'Asif Khan';
-  const instructorTitle = profile?.title || 'Lead Instructor';
+  const instructorTitle = profile?.title || 'Lead Mentor';
   const linkedinUrl = profile?.linkedin_url || 'https://www.linkedin.com/in/pathan-asif-khan-/';
   const instructorPhoto = profile?.photo_url || '/instructor.jpg';
 

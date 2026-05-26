@@ -193,7 +193,7 @@ function ProWelcomeBanner({ user, onDismiss, navigate }) {
           </div>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
             <button style={{ background: 'linear-gradient(135deg,#F6D365 0%,#E8A838 100%)', color: '#0a1628', border: 'none', borderRadius: 10, padding: '9px 20px', fontWeight: 800, fontSize: 13, cursor: 'pointer', boxShadow: '0 4px 18px rgba(246,211,101,0.35)' }} onClick={() => { onDismiss(); navigate('/jobs'); }}>💼 Browse Job Board</button>
-            <button style={{ background: 'transparent', color: 'rgba(246,211,101,0.7)', border: '1px solid rgba(246,211,101,0.2)', borderRadius: 10, padding: '9px 20px', fontWeight: 600, fontSize: 13, cursor: 'pointer' }} onClick={() => { onDismiss(); navigate('/instructor'); }}>👨‍🏫 Meet Your Instructor</button>
+            <button style={{ background: 'transparent', color: 'rgba(246,211,101,0.7)', border: '1px solid rgba(246,211,101,0.2)', borderRadius: 10, padding: '9px 20px', fontWeight: 600, fontSize: 13, cursor: 'pointer' }} onClick={() => { onDismiss(); navigate('/instructor'); }}>👨‍🏫 Meet Your Mentor</button>
             <button onClick={onDismiss} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: 'rgba(255,255,255,0.3)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: 3 }}>Dismiss</button>
           </div>
         </div>

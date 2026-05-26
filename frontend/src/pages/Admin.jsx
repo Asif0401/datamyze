@@ -514,7 +514,7 @@ function InstructorTab() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           {[
             { key: 'name',        label: 'Full Name',    placeholder: 'Asif Khan' },
-            { key: 'title',       label: 'Title / Role', placeholder: 'Lead Instructor · Data Scientist' },
+            { key: 'title',       label: 'Title / Role', placeholder: 'Lead Mentor · Data Scientist' },
             { key: 'location',    label: 'Location',     placeholder: 'Mumbai, India' },
             { key: 'linkedin_url',label: 'LinkedIn URL', placeholder: 'https://linkedin.com/in/...' },
             { key: 'github_url',  label: 'GitHub URL',   placeholder: 'https://github.com/...' },

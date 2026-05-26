@@ -105,7 +105,7 @@ const NAV = [
 const PREMIUM_NAV = [
   { to: '/premium',    Icon: Icons.Premium,    label: 'Pro Hub',            className: 'nav-premium-item' },
   { to: '/jobs',       Icon: Icons.Jobs,       label: 'Job Board',          className: 'nav-premium-item' },
-  { to: '/instructor', Icon: Icons.Instructor, label: 'Your Instructor',    className: 'nav-instructor-item' },
+  { to: '/instructor', Icon: Icons.Instructor, label: 'Meet Your Mentor',   className: 'nav-instructor-item' },
 ];
 
 export default function Layout() {
