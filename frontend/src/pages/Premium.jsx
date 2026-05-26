@@ -2463,18 +2463,34 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
         <div className="page-title">Everything in Premium</div>
         <div className="page-sub">Six high-impact benefits to accelerate your data career</div>
       </div>
-      <div className="features-grid">
+      <style>{`
+        @keyframes upgCardEnter { from{opacity:0;transform:translateY(22px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+        @keyframes upgShimmer   { from{background-position:-280% center} to{background-position:280% center} }
+      `}</style>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'1.2rem', marginBottom:'2.5rem' }}>
         {FEATURES.map((f,i) => (
-          <div key={f.label} className="feature-card"
-            style={{ position:'relative', overflow:'hidden', animation:`proCardEnter 0.5s ${i*0.07}s cubic-bezier(.22,1,.36,1) both`, transition:'all 0.22s cubic-bezier(.22,1,.36,1)' }}
-            onMouseEnter={e=>{ e.currentTarget.style.borderColor=(f.color||'#4A90D9')+'44'; e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.boxShadow=`0 16px 40px ${f.color||'#4A90D9'}18`; }}
-            onMouseLeave={e=>{ e.currentTarget.style.borderColor=''; e.currentTarget.style.transform='none'; e.currentTarget.style.boxShadow='none'; }}>
-            <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:`linear-gradient(90deg, ${f.color||'#4A90D9'}, transparent)` }} />
-            <div className="feature-icon" style={{ background: f.bg, border: `1px solid ${f.border}` }}>
-              <span style={{ fontSize: 22 }}>{f.icon}</span>
+          <div key={f.label}
+            style={{ borderRadius:18, overflow:'hidden', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', display:'flex', flexDirection:'column', cursor:'default', transition:'all 0.25s cubic-bezier(.22,1,.36,1)', animation:`upgCardEnter 0.55s ${i*0.07}s cubic-bezier(.22,1,.36,1) both` }}
+            onMouseEnter={e=>{ e.currentTarget.style.borderColor=f.color+'48'; e.currentTarget.style.transform='translateY(-5px)'; e.currentTarget.style.boxShadow=`0 20px 48px ${f.color}1e`; }}
+            onMouseLeave={e=>{ e.currentTarget.style.borderColor='rgba(255,255,255,0.08)'; e.currentTarget.style.transform='none'; e.currentTarget.style.boxShadow='none'; }}>
+
+            {/* Gradient banner */}
+            <div style={{ height:110, background:`linear-gradient(135deg, ${f.color}22, ${f.color}08)`, position:'relative', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+              <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:`linear-gradient(90deg, ${f.color}cc, ${f.color}44, transparent)` }} />
+              <div style={{ position:'absolute', inset:0, background:`radial-gradient(circle at 50% 140%, ${f.color}30, transparent 62%)` }} />
+              {/* Shimmer sweep on hover */}
+              <div className="upg-shimmer" style={{ position:'absolute', inset:0, background:`linear-gradient(105deg, transparent 35%, ${f.color}18 50%, transparent 65%)`, backgroundSize:'280% 100%', backgroundPosition:'-280% center' }} />
+              <span style={{ fontSize:44, position:'relative', filter:'drop-shadow(0 4px 18px rgba(0,0,0,0.55))' }}>{f.icon}</span>
             </div>
-            <div className="feature-title">{f.label}</div>
-            <div className="feature-desc">{f.desc}</div>
+
+            {/* Body */}
+            <div style={{ padding:'1rem 1.2rem 1.2rem', flex:1, display:'flex', flexDirection:'column' }}>
+              <div style={{ fontWeight:800, fontSize:15, color:'#fff', marginBottom:7, lineHeight:1.3 }}>{f.label}</div>
+              <div style={{ fontSize:13, color:'rgba(255,255,255,0.48)', lineHeight:1.65, flex:1 }}>{f.desc}</div>
+              <div style={{ marginTop:'0.9rem', display:'inline-flex', alignItems:'center', gap:5, fontSize:12, color:f.color, fontWeight:700 }}>
+                Included in Pro <span>→</span>
+              </div>
+            </div>
           </div>
         ))}
       </div>
