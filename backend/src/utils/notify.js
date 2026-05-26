@@ -35,4 +35,24 @@ async function sendNotification(subject, html, replyTo = null) {
   }
 }
 
-module.exports = { sendNotification };
+// Send email to any recipient (used for OTPs, user-facing emails)
+async function sendEmail(to, subject, html) {
+  const transport = getTransport();
+  if (!transport) {
+    console.log(`[Email] SMTP not configured — email to ${to} skipped:\n${subject}`);
+    return;
+  }
+  try {
+    await transport.sendMail({
+      from: `"Datamyze" <${process.env.SMTP_USER}>`,
+      to,
+      subject,
+      html,
+    });
+    console.log(`[Email] Sent to ${to}: ${subject}`);
+  } catch (e) {
+    console.error(`[Email] Failed to send to ${to}:`, e.message);
+  }
+}
+
+module.exports = { sendNotification, sendEmail };

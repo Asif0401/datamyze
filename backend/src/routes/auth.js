@@ -162,9 +162,10 @@ router.post('/send-otp', async (req, res) => {
     });
   }
 
-  // Email OTP — send via Gmail SMTP
-  const { sendNotification } = require('../utils/notify');
-  await sendNotification(
+  // Email OTP — send to the actual user's email
+  const { sendEmail } = require('../utils/notify');
+  await sendEmail(
+    clean,
     `Your Datamyze verification code is ${code}`,
     `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#0d1117;border-radius:16px">
        <div style="text-align:center;margin-bottom:24px">
