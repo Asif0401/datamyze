@@ -267,57 +267,6 @@ export default function Dashboard() {
 
       {showProBanner && <ProWelcomeBanner user={user} onDismiss={dismissProBanner} navigate={navigate} />}
 
-      {/* ── MENTOR MESSAGE BANNER ── */}
-      <div className="dash-fadein" style={{ animationDelay: '.05s', marginBottom: '1.5rem' }}>
-        <div style={{
-          position: 'relative', borderRadius: 18, overflow: 'hidden',
-          background: 'linear-gradient(135deg, rgba(74,144,217,0.10) 0%, rgba(92,200,160,0.08) 100%)',
-          border: '1px solid rgba(74,144,217,0.22)',
-          padding: '1.25rem 1.5rem',
-          display: 'flex', alignItems: 'flex-start', gap: '1.1rem',
-        }}>
-          {/* Mentor avatar */}
-          <div style={{ position: 'relative', flexShrink: 0 }}>
-            <div className="mentor-pulse" style={{
-              position: 'absolute', inset: -6, borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(74,144,217,0.35) 0%, transparent 70%)',
-              pointerEvents: 'none',
-            }} />
-            <img
-              src="/instructor.jpg"
-              alt="Mentor"
-              onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}
-              style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(74,144,217,0.5)', position: 'relative', zIndex: 1 }}
-            />
-            <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'linear-gradient(135deg,#4A90D9,#5CC8A0)', display: 'none', alignItems: 'center', justifyContent: 'center', fontSize: 22, position: 'relative', zIndex: 1 }}>👨‍🏫</div>
-            <div style={{ position: 'absolute', bottom: 1, right: 1, width: 11, height: 11, borderRadius: '50%', background: '#5CC8A0', border: '2px solid #0e1a2e', zIndex: 2 }} />
-          </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#4A90D9', letterSpacing: '.06em', marginBottom: 4, textTransform: 'uppercase' }}>
-              Asif Khan · Your Mentor
-            </div>
-            <div style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.82)', lineHeight: 1.6, marginBottom: mentor?.action ? 10 : 0 }}>
-              {mentor?.message || 'Keep practicing every day — consistency is what separates good analysts from great ones.'}
-            </div>
-            {mentor?.action && (
-              <button
-                onClick={() => navigate(mentor.actionPath || '/problems')}
-                style={{
-                  background: 'linear-gradient(135deg,#4A90D9,#38bdf8)', color: '#fff',
-                  border: 'none', borderRadius: 9, padding: '7px 18px',
-                  fontSize: 12, fontWeight: 700, cursor: 'pointer',
-                  boxShadow: '0 3px 14px rgba(74,144,217,0.35)',
-                  transition: 'transform .15s, box-shadow .15s',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.transform='translateY(-1px)'; e.currentTarget.style.boxShadow='0 5px 18px rgba(74,144,217,0.5)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='0 3px 14px rgba(74,144,217,0.35)'; }}
-              >
-                {mentor.action} →
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
 
       {/* ── READINESS HERO ── */}
       <div className="dash-fadein readiness-hero" style={{
