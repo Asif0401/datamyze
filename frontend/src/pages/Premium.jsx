@@ -1161,31 +1161,71 @@ function PremiumHub({ status, user }) {
 
   return (
     <div className="page" style={{ maxWidth: 1100 }}>
-      {/* Premium header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: '1.8rem', padding: '1.2rem 1.5rem', background: 'rgba(255,255,255,0.055)', backdropFilter: 'blur(18px)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 18, position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, #E8A838, #4A90D9, #5CC8A0)' }} />
-        <div style={{ width: 52, height: 52, borderRadius: 14, background: 'linear-gradient(135deg, rgba(232,168,56,0.25), rgba(240,123,106,0.20))', border: '1px solid rgba(232,168,56,0.30)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>👑</div>
-        <div style={{ flex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 3 }}>
-            <span style={{ fontWeight: 800, fontSize: 17, color: '#fff' }}>Pro Member</span>
-            <span className="premium-badge">👑 Active</span>
-          </div>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>
-            Welcome back, <strong style={{ color: 'rgba(255,255,255,0.80)' }}>{user?.name?.split(' ')[0]}</strong>
-            {expiryDate && <span> · Valid until {expiryDate}</span>}
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: 20, flexShrink: 0 }}>
-          {[
-            { val: sessions.length, lbl: 'Sessions' },
-            { val: reviews.length,  lbl: 'Reviews'  },
-            { val: mockCount,       lbl: 'Interviews' },
-          ].map(s => (
-            <div key={s.lbl} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 22, fontWeight: 800, color: '#fff' }}>{s.val}</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{s.lbl}</div>
+      <style>{`
+        @keyframes goldShimmer { 0%{background-position:-250% center} 100%{background-position:250% center} }
+        @keyframes crownGlow   { 0%,100%{box-shadow:0 0 22px rgba(232,168,56,0.28)} 50%{box-shadow:0 0 44px rgba(232,168,56,0.60)} }
+        @keyframes activePulse { 0%,100%{opacity:0.75} 50%{opacity:1} }
+        @keyframes hubFadeUp   { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes proCardEnter{ from{opacity:0;transform:translateY(20px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+        @keyframes starDrift   { 0%,100%{transform:translateY(0) scale(1);opacity:0.55} 50%{transform:translateY(-6px) scale(1.15);opacity:0.90} }
+      `}</style>
+
+      {/* ─── Premium Header ─────────────────────────────── */}
+      <div style={{ position:'relative', overflow:'hidden', borderRadius:22, marginBottom:'1.6rem', background:'linear-gradient(145deg, rgba(20,12,2,0.98) 0%, rgba(12,7,1,0.99) 100%)', border:'1px solid rgba(232,168,56,0.24)', padding:'1.8rem 2rem' }}>
+        {/* Animated gold shimmer line */}
+        <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'linear-gradient(90deg, transparent 0%, #a06510 15%, #E8A838 38%, #fde68a 52%, #E8A838 65%, #a06510 85%, transparent 100%)', backgroundSize:'250% 100%', animation:'goldShimmer 3.5s linear infinite' }} />
+        {/* Glow orbs */}
+        <div style={{ position:'absolute', top:-90, right:-50, width:260, height:260, borderRadius:'50%', background:'radial-gradient(circle, rgba(232,168,56,0.11) 0%, transparent 68%)', pointerEvents:'none' }} />
+        <div style={{ position:'absolute', bottom:-110, left:-70, width:300, height:300, borderRadius:'50%', background:'radial-gradient(circle, rgba(74,144,217,0.07) 0%, transparent 68%)', pointerEvents:'none' }} />
+        {/* Floating gold stars */}
+        {[{l:'10%',t:'28%',d:'0s'},{l:'87%',t:'62%',d:'0.9s'},{l:'70%',t:'18%',d:'1.6s'},{l:'28%',t:'70%',d:'0.5s'},{l:'52%',t:'82%',d:'1.2s'}].map((s,i)=>(
+          <div key={i} style={{ position:'absolute', left:s.l, top:s.t, width:5, height:5, borderRadius:'50%', background:'rgba(232,168,56,0.60)', animation:`starDrift 2.8s ${s.d} ease-in-out infinite`, pointerEvents:'none' }} />
+        ))}
+
+        <div style={{ display:'flex', alignItems:'center', gap:22, position:'relative', animation:'hubFadeUp 0.5s ease both' }}>
+          {/* Crown avatar with glow */}
+          <div style={{ width:72, height:72, borderRadius:20, background:'linear-gradient(135deg, rgba(232,168,56,0.30), rgba(240,200,100,0.14))', border:'1.5px solid rgba(232,168,56,0.48)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:34, flexShrink:0, animation:'crownGlow 2.8s ease-in-out infinite' }}>👑</div>
+
+          {/* Title block */}
+          <div style={{ flex:1, minWidth:0 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:6, flexWrap:'wrap' }}>
+              <span style={{ fontWeight:900, fontSize:22, color:'#fff', letterSpacing:'-0.4px' }}>Pro Member</span>
+              <span style={{ background:'linear-gradient(135deg, rgba(232,168,56,0.22), rgba(240,200,100,0.12))', border:'1px solid rgba(232,168,56,0.44)', color:'#E8A838', fontSize:10, fontWeight:800, padding:'3px 12px', borderRadius:20, letterSpacing:'1px', textTransform:'uppercase', animation:'activePulse 2s ease-in-out infinite' }}>✦ Active</span>
             </div>
-          ))}
+            <div style={{ fontSize:14, color:'rgba(255,255,255,0.52)', lineHeight:1.5, marginBottom:10 }}>
+              Welcome back, <strong style={{ color:'rgba(255,255,255,0.92)' }}>{user?.name?.split(' ')[0]}</strong> — all Pro features are unlocked for you.
+              {expiryDate && <span style={{ color:'rgba(255,255,255,0.28)', fontSize:12 }}> · Valid until {expiryDate}</span>}
+            </div>
+            {/* Perks pills */}
+            <div style={{ display:'flex', gap:7, flexWrap:'wrap' }}>
+              {[
+                {label:'1:1 Sessions',icon:'📅',c:'#4A90D9'},
+                {label:'Resume Review',icon:'📄',c:'#E8A838'},
+                {label:'Mock Interviews',icon:'🎙️',c:'#a78bfa'},
+                {label:'Study Guides',icon:'📚',c:'#5CC8A0'},
+                {label:'Priority Support',icon:'⭐',c:'#F07B6A'},
+                {label:'Job Board',icon:'💼',c:'#38bdf8'},
+              ].map(p=>(
+                <span key={p.label} style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:11, fontWeight:600, padding:'3px 10px', borderRadius:20, background:p.c+'14', border:`1px solid ${p.c}32`, color:p.c }}>
+                  {p.icon} {p.label}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Stats block */}
+          <div style={{ display:'flex', gap:0, flexShrink:0, background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:16, overflow:'hidden' }}>
+            {[
+              {val:sessions.length, lbl:'Sessions',   icon:'📅', c:'#4A90D9'},
+              {val:reviews.length,  lbl:'Reviews',    icon:'📄', c:'#E8A838'},
+              {val:mockCount,       lbl:'Interviews', icon:'🎙️', c:'#a78bfa'},
+            ].map((s,i)=>(
+              <div key={s.lbl} style={{ textAlign:'center', padding:'14px 24px', borderRight:i<2?'1px solid rgba(255,255,255,0.06)':'none' }}>
+                <div style={{ fontSize:9, color:s.c, textTransform:'uppercase', letterSpacing:'0.9px', fontWeight:700, marginBottom:6 }}>{s.icon} {s.lbl}</div>
+                <div style={{ fontSize:28, fontWeight:900, color:'#fff', lineHeight:1 }}>{s.val}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -1223,27 +1263,63 @@ function PremiumHub({ status, user }) {
 /* ── Overview tab ──────────────────────────────────── */
 function OverviewTab({ sessions, reviews, navigate, setTab }) {
   const quick = [
-    { icon: '💼', title: 'Browse Job Board', sub: '18+ live data analytics roles', color: '#5CC8A0', action: () => navigate('/jobs') },
-    { icon: '📅', title: 'Book a 1:1 Session', sub: 'With us — 30 min, any topic', color: '#4A90D9', action: () => setTab('session') },
-    { icon: '🎓', title: 'Practice Interviews', sub: 'SQL, Python, Case Studies & HR', color: '#a78bfa', action: () => setTab('interview') },
-    { icon: '📄', title: 'Submit Resume', sub: 'Get expert feedback in 48h', color: '#E8A838', action: () => setTab('resume') },
-    { icon: '🗺️', title: 'View 12-Week Roadmap', sub: 'Step-by-step to getting hired', color: '#F07B6A', action: () => setTab('roadmap') },
-    { icon: '📚', title: 'Download Resources', sub: 'Guides, cheatsheets, templates', color: '#38bdf8', action: () => setTab('resources') },
+    { icon: '🎙️', title: 'Book Mock Interview', sub: 'Live 45-min session — SQL, Python, Case Study, or full analytics round. Get real-time feedback on your thinking.', color: '#a78bfa', action: () => setTab('interview'), badge: 'Most Popular' },
+    { icon: '📅', title: 'Book 1:1 Session',    sub: '30-minute video call for resume critique, career strategy, code review, or salary negotiation prep.', color: '#4A90D9', action: () => setTab('session'), badge: null },
+    { icon: '📄', title: 'Resume Review',        sub: 'Expert ATS-optimised feedback within 48 hours — line-by-line rewrites, keyword gaps, and LinkedIn tips.', color: '#E8A838', action: () => setTab('resume'), badge: '48h Turnaround' },
+    { icon: '🗺️', title: '12-Week Roadmap',      sub: 'Your personalised path from beginner to hired — 7 phases, 20+ skills, with weekly action items.', color: '#F07B6A', action: () => setTab('roadmap'), badge: null },
+    { icon: '📚', title: 'Study Materials',       sub: '7 exclusive guides — SQL mastery, Python handbook, resume playbook, salary scripts & more.', color: '#5CC8A0', action: () => setTab('resources'), badge: '7 Guides' },
+    { icon: '💼', title: 'Job Board',             sub: '18+ hand-picked data analytics roles at top Indian companies — updated weekly.', color: '#38bdf8', action: () => navigate('/jobs'), badge: '18+ Live Jobs' },
+  ];
+
+  const valueProps = [
+    { icon: '🚀', stat: '3×', desc: 'faster hiring', sub: 'vs. self-study' },
+    { icon: '🎙️', stat: '45 min', desc: 'live mock', sub: 'sessions' },
+    { icon: '📄', stat: '48h', desc: 'resume', sub: 'feedback' },
+    { icon: '💼', stat: '18+', desc: 'curated', sub: 'live jobs' },
   ];
 
   return (
-    <div>
+    <div style={{ animation:'hubFadeUp 0.4s ease both' }}>
+
+      {/* Value prop strip */}
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'0.8rem', marginBottom:'1.6rem' }}>
+        {valueProps.map((v,i)=>(
+          <div key={v.stat} style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:14, padding:'0.9rem 1rem', display:'flex', alignItems:'center', gap:12, animation:`hubFadeUp 0.4s ${i*0.06}s ease both` }}>
+            <span style={{ fontSize:24, flexShrink:0 }}>{v.icon}</span>
+            <div>
+              <div style={{ fontWeight:900, fontSize:18, color:'#fff', lineHeight:1 }}>{v.stat}</div>
+              <div style={{ fontSize:11, color:'rgba(255,255,255,0.40)', marginTop:2 }}>{v.desc} {v.sub}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {/* Quick action cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
-        {quick.map(q => (
-          <div key={q.title} onClick={q.action} style={{ background: 'rgba(255,255,255,0.055)', backdropFilter: 'blur(18px)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 16, padding: '1.2rem', cursor: 'pointer', transition: 'all 0.2s', position: 'relative', overflow: 'hidden' }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = q.color + '50'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = `0 12px 32px ${q.color}20`; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.10)'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${q.color}, transparent)` }} />
-            <div style={{ fontSize: 28, marginBottom: '0.6rem' }}>{q.icon}</div>
-            <div style={{ fontWeight: 700, fontSize: 14, color: '#fff', marginBottom: 3 }}>{q.title}</div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.40)' }}>{q.sub}</div>
-            <div style={{ marginTop: '0.8rem', fontSize: 12, color: q.color, fontWeight: 600 }}>Open →</div>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'1rem', marginBottom:'2rem' }}>
+        {quick.map((q,i)=>(
+          <div key={q.title} onClick={q.action}
+            style={{ borderRadius:18, overflow:'hidden', cursor:'pointer', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', transition:'all 0.25s cubic-bezier(.22,1,.36,1)', animation:`proCardEnter 0.5s ${i*0.07}s cubic-bezier(.22,1,.36,1) both` }}
+            onMouseEnter={e=>{ e.currentTarget.style.borderColor=q.color+'52'; e.currentTarget.style.transform='translateY(-5px)'; e.currentTarget.style.boxShadow=`0 18px 44px ${q.color}1e`; }}
+            onMouseLeave={e=>{ e.currentTarget.style.borderColor='rgba(255,255,255,0.08)'; e.currentTarget.style.transform='none'; e.currentTarget.style.boxShadow='none'; }}>
+            {/* Banner */}
+            <div style={{ height:104, background:`linear-gradient(135deg, ${q.color}22, ${q.color}08)`, display:'flex', alignItems:'center', justifyContent:'center', position:'relative', overflow:'hidden' }}>
+              <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:`linear-gradient(90deg, ${q.color}, transparent)` }} />
+              <div style={{ position:'absolute', inset:0, background:`radial-gradient(circle at 50% 130%, ${q.color}2a, transparent 65%)` }} />
+              {q.badge && (
+                <div style={{ position:'absolute', top:10, right:10, fontSize:10, fontWeight:700, padding:'2px 9px', borderRadius:20, background:q.color+'28', border:`1px solid ${q.color}44`, color:q.color }}>
+                  {q.badge}
+                </div>
+              )}
+              <span style={{ fontSize:42, position:'relative', filter:'drop-shadow(0 4px 16px rgba(0,0,0,0.55))' }}>{q.icon}</span>
+            </div>
+            {/* Body */}
+            <div style={{ padding:'0.9rem 1.1rem 1rem' }}>
+              <div style={{ fontWeight:800, fontSize:14, color:'#fff', marginBottom:5, lineHeight:1.3 }}>{q.title}</div>
+              <div style={{ fontSize:12, color:'rgba(255,255,255,0.40)', lineHeight:1.6, marginBottom:'0.85rem', display:'-webkit-box', WebkitLineClamp:3, WebkitBoxOrient:'vertical', overflow:'hidden' }}>{q.sub}</div>
+              <div style={{ display:'flex', alignItems:'center', gap:4, fontSize:12, color:q.color, fontWeight:700 }}>
+                Open <span style={{ fontSize:14 }}>→</span>
+              </div>
+            </div>
           </div>
         ))}
       </div>
@@ -2136,38 +2212,47 @@ function ResourcesTab() {
         <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>Exclusive guides, cheatsheets, and playbooks for pro members</div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
-        {STUDY_MATERIALS.map((mat) => (
-          <div key={mat.id} style={{ background: 'rgba(255,255,255,0.055)', backdropFilter: 'blur(18px)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 16, overflow: 'hidden', transition: 'all 0.2s', display: 'flex', flexDirection: 'column' }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = mat.color + '50'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = `0 12px 32px ${mat.color}18`; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.09)'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}>
-            <div style={{ height: 4, background: `linear-gradient(90deg, ${mat.color}, transparent)` }} />
-            <div style={{ padding: '1.1rem', flex: 1 }}>
-              <div style={{ fontSize: 28, marginBottom: '0.6rem' }}>{mat.icon}</div>
-              <div style={{ fontWeight: 700, fontSize: 13, color: '#fff', marginBottom: 5, lineHeight: 1.4 }}>{mat.title}</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.40)', marginBottom: '0.7rem', lineHeight: 1.5 }}>{mat.desc}</div>
-              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: '0.7rem' }}>
-                <span style={{ background: mat.color + '20', color: mat.color, border: `1px solid ${mat.color}40`, fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>{mat.tag}</span>
-                <span style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.08)', fontSize: 10, padding: '2px 8px', borderRadius: 10 }}>{mat.pages}p</span>
-                <span style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.08)', fontSize: 10, padding: '2px 8px', borderRadius: 10 }}>{mat.level}</span>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:'1.2rem' }}>
+        {STUDY_MATERIALS.map((mat,idx)=>(
+          <div key={mat.id}
+            style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', borderRadius:20, overflow:'hidden', transition:'all 0.25s cubic-bezier(.22,1,.36,1)', display:'flex', flexDirection:'column', animation:`proCardEnter 0.5s ${idx*0.07}s cubic-bezier(.22,1,.36,1) both` }}
+            onMouseEnter={e=>{ e.currentTarget.style.borderColor=mat.color+'50'; e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.boxShadow=`0 18px 44px ${mat.color}1c`; }}
+            onMouseLeave={e=>{ e.currentTarget.style.borderColor='rgba(255,255,255,0.08)'; e.currentTarget.style.transform='none'; e.currentTarget.style.boxShadow='none'; }}>
+            {/* Banner */}
+            <div style={{ height:110, background:`linear-gradient(135deg, ${mat.color}24, ${mat.color}0a)`, position:'relative', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center', gap:18 }}>
+              <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:`linear-gradient(90deg, ${mat.color}, transparent)` }} />
+              <div style={{ position:'absolute', inset:0, background:`radial-gradient(circle at 20% 130%, ${mat.color}2e, transparent 60%)` }} />
+              {/* Icon */}
+              <span style={{ fontSize:46, filter:`drop-shadow(0 4px 18px rgba(0,0,0,0.55))`, position:'relative' }}>{mat.icon}</span>
+              {/* Meta pills on right */}
+              <div style={{ display:'flex', flexDirection:'column', gap:6, position:'relative' }}>
+                <span style={{ background:mat.color+'28', color:mat.color, border:`1px solid ${mat.color}44`, fontSize:11, fontWeight:800, padding:'4px 12px', borderRadius:20, letterSpacing:'0.3px' }}>{mat.tag}</span>
+                <span style={{ background:'rgba(255,255,255,0.08)', color:'rgba(255,255,255,0.55)', border:'1px solid rgba(255,255,255,0.10)', fontSize:11, fontWeight:600, padding:'4px 12px', borderRadius:20 }}>{mat.pages} pages</span>
+                <span style={{ background:'rgba(255,255,255,0.08)', color:'rgba(255,255,255,0.55)', border:'1px solid rgba(255,255,255,0.10)', fontSize:11, fontWeight:600, padding:'4px 12px', borderRadius:20 }}>{mat.level}</span>
               </div>
             </div>
-            <div style={{ padding: '0 1.1rem 1.1rem', display: 'flex', gap: 6 }}>
+            {/* Body */}
+            <div style={{ padding:'1rem 1.3rem', flex:1 }}>
+              <div style={{ fontWeight:800, fontSize:15, color:'#fff', marginBottom:5, lineHeight:1.3 }}>{mat.title}</div>
+              <div style={{ fontSize:13, color:'rgba(255,255,255,0.45)', lineHeight:1.6 }}>{mat.desc}</div>
+            </div>
+            {/* Buttons */}
+            <div style={{ padding:'0 1.3rem 1.2rem', display:'flex', gap:8 }}>
               <button
-                onClick={() => setPreview(mat)}
-                style={{ flex: 1, background: mat.color + '15', border: `1px solid ${mat.color}35`, borderRadius: 9, color: mat.color, fontSize: 12, fontWeight: 700, padding: '7px 0', cursor: 'pointer', transition: 'background 0.15s' }}
-                onMouseEnter={e => e.currentTarget.style.background = mat.color + '28'}
-                onMouseLeave={e => e.currentTarget.style.background = mat.color + '15'}
+                onClick={()=>setPreview(mat)}
+                style={{ flex:1, background:mat.color+'18', border:`1px solid ${mat.color}38`, borderRadius:11, color:mat.color, fontSize:13, fontWeight:700, padding:'9px 0', cursor:'pointer', transition:'background 0.15s' }}
+                onMouseEnter={e=>e.currentTarget.style.background=mat.color+'2e'}
+                onMouseLeave={e=>e.currentTarget.style.background=mat.color+'18'}
               >
                 📖 Preview
               </button>
               <button
-                onClick={() => { setPreview(mat); setTimeout(() => { window.print(); }, 300); showToast("Use 'Save as PDF' in your print dialog"); }}
-                style={{ flex: 1, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 9, color: 'rgba(255,255,255,0.65)', fontSize: 12, fontWeight: 700, padding: '7px 0', cursor: 'pointer', transition: 'background 0.15s' }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.10)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
+                onClick={()=>{ setPreview(mat); setTimeout(()=>{ window.print(); },300); showToast("Use 'Save as PDF' in your print dialog"); }}
+                style={{ flex:1, background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.10)', borderRadius:11, color:'rgba(255,255,255,0.70)', fontSize:13, fontWeight:700, padding:'9px 0', cursor:'pointer', transition:'background 0.15s' }}
+                onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.12)'}
+                onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.06)'}
               >
-                ⬇️ Download
+                ⬇️ Download PDF
               </button>
             </div>
           </div>
@@ -2281,13 +2366,13 @@ function SupportTab({ setToast, user }) {
    UPGRADE PAGE (non-premium users)
 ═══════════════════════════════════════════════════ */
 const FEATURES = [
-  { icon: '🎯', label: 'Placement Assistance',    desc: 'Personalised guidance on resume, LinkedIn, and job strategy.',                    bg: 'rgba(74,144,217,0.14)',  border: 'rgba(74,144,217,0.25)'  },
-  { icon: '💼', label: 'Curated Job Board',        desc: '18+ hand-picked data analytics jobs from top Indian companies.',                  bg: 'rgba(92,200,160,0.14)',  border: 'rgba(92,200,160,0.25)'  },
-  { icon: '👤', label: '1:1 Mentorship Sessions',  desc: 'Book 30-min live sessions with our mentor for career advice and code review.',    bg: 'rgba(232,168,56,0.14)',  border: 'rgba(232,168,56,0.25)'  },
-  { icon: '📄', label: 'Resume Review',            desc: 'Expert feedback within 48 hours. ATS-optimised and role-specific.',              bg: 'rgba(240,123,106,0.14)', border: 'rgba(240,123,106,0.25)' },
-  { icon: '🎙️', label: 'Live Mock Interviews',     desc: 'Schedule a real mock interview with our team — SQL, Python, or full analytics round.', bg: 'rgba(168,139,250,0.14)', border: 'rgba(168,139,250,0.25)' },
-  { icon: '📚', label: 'Interview Question Bank',  desc: '80+ curated SQL, Python and case-study questions with model answers.',            bg: 'rgba(56,189,248,0.14)',  border: 'rgba(56,189,248,0.25)'  },
-  { icon: '⭐', label: 'Priority Support',         desc: '6-hour response time from us directly.',                                         bg: 'rgba(92,200,160,0.14)',  border: 'rgba(92,200,160,0.25)'  },
+  { icon: '🎙️', label: 'Live Mock Interviews',     desc: 'Real 45-min sessions with our mentor — SQL, Python, or full analytics round. Written feedback included.',  color: '#a78bfa', bg: 'rgba(168,139,250,0.12)', border: 'rgba(168,139,250,0.22)' },
+  { icon: '👤', label: '1:1 Mentorship Sessions',  desc: 'Book 30-min live sessions for career strategy, code review, or job hunt — with personalised action plans.', color: '#4A90D9', bg: 'rgba(74,144,217,0.12)',  border: 'rgba(74,144,217,0.22)'  },
+  { icon: '📄', label: 'Resume Review',            desc: 'Line-by-line expert feedback within 48 hours — ATS keywords, impact rewrites, and LinkedIn optimisation.',  color: '#E8A838', bg: 'rgba(232,168,56,0.12)',  border: 'rgba(232,168,56,0.22)'  },
+  { icon: '🗺️', label: '12-Week Roadmap',          desc: 'A proven 7-phase plan: SQL → Python → EDA → Viz → Advanced SQL → Portfolio → Interviews. Never feel lost.', color: '#F07B6A', bg: 'rgba(240,123,106,0.12)', border: 'rgba(240,123,106,0.22)' },
+  { icon: '📚', label: 'Exclusive Study Guides',   desc: '7 premium guides — SQL mastery, Python handbook, resume playbook, salary negotiation scripts, and more.',   color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.22)'  },
+  { icon: '💼', label: 'Curated Job Board',        desc: '18+ hand-picked data analytics roles at top Indian companies — updated weekly with direct apply links.',     color: '#38bdf8', bg: 'rgba(56,189,248,0.12)',  border: 'rgba(56,189,248,0.22)'  },
+  { icon: '⭐', label: 'Priority Support',         desc: '6-hour direct response from us — faster than public support. We personally read every message.',             color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.22)'  },
 ];
 
 function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep, utr, setUtr, submitting, submitUTR, copied, copyUPI, toast, cfLoading, handleCashfreePay }) {
@@ -2379,8 +2464,12 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
         <div className="page-sub">Six high-impact benefits to accelerate your data career</div>
       </div>
       <div className="features-grid">
-        {FEATURES.map(f => (
-          <div key={f.label} className="feature-card">
+        {FEATURES.map((f,i) => (
+          <div key={f.label} className="feature-card"
+            style={{ position:'relative', overflow:'hidden', animation:`proCardEnter 0.5s ${i*0.07}s cubic-bezier(.22,1,.36,1) both`, transition:'all 0.22s cubic-bezier(.22,1,.36,1)' }}
+            onMouseEnter={e=>{ e.currentTarget.style.borderColor=(f.color||'#4A90D9')+'44'; e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.boxShadow=`0 16px 40px ${f.color||'#4A90D9'}18`; }}
+            onMouseLeave={e=>{ e.currentTarget.style.borderColor=''; e.currentTarget.style.transform='none'; e.currentTarget.style.boxShadow='none'; }}>
+            <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:`linear-gradient(90deg, ${f.color||'#4A90D9'}, transparent)` }} />
             <div className="feature-icon" style={{ background: f.bg, border: `1px solid ${f.border}` }}>
               <span style={{ fontSize: 22 }}>{f.icon}</span>
             </div>
