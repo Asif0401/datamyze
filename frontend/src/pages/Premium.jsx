@@ -2438,30 +2438,86 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
         </div>
       )}
 
-      <div className="premium-hero">
-        <span className="premium-hero-crown">👑</span>
-        <div className="premium-hero-title">Go Pro. Get Hired.</div>
-        <div className="premium-hero-sub">Everything you need to go from learner to hired — in one Pro membership</div>
-        <div className="premium-hero-price">
-          <span className="premium-price-amount">₹{AMOUNT}</span>
-          <span className="premium-price-period">lifetime</span>
+      <style>{`
+        @keyframes heroGlow    { 0%,100%{box-shadow:0 0 60px rgba(232,168,56,0.10)} 50%{box-shadow:0 0 120px rgba(232,168,56,0.22)} }
+        @keyframes crownFloat  { 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-10px) rotate(3deg)} }
+        @keyframes ringPulse   { 0%{transform:scale(1);opacity:0.6} 100%{transform:scale(2.4);opacity:0} }
+        @keyframes heroFadeUp  { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes statSlide   { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes pricingEnter{ from{opacity:0;transform:translateY(28px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+      `}</style>
+
+      {/* ── Hero ─────────────────────────────────────── */}
+      <div style={{ position:'relative', overflow:'hidden', borderRadius:24, marginBottom:'2rem', background:'linear-gradient(145deg, rgba(10,6,1,0.97) 0%, rgba(18,10,2,0.98) 50%, rgba(8,6,14,0.97) 100%)', border:'1px solid rgba(232,168,56,0.20)', padding:'3.5rem 2.5rem', textAlign:'center', animation:'heroGlow 4s ease-in-out infinite' }}>
+        {/* Animated shimmer top edge */}
+        <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'linear-gradient(90deg, transparent 0%, #a06510 20%, #E8A838 40%, #fde68a 52%, #E8A838 65%, #a06510 82%, transparent 100%)', backgroundSize:'250% 100%', animation:'goldShimmer 3s linear infinite' }} />
+        {/* Glow orbs */}
+        <div style={{ position:'absolute', top:-120, left:'30%', width:340, height:340, borderRadius:'50%', background:'radial-gradient(circle, rgba(232,168,56,0.10) 0%, transparent 65%)', pointerEvents:'none' }} />
+        <div style={{ position:'absolute', bottom:-100, right:'20%', width:280, height:280, borderRadius:'50%', background:'radial-gradient(circle, rgba(74,144,217,0.07) 0%, transparent 65%)', pointerEvents:'none' }} />
+        {/* Floating stars */}
+        {[{l:'8%',t:'20%',d:'0s'},{l:'92%',t:'30%',d:'1.2s'},{l:'15%',t:'75%',d:'0.6s'},{l:'85%',t:'72%',d:'1.8s'},{l:'50%',t:'88%',d:'0.9s'}].map((s,i)=>(
+          <div key={i} style={{ position:'absolute', left:s.l, top:s.t, width:4, height:4, borderRadius:'50%', background:'rgba(232,168,56,0.55)', animation:`starDrift 3s ${s.d} ease-in-out infinite`, pointerEvents:'none' }} />
+        ))}
+
+        {/* Social proof badge */}
+        <div style={{ display:'inline-flex', alignItems:'center', gap:7, fontSize:12, fontWeight:700, padding:'5px 14px', borderRadius:20, background:'rgba(92,200,160,0.12)', border:'1px solid rgba(92,200,160,0.28)', color:'#5CC8A0', marginBottom:'1.4rem', animation:'heroFadeUp 0.4s ease both' }}>
+          <span>✦</span> Trusted by 500+ aspiring data analysts
         </div>
-        {!isPending && (
-          <div style={{ marginTop: '1.5rem' }}>
-            <button className="btn-gold" onClick={() => setShowModal(true)}><span>⚡</span> Get Pro Now</button>
+
+        {/* Crown with rings */}
+        <div style={{ position:'relative', display:'inline-block', marginBottom:'1rem' }}>
+          <div style={{ position:'absolute', inset:'-20px', borderRadius:'50%', border:'1px solid rgba(232,168,56,0.30)', animation:'ringPulse 2s ease-out infinite' }} />
+          <div style={{ position:'absolute', inset:'-10px', borderRadius:'50%', border:'1px solid rgba(232,168,56,0.20)', animation:'ringPulse 2s 0.5s ease-out infinite' }} />
+          <span style={{ fontSize:64, display:'block', animation:'crownFloat 4s ease-in-out infinite', filter:'drop-shadow(0 8px 28px rgba(232,168,56,0.55))' }}>👑</span>
+        </div>
+
+        {/* Title */}
+        <div style={{ fontSize:42, fontWeight:900, letterSpacing:'-1px', marginBottom:'0.7rem', background:'linear-gradient(135deg, #fff 0%, #E8A838 45%, #fff 100%)', backgroundSize:'200% auto', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', animation:'shimmer 4s linear infinite, heroFadeUp 0.5s 0.1s ease both' }}>
+          Go Pro. Get Hired.
+        </div>
+        <div style={{ fontSize:16, color:'rgba(255,255,255,0.45)', marginBottom:'1.6rem', animation:'heroFadeUp 0.5s 0.2s ease both' }}>
+          Everything you need to land a data analyst job — in one ₹149 membership
+        </div>
+
+        {/* Price + CTA */}
+        <div style={{ animation:'heroFadeUp 0.5s 0.3s ease both' }}>
+          <div style={{ display:'inline-flex', alignItems:'baseline', gap:6, marginBottom:'0.5rem' }}>
+            <span style={{ fontSize:58, fontWeight:900, letterSpacing:'-2px', background:'linear-gradient(135deg, #E8A838, #F07B6A)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>₹{AMOUNT}</span>
+            <span style={{ fontSize:18, color:'rgba(255,255,255,0.35)' }}>lifetime</span>
           </div>
-        )}
-        <div className="premium-hero-stats">
-          <div className="premium-stat"><div className="premium-stat-val">1:1</div><div className="premium-stat-lbl">Mentor Session</div></div>
-          <div className="premium-stat"><div className="premium-stat-val">18+</div><div className="premium-stat-lbl">Live Jobs</div></div>
-          <div className="premium-stat"><div className="premium-stat-val">24h</div><div className="premium-stat-lbl">Resume Feedback</div></div>
-          <div className="premium-stat"><div className="premium-stat-val">4.9★</div><div className="premium-stat-lbl">Mentor Rating</div></div>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:10, marginBottom:'1.5rem' }}>
+            <span style={{ fontSize:14, color:'rgba(255,255,255,0.25)', textDecoration:'line-through' }}>₹999</span>
+            <span style={{ fontSize:11, fontWeight:800, padding:'2px 9px', borderRadius:20, background:'rgba(92,200,160,0.15)', border:'1px solid rgba(92,200,160,0.30)', color:'#5CC8A0' }}>85% OFF — Limited Offer</span>
+          </div>
+          {!isPending && (
+            <button className="btn-gold" style={{ fontSize:17, padding:'15px 40px' }} onClick={() => setShowModal(true)}>
+              <span>⚡</span> Get Pro Now
+            </button>
+          )}
+        </div>
+
+        {/* Stats row */}
+        <div style={{ display:'flex', justifyContent:'center', gap:'1rem', marginTop:'2rem', paddingTop:'1.8rem', borderTop:'1px solid rgba(255,255,255,0.07)', flexWrap:'wrap', animation:'heroFadeUp 0.5s 0.4s ease both' }}>
+          {[
+            {icon:'📅', val:'1:1', lbl:'Mentor Session',  color:'#4A90D9'},
+            {icon:'💼', val:'18+', lbl:'Live Jobs',        color:'#5CC8A0'},
+            {icon:'📄', val:'24h', lbl:'Resume Feedback',  color:'#E8A838'},
+            {icon:'⭐', val:'4.9★',lbl:'Mentor Rating',    color:'#a78bfa'},
+          ].map((s,i)=>(
+            <div key={s.lbl} style={{ display:'flex', alignItems:'center', gap:12, padding:'10px 20px', borderRadius:16, background:'rgba(255,255,255,0.04)', border:`1px solid ${s.color}28`, animation:`statSlide 0.4s ${0.5+i*0.08}s ease both` }}>
+              <span style={{ fontSize:22 }}>{s.icon}</span>
+              <div style={{ textAlign:'left' }}>
+                <div style={{ fontSize:20, fontWeight:900, color:s.color, lineHeight:1 }}>{s.val}</div>
+                <div style={{ fontSize:11, color:'rgba(255,255,255,0.35)', marginTop:2 }}>{s.lbl}</div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
       <div className="page-header">
         <div className="page-title">Everything in Premium</div>
-        <div className="page-sub">Six high-impact benefits to accelerate your data career</div>
+        <div className="page-sub">Seven high-impact benefits to accelerate your data career</div>
       </div>
       <style>{`
         @keyframes upgCardEnter { from{opacity:0;transform:translateY(22px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
@@ -2496,20 +2552,59 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
       </div>
 
       {!isPending && (
-        <div className="pricing-card">
-          <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.40)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Simple Pricing</div>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 4, marginBottom: '0.3rem' }}>
-            <span style={{ fontSize: 56, fontWeight: 900, letterSpacing: -2, color: '#fff' }}>₹{AMOUNT}</span>
-            <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: 18 }}>lifetime</span>
+        <div style={{ position:'relative', overflow:'hidden', borderRadius:24, marginBottom:'2rem', background:'linear-gradient(145deg, rgba(16,10,2,0.98), rgba(10,6,1,0.99))', border:'1px solid rgba(232,168,56,0.25)', boxShadow:'0 32px 80px rgba(232,168,56,0.08), inset 0 0 0 1px rgba(232,168,56,0.06)', animation:'pricingEnter 0.6s 0.2s cubic-bezier(.22,1,.36,1) both' }}>
+          {/* Shimmer top edge */}
+          <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'linear-gradient(90deg, transparent, #a06510 25%, #E8A838 45%, #fde68a 55%, #E8A838 70%, #a06510 85%, transparent)', backgroundSize:'250% 100%', animation:'goldShimmer 3.5s linear infinite' }} />
+          {/* Background glow */}
+          <div style={{ position:'absolute', top:-80, left:'50%', transform:'translateX(-50%)', width:400, height:400, borderRadius:'50%', background:'radial-gradient(circle, rgba(232,168,56,0.08), transparent 65%)', pointerEvents:'none' }} />
+
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1.4fr', gap:0, position:'relative' }}>
+            {/* Left: Price + CTA */}
+            <div style={{ padding:'2.5rem 2rem', borderRight:'1px solid rgba(255,255,255,0.07)', display:'flex', flexDirection:'column', justifyContent:'center' }}>
+              <div style={{ fontSize:11, fontWeight:800, color:'#E8A838', textTransform:'uppercase', letterSpacing:'1.5px', marginBottom:14 }}>✦ Lifetime Access</div>
+
+              {/* Price */}
+              <div style={{ display:'flex', alignItems:'flex-start', gap:4, marginBottom:6 }}>
+                <span style={{ fontSize:68, fontWeight:900, letterSpacing:'-3px', lineHeight:1, background:'linear-gradient(135deg, #E8A838, #F07B6A)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>₹{AMOUNT}</span>
+              </div>
+              <div style={{ fontSize:13, color:'rgba(255,255,255,0.35)', marginBottom:12 }}>one-time · no subscription ever</div>
+
+              {/* Savings badge */}
+              <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:'2rem' }}>
+                <span style={{ fontSize:15, color:'rgba(255,255,255,0.25)', textDecoration:'line-through' }}>₹999</span>
+                <span style={{ fontSize:11, fontWeight:800, padding:'3px 10px', borderRadius:20, background:'rgba(92,200,160,0.14)', border:'1px solid rgba(92,200,160,0.30)', color:'#5CC8A0' }}>Save ₹850 (85% OFF)</span>
+              </div>
+
+              {/* CTA */}
+              <button className="btn-gold" style={{ width:'100%', justifyContent:'center', fontSize:16, padding:'15px 20px' }} onClick={() => setShowModal(true)}>
+                <span>👑</span> Get Pro — ₹{AMOUNT}
+              </button>
+
+              {/* Trust */}
+              <div style={{ marginTop:'1rem', fontSize:12, color:'rgba(255,255,255,0.22)', display:'flex', flexDirection:'column', gap:5 }}>
+                <div style={{ display:'flex', alignItems:'center', gap:6 }}><span>🔒</span> One-time payment • Instant access</div>
+                <div style={{ display:'flex', alignItems:'center', gap:6 }}><span>📱</span> UPI, PhonePe, GPay, Cards accepted</div>
+              </div>
+            </div>
+
+            {/* Right: Feature list */}
+            <div style={{ padding:'2.5rem 2rem' }}>
+              <div style={{ fontSize:11, fontWeight:800, color:'rgba(255,255,255,0.35)', textTransform:'uppercase', letterSpacing:'1.2px', marginBottom:16 }}>Everything included</div>
+              <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                {FEATURES.map(f => (
+                  <div key={f.label} style={{ display:'flex', alignItems:'center', gap:12, padding:'9px 12px', borderRadius:12, background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.06)', transition:'background 0.15s' }}
+                    onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.06)'}
+                    onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.03)'}>
+                    <div style={{ width:36, height:36, borderRadius:10, background:f.color+'18', border:`1px solid ${f.color}30`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:17, flexShrink:0 }}>{f.icon}</div>
+                    <div style={{ flex:1 }}>
+                      <div style={{ fontSize:13, fontWeight:700, color:'#fff', lineHeight:1.3 }}>{f.label}</div>
+                    </div>
+                    <div style={{ width:20, height:20, borderRadius:'50%', background:f.color+'20', border:`1px solid ${f.color}44`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:10, color:f.color, fontWeight:800, flexShrink:0 }}>✓</div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-          <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 13, marginBottom: '0.5rem' }}>One-time payment • Lifetime access</div>
-          <ul className="pricing-checklist">
-            {FEATURES.map(f => <li key={f.label}>{f.label}</li>)}
-          </ul>
-          <button className="btn-gold" style={{ width: '100%', justifyContent: 'center' }} onClick={() => setShowModal(true)}>
-            <span>👑</span> Get Pro — ₹{AMOUNT} lifetime
-          </button>
-          <div style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12, marginTop: '1rem' }}>Powered by PhonePe UPI • Secure payment</div>
         </div>
       )}
 
