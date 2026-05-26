@@ -222,7 +222,8 @@ export default function Instructor() {
 
   // Derive dynamic values (fall back to static defaults)
   const instructorName  = profile?.name  || 'Asif Khan';
-  const instructorTitle = profile?.title || 'Lead Instructor · Data Scientist';
+  const instructorTitle = profile?.title || 'Lead Instructor';
+  const linkedinUrl = profile?.linkedin_url || 'https://www.linkedin.com/in/pathan-asif-khan-/';
   const instructorPhoto = profile?.photo_url || null;
 
   const SKILLS = [
@@ -305,7 +306,7 @@ export default function Instructor() {
             fontSize: 11, fontWeight: 700, color: '#a78bfa', letterSpacing: 0.8,
           }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px #22c55e' }} />
-            LEAD INSTRUCTOR · DATA SCIENTIST
+            {instructorTitle.toUpperCase()}
           </div>
 
           <h1 style={{
@@ -322,7 +323,7 @@ export default function Instructor() {
 
           {/* CTA row */}
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <a href="https://www.linkedin.com/in/asif-khan" target="_blank" rel="noreferrer"
+            <a href={linkedinUrl} target="_blank" rel="noreferrer"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 background: 'linear-gradient(135deg, #0077B5, #005E93)',
