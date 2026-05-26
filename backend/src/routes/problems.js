@@ -6,27 +6,27 @@ const authMiddleware = require('../middleware/auth');
 const router = express.Router();
 
 /* ── List problems ──────────────────────────────────── */
-router.get('/', authMiddleware, (req, res) => {
+router.get('/', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
   const { topic, difficulty } = req.query;
   let q = 'SELECT * FROM problems WHERE 1=1'; const p = [];
   if (topic && topic !== 'All') { q += ' AND topic = ?'; p.push(topic); }
   if (difficulty && difficulty !== 'All') { q += ' AND difficulty = ?'; p.push(difficulty); }
   q += ' ORDER BY rowid';
-  const problems = all(db, q, p);
-  const solved = all(db,
+  const problems = await all(db, q, p);
+  const solved = (await all(db,
     "SELECT DISTINCT problem_id FROM user_problem_submissions WHERE user_id = ? AND status = 'accepted'",
     [req.user.id]
-  ).map(r => r.problem_id);
+  )).map(r => r.problem_id);
   res.json({ problems: problems.map(p => ({ ...p, solved: solved.includes(p.id) })) });
 });
 
 /* ── Get single problem ─────────────────────────────── */
-router.get('/:id', authMiddleware, (req, res) => {
+router.get('/:id', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const problem = get(db, 'SELECT * FROM problems WHERE id = ?', [req.params.id]);
+  const problem = await get(db, 'SELECT * FROM problems WHERE id = ?', [req.params.id]);
   if (!problem) return res.status(404).json({ error: 'Problem not found' });
-  const submissions = all(db,
+  const submissions = await all(db,
     'SELECT id, code, status, submitted_at FROM user_problem_submissions WHERE user_id = ? AND problem_id = ? ORDER BY submitted_at DESC LIMIT 5',
     [req.user.id, req.params.id]
   );
@@ -39,7 +39,7 @@ router.post('/:id/run', authMiddleware, async (req, res) => {
   if (!code?.trim()) return res.status(400).json({ error: 'Code is required.' });
 
   const db = req.app.locals.db;
-  const problem = get(db, 'SELECT topic, title FROM problems WHERE id = ?', [req.params.id]);
+  const problem = await get(db, 'SELECT topic, title FROM problems WHERE id = ?', [req.params.id]);
   if (!problem) return res.status(404).json({ error: 'Problem not found.' });
 
   if (problem.topic === 'SQL') {
@@ -65,7 +65,7 @@ router.post('/:id/submit', authMiddleware, async (req, res) => {
   if (!code?.trim()) return res.status(400).json({ error: 'Code is required.' });
 
   const db = req.app.locals.db;
-  const problem = get(db, 'SELECT * FROM problems WHERE id = ?', [req.params.id]);
+  const problem = await get(db, 'SELECT * FROM problems WHERE id = ?', [req.params.id]);
   if (!problem) return res.status(404).json({ error: 'Problem not found.' });
 
   let status = 'wrong_answer';
@@ -89,19 +89,19 @@ router.post('/:id/submit', authMiddleware, async (req, res) => {
 
   // Persist submission
   const subId = uuidv4();
-  run(db,
+  await run(db,
     'INSERT INTO user_problem_submissions (id, user_id, problem_id, code, status) VALUES (?, ?, ?, ?, ?)',
     [subId, req.user.id, problem.id, code, status]
   );
 
   let xp_earned = 0;
   if (status === 'accepted') {
-    const prev = all(db,
+    const prev = await all(db,
       "SELECT id FROM user_problem_submissions WHERE user_id = ? AND problem_id = ? AND status = 'accepted' AND id != ?",
       [req.user.id, problem.id, subId]
     );
     if (prev.length === 0) {
-      run(db, 'UPDATE users SET xp = xp + ? WHERE id = ?', [problem.xp_reward, req.user.id]);
+      await run(db, 'UPDATE users SET xp = xp + ? WHERE id = ?', [problem.xp_reward, req.user.id]);
       xp_earned = problem.xp_reward;
     }
   }

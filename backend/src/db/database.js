@@ -1,64 +1,35 @@
-const initSqlJs = require('sql.js');
-const path = require('path');
-const fs = require('fs');
+const { createClient } = require('@libsql/client');
 
-const DB_PATH = path.join(__dirname, '../../dataquest.db');
+let client;
 
-let db = null;
-
-async function getDb() {
-  if (db) return db;
-  const SQL = await initSqlJs();
-  if (fs.existsSync(DB_PATH)) {
-    const fileBuffer = fs.readFileSync(DB_PATH);
-    db = new SQL.Database(fileBuffer);
-  } else {
-    db = new SQL.Database();
+function getClient() {
+  if (!client) {
+    client = createClient({
+      url: process.env.TURSO_DATABASE_URL,
+      authToken: process.env.TURSO_AUTH_TOKEN,
+    });
   }
-  return db;
+  return client;
 }
 
-function saveDb() {
-  if (!db) return;
-  const data = db.export();
-  fs.writeFileSync(DB_PATH, Buffer.from(data));
+async function run(db, sql, params = []) {
+  await getClient().execute({ sql, args: params });
 }
 
-// Auto-save every 5 seconds
-setInterval(saveDb, 5000);
-process.on('exit', saveDb);
-process.on('SIGINT', () => { saveDb(); process.exit(); });
-
-function run(db, sql, params = []) {
-  db.run(sql, params);
-  saveDb();
+async function get(db, sql, params = []) {
+  const result = await getClient().execute({ sql, args: params });
+  return result.rows[0] || undefined;
 }
 
-function get(db, sql, params = []) {
-  const stmt = db.prepare(sql);
-  stmt.bind(params);
-  if (stmt.step()) {
-    const row = stmt.getAsObject();
-    stmt.free();
-    return row;
-  }
-  stmt.free();
-  return undefined;
-}
-
-function all(db, sql, params = []) {
-  const stmt = db.prepare(sql);
-  const rows = [];
-  stmt.bind(params);
-  while (stmt.step()) rows.push(stmt.getAsObject());
-  stmt.free();
-  return rows;
+async function all(db, sql, params = []) {
+  const result = await getClient().execute({ sql, args: params });
+  return result.rows;
 }
 
 async function initDb() {
-  const database = await getDb();
+  const c = getClient();
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
@@ -72,7 +43,7 @@ async function initDb() {
     )
   `);
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS courses (
       id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
@@ -86,7 +57,7 @@ async function initDb() {
     )
   `);
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS lessons (
       id TEXT PRIMARY KEY,
       course_id TEXT NOT NULL,
@@ -101,9 +72,9 @@ async function initDb() {
   `);
 
   // Migration: add video_url to existing databases that predate this column
-  try { database.run('ALTER TABLE lessons ADD COLUMN video_url TEXT'); } catch (e) {}
+  try { await c.execute('ALTER TABLE lessons ADD COLUMN video_url TEXT'); } catch (e) {}
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS user_course_progress (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
@@ -116,7 +87,7 @@ async function initDb() {
     )
   `);
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS problems (
       id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
@@ -130,7 +101,7 @@ async function initDb() {
     )
   `);
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS user_problem_submissions (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
@@ -141,7 +112,7 @@ async function initDb() {
     )
   `);
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS quizzes (
       id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
@@ -150,7 +121,7 @@ async function initDb() {
     )
   `);
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS quiz_questions (
       id TEXT PRIMARY KEY,
       quiz_id TEXT NOT NULL,
@@ -162,7 +133,7 @@ async function initDb() {
     )
   `);
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS user_quiz_attempts (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
@@ -174,7 +145,7 @@ async function initDb() {
     )
   `);
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS certificates (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
@@ -185,7 +156,7 @@ async function initDb() {
     )
   `);
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS daily_streaks (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
@@ -195,7 +166,7 @@ async function initDb() {
     )
   `);
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS premium_subscriptions (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
@@ -208,7 +179,7 @@ async function initDb() {
     )
   `);
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS job_listings (
       id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
@@ -225,7 +196,7 @@ async function initDb() {
     )
   `);
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS session_bookings (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
@@ -239,7 +210,7 @@ async function initDb() {
     )
   `);
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS resume_reviews (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
@@ -254,38 +225,38 @@ async function initDb() {
   `);
 
   // Migrations for quiz tables
-  try { database.run('ALTER TABLE quiz_questions ADD COLUMN course_id TEXT'); } catch(e) {}
-  try { database.run("ALTER TABLE quiz_questions ADD COLUMN topic TEXT DEFAULT 'General'"); } catch(e) {}
-  try { database.run('ALTER TABLE quizzes ADD COLUMN course_id TEXT'); } catch(e) {}
+  try { await c.execute('ALTER TABLE quiz_questions ADD COLUMN course_id TEXT'); } catch(e) {}
+  try { await c.execute("ALTER TABLE quiz_questions ADD COLUMN topic TEXT DEFAULT 'General'"); } catch(e) {}
+  try { await c.execute('ALTER TABLE quizzes ADD COLUMN course_id TEXT'); } catch(e) {}
 
   // Migrations for users table
-  try { database.run('ALTER TABLE users ADD COLUMN is_premium INTEGER DEFAULT 0'); } catch(e) {}
-  try { database.run('ALTER TABLE users ADD COLUMN premium_expires_at TEXT'); } catch(e) {}
-  try { database.run('ALTER TABLE resume_reviews ADD COLUMN resume_filename TEXT'); } catch(e) {}
-  try { database.run('ALTER TABLE resume_reviews ADD COLUMN resume_original TEXT'); } catch(e) {}
-  try { database.run('ALTER TABLE premium_subscriptions ADD COLUMN receipt_filename TEXT'); } catch(e) {}
-  try { database.run('ALTER TABLE premium_subscriptions ADD COLUMN receipt_original TEXT'); } catch(e) {}
+  try { await c.execute('ALTER TABLE users ADD COLUMN is_premium INTEGER DEFAULT 0'); } catch(e) {}
+  try { await c.execute('ALTER TABLE users ADD COLUMN premium_expires_at TEXT'); } catch(e) {}
+  try { await c.execute('ALTER TABLE resume_reviews ADD COLUMN resume_filename TEXT'); } catch(e) {}
+  try { await c.execute('ALTER TABLE resume_reviews ADD COLUMN resume_original TEXT'); } catch(e) {}
+  try { await c.execute('ALTER TABLE premium_subscriptions ADD COLUMN receipt_filename TEXT'); } catch(e) {}
+  try { await c.execute('ALTER TABLE premium_subscriptions ADD COLUMN receipt_original TEXT'); } catch(e) {}
 
   // Profile / settings migrations
-  try { database.run('ALTER TABLE users ADD COLUMN phone TEXT'); } catch(e) {}
-  try { database.run('ALTER TABLE users ADD COLUMN bio TEXT'); } catch(e) {}
-  try { database.run("ALTER TABLE users ADD COLUMN location TEXT"); } catch(e) {}
-  try { database.run('ALTER TABLE users ADD COLUMN website TEXT'); } catch(e) {}
-  try { database.run("ALTER TABLE users ADD COLUMN avatar_color TEXT DEFAULT '#4A90D9'"); } catch(e) {}
-  try { database.run('ALTER TABLE users ADD COLUMN job_title TEXT'); } catch(e) {}
-  try { database.run('ALTER TABLE users ADD COLUMN company TEXT'); } catch(e) {}
-  try { database.run('ALTER TABLE users ADD COLUMN linkedin_url TEXT'); } catch(e) {}
-  try { database.run('ALTER TABLE users ADD COLUMN github_url TEXT'); } catch(e) {}
-  try { database.run("ALTER TABLE users ADD COLUMN experience_years TEXT DEFAULT ''"); } catch(e) {}
-  try { database.run("ALTER TABLE users ADD COLUMN skills TEXT DEFAULT '[]'"); } catch(e) {}
-  try { database.run('ALTER TABLE users ADD COLUMN education TEXT'); } catch(e) {}
-  try { database.run('ALTER TABLE users ADD COLUMN target_role TEXT'); } catch(e) {}
-  try { database.run('ALTER TABLE users ADD COLUMN avatar_url TEXT'); } catch(e) {}
-  try { database.run('ALTER TABLE users ADD COLUMN profile_completed INTEGER DEFAULT 0'); } catch(e) {}
-  try { database.run('ALTER TABLE courses ADD COLUMN is_coming_soon INTEGER DEFAULT 0'); } catch(e) {}
+  try { await c.execute('ALTER TABLE users ADD COLUMN phone TEXT'); } catch(e) {}
+  try { await c.execute('ALTER TABLE users ADD COLUMN bio TEXT'); } catch(e) {}
+  try { await c.execute("ALTER TABLE users ADD COLUMN location TEXT"); } catch(e) {}
+  try { await c.execute('ALTER TABLE users ADD COLUMN website TEXT'); } catch(e) {}
+  try { await c.execute("ALTER TABLE users ADD COLUMN avatar_color TEXT DEFAULT '#4A90D9'"); } catch(e) {}
+  try { await c.execute('ALTER TABLE users ADD COLUMN job_title TEXT'); } catch(e) {}
+  try { await c.execute('ALTER TABLE users ADD COLUMN company TEXT'); } catch(e) {}
+  try { await c.execute('ALTER TABLE users ADD COLUMN linkedin_url TEXT'); } catch(e) {}
+  try { await c.execute('ALTER TABLE users ADD COLUMN github_url TEXT'); } catch(e) {}
+  try { await c.execute("ALTER TABLE users ADD COLUMN experience_years TEXT DEFAULT ''"); } catch(e) {}
+  try { await c.execute("ALTER TABLE users ADD COLUMN skills TEXT DEFAULT '[]'"); } catch(e) {}
+  try { await c.execute('ALTER TABLE users ADD COLUMN education TEXT'); } catch(e) {}
+  try { await c.execute('ALTER TABLE users ADD COLUMN target_role TEXT'); } catch(e) {}
+  try { await c.execute('ALTER TABLE users ADD COLUMN avatar_url TEXT'); } catch(e) {}
+  try { await c.execute('ALTER TABLE users ADD COLUMN profile_completed INTEGER DEFAULT 0'); } catch(e) {}
+  try { await c.execute('ALTER TABLE courses ADD COLUMN is_coming_soon INTEGER DEFAULT 0'); } catch(e) {}
 
   // OTP table for signup & phone login verification
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS otps (
       id TEXT PRIMARY KEY,
       identifier TEXT NOT NULL,
@@ -298,7 +269,7 @@ async function initDb() {
     )
   `);
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS mock_interviews (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
@@ -315,7 +286,7 @@ async function initDb() {
   `);
 
   // Live session poll
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS live_session_polls (
       id TEXT PRIMARY KEY,
       course_id TEXT NOT NULL,
@@ -325,7 +296,7 @@ async function initDb() {
     )
   `);
 
-  database.run(`
+  await c.execute(`
     CREATE TABLE IF NOT EXISTS case_studies (
       id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
@@ -344,9 +315,8 @@ async function initDb() {
     )
   `);
 
-  saveDb();
   console.log('✅ Database ready');
-  return database;
+  return null;
 }
 
-module.exports = { getDb, initDb, run, get, all, saveDb };
+module.exports = { initDb, run, get, all };

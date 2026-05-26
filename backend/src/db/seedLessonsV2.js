@@ -2398,33 +2398,34 @@ function onEdit(e) {
   ],
 };
 
-function seedLessonsV2(db) {
+async function seedLessonsV2(db) {
   const { all: dbAll, run: dbRun } = require('./database');
   const { v4: uuidv4 } = require('uuid');
 
   console.log('🌱 Running seedLessonsV2...');
 
-  const courses = dbAll(db, 'SELECT id, title FROM courses');
+  const courses = await dbAll(db, 'SELECT id, title FROM courses');
 
   if (!courses || courses.length === 0) {
     console.log('⚠️  No courses found — run seed() first.');
     return;
   }
 
-  courses.forEach(course => {
+  for (const course of courses) {
     const lessonDefs = LESSONS_V2[course.title];
 
     if (!lessonDefs || lessonDefs.length === 0) {
       // No V2 content defined for this course — skip
-      return;
+      continue;
     }
 
     let upsertCount = 0;
     let insertCount = 0;
 
-    lessonDefs.forEach((def, idx) => {
+    for (let idx = 0; idx < lessonDefs.length; idx++) {
+      const def = lessonDefs[idx];
       // Check if a lesson with this title already exists for this course
-      const existing = dbAll(
+      const existing = await dbAll(
         db,
         'SELECT id FROM lessons WHERE course_id = ? AND title = ?',
         [course.id, def.title]
@@ -2432,7 +2433,7 @@ function seedLessonsV2(db) {
 
       if (existing && existing.length > 0) {
         // UPDATE existing lesson
-        dbRun(
+        await dbRun(
           db,
           `UPDATE lessons
              SET content          = ?,
@@ -2446,7 +2447,7 @@ function seedLessonsV2(db) {
         upsertCount++;
       } else {
         // INSERT new lesson
-        dbRun(
+        await dbRun(
           db,
           `INSERT INTO lessons
              (id, course_id, title, content, video_url, order_index, duration_minutes)
@@ -2455,16 +2456,17 @@ function seedLessonsV2(db) {
         );
         insertCount++;
       }
-    });
+    }
 
     // Update total_lessons count on the course to reflect the V2 lesson set
-    const totalLessons = dbAll(
+    const totalLessonsRows = await dbAll(
       db,
       'SELECT COUNT(*) AS cnt FROM lessons WHERE course_id = ?',
       [course.id]
-    )[0]?.cnt || lessonDefs.length;
+    );
+    const totalLessons = totalLessonsRows[0]?.cnt || lessonDefs.length;
 
-    dbRun(
+    await dbRun(
       db,
       'UPDATE courses SET total_lessons = ? WHERE id = ?',
       [totalLessons, course.id]
@@ -2473,7 +2475,7 @@ function seedLessonsV2(db) {
     console.log(
       `  ✅ "${course.title}": ${insertCount} inserted, ${upsertCount} updated (total_lessons = ${totalLessons})`
     );
-  });
+  }
 
   console.log('✅ seedLessonsV2 complete!');
 }

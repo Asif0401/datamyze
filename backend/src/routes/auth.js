@@ -125,7 +125,7 @@ router.post('/send-otp', async (req, res) => {
   // For signup: check not already registered
   if (purpose === 'signup') {
     const field  = type === 'phone' ? 'phone' : 'email';
-    const exists = get(db, `SELECT id FROM users WHERE ${field} = ?`, [clean]);
+    const exists = await get(db, `SELECT id FROM users WHERE ${field} = ?`, [clean]);
     if (exists) {
       return res.status(409).json({
         error: type === 'phone' ? 'Phone number already registered' : 'Email already registered',
@@ -135,16 +135,16 @@ router.post('/send-otp', async (req, res) => {
 
   // For phone login: check user exists
   if (purpose === 'login' && type === 'phone') {
-    const exists = get(db, 'SELECT id FROM users WHERE phone = ?', [clean]);
+    const exists = await get(db, 'SELECT id FROM users WHERE phone = ?', [clean]);
     if (!exists) return res.status(404).json({ error: 'No account found with this phone number' });
   }
 
   // Delete any previous OTPs for this identifier + purpose
-  run(db, 'DELETE FROM otps WHERE identifier = ? AND purpose = ?', [clean, purpose]);
+  await run(db, 'DELETE FROM otps WHERE identifier = ? AND purpose = ?', [clean, purpose]);
 
   const code      = generateOTP();
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 min
-  run(db, 'INSERT INTO otps (id, identifier, code, type, purpose, expires_at) VALUES (?, ?, ?, ?, ?, ?)',
+  await run(db, 'INSERT INTO otps (id, identifier, code, type, purpose, expires_at) VALUES (?, ?, ?, ?, ?, ?)',
     [uuidv4(), clean, code, type, purpose, expiresAt]);
 
   console.log(`\n🔑 OTP for ${clean} [${purpose}]: ${code}  (expires in 10 min)\n`);
@@ -213,7 +213,7 @@ router.post('/signup', async (req, res) => {
     return res.status(400).json({ error: 'Invalid phone number' });
 
   // Verify OTP
-  const otp = get(db,
+  const otp = await get(db,
     `SELECT * FROM otps WHERE identifier = ? AND purpose = 'signup'
      AND verified = 0 AND expires_at > datetime('now')`,
     [clean]
@@ -223,11 +223,11 @@ router.post('/signup', async (req, res) => {
     return res.status(400).json({ error: 'Incorrect OTP. Please try again.' });
 
   // Mark OTP as used
-  run(db, 'UPDATE otps SET verified = 1 WHERE id = ?', [otp.id]);
+  await run(db, 'UPDATE otps SET verified = 1 WHERE id = ?', [otp.id]);
 
   // Check not already registered
   const field   = type === 'phone' ? 'phone' : 'email';
-  const existing = get(db, `SELECT id FROM users WHERE ${field} = ?`, [clean]);
+  const existing = await get(db, `SELECT id FROM users WHERE ${field} = ?`, [clean]);
   if (existing) return res.status(409).json({ error: `${type === 'phone' ? 'Phone' : 'Email'} already registered` });
 
   const passwordHash = await bcrypt.hash(password, 12);
@@ -236,20 +236,20 @@ router.post('/signup', async (req, res) => {
 
   if (type === 'email') {
     const cleanPhone = phoneRaw ? phoneRaw.trim() : null;
-    run(db,
+    await run(db,
       'INSERT INTO users (id, name, email, phone, password_hash, xp, streak, last_active, profile_completed) VALUES (?, ?, ?, ?, ?, 0, 1, ?, 0)',
       [id, name.trim(), clean, cleanPhone, passwordHash, today]
     );
   } else {
     // email column is NOT NULL — use a unique placeholder for phone-only signups
     const emailPlaceholder = `phone_${clean}@datalift.app`;
-    run(db,
+    await run(db,
       'INSERT INTO users (id, name, email, phone, password_hash, xp, streak, last_active, profile_completed) VALUES (?, ?, ?, ?, ?, 0, 1, ?, 0)',
       [id, name.trim(), emailPlaceholder, clean, passwordHash, today]
     );
   }
 
-  run(db, 'INSERT OR IGNORE INTO daily_streaks (id, user_id, date) VALUES (?, ?, ?)', [uuidv4(), id, today]);
+  await run(db, 'INSERT OR IGNORE INTO daily_streaks (id, user_id, date) VALUES (?, ?, ?)', [uuidv4(), id, today]);
 
   // Email notification
   const ts = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
@@ -265,7 +265,7 @@ router.post('/signup', async (req, res) => {
   );
 
   const token = issueToken({ id, email: clean, name: name.trim() });
-  const user  = get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [id]);
+  const user  = await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [id]);
   res.status(201).json({ token, user });
 });
 
@@ -277,7 +277,7 @@ router.post('/login', async (req, res) => {
   if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
 
   const db   = req.app.locals.db;
-  const user = get(db, 'SELECT * FROM users WHERE email = ?', [email.toLowerCase()]);
+  const user = await get(db, 'SELECT * FROM users WHERE email = ?', [email.toLowerCase()]);
   if (!user) return res.status(401).json({ error: 'Invalid email or password' });
 
   const valid = await bcrypt.compare(password, user.password_hash);
@@ -291,11 +291,11 @@ router.post('/login', async (req, res) => {
     else if (diff > 1) newStreak = 1;
   } else { newStreak = 1; }
 
-  run(db, 'UPDATE users SET last_active = ?, streak = ? WHERE id = ?', [today, newStreak, user.id]);
-  run(db, 'INSERT OR IGNORE INTO daily_streaks (id, user_id, date) VALUES (?, ?, ?)', [uuidv4(), user.id, today]);
+  await run(db, 'UPDATE users SET last_active = ?, streak = ? WHERE id = ?', [today, newStreak, user.id]);
+  await run(db, 'INSERT OR IGNORE INTO daily_streaks (id, user_id, date) VALUES (?, ?, ?)', [uuidv4(), user.id, today]);
 
   const token = issueToken(user);
-  const safe  = get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [user.id]);
+  const safe  = await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [user.id]);
   safe.streak = newStreak;
   res.json({ token, user: safe });
 });
@@ -314,13 +314,13 @@ router.post('/login-phone', async (req, res) => {
 
   // Step 1: send OTP
   if (!otp_code) {
-    const user = get(db, 'SELECT id FROM users WHERE phone = ?', [clean]);
+    const user = await get(db, 'SELECT id FROM users WHERE phone = ?', [clean]);
     if (!user) return res.status(404).json({ error: 'No account found with this phone number. Please sign up first.' });
 
-    run(db, "DELETE FROM otps WHERE identifier = ? AND purpose = 'login'", [clean]);
+    await run(db, "DELETE FROM otps WHERE identifier = ? AND purpose = 'login'", [clean]);
     const code      = generateOTP();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
-    run(db, 'INSERT INTO otps (id, identifier, code, type, purpose, expires_at) VALUES (?, ?, ?, ?, ?, ?)',
+    await run(db, 'INSERT INTO otps (id, identifier, code, type, purpose, expires_at) VALUES (?, ?, ?, ?, ?, ?)',
       [uuidv4(), clean, code, 'phone', 'login', expiresAt]);
 
     console.log(`\n🔑 Login OTP for ${clean}: ${code}\n`);
@@ -333,7 +333,7 @@ router.post('/login-phone', async (req, res) => {
   }
 
   // Step 2: verify OTP and log in
-  const otp = get(db,
+  const otp = await get(db,
     `SELECT * FROM otps WHERE identifier = ? AND purpose = 'login'
      AND verified = 0 AND expires_at > datetime('now')`,
     [clean]
@@ -341,9 +341,9 @@ router.post('/login-phone', async (req, res) => {
   if (!otp)                   return res.status(400).json({ error: 'OTP expired or not found' });
   if (otp.code !== otp_code.trim()) return res.status(400).json({ error: 'Incorrect OTP' });
 
-  run(db, 'UPDATE otps SET verified = 1 WHERE id = ?', [otp.id]);
+  await run(db, 'UPDATE otps SET verified = 1 WHERE id = ?', [otp.id]);
 
-  const user = get(db, 'SELECT * FROM users WHERE phone = ?', [clean]);
+  const user = await get(db, 'SELECT * FROM users WHERE phone = ?', [clean]);
   if (!user) return res.status(404).json({ error: 'User not found' });
 
   const today = new Date().toISOString().split('T')[0];
@@ -354,11 +354,11 @@ router.post('/login-phone', async (req, res) => {
     else if (diff > 1) newStreak = 1;
   } else { newStreak = 1; }
 
-  run(db, 'UPDATE users SET last_active = ?, streak = ? WHERE id = ?', [today, newStreak, user.id]);
-  run(db, 'INSERT OR IGNORE INTO daily_streaks (id, user_id, date) VALUES (?, ?, ?)', [uuidv4(), user.id, today]);
+  await run(db, 'UPDATE users SET last_active = ?, streak = ? WHERE id = ?', [today, newStreak, user.id]);
+  await run(db, 'INSERT OR IGNORE INTO daily_streaks (id, user_id, date) VALUES (?, ?, ?)', [uuidv4(), user.id, today]);
 
   const token = issueToken(user);
-  const safe  = get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [user.id]);
+  const safe  = await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [user.id]);
   safe.streak = newStreak;
   res.json({ token, user: safe });
 });
@@ -367,7 +367,7 @@ router.post('/login-phone', async (req, res) => {
    COMPLETE PROFILE  –  POST /auth/complete-profile
    Saves onboarding fields + marks profile_completed = 1
 ══════════════════════════════════════════════════ */
-router.post('/complete-profile', authMiddleware, (req, res) => {
+router.post('/complete-profile', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
   const { current_status, job_title, experience_years, target_role, location, phone } = req.body;
 
@@ -381,23 +381,23 @@ router.post('/complete-profile', authMiddleware, (req, res) => {
   if (location)         { updates.push('location = ?');          values.push(location); }
   if (phone) {
     // Only save phone if not already set
-    const u = get(db, 'SELECT phone FROM users WHERE id = ?', [req.user.id]);
+    const u = await get(db, 'SELECT phone FROM users WHERE id = ?', [req.user.id]);
     if (!u?.phone) { updates.push('phone = ?'); values.push(phone.trim()); }
   }
 
   values.push(req.user.id);
-  run(db, `UPDATE users SET ${updates.join(', ')} WHERE id = ?`, values);
+  await run(db, `UPDATE users SET ${updates.join(', ')} WHERE id = ?`, values);
 
-  const user = get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [req.user.id]);
+  const user = await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [req.user.id]);
   res.json({ user, message: 'Profile saved!' });
 });
 
 /* ══════════════════════════════════════════════════
    GET ME  –  GET /auth/me
 ══════════════════════════════════════════════════ */
-router.get('/me', authMiddleware, (req, res) => {
+router.get('/me', authMiddleware, async (req, res) => {
   const db   = req.app.locals.db;
-  const user = get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [req.user.id]);
+  const user = await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [req.user.id]);
   if (!user) return res.status(404).json({ error: 'User not found' });
   res.json({ user });
 });
@@ -433,28 +433,28 @@ router.patch('/profile', authMiddleware, async (req, res) => {
   if (fields.length === 0) return res.status(400).json({ error: 'No valid fields provided' });
 
   values.push(req.user.id);
-  run(db, `UPDATE users SET ${fields.join(', ')} WHERE id = ?`, values);
+  await run(db, `UPDATE users SET ${fields.join(', ')} WHERE id = ?`, values);
 
-  const user = get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [req.user.id]);
+  const user = await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [req.user.id]);
   res.json({ user, message: 'Profile updated successfully' });
 });
 
 /* ── Avatar upload ─────────────────────────────────── */
-router.post('/avatar', authMiddleware, uploadAvatar.single('avatar'), (req, res) => {
+router.post('/avatar', authMiddleware, uploadAvatar.single('avatar'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
   const db = req.app.locals.db;
-  run(db, 'UPDATE users SET avatar_url = ? WHERE id = ?', [req.file.filename, req.user.id]);
+  await run(db, 'UPDATE users SET avatar_url = ? WHERE id = ?', [req.file.filename, req.user.id]);
   res.json({ filename: req.file.filename, message: 'Avatar updated successfully' });
 });
 
-router.delete('/avatar', authMiddleware, (req, res) => {
+router.delete('/avatar', authMiddleware, async (req, res) => {
   const db   = req.app.locals.db;
-  const user = get(db, 'SELECT avatar_url FROM users WHERE id = ?', [req.user.id]);
+  const user = await get(db, 'SELECT avatar_url FROM users WHERE id = ?', [req.user.id]);
   if (user?.avatar_url) {
     const filePath = path.join(avatarDir, user.avatar_url);
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
   }
-  run(db, 'UPDATE users SET avatar_url = NULL WHERE id = ?', [req.user.id]);
+  await run(db, 'UPDATE users SET avatar_url = NULL WHERE id = ?', [req.user.id]);
   res.json({ message: 'Avatar removed' });
 });
 
@@ -465,12 +465,12 @@ router.patch('/password', authMiddleware, async (req, res) => {
   if (new_password.length < 8) return res.status(400).json({ error: 'New password must be at least 8 characters' });
 
   const db   = req.app.locals.db;
-  const user = get(db, 'SELECT * FROM users WHERE id = ?', [req.user.id]);
+  const user = await get(db, 'SELECT * FROM users WHERE id = ?', [req.user.id]);
   const valid = await bcrypt.compare(current_password, user.password_hash);
   if (!valid) return res.status(401).json({ error: 'Current password is incorrect' });
 
   const newHash = await bcrypt.hash(new_password, 12);
-  run(db, 'UPDATE users SET password_hash = ? WHERE id = ?', [newHash, req.user.id]);
+  await run(db, 'UPDATE users SET password_hash = ? WHERE id = ?', [newHash, req.user.id]);
   res.json({ message: 'Password updated successfully' });
 });
 

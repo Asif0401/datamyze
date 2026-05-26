@@ -1,14 +1,14 @@
 const { v4: uuidv4 } = require('uuid');
 const { run, get, all } = require('./database');
 
-function seedQuizV2(db) {
+async function seedQuizV2(db) {
   // Get courses by title to link questions to courses
-  const courses = all(db, 'SELECT id, title FROM courses');
+  const courses = await all(db, 'SELECT id, title FROM courses');
   const courseMap = {};
   courses.forEach(c => { courseMap[c.title] = c.id; });
 
   // Check if already seeded
-  const existing = all(db, "SELECT COUNT(*) as count FROM quiz_questions WHERE course_id IS NOT NULL");
+  const existing = await all(db, "SELECT COUNT(*) as count FROM quiz_questions WHERE course_id IS NOT NULL");
   if (existing[0]?.count > 20) {
     console.log('✅ QuizV2 already seeded');
     return;
@@ -74,15 +74,15 @@ function seedQuizV2(db) {
   ];
 
   let inserted = 0;
-  allQuestions.forEach(q => {
+  for (const q of allQuestions) {
     const courseId = courseMap[q.courseTitle];
-    if (!courseId) return;
+    if (!courseId) continue;
     try {
-      run(db, `INSERT INTO quiz_questions (id, quiz_id, question, options, correct_index, explanation, order_index, course_id, topic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      await run(db, `INSERT INTO quiz_questions (id, quiz_id, question, options, correct_index, explanation, order_index, course_id, topic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [uuidv4(), '', q.q, JSON.stringify(q.opts), q.ans, q.exp, 0, courseId, q.topic]);
       inserted++;
     } catch(e) {}
-  });
+  }
   console.log(`✅ QuizV2: ${inserted} questions seeded`);
 }
 

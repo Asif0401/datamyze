@@ -809,9 +809,9 @@ const EXTRA_PROBLEMS = [
   },
 ];
 
-function seedProblems(db) {
+async function seedProblems(db) {
   // Check how many problems already exist
-  const existingRows = all(db, 'SELECT COUNT(*) as count FROM problems');
+  const existingRows = await all(db, 'SELECT COUNT(*) as count FROM problems');
   const count = existingRows[0]?.count || 0;
 
   if (count >= 20) {
@@ -821,9 +821,9 @@ function seedProblems(db) {
 
   console.log('🌱 Seeding 95 extra problems...');
   let inserted = 0;
-  EXTRA_PROBLEMS.forEach(p => {
+  for (const p of EXTRA_PROBLEMS) {
     try {
-      run(db,
+      await run(db,
         `INSERT INTO problems (id, title, description, difficulty, topic, starter_code, acceptance_rate, xp_reward)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [uuidv4(), p.title, p.description, p.difficulty, p.topic, p.starter_code, p.acceptance_rate, p.xp_reward]
@@ -832,7 +832,7 @@ function seedProblems(db) {
     } catch (e) {
       // skip on duplicate title or other constraint errors
     }
-  });
+  }
 
   console.log(`✅ Seeded ${inserted} extra problems (total now: ${count + inserted})`);
 }

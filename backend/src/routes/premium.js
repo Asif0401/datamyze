@@ -4,23 +4,23 @@ const { run, get, all } = require('../db/database');
 const authMiddleware = require('../middleware/auth');
 
 // Grant certificates for all 100%-complete courses a user doesn't already have
-function grantPendingCertificates(db, userId) {
-  const completed = all(db,
+async function grantPendingCertificates(db, userId) {
+  const completed = await all(db,
     "SELECT course_id FROM user_course_progress WHERE user_id = ? AND progress_percent = 100",
     [userId]);
   let granted = 0;
-  completed.forEach(row => {
-    const existing = get(db, 'SELECT id FROM certificates WHERE user_id = ? AND course_id = ?', [userId, row.course_id]);
+  for (const row of completed) {
+    const existing = await get(db, 'SELECT id FROM certificates WHERE user_id = ? AND course_id = ?', [userId, row.course_id]);
     if (!existing) {
       const credId = 'DQ-' + new Date().getFullYear() + '-' + Math.random().toString(36).slice(2, 8).toUpperCase();
       try {
-        run(db, 'INSERT INTO certificates (id, user_id, course_id, credential_id) VALUES (?, ?, ?, ?)',
+        await run(db, 'INSERT INTO certificates (id, user_id, course_id, credential_id) VALUES (?, ?, ?, ?)',
           [uuidv4(), userId, row.course_id, credId]);
-        run(db, 'UPDATE users SET xp = xp + 500 WHERE id = ?', [userId]);
+        await run(db, 'UPDATE users SET xp = xp + 500 WHERE id = ?', [userId]);
         granted++;
       } catch (e) {}
     }
-  });
+  }
   return granted;
 }
 const multer = require('multer');
@@ -54,65 +54,65 @@ const uploadReceipt = multer({ storage: receiptStorage, limits: { fileSize: 10*1
 }});
 
 // Get premium status
-router.get('/status', authMiddleware, (req, res) => {
+router.get('/status', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const user = get(db, 'SELECT is_premium, premium_expires_at FROM users WHERE id = ?', [req.user.id]);
-  const sub = get(db, 'SELECT * FROM premium_subscriptions WHERE user_id = ? ORDER BY created_at DESC LIMIT 1', [req.user.id]);
+  const user = await get(db, 'SELECT is_premium, premium_expires_at FROM users WHERE id = ?', [req.user.id]);
+  const sub = await get(db, 'SELECT * FROM premium_subscriptions WHERE user_id = ? ORDER BY created_at DESC LIMIT 1', [req.user.id]);
   res.json({ is_premium: user?.is_premium || 0, premium_expires_at: user?.premium_expires_at, latest_subscription: sub || null });
 });
 
 // Submit payment UTR for verification
-router.post('/subscribe', authMiddleware, (req, res) => {
+router.post('/subscribe', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
   const { utr_number } = req.body;
   if (!utr_number || utr_number.trim().length < 6) return res.status(400).json({ error: 'Valid UTR number required' });
 
   // Check if already has pending/active
-  const existing = get(db, "SELECT id, status FROM premium_subscriptions WHERE user_id = ? AND status IN ('pending','active')", [req.user.id]);
+  const existing = await get(db, "SELECT id, status FROM premium_subscriptions WHERE user_id = ? AND status IN ('pending','active')", [req.user.id]);
   if (existing?.status === 'active') return res.status(409).json({ error: 'Already a premium member!' });
 
   const id = uuidv4();
   const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
   const { receipt_filename, receipt_original } = req.body;
-  run(db, 'INSERT INTO premium_subscriptions (id, user_id, amount, utr_number, status, expires_at, receipt_filename, receipt_original) VALUES (?, ?, 149, ?, ?, ?, ?, ?)',
+  await run(db, 'INSERT INTO premium_subscriptions (id, user_id, amount, utr_number, status, expires_at, receipt_filename, receipt_original) VALUES (?, ?, 149, ?, ?, ?, ?, ?)',
     [id, req.user.id, utr_number.trim(), 'pending', expiresAt, receipt_filename || null, receipt_original || null]);
   res.status(201).json({ message: 'Payment submitted! Your account will be activated within 2 hours.', status: 'pending' });
 });
 
 // Book 1:1 session (premium only)
-router.post('/sessions', authMiddleware, (req, res) => {
+router.post('/sessions', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const user = get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
+  const user = await get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
   if (!user?.is_premium) return res.status(403).json({ error: 'Premium membership required' });
   const { preferred_date, preferred_time, topic, notes } = req.body;
   if (!preferred_date || !preferred_time) return res.status(400).json({ error: 'Date and time required' });
-  run(db, 'INSERT INTO session_bookings (id, user_id, preferred_date, preferred_time, topic, notes) VALUES (?, ?, ?, ?, ?, ?)',
+  await run(db, 'INSERT INTO session_bookings (id, user_id, preferred_date, preferred_time, topic, notes) VALUES (?, ?, ?, ?, ?, ?)',
     [uuidv4(), req.user.id, preferred_date, preferred_time, topic || '', notes || '']);
   res.status(201).json({ message: 'Session booked! You will receive a confirmation within 24 hours.' });
 });
 
 // Get user's sessions
-router.get('/sessions', authMiddleware, (req, res) => {
+router.get('/sessions', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const sessions = all(db, 'SELECT * FROM session_bookings WHERE user_id = ? ORDER BY created_at DESC', [req.user.id]);
+  const sessions = await all(db, 'SELECT * FROM session_bookings WHERE user_id = ? ORDER BY created_at DESC', [req.user.id]);
   res.json({ sessions });
 });
 
 // Submit resume for review (premium only)
-router.post('/resume', authMiddleware, (req, res) => {
+router.post('/resume', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const user = get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
+  const user = await get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
   if (!user?.is_premium) return res.status(403).json({ error: 'Premium membership required' });
   const { linkedin_url, job_target, experience_years, current_role, resume_filename, resume_original } = req.body;
-  run(db, 'INSERT INTO resume_reviews (id, user_id, linkedin_url, job_target, experience_years, current_role, resume_filename, resume_original) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+  await run(db, 'INSERT INTO resume_reviews (id, user_id, linkedin_url, job_target, experience_years, current_role, resume_filename, resume_original) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
     [uuidv4(), req.user.id, linkedin_url || '', job_target || '', experience_years || 0, current_role || '', resume_filename || null, resume_original || null]);
   res.status(201).json({ message: 'Resume submitted for review! Feedback within 48 hours.' });
 });
 
 // Get user's resume reviews
-router.get('/resume', authMiddleware, (req, res) => {
+router.get('/resume', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const reviews = all(db, 'SELECT * FROM resume_reviews WHERE user_id = ? ORDER BY created_at DESC', [req.user.id]);
+  const reviews = await all(db, 'SELECT * FROM resume_reviews WHERE user_id = ? ORDER BY created_at DESC', [req.user.id]);
   res.json({ reviews });
 });
 
@@ -146,10 +146,10 @@ router.get('/resume/file/:filename', authMiddleware, (req, res) => {
 router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
   try {
     const db = req.app.locals.db;
-    const user = get(db, 'SELECT id, name, email, phone FROM users WHERE id = ?', [req.user.id]);
+    const user = await get(db, 'SELECT id, name, email, phone FROM users WHERE id = ?', [req.user.id]);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    const existing = get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
+    const existing = await get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
     if (existing?.is_premium === 1) return res.status(409).json({ error: 'Already a premium member!' });
 
     const { Cashfree, CFEnvironment } = require('cashfree-pg');
@@ -178,7 +178,7 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
     const { payment_session_id } = response.data;
 
     // Persist pending order (utr_number column reused to store orderId for lookup)
-    run(db, `INSERT INTO premium_subscriptions (id, user_id, amount, utr_number, status, expires_at)
+    await run(db, `INSERT INTO premium_subscriptions (id, user_id, amount, utr_number, status, expires_at)
              VALUES (?, ?, 149, ?, 'cashfree_pending', ?)`,
       [uuidv4(), user.id, orderId, new Date(Date.now() + 365*24*60*60*1000).toISOString()]);
 
@@ -200,13 +200,13 @@ router.get('/cashfree/verify/:orderId', authMiddleware, async (req, res) => {
 
     if (orderStatus === 'PAID') {
       const db = req.app.locals.db;
-      const sub = get(db, "SELECT * FROM premium_subscriptions WHERE utr_number = ?", [req.params.orderId]);
+      const sub = await get(db, "SELECT * FROM premium_subscriptions WHERE utr_number = ?", [req.params.orderId]);
       if (sub && sub.user_id === req.user.id && sub.status !== 'active') {
         const expiresAt = new Date(Date.now() + 365*24*60*60*1000).toISOString();
-        run(db, "UPDATE premium_subscriptions SET status='active', activated_at=datetime('now'), expires_at=? WHERE utr_number=?",
+        await run(db, "UPDATE premium_subscriptions SET status='active', activated_at=datetime('now'), expires_at=? WHERE utr_number=?",
           [expiresAt, req.params.orderId]);
-        run(db, 'UPDATE users SET is_premium=1, premium_expires_at=? WHERE id=?', [expiresAt, sub.user_id]);
-        grantPendingCertificates(db, sub.user_id);
+        await run(db, 'UPDATE users SET is_premium=1, premium_expires_at=? WHERE id=?', [expiresAt, sub.user_id]);
+        await grantPendingCertificates(db, sub.user_id);
         console.log(`✅ Cashfree verify: premium activated for ${sub.user_id}`);
       }
     }
@@ -219,41 +219,41 @@ router.get('/cashfree/verify/:orderId', authMiddleware, async (req, res) => {
 });
 
 // Admin: activate premium for any user
-router.post('/activate/:userId', authMiddleware, (req, res) => {
+router.post('/activate/:userId', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const admin = get(db, "SELECT role FROM users WHERE id = ?", [req.user.id]);
+  const admin = await get(db, "SELECT role FROM users WHERE id = ?", [req.user.id]);
   if (admin?.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
   const { userId } = req.params;
   const expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
-  run(db, 'UPDATE users SET is_premium = 1, premium_expires_at = ? WHERE id = ?', [expiresAt, userId]);
-  run(db, "UPDATE premium_subscriptions SET status = 'active', activated_at = datetime('now') WHERE user_id = ? AND status = 'pending'", [userId]);
-  const granted = grantPendingCertificates(db, userId);
+  await run(db, 'UPDATE users SET is_premium = 1, premium_expires_at = ? WHERE id = ?', [expiresAt, userId]);
+  await run(db, "UPDATE premium_subscriptions SET status = 'active', activated_at = datetime('now') WHERE user_id = ? AND status = 'pending'", [userId]);
+  const granted = await grantPendingCertificates(db, userId);
   res.json({ message: 'Premium activated', certificates_granted: granted });
 });
 
 // Self-activate (owner/dev setup — activates premium for the currently logged-in user)
-router.post('/self-activate', authMiddleware, (req, res) => {
+router.post('/self-activate', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
   const expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
-  run(db, 'UPDATE users SET is_premium = 1, premium_expires_at = ?, role = ? WHERE id = ?',
+  await run(db, 'UPDATE users SET is_premium = 1, premium_expires_at = ?, role = ? WHERE id = ?',
     [expiresAt, 'admin', req.user.id]);
-  const granted = grantPendingCertificates(db, req.user.id);
+  const granted = await grantPendingCertificates(db, req.user.id);
   res.json({ message: 'Premium + admin activated', expires: expiresAt, certificates_granted: granted });
 });
 
 // Book a mock interview (premium only)
-router.post('/mock-interview', authMiddleware, (req, res) => {
+router.post('/mock-interview', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const user = get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
+  const user = await get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
   if (!user?.is_premium) return res.status(403).json({ error: 'Premium membership required' });
   const { interview_type, difficulty, preferred_date, preferred_time, notes } = req.body;
   if (!preferred_date || !preferred_time) return res.status(400).json({ error: 'Date and time required' });
   if (!interview_type) return res.status(400).json({ error: 'Interview type required' });
-  run(db, 'INSERT INTO mock_interviews (id, user_id, interview_type, difficulty, preferred_date, preferred_time, notes) VALUES (?, ?, ?, ?, ?, ?, ?)',
+  await run(db, 'INSERT INTO mock_interviews (id, user_id, interview_type, difficulty, preferred_date, preferred_time, notes) VALUES (?, ?, ?, ?, ?, ?, ?)',
     [uuidv4(), req.user.id, interview_type, difficulty || 'Medium', preferred_date, preferred_time, notes || '']);
 
   // Email notification
-  const booker = get(db, 'SELECT name, email, phone FROM users WHERE id = ?', [req.user.id]);
+  const booker = await get(db, 'SELECT name, email, phone FROM users WHERE id = ?', [req.user.id]);
   const ts = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
   sendNotification(
     `🎙️ Mock Interview Booked — ${booker?.name}`,
@@ -273,9 +273,9 @@ router.post('/mock-interview', authMiddleware, (req, res) => {
 });
 
 // Get user's mock interview bookings
-router.get('/mock-interview', authMiddleware, (req, res) => {
+router.get('/mock-interview', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const interviews = all(db, 'SELECT * FROM mock_interviews WHERE user_id = ? ORDER BY created_at DESC', [req.user.id]);
+  const interviews = await all(db, 'SELECT * FROM mock_interviews WHERE user_id = ? ORDER BY created_at DESC', [req.user.id]);
   res.json({ interviews });
 });
 

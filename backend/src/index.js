@@ -29,7 +29,7 @@ app.use(cors({
 }));
 
 // ── Cashfree webhook ─ MUST be before express.json() to get raw body ──
-app.post('/api/premium/cashfree/webhook', express.raw({ type: '*/*' }), (req, res) => {
+app.post('/api/premium/cashfree/webhook', express.raw({ type: '*/*' }), async (req, res) => {
   try {
     const { Cashfree, CFEnvironment } = require('cashfree-pg');
     const { v4: uuidv4 } = require('uuid');
@@ -49,31 +49,30 @@ app.post('/api/premium/cashfree/webhook', express.raw({ type: '*/*' }), (req, re
 
     if (paymentStatus === 'SUCCESS' && orderId) {
       const db = app.locals.db;
-      if (db) {
+      if (db !== undefined) {
         const { run, get, all } = require('./db/database');
-        const sub = get(db, "SELECT * FROM premium_subscriptions WHERE utr_number = ?", [orderId]);
+        const sub = await get(db, "SELECT * FROM premium_subscriptions WHERE utr_number = ?", [orderId]);
         if (sub && sub.status !== 'active') {
           const expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
-          run(db, "UPDATE premium_subscriptions SET status='active', activated_at=datetime('now'), expires_at=? WHERE utr_number=?",
+          await run(db, "UPDATE premium_subscriptions SET status='active', activated_at=datetime('now'), expires_at=? WHERE utr_number=?",
             [expiresAt, orderId]);
-          run(db, 'UPDATE users SET is_premium=1, premium_expires_at=? WHERE id=?', [expiresAt, sub.user_id]);
+          await run(db, 'UPDATE users SET is_premium=1, premium_expires_at=? WHERE id=?', [expiresAt, sub.user_id]);
 
           // Grant any pending certificates for completed courses
-          const { all: allRows } = require('./db/database');
-          const completed = allRows(db,
+          const completed = await all(db,
             "SELECT course_id FROM user_course_progress WHERE user_id = ? AND progress_percent = 100",
             [sub.user_id]);
-          completed.forEach(row => {
-            const existing = get(db, 'SELECT id FROM certificates WHERE user_id = ? AND course_id = ?', [sub.user_id, row.course_id]);
+          for (const row of completed) {
+            const existing = await get(db, 'SELECT id FROM certificates WHERE user_id = ? AND course_id = ?', [sub.user_id, row.course_id]);
             if (!existing) {
               const credId = 'DQ-' + new Date().getFullYear() + '-' + Math.random().toString(36).slice(2, 8).toUpperCase();
               try {
-                run(db, 'INSERT INTO certificates (id, user_id, course_id, credential_id) VALUES (?, ?, ?, ?)',
+                await run(db, 'INSERT INTO certificates (id, user_id, course_id, credential_id) VALUES (?, ?, ?, ?)',
                   [uuidv4(), sub.user_id, row.course_id, credId]);
-                run(db, 'UPDATE users SET xp = xp + 500 WHERE id = ?', [sub.user_id]);
+                await run(db, 'UPDATE users SET xp = xp + 500 WHERE id = ?', [sub.user_id]);
               } catch (e) {}
             }
-          });
+          }
 
           console.log(`✅ Cashfree webhook: premium activated for user ${sub.user_id} (order ${orderId})`);
         }
@@ -93,14 +92,14 @@ app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
 
 (async () => {
   const database = await initDb();
-  seed(database);
-  seedVideos(database);
-  seedJobs(database);
-  seedLessonsV2(database);
-  seedProblems(database);
-  seedComingSoonCourses(database);
-  seedCaseStudies(database);
-  seedQuizV2(database);
+  await seed(database);
+  await seedVideos(database);
+  await seedJobs(database);
+  await seedLessonsV2(database);
+  await seedProblems(database);
+  await seedComingSoonCourses(database);
+  await seedCaseStudies(database);
+  await seedQuizV2(database);
   app.locals.db = database;
 
   app.use('/api/auth',     require('./routes/auth'));

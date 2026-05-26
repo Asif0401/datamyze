@@ -36,7 +36,7 @@ router.post('/', authMiddleware, async (req, res) => {
   }
 
   const db = req.app.locals.db;
-  const user = get(db, 'SELECT name, email, phone, xp, is_premium FROM users WHERE id = ?', [req.user.id]);
+  const user = await get(db, 'SELECT name, email, phone, xp, is_premium FROM users WHERE id = ?', [req.user.id]);
   if (!user) return res.status(404).json({ error: 'User not found' });
 
   const ts = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });

@@ -1,8 +1,8 @@
 const { v4: uuidv4 } = require('uuid');
 const { all, run } = require('./database');
 
-function seed(db) {
-  const existing = all(db, 'SELECT COUNT(*) as count FROM courses');
+async function seed(db) {
+  const existing = await all(db, 'SELECT COUNT(*) as count FROM courses');
   if (existing[0]?.count > 0) {
     console.log('✅ Already seeded, skipping.');
     return;
@@ -18,10 +18,10 @@ function seed(db) {
     { id: uuidv4(), title: 'Excel & Google Sheets', description: 'Power user techniques: XLOOKUP, PivotTables, data validation, and automation.', icon: '📋', color: '#1D9E75', difficulty: 'Beginner', duration: '6h', total_lessons: 3 },
   ];
 
-  courses.forEach(c => {
-    run(db, `INSERT INTO courses (id, title, description, icon, color, difficulty, duration, total_lessons) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+  for (const c of courses) {
+    await run(db, `INSERT INTO courses (id, title, description, icon, color, difficulty, duration, total_lessons) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [c.id, c.title, c.description, c.icon, c.color, c.difficulty, c.duration, c.total_lessons]);
-  });
+  }
 
   const sqlCourse = courses[0];
   const lessons = [
@@ -33,10 +33,11 @@ function seed(db) {
     { title: 'Window Functions', content: '# Window Functions\n\n```sql\nSELECT name, salary,\n  ROW_NUMBER() OVER (PARTITION BY dept ORDER BY salary DESC) AS rank\nFROM employees;\n\nSELECT month, revenue,\n  LAG(revenue, 1) OVER (ORDER BY month) AS prev_month,\n  revenue - LAG(revenue, 1) OVER (ORDER BY month) AS growth\nFROM monthly_sales;\n```', dur: 35 },
   ];
 
-  lessons.forEach((l, i) => {
-    run(db, `INSERT INTO lessons (id, course_id, title, content, order_index, duration_minutes) VALUES (?, ?, ?, ?, ?, ?)`,
+  for (let i = 0; i < lessons.length; i++) {
+    const l = lessons[i];
+    await run(db, `INSERT INTO lessons (id, course_id, title, content, order_index, duration_minutes) VALUES (?, ?, ?, ?, ?, ?)`,
       [uuidv4(), sqlCourse.id, l.title, l.content, i, l.dur]);
-  });
+  }
 
   const problems = [
     { title: 'Find Top 5 Customers by Revenue', description: 'Write a SQL query to find the top 5 customers by total revenue.\n\nSchema:\n  orders(id, customer_id, amount, status)\n  customers(id, name, email)', difficulty: 'Easy', topic: 'SQL', starter_code: 'SELECT \n  c.id, c.name,\n  SUM(o.amount) AS total_revenue\nFROM customers c\nJOIN orders o ON c.id = o.customer_id\nGROUP BY c.id\nORDER BY total_revenue DESC\nLIMIT 5;', acceptance_rate: 78, xp_reward: 50 },
@@ -49,13 +50,13 @@ function seed(db) {
     { title: 'Detect Outliers (IQR)', description: 'Write a Python function to detect outliers using IQR method and return a summary.', difficulty: 'Medium', topic: 'Python', starter_code: 'import pandas as pd\n\ndef remove_outliers_iqr(df, column):\n    Q1 = df[column].quantile(0.25)\n    Q3 = df[column].quantile(0.75)\n    IQR = Q3 - Q1\n    lower, upper = Q1 - 1.5 * IQR, Q3 + 1.5 * IQR\n    original = len(df)\n    cleaned = df[(df[column] >= lower) & (df[column] <= upper)]\n    print(f"Removed {original - len(cleaned)} outliers")\n    return cleaned\n\ndf = pd.read_csv("data.csv")\ncleaned = remove_outliers_iqr(df, "revenue")', acceptance_rate: 49, xp_reward: 100 },
   ];
 
-  problems.forEach(p => {
-    run(db, `INSERT INTO problems (id, title, description, difficulty, topic, starter_code, acceptance_rate, xp_reward) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+  for (const p of problems) {
+    await run(db, `INSERT INTO problems (id, title, description, difficulty, topic, starter_code, acceptance_rate, xp_reward) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [uuidv4(), p.title, p.description, p.difficulty, p.topic, p.starter_code, p.acceptance_rate, p.xp_reward]);
-  });
+  }
 
   const quizId = uuidv4();
-  run(db, `INSERT INTO quizzes (id, title) VALUES (?, ?)`, [quizId, 'Data Analytics Fundamentals Quiz']);
+  await run(db, `INSERT INTO quizzes (id, title) VALUES (?, ?)`, [quizId, 'Data Analytics Fundamentals Quiz']);
 
   const questions = [
     { q: 'Which SQL clause filters aggregated results?', opts: ['WHERE','HAVING','FILTER','GROUP BY'], ans: 1, exp: 'HAVING filters rows after aggregation. WHERE filters before aggregation.' },
@@ -67,15 +68,16 @@ function seed(db) {
     { q: 'What does COUNT(*) count?', opts: ['Non-NULL values only','Distinct values only','All rows including NULLs','Numeric columns only'], ans: 2, exp: 'COUNT(*) counts all rows regardless of NULL values in any column.' },
   ];
 
-  questions.forEach((q, i) => {
-    run(db, `INSERT INTO quiz_questions (id, quiz_id, question, options, correct_index, explanation, order_index) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+  for (let i = 0; i < questions.length; i++) {
+    const q = questions[i];
+    await run(db, `INSERT INTO quiz_questions (id, quiz_id, question, options, correct_index, explanation, order_index) VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [uuidv4(), quizId, q.q, JSON.stringify(q.opts), q.ans, q.exp, i]);
-  });
+  }
 
   console.log('✅ Seed complete!');
 }
 
-function seedVideos(db) {
+async function seedVideos(db) {
   // Add video_url to existing SQL lessons by title match
   const sqlVideoMap = {
     'Introduction to Databases':  '27axs9dO7AE', // What is SQL? 4-min explainer
@@ -86,18 +88,17 @@ function seedVideos(db) {
     'Window Functions':           'Ww71knvhQ-s', // TechTFQ – SQL Window Functions
   };
 
-  Object.entries(sqlVideoMap).forEach(([title, vid]) => {
-    run(db, 'UPDATE lessons SET video_url = ? WHERE title = ? AND video_url IS NULL', [vid, title]);
-  });
+  for (const [title, vid] of Object.entries(sqlVideoMap)) {
+    await run(db, 'UPDATE lessons SET video_url = ? WHERE title = ? AND video_url IS NULL', [vid, title]);
+  }
 
   // Add lessons for courses that have none yet
-  const allCourses = require('./database').all ? null : null; // avoid circular — use inline query
   const { all: dbAll } = require('./database');
-  const courses = dbAll(db, 'SELECT id, title FROM courses');
+  const courses = await dbAll(db, 'SELECT id, title FROM courses');
 
-  courses.forEach(course => {
-    const existing = dbAll(db, 'SELECT COUNT(*) as count FROM lessons WHERE course_id = ?', [course.id]);
-    if (existing[0]?.count > 0) return;
+  for (const course of courses) {
+    const existing = await dbAll(db, 'SELECT COUNT(*) as count FROM lessons WHERE course_id = ?', [course.id]);
+    if (existing[0]?.count > 0) continue;
 
     let lessons = [];
 
@@ -142,22 +143,23 @@ function seedVideos(db) {
       ];
     }
 
-    lessons.forEach((l, i) => {
-      run(db, `INSERT INTO lessons (id, course_id, title, content, video_url, order_index, duration_minutes) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    for (let i = 0; i < lessons.length; i++) {
+      const l = lessons[i];
+      await run(db, `INSERT INTO lessons (id, course_id, title, content, video_url, order_index, duration_minutes) VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [uuidv4(), course.id, l.title, l.content, l.video_url, i, l.dur]);
-    });
+    }
 
     if (lessons.length > 0) {
-      run(db, 'UPDATE courses SET total_lessons = ? WHERE id = ?', [lessons.length, course.id]);
+      await run(db, 'UPDATE courses SET total_lessons = ? WHERE id = ?', [lessons.length, course.id]);
     }
-  });
+  }
 
   console.log('✅ Video seed complete!');
 }
 
-function seedJobs(db) {
+async function seedJobs(db) {
   const { all: dbAll } = require('./database');
-  const existing = dbAll(db, 'SELECT COUNT(*) as count FROM job_listings');
+  const existing = await dbAll(db, 'SELECT COUNT(*) as count FROM job_listings');
   if (existing[0]?.count > 0) return;
 
   const jobs = [
@@ -242,17 +244,17 @@ function seedJobs(db) {
     { title: 'Business Analyst – Climate Tech', company: 'Ather Energy', location: 'Bangalore, Karnataka', type: 'Full-time', salary: '₹8–14 LPA', skills: '["SQL","Python","Tableau","IoT Analytics","Excel"]', url: 'https://atherenergy.com/careers', source: 'Ather Careers', posted_days_ago: 6 },
   ];
 
-  jobs.forEach(j => {
-    run(db, `INSERT INTO job_listings (id, title, company, location, type, salary, skills, url, source, posted_days_ago) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  for (const j of jobs) {
+    await run(db, `INSERT INTO job_listings (id, title, company, location, type, salary, skills, url, source, posted_days_ago) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [uuidv4(), j.title, j.company, j.location, j.type, j.salary, j.skills, j.url, j.source, j.posted_days_ago]);
-  });
+  }
 
   console.log('✅ Jobs seed complete!');
 }
 
-function seedComingSoonCourses(db) {
+async function seedComingSoonCourses(db) {
   const { all: dbAll } = require('./database');
-  const existing = dbAll(db, "SELECT COUNT(*) as count FROM courses WHERE title = 'AI in Analytics'");
+  const existing = await dbAll(db, "SELECT COUNT(*) as count FROM courses WHERE title = 'AI in Analytics'");
   if (existing[0]?.count > 0) {
     console.log('✅ Coming soon courses already seeded, skipping.');
     return;
@@ -292,17 +294,17 @@ function seedComingSoonCourses(db) {
     },
   ];
 
-  comingSoon.forEach(c => {
-    run(db, `INSERT INTO courses (id, title, description, icon, color, difficulty, duration, total_lessons, is_coming_soon) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+  for (const c of comingSoon) {
+    await run(db, `INSERT INTO courses (id, title, description, icon, color, difficulty, duration, total_lessons, is_coming_soon) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)`,
       [c.id, c.title, c.description, c.icon, c.color, c.difficulty, c.duration, c.total_lessons]);
-  });
+  }
 
   console.log('✅ Coming soon courses seeded!');
 }
 
-function seedCaseStudies(db) {
+async function seedCaseStudies(db) {
   const { all: dbAll } = require('./database');
-  const existing = dbAll(db, 'SELECT COUNT(*) as count FROM case_studies');
+  const existing = await dbAll(db, 'SELECT COUNT(*) as count FROM case_studies');
   if (existing[0]?.count > 0) return;
 
   console.log('🌱 Seeding case studies...');
@@ -394,10 +396,10 @@ function seedCaseStudies(db) {
     },
   ];
 
-  cases.forEach(c => {
-    run(db, `INSERT INTO case_studies (id, title, company, company_logo, difficulty, tags, summary, problem, data_overview, approach, key_insights, outcome, is_free) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  for (const c of cases) {
+    await run(db, `INSERT INTO case_studies (id, title, company, company_logo, difficulty, tags, summary, problem, data_overview, approach, key_insights, outcome, is_free) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [uuidv4(), c.title, c.company, c.company_logo, c.difficulty, c.tags, c.summary, c.problem, c.data_overview, c.approach, c.key_insights, c.outcome, c.is_free]);
-  });
+  }
 
   console.log('✅ Case studies seed complete!');
 }

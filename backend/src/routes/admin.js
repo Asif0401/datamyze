@@ -24,23 +24,23 @@ const uploadInstructorPhoto = multer({
 });
 
 // Grant certificates for all 100%-complete courses a user doesn't already have
-function grantPendingCertificates(db, userId) {
-  const completed = all(db,
+async function grantPendingCertificates(db, userId) {
+  const completed = await all(db,
     "SELECT course_id FROM user_course_progress WHERE user_id = ? AND progress_percent = 100",
     [userId]);
   let granted = 0;
-  completed.forEach(row => {
-    const existing = get(db, 'SELECT id FROM certificates WHERE user_id = ? AND course_id = ?', [userId, row.course_id]);
+  for (const row of completed) {
+    const existing = await get(db, 'SELECT id FROM certificates WHERE user_id = ? AND course_id = ?', [userId, row.course_id]);
     if (!existing) {
       const credId = 'DQ-' + new Date().getFullYear() + '-' + Math.random().toString(36).slice(2, 8).toUpperCase();
       try {
-        run(db, 'INSERT INTO certificates (id, user_id, course_id, credential_id) VALUES (?, ?, ?, ?)',
+        await run(db, 'INSERT INTO certificates (id, user_id, course_id, credential_id) VALUES (?, ?, ?, ?)',
           [uuidv4(), userId, row.course_id, credId]);
-        run(db, 'UPDATE users SET xp = xp + 500 WHERE id = ?', [userId]);
+        await run(db, 'UPDATE users SET xp = xp + 500 WHERE id = ?', [userId]);
         granted++;
       } catch (e) {}
     }
-  });
+  }
   return granted;
 }
 
@@ -51,22 +51,22 @@ function adminOnly(req, res, next) {
   return res.status(403).json({ error: 'Access denied' });
 }
 
-router.get('/overview', authMiddleware, adminOnly, (req, res) => {
+router.get('/overview', authMiddleware, adminOnly, async (req, res) => {
   const db = req.app.locals.db;
 
-  const totalUsers = all(db, 'SELECT COUNT(*) as count FROM users')[0]?.count || 0;
-  const totalSolved = all(db, "SELECT COUNT(*) as count FROM user_problem_submissions WHERE status='accepted'")[0]?.count || 0;
-  const totalEnrollments = all(db, 'SELECT COUNT(*) as count FROM user_course_progress')[0]?.count || 0;
-  const totalQuizAttempts = all(db, 'SELECT COUNT(*) as count FROM user_quiz_attempts')[0]?.count || 0;
-  const totalCerts = all(db, 'SELECT COUNT(*) as count FROM certificates')[0]?.count || 0;
-  const totalXP = all(db, 'SELECT SUM(xp) as total FROM users')[0]?.total || 0;
+  const totalUsers = (await all(db, 'SELECT COUNT(*) as count FROM users'))[0]?.count || 0;
+  const totalSolved = (await all(db, "SELECT COUNT(*) as count FROM user_problem_submissions WHERE status='accepted'"))[0]?.count || 0;
+  const totalEnrollments = (await all(db, 'SELECT COUNT(*) as count FROM user_course_progress'))[0]?.count || 0;
+  const totalQuizAttempts = (await all(db, 'SELECT COUNT(*) as count FROM user_quiz_attempts'))[0]?.count || 0;
+  const totalCerts = (await all(db, 'SELECT COUNT(*) as count FROM certificates'))[0]?.count || 0;
+  const totalXP = (await all(db, 'SELECT SUM(xp) as total FROM users'))[0]?.total || 0;
 
   res.json({ totalUsers, totalSolved, totalEnrollments, totalQuizAttempts, totalCerts, totalXP });
 });
 
-router.get('/users', authMiddleware, adminOnly, (req, res) => {
+router.get('/users', authMiddleware, adminOnly, async (req, res) => {
   const db = req.app.locals.db;
-  const users = all(db, `
+  const users = await all(db, `
     SELECT u.id, u.name, u.email, u.xp, u.streak, u.role, u.last_active, u.created_at,
       (SELECT COUNT(*) FROM user_problem_submissions WHERE user_id = u.id AND status='accepted') as problems_solved,
       (SELECT COUNT(*) FROM user_course_progress WHERE user_id = u.id) as courses_enrolled,
@@ -76,9 +76,9 @@ router.get('/users', authMiddleware, adminOnly, (req, res) => {
   res.json({ users });
 });
 
-router.get('/courses', authMiddleware, adminOnly, (req, res) => {
+router.get('/courses', authMiddleware, adminOnly, async (req, res) => {
   const db = req.app.locals.db;
-  const courses = all(db, `
+  const courses = await all(db, `
     SELECT c.*,
       (SELECT COUNT(*) FROM user_course_progress WHERE course_id = c.id) as enrollments,
       (SELECT COUNT(*) FROM user_course_progress WHERE course_id = c.id AND progress_percent = 100) as completions,
@@ -88,9 +88,9 @@ router.get('/courses', authMiddleware, adminOnly, (req, res) => {
   res.json({ courses });
 });
 
-router.get('/problems', authMiddleware, adminOnly, (req, res) => {
+router.get('/problems', authMiddleware, adminOnly, async (req, res) => {
   const db = req.app.locals.db;
-  const problems = all(db, `
+  const problems = await all(db, `
     SELECT p.*,
       (SELECT COUNT(*) FROM user_problem_submissions WHERE problem_id = p.id) as total_attempts,
       (SELECT COUNT(*) FROM user_problem_submissions WHERE problem_id = p.id AND status='accepted') as accepted
@@ -99,9 +99,9 @@ router.get('/problems', authMiddleware, adminOnly, (req, res) => {
   res.json({ problems });
 });
 
-router.get('/submissions', authMiddleware, adminOnly, (req, res) => {
+router.get('/submissions', authMiddleware, adminOnly, async (req, res) => {
   const db = req.app.locals.db;
-  const submissions = all(db, `
+  const submissions = await all(db, `
     SELECT s.id, s.status, s.submitted_at,
       u.name as user_name, u.email as user_email,
       p.title as problem_title, p.topic, p.difficulty
@@ -113,9 +113,9 @@ router.get('/submissions', authMiddleware, adminOnly, (req, res) => {
   res.json({ submissions });
 });
 
-router.get('/activity', authMiddleware, adminOnly, (req, res) => {
+router.get('/activity', authMiddleware, adminOnly, async (req, res) => {
   const db = req.app.locals.db;
-  const activity = all(db, `
+  const activity = await all(db, `
     SELECT date, COUNT(*) as active_users
     FROM daily_streaks
     GROUP BY date
@@ -125,9 +125,9 @@ router.get('/activity', authMiddleware, adminOnly, (req, res) => {
 });
 
 // GET all premium payment submissions
-router.get('/payments', authMiddleware, adminOnly, (req, res) => {
+router.get('/payments', authMiddleware, adminOnly, async (req, res) => {
   const db = req.app.locals.db;
-  const payments = all(db, `
+  const payments = await all(db, `
     SELECT ps.id, ps.user_id, ps.amount, ps.utr_number, ps.status,
            ps.created_at, ps.activated_at, ps.expires_at,
            ps.receipt_filename, ps.receipt_original,
@@ -147,30 +147,30 @@ router.get('/payments', authMiddleware, adminOnly, (req, res) => {
 });
 
 // Activate a payment
-router.post('/payments/:subId/activate', authMiddleware, adminOnly, (req, res) => {
+router.post('/payments/:subId/activate', authMiddleware, adminOnly, async (req, res) => {
   const db = req.app.locals.db;
-  const sub = get(db, 'SELECT * FROM premium_subscriptions WHERE id = ?', [req.params.subId]);
+  const sub = await get(db, 'SELECT * FROM premium_subscriptions WHERE id = ?', [req.params.subId]);
   if (!sub) return res.status(404).json({ error: 'Subscription not found' });
   const expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
-  run(db, "UPDATE premium_subscriptions SET status='active', activated_at=datetime('now'), expires_at=? WHERE id=?", [expiresAt, req.params.subId]);
-  run(db, 'UPDATE users SET is_premium=1, premium_expires_at=? WHERE id=?', [expiresAt, sub.user_id]);
-  const granted = grantPendingCertificates(db, sub.user_id);
+  await run(db, "UPDATE premium_subscriptions SET status='active', activated_at=datetime('now'), expires_at=? WHERE id=?", [expiresAt, req.params.subId]);
+  await run(db, 'UPDATE users SET is_premium=1, premium_expires_at=? WHERE id=?', [expiresAt, sub.user_id]);
+  const granted = await grantPendingCertificates(db, sub.user_id);
   res.json({ message: 'Premium activated for user', certificates_granted: granted });
 });
 
 // Reject a payment
-router.post('/payments/:subId/reject', authMiddleware, adminOnly, (req, res) => {
+router.post('/payments/:subId/reject', authMiddleware, adminOnly, async (req, res) => {
   const db = req.app.locals.db;
-  run(db, "UPDATE premium_subscriptions SET status='rejected' WHERE id=?", [req.params.subId]);
+  await run(db, "UPDATE premium_subscriptions SET status='rejected' WHERE id=?", [req.params.subId]);
   res.json({ message: 'Payment rejected' });
 });
 
 // ── Instructor Profile ───────────────────────────────────────────────
 
 // GET instructor profile (public — used by Instructor page)
-router.get('/instructor', authMiddleware, (req, res) => {
+router.get('/instructor', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const admin = get(db, "SELECT id, name, email, bio, job_title, location, linkedin_url, github_url, skills FROM users WHERE role = 'admin' OR email = ? LIMIT 1", ['ak384837@gmail.com']);
+  const admin = await get(db, "SELECT id, name, email, bio, job_title, location, linkedin_url, github_url, skills FROM users WHERE role = 'admin' OR email = ? LIMIT 1", ['ak384837@gmail.com']);
 
   // Check if photo exists
   const photoExts = ['jpg', 'jpeg', 'png', 'webp'];
@@ -201,10 +201,10 @@ router.post('/instructor/photo', authMiddleware, adminOnly, uploadInstructorPhot
 });
 
 // PUT update instructor profile info (admin only)
-router.put('/instructor', authMiddleware, adminOnly, (req, res) => {
+router.put('/instructor', authMiddleware, adminOnly, async (req, res) => {
   const db = req.app.locals.db;
   const { name, job_title, bio, location, linkedin_url, github_url } = req.body;
-  run(db, "UPDATE users SET name = ?, job_title = ?, bio = ?, location = ?, linkedin_url = ?, github_url = ? WHERE role = 'admin' OR email = ?",
+  await run(db, "UPDATE users SET name = ?, job_title = ?, bio = ?, location = ?, linkedin_url = ?, github_url = ? WHERE role = 'admin' OR email = ?",
     [name, job_title, bio, location, linkedin_url, github_url, 'ak384837@gmail.com']);
   res.json({ message: 'Instructor profile updated' });
 });
