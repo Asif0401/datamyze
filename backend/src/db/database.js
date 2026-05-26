@@ -254,6 +254,8 @@ async function initDb() {
   try { await c.execute('ALTER TABLE users ADD COLUMN avatar_url TEXT'); } catch(e) {}
   try { await c.execute('ALTER TABLE users ADD COLUMN profile_completed INTEGER DEFAULT 0'); } catch(e) {}
   try { await c.execute('ALTER TABLE courses ADD COLUMN is_coming_soon INTEGER DEFAULT 0'); } catch(e) {}
+  try { await c.execute('ALTER TABLE problems ADD COLUMN hint TEXT'); } catch(e) {}
+  try { await c.execute("UPDATE problems SET starter_code = '' WHERE starter_code IS NOT NULL"); } catch(e) {}
 
   // OTP table for signup & phone login verification
   await c.execute(`

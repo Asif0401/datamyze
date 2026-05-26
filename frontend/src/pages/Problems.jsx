@@ -51,15 +51,20 @@ function ResultTable({ columns, rows }) {
 
 /* ── Full-screen Problem IDE ────────────────────────── */
 function ProblemIDE({ problem, onClose, onSolved }) {
-  const [code, setCode]           = useState(problem.starter_code || '');
+  const lang = problem.topic === 'Python' ? 'python' : 'sql';
+  const emptyCode = lang === 'sql' ? '-- Write your SQL query here\n' : '# Write your Python code here\n';
+  const [code, setCode]           = useState(emptyCode);
   const [running, setRunning]     = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [runResult, setRunResult] = useState(null);
   const [submitResult, setSubmitResult] = useState(null);
-  const [bottomTab, setBottomTab] = useState('output'); // 'output' | 'testcase'
+  const [bottomTab, setBottomTab] = useState('output');
   const [panelH, setPanelH]       = useState(220);
+  const [hintUsed, setHintUsed]   = useState(false);
+  const [hintData, setHintData]   = useState(null);
+  const [showHint, setShowHint]   = useState(false);
+  const [loadingHint, setLoadingHint] = useState(false);
   const dragRef = useRef(null);
-  const lang = problem.topic === 'Python' ? 'python' : 'sql';
 
   async function handleRun() {
     setRunning(true);
@@ -79,13 +84,30 @@ function ProblemIDE({ problem, onClose, onSolved }) {
     setSubmitting(true);
     setBottomTab('output');
     try {
-      const { data } = await api.post(`/problems/${problem.id}/submit`, { code });
+      const { data } = await api.post(`/problems/${problem.id}/submit`, { code, hint_used: hintUsed });
       setSubmitResult(data);
       if (data.status === 'accepted') onSolved();
     } catch {
       setSubmitResult({ status: 'wrong_answer', message: '❌ Server error.', xp_earned: 0 });
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function handleHint() {
+    if (hintData) { setShowHint(h => !h); return; }
+    setLoadingHint(true);
+    try {
+      const { data } = await api.post(`/problems/${problem.id}/hint`);
+      setHintData(data);
+      setHintUsed(true);
+      setShowHint(true);
+    } catch {
+      setHintData({ hint: '💡 Think about what columns and tables you need, then build the query step by step.', penalty: 0, xp_after_hint: problem.xp_reward });
+      setHintUsed(true);
+      setShowHint(true);
+    } finally {
+      setLoadingHint(false);
     }
   }
 
@@ -134,8 +156,18 @@ function ProblemIDE({ problem, onClose, onSolved }) {
         {problem.solved && <span style={{ background: 'rgba(92,200,160,0.15)', color: '#5CC8A0', border: '1px solid rgba(92,200,160,0.25)', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20 }}>✓ Solved</span>}
         <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginLeft: 4 }}>+{problem.xp_reward} XP</span>
 
-        {/* Run & Submit */}
-        <div style={{ display: 'flex', gap: 8, marginLeft: 8 }}>
+        {/* Hint, Run & Submit */}
+        <div style={{ display: 'flex', gap: 8, marginLeft: 8, alignItems: 'center' }}>
+          {/* Hint button */}
+          <button onClick={handleHint} disabled={loadingHint} title={hintUsed ? 'Hint used — XP reduced by 50%' : 'Use hint (costs 50% XP)'} style={{
+            background: hintUsed ? 'rgba(232,168,56,0.20)' : 'rgba(232,168,56,0.10)',
+            border: `1px solid ${hintUsed ? 'rgba(232,168,56,0.50)' : 'rgba(232,168,56,0.25)'}`,
+            color: '#E8A838', padding: '6px 14px', borderRadius: 8,
+            fontSize: 12, fontWeight: 700, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: 5, transition: 'all 0.15s',
+          }}>
+            💡 {loadingHint ? 'Loading…' : hintUsed ? 'Hint (−50% XP)' : 'Hint'}
+          </button>
           <button onClick={handleRun} disabled={running || submitting} style={{
             background: running ? 'rgba(92,200,160,0.12)' : 'rgba(92,200,160,0.18)',
             border: '1px solid rgba(92,200,160,0.30)',
@@ -210,6 +242,23 @@ function ProblemIDE({ problem, onClose, onSolved }) {
               {lang === 'sql' ? '⌃⏎ Run  ·  Ctrl+Space Autocomplete' : '⌃⏎ Run'}
             </span>
           </div>
+
+          {/* Hint panel */}
+          {showHint && hintData && (
+            <div style={{
+              background: 'rgba(232,168,56,0.08)', borderBottom: '1px solid rgba(232,168,56,0.25)',
+              padding: '10px 16px', display: 'flex', alignItems: 'flex-start', gap: 10, flexShrink: 0,
+            }}>
+              <span style={{ fontSize: 18, lineHeight: 1.4 }}>💡</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#E8A838', marginBottom: 3 }}>
+                  Hint used — XP reduced to {hintData.xp_after_hint} XP (was {problem.xp_reward} XP)
+                </div>
+                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.70)', lineHeight: 1.6 }}>{hintData.hint}</div>
+              </div>
+              <button onClick={() => setShowHint(false)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.3)', cursor: 'pointer', fontSize: 16, lineHeight: 1, padding: 0 }}>✕</button>
+            </div>
+          )}
 
           {/* Monaco Editor */}
           <div style={{ flex: 1, overflow: 'hidden', minHeight: 0 }}>

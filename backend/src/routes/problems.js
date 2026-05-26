@@ -59,9 +59,20 @@ router.post('/:id/run', authMiddleware, async (req, res) => {
   return res.json(simulatePython(code, problem.title));
 });
 
+/* ── Get hint (deducts XP on first use) ──────────────── */
+router.post('/:id/hint', authMiddleware, async (req, res) => {
+  const db = req.app.locals.db;
+  const problem = await get(db, 'SELECT * FROM problems WHERE id = ?', [req.params.id]);
+  if (!problem) return res.status(404).json({ error: 'Problem not found.' });
+
+  const hint = problem.hint || '💡 Break the problem into steps: think about which table(s) you need, what filtering/grouping is required, and which SQL functions apply.';
+  const penalty = Math.floor((problem.xp_reward || 50) * 0.5); // 50% XP penalty
+  res.json({ hint, penalty, xp_after_hint: (problem.xp_reward || 50) - penalty });
+});
+
 /* ── Submit (validate + award XP) ──────────────────── */
 router.post('/:id/submit', authMiddleware, async (req, res) => {
-  const { code } = req.body;
+  const { code, hint_used } = req.body;
   if (!code?.trim()) return res.status(400).json({ error: 'Code is required.' });
 
   const db = req.app.locals.db;
@@ -101,8 +112,10 @@ router.post('/:id/submit', authMiddleware, async (req, res) => {
       [req.user.id, problem.id, subId]
     );
     if (prev.length === 0) {
-      await run(db, 'UPDATE users SET xp = xp + ? WHERE id = ?', [problem.xp_reward, req.user.id]);
-      xp_earned = problem.xp_reward;
+      // Reduce XP by 50% if hint was used
+      const base = problem.xp_reward || 50;
+      xp_earned = hint_used ? Math.floor(base * 0.5) : base;
+      await run(db, 'UPDATE users SET xp = xp + ? WHERE id = ?', [xp_earned, req.user.id]);
     }
   }
 
