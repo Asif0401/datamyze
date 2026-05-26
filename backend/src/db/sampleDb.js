@@ -5,7 +5,7 @@
 const initSqlJs = require('sql.js');
 
 async function createSampleDb() {
-  const SQL = await initSqlJs();
+  const SQL = await initSqlJs({ locateFile: file => `${__dirname}/../../../node_modules/sql.js/dist/${file}` });
   const db  = new SQL.Database();
 
   // ── Existing tables ──────────────────────────────────────────────────
