@@ -1136,6 +1136,7 @@ const HUB_TABS = [
   { id: 'session',    icon: '📅', label: '1:1 Sessions'    },
   { id: 'resume',     icon: '📄', label: 'Resume Review'   },
   { id: 'interview',  icon: '🎓', label: 'Mock Interviews' },
+  { id: 'projects',   icon: '🔬', label: 'Real Projects'   },
   { id: 'roadmap',    icon: '🗺️', label: 'Roadmap'         },
   { id: 'resources',  icon: '📚', label: 'Resources'       },
   { id: 'support',    icon: '⭐', label: 'Support'         },
@@ -1251,6 +1252,7 @@ function PremiumHub({ status, user }) {
       {tab === 'session'   && <SessionTab sessions={sessions} setSessions={setSessions} setToast={setToast} />}
       {tab === 'resume'    && <ResumeTab reviews={reviews} setReviews={setReviews} setToast={setToast} />}
       {tab === 'interview' && <InterviewTab />}
+      {tab === 'projects'  && <ProjectsTab />}
       {tab === 'roadmap'   && <RoadmapTab />}
       {tab === 'resources' && <ResourcesTab />}
       {tab === 'support'   && <SupportTab setToast={setToast} user={user} />}
@@ -1268,6 +1270,7 @@ function OverviewTab({ sessions, reviews, navigate, setTab }) {
     { icon: '📄', title: 'Resume Review',        sub: 'Expert ATS-optimised feedback within 48 hours — line-by-line rewrites, keyword gaps, and LinkedIn tips.', color: '#E8A838', action: () => setTab('resume'), badge: '48h Turnaround' },
     { icon: '🗺️', title: '12-Week Roadmap',      sub: 'Your personalised path from beginner to hired — 7 phases, 20+ skills, with weekly action items.', color: '#F07B6A', action: () => setTab('roadmap'), badge: null },
     { icon: '📚', title: 'Study Materials',       sub: '7 exclusive guides — SQL mastery, Python handbook, resume playbook, salary scripts & more.', color: '#5CC8A0', action: () => setTab('resources'), badge: '7 Guides' },
+    { icon: '🔬', title: 'Real-World Projects',    sub: '6 industry-grade projects with real datasets — e-commerce, HR analytics, fintech & more. Build your portfolio.', color: '#f59e0b', action: () => setTab('projects'), badge: '6 Projects' },
     { icon: '💼', title: 'Job Board',             sub: '18+ hand-picked data analytics roles at top Indian companies — updated weekly.', color: '#38bdf8', action: () => navigate('/jobs'), badge: '18+ Live Jobs' },
   ];
 
@@ -1997,6 +2000,282 @@ function InterviewTab() {
   );
 }
 
+/* ── Real-World Projects tab ────────────────────────── */
+const PROJECTS = [
+  {
+    id: 'ecommerce',
+    icon: '🛒',
+    title: 'E-Commerce Sales Analysis',
+    company: 'Flipkart-style Dataset',
+    color: '#4A90D9',
+    difficulty: 'Beginner',
+    tools: ['SQL', 'Python', 'Tableau'],
+    duration: '3–4 hours',
+    desc: 'Analyse 50,000+ orders to find top-selling categories, revenue trends, and customer behaviour. Present findings as an executive dashboard.',
+    skills: ['Cohort analysis', 'Revenue MoM growth', 'Product ranking', 'SQL window functions', 'Tableau dashboard'],
+    deliverables: ['SQL query file (.sql)', 'Python EDA notebook (.ipynb)', 'Tableau dashboard (published on Tableau Public)', 'README with 3 key insights'],
+    dataset: 'Provided: ecommerce_orders.csv (50k rows) + products.csv + customers.csv',
+    steps: [
+      'Load and explore the dataset — check nulls, dtypes, row counts',
+      'SQL: Find top 10 products by revenue per quarter using window functions',
+      'Python: Plot monthly revenue trend and identify the best/worst months',
+      'Python: Cohort analysis — retention rate by signup month',
+      'Tableau: Build an interactive dashboard with filters for date & category',
+      'Write a 3-bullet insight summary for your README',
+    ],
+  },
+  {
+    id: 'hr',
+    icon: '👥',
+    title: 'HR Attrition Analysis',
+    company: 'IBM HR Dataset',
+    color: '#a78bfa',
+    difficulty: 'Beginner',
+    tools: ['Python', 'Pandas', 'Seaborn'],
+    duration: '2–3 hours',
+    desc: 'Identify why employees leave the company. Explore 1,400+ employee records to find key drivers of attrition using EDA and visualisations.',
+    skills: ['EDA', 'Correlation analysis', 'Feature importance', 'Group-by aggregation', 'Data storytelling'],
+    deliverables: ['Python notebook (.ipynb)', 'Summary slide (PDF or PowerPoint)', 'Top 5 attrition drivers with charts'],
+    dataset: 'IBM HR Analytics Employee Attrition dataset (publicly available on Kaggle)',
+    steps: [
+      'Load dataset — understand all 35 columns and their meaning',
+      'Calculate overall attrition rate and segment by department, role, age',
+      'Correlation heatmap — which features correlate most with attrition?',
+      'Plot: Attrition rate by overtime, job satisfaction, years at company',
+      'Identify the top 3 factors driving attrition with evidence',
+      'Create a 5-slide summary: Problem → Data → Findings → Recommendation → Impact',
+    ],
+  },
+  {
+    id: 'marketing',
+    icon: '📣',
+    title: 'Marketing Attribution Analysis',
+    company: 'D2C Brand Dataset',
+    color: '#5CC8A0',
+    difficulty: 'Intermediate',
+    tools: ['SQL', 'Python', 'Excel'],
+    duration: '4–5 hours',
+    desc: 'Figure out which marketing channel drives the most revenue for a D2C brand. Analyse multi-touch attribution, CAC, and ROAS across channels.',
+    skills: ['Multi-touch attribution', 'CAC calculation', 'ROAS', 'Funnel analysis', 'SQL CTEs'],
+    deliverables: ['SQL attribution queries', 'Python ROAS & CAC analysis', 'Channel performance comparison chart', 'Recommendations doc'],
+    dataset: 'Provided: marketing_events.csv + orders.csv + ad_spend.csv',
+    steps: [
+      'Map the customer journey — first touch, last touch, and linear attribution',
+      'SQL CTE: Calculate revenue attributed to each channel per month',
+      'Python: Calculate CAC (Cost per Acquisition) and ROAS per channel',
+      'Funnel analysis — drop-off rates from ad click to purchase',
+      'Identify the highest ROI channel and the most inefficient spend',
+      'Write a brief recommendation: where should the brand increase/decrease budget?',
+    ],
+  },
+  {
+    id: 'fintech',
+    icon: '💳',
+    title: 'Fintech Transaction Fraud Detection',
+    company: 'PaySim Synthetic Dataset',
+    color: '#F07B6A',
+    difficulty: 'Intermediate',
+    tools: ['Python', 'Scikit-learn', 'Pandas'],
+    duration: '5–6 hours',
+    desc: 'Build a fraud detection model on 6M+ financial transactions. Apply EDA, feature engineering, and a classification model to flag suspicious activity.',
+    skills: ['Imbalanced classification', 'Feature engineering', 'Precision/Recall trade-off', 'XGBoost', 'Confusion matrix'],
+    deliverables: ['Python ML notebook (.ipynb)', 'Model performance report (Precision, Recall, F1)', 'Feature importance chart', 'Business impact summary'],
+    dataset: 'PaySim financial transactions dataset (available on Kaggle — 6.3M rows)',
+    steps: [
+      'EDA: Understand transaction types, amounts, fraud distribution (class imbalance)',
+      'Feature engineering: create time-based features, amount deviation from mean',
+      'Handle class imbalance — use SMOTE or class_weight parameter',
+      'Train Logistic Regression baseline → then XGBoost',
+      'Evaluate with Precision, Recall, F1, ROC-AUC — explain why accuracy is misleading here',
+      'Business framing: what is the cost of a false negative vs false positive?',
+    ],
+  },
+  {
+    id: 'product',
+    icon: '📱',
+    title: 'Product Funnel & Retention Analysis',
+    company: 'SaaS App Dataset',
+    color: '#38bdf8',
+    difficulty: 'Intermediate',
+    tools: ['SQL', 'Python', 'Mixpanel-style'],
+    duration: '4–5 hours',
+    desc: 'Analyse user behaviour in a SaaS app — from signup to activation to retention. Find where users drop off and what drives long-term engagement.',
+    skills: ['Funnel analysis', 'Cohort retention', 'DAU/MAU ratio', 'SQL window functions', 'North Star Metric'],
+    deliverables: ['SQL funnel queries', 'Python cohort retention heatmap', 'Retention curve chart', 'Drop-off analysis with recommendations'],
+    dataset: 'Provided: user_events.csv (signups, activations, feature usage, churns)',
+    steps: [
+      'Define the activation funnel: Signup → Onboarding → First key action → DAU',
+      'SQL: Calculate conversion rate at each funnel step using COUNT + CTEs',
+      'Python: Build a cohort retention table (monthly cohorts × retention weeks)',
+      'Plot the retention curve — identify the "retention cliff" week',
+      'DAU/MAU ratio — is the product sticky enough?',
+      'Propose 2 product changes to improve the worst drop-off step',
+    ],
+  },
+  {
+    id: 'supply',
+    icon: '🏭',
+    title: 'Supply Chain Optimisation',
+    company: 'Manufacturing Dataset',
+    color: '#E8A838',
+    difficulty: 'Advanced',
+    tools: ['Python', 'SQL', 'Power BI'],
+    duration: '6–8 hours',
+    desc: 'Optimise inventory levels and identify bottlenecks in a manufacturing supply chain. Analyse lead times, stock-outs, and supplier performance.',
+    skills: ['Inventory analysis', 'Lead time optimisation', 'Supplier scorecard', 'Power BI dashboard', 'Root cause analysis'],
+    deliverables: ['SQL supplier performance queries', 'Python inventory optimisation notebook', 'Power BI dashboard', 'Executive summary (1 page)'],
+    dataset: 'Provided: supply_chain_data.csv (orders, inventory, suppliers, lead times)',
+    steps: [
+      'Overview: Calculate fill rate, stock-out frequency, average lead time per supplier',
+      'SQL: Rank suppliers by on-time delivery rate and defect rate',
+      'Python: Identify products at risk of stock-out in the next 30 days',
+      'Root cause: Which suppliers are causing the most delays?',
+      'Power BI: Build a supply chain KPI dashboard (fill rate, lead time, defects)',
+      'Recommendation: Which 2 suppliers should be replaced or renegotiated?',
+    ],
+  },
+];
+
+function ProjectsTab() {
+  const [selected, setSelected] = useState(null);
+  const [filter, setFilter]     = useState('All');
+  const difficulties = ['All', 'Beginner', 'Intermediate', 'Advanced'];
+  const diffColor = d => d === 'Beginner' ? '#5CC8A0' : d === 'Intermediate' ? '#E8A838' : '#F07B6A';
+  const filtered = filter === 'All' ? PROJECTS : PROJECTS.filter(p => p.difficulty === filter);
+
+  return (
+    <div style={{ animation: 'hubFadeUp 0.4s ease both' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <div style={{ fontWeight: 800, fontSize: 18, color: '#fff', marginBottom: 4 }}>🔬 Real-World Projects</div>
+          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>Industry-grade projects with real datasets — build your portfolio, impress recruiters</div>
+        </div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {difficulties.map(d => (
+            <button key={d} onClick={() => setFilter(d)}
+              className={filter === d ? 'filter-chip active' : 'filter-chip'}
+              style={{ fontSize: 12, fontWeight: 700 }}>
+              {d}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Value banner */}
+      <div style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.22)', borderRadius: 14, padding: '0.9rem 1.3rem', marginBottom: '1.5rem', fontSize: 13, color: 'rgba(255,255,255,0.60)', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <span style={{ fontSize: 22 }}>💡</span>
+        <div><strong style={{ color: '#f59e0b' }}>Pro tip:</strong> Completing 2–3 of these projects and hosting them on GitHub + Tableau Public is what separates your resume from 95% of applicants. Recruiters love numbers and real data.</div>
+      </div>
+
+      {/* Project cards grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.1rem', marginBottom: '1.5rem' }}>
+        {filtered.map((proj, i) => (
+          <div key={proj.id}
+            onClick={() => setSelected(selected?.id === proj.id ? null : proj)}
+            style={{ borderRadius: 18, overflow: 'hidden', background: 'rgba(255,255,255,0.04)', border: `1px solid ${selected?.id === proj.id ? proj.color + '55' : 'rgba(255,255,255,0.08)'}`, cursor: 'pointer', transition: 'all 0.25s cubic-bezier(.22,1,.36,1)', animation: `proCardEnter 0.5s ${i * 0.07}s cubic-bezier(.22,1,.36,1) both`, boxShadow: selected?.id === proj.id ? `0 16px 44px ${proj.color}1e` : 'none' }}
+            onMouseEnter={e => { if (selected?.id !== proj.id) { e.currentTarget.style.borderColor = proj.color + '44'; e.currentTarget.style.transform = 'translateY(-3px)'; } }}
+            onMouseLeave={e => { if (selected?.id !== proj.id) { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'none'; } }}>
+            {/* Banner */}
+            <div style={{ height: 88, background: `linear-gradient(135deg, ${proj.color}22, ${proj.color}08)`, position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', gap: 16, padding: '0 1.3rem' }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${proj.color}, transparent)` }} />
+              <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(circle at 10% 130%, ${proj.color}28, transparent 60%)` }} />
+              <span style={{ fontSize: 36, filter: 'drop-shadow(0 3px 12px rgba(0,0,0,0.5))', position: 'relative' }}>{proj.icon}</span>
+              <div style={{ position: 'relative' }}>
+                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', marginBottom: 3 }}>{proj.company}</div>
+                <div style={{ fontWeight: 800, fontSize: 14, color: '#fff', lineHeight: 1.3 }}>{proj.title}</div>
+              </div>
+              {/* Difficulty + duration pills */}
+              <div style={{ marginLeft: 'auto', display: 'flex', flexDirection: 'column', gap: 5, alignItems: 'flex-end', position: 'relative' }}>
+                <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 9px', borderRadius: 20, background: diffColor(proj.difficulty) + '20', border: `1px solid ${diffColor(proj.difficulty)}44`, color: diffColor(proj.difficulty) }}>{proj.difficulty}</span>
+                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.38)', padding: '2px 8px', borderRadius: 20, background: 'rgba(255,255,255,0.06)' }}>⏱ {proj.duration}</span>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div style={{ padding: '0.9rem 1.3rem' }}>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6, marginBottom: '0.8rem' }}>{proj.desc}</div>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: '0.7rem' }}>
+                {proj.tools.map(t => (
+                  <span key={t} style={{ fontSize: 11, fontWeight: 600, padding: '2px 9px', borderRadius: 20, background: proj.color + '15', border: `1px solid ${proj.color}30`, color: proj.color }}>{t}</span>
+                ))}
+              </div>
+              <div style={{ fontSize: 12, color: proj.color, fontWeight: 700 }}>
+                {selected?.id === proj.id ? '▲ Hide details' : '▼ View project guide'}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Expanded project detail panel */}
+      {selected && (
+        <div style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${selected.color}40`, borderRadius: 20, padding: '1.8rem 2rem', marginTop: '0.5rem', animation: 'hubFadeUp 0.3s ease both' }}>
+          <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${selected.color}, transparent)`, borderRadius: 2 }} />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+            {/* Steps */}
+            <div style={{ gridColumn: '1 / 3' }}>
+              <div style={{ fontSize: 12, fontWeight: 800, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 12 }}>📋 Step-by-Step Guide</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {selected.steps.map((step, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                    <div style={{ width: 24, height: 24, borderRadius: '50%', background: selected.color + '20', border: `1px solid ${selected.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: selected.color, flexShrink: 0, marginTop: 1 }}>{i + 1}</div>
+                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.55 }}>{step}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Dataset + Skills + Deliverables */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+              {/* Dataset */}
+              <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '0.9rem 1rem' }}>
+                <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.30)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 8 }}>📦 Dataset</div>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.60)', lineHeight: 1.5 }}>{selected.dataset}</div>
+              </div>
+              {/* Skills */}
+              <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '0.9rem 1rem' }}>
+                <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.30)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 8 }}>🧠 Skills You'll Gain</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                  {selected.skills.map(s => (
+                    <span key={s} style={{ fontSize: 11, color: 'rgba(255,255,255,0.60)', background: selected.color + '12', border: `1px solid ${selected.color}25`, padding: '2px 8px', borderRadius: 8 }}>{s}</span>
+                  ))}
+                </div>
+              </div>
+              {/* Deliverables */}
+              <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '0.9rem 1rem' }}>
+                <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.30)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 8 }}>✅ Deliverables</div>
+                {selected.deliverables.map((d, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 7, fontSize: 12, color: 'rgba(255,255,255,0.60)', marginBottom: 5, lineHeight: 1.4 }}>
+                    <span style={{ color: selected.color, flexShrink: 0 }}>☐</span>{d}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div style={{ display: 'flex', gap: 10, paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            <a href="https://www.kaggle.com/datasets" target="_blank" rel="noreferrer"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, padding: '9px 20px', borderRadius: 12, background: selected.color + '18', border: `1px solid ${selected.color}35`, color: selected.color, textDecoration: 'none', transition: 'background 0.15s' }}
+              onMouseEnter={e => e.currentTarget.style.background = selected.color + '2e'}
+              onMouseLeave={e => e.currentTarget.style.background = selected.color + '18'}>
+              📦 Get Dataset
+            </a>
+            <button onClick={() => setSelected(null)}
+              style={{ fontSize: 13, fontWeight: 600, padding: '9px 20px', borderRadius: 12, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.55)', cursor: 'pointer' }}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ── Roadmap tab ────────────────────────────────────── */
 function RoadmapTab() {
   const [view, setView] = useState('timeline');
@@ -2373,6 +2652,7 @@ const FEATURES = [
   { icon: '📚', label: 'Exclusive Study Guides',   desc: '7 premium guides — SQL mastery, Python handbook, resume playbook, salary negotiation scripts, and more.',   color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.22)'  },
   { icon: '💼', label: 'Curated Job Board',        desc: '18+ hand-picked data analytics roles at top Indian companies — updated weekly with direct apply links.',     color: '#38bdf8', bg: 'rgba(56,189,248,0.12)',  border: 'rgba(56,189,248,0.22)'  },
   { icon: '⭐', label: 'Priority Support',         desc: '6-hour direct response from us — faster than public support. We personally read every message.',             color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.22)'  },
+  { icon: '🔬', label: 'Real-World Projects',      desc: '6 industry-grade projects with real datasets — e-commerce, HR, fintech, marketing & more. Build your portfolio.', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  border: 'rgba(245,158,11,0.22)'  },
 ];
 
 function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep, utr, setUtr, submitting, submitUTR, copied, copyUPI, toast, cfLoading, handleCashfreePay }) {
