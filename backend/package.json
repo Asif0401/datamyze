@@ -20,6 +20,7 @@
     "multer": "^2.1.1",
     "nodemailer": "^8.0.7",
     "@libsql/client": "^0.14.0",
+    "sql.js": "^1.14.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
