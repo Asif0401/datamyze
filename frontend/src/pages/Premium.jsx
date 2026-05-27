@@ -2881,7 +2881,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
 
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1.4fr', gap:0, position:'relative' }}>
             {/* Left: Price + CTA */}
-            <div style={{ padding:'2.5rem 2rem', borderRight:'1px solid rgba(255,255,255,0.07)', display:'flex', flexDirection:'column', justifyContent:'center' }}>
+            <div style={{ padding:'2.5rem 2rem', borderRight:'1px solid rgba(255,255,255,0.07)', display:'flex', flexDirection:'column', justifyContent:'space-between' }}>
               <div style={{ fontSize:11, fontWeight:800, color:'#E8A838', textTransform:'uppercase', letterSpacing:'1.5px', marginBottom:14 }}>✦ Lifetime Access</div>
 
               {/* Price */}
@@ -2909,11 +2909,11 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
             </div>
 
             {/* Right: Feature list */}
-            <div style={{ padding:'2.5rem 2rem' }}>
-              <div style={{ fontSize:11, fontWeight:800, color:'rgba(255,255,255,0.35)', textTransform:'uppercase', letterSpacing:'1.2px', marginBottom:16 }}>Everything included</div>
-              <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+            <div style={{ padding:'2.5rem 2rem', display:'flex', flexDirection:'column' }}>
+              <div style={{ fontSize:11, fontWeight:800, color:'rgba(255,255,255,0.35)', textTransform:'uppercase', letterSpacing:'1.5px', marginBottom:16 }}>Everything included</div>
+              <div style={{ display:'flex', flexDirection:'column', gap:6, flex:1 }}>
                 {FEATURES.map(f => (
-                  <div key={f.label} style={{ display:'flex', alignItems:'center', gap:12, padding:'9px 12px', borderRadius:12, background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.06)', transition:'background 0.15s' }}
+                  <div key={f.label} style={{ display:'flex', alignItems:'center', gap:12, padding:'8px 12px', borderRadius:12, background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.06)', transition:'background 0.15s' }}
                     onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.06)'}
                     onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.03)'}>
                     <div style={{ width:36, height:36, borderRadius:10, background:f.color+'18', border:`1px solid ${f.color}30`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:17, flexShrink:0 }}>{f.icon}</div>
