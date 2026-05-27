@@ -292,22 +292,22 @@ export default function AuthPage({ mode: initialMode }) {
           </div>
 
           {/* Comparison card */}
-          <div style={{ marginTop:'1.2rem', borderRadius:18, overflow:'hidden', position:'relative',
+          <div style={{ marginTop:'0.7rem', borderRadius:18, overflow:'hidden', position:'relative',
             boxShadow:'0 0 0 1px rgba(127,119,221,0.22), 0 8px 32px rgba(127,119,221,0.1)' }}>
 
             {/* Single unified grid — all cells are direct children so rows are guaranteed equal height */}
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr' }}>
 
               {/* ── Header: Others ── */}
-              <div style={{ background:'rgba(255,255,255,0.025)', padding:'11px 16px',
+              <div style={{ background:'rgba(255,255,255,0.025)', padding:'8px 16px',
                 borderBottom:'1px solid rgba(255,255,255,0.06)', borderRight:'1px solid rgba(255,255,255,0.06)',
                 display:'flex', alignItems:'center', justifyContent:'center' }}>
-                <span style={{ fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.28)', letterSpacing:1, textTransform:'uppercase' }}>Others</span>
+                <span style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.28)', letterSpacing:1, textTransform:'uppercase' }}>Others</span>
               </div>
 
               {/* ── Header: Datamyze ── */}
               <div style={{ background:'linear-gradient(135deg,rgba(127,119,221,0.18),rgba(56,189,248,0.1))',
-                padding:'11px 16px', borderBottom:'1px solid rgba(127,119,221,0.25)',
+                padding:'8px 16px', borderBottom:'1px solid rgba(127,119,221,0.25)',
                 position:'relative', overflow:'hidden',
                 display:'flex', alignItems:'center', justifyContent:'center' }}>
                 <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'linear-gradient(90deg,#7F77DD,#38bdf8)' }} />
@@ -325,7 +325,7 @@ export default function AuthPage({ mode: initialMode }) {
               ].flatMap((row, i) => [
                 /* Left cell */
                 <div key={`bad-${i}`} style={{
-                  padding:'10px 16px',
+                  padding:'7px 14px',
                   borderRight:'1px solid rgba(255,255,255,0.05)',
                   borderBottom: i < 4 ? '1px solid rgba(255,255,255,0.045)' : 'none',
                   background: i % 2 === 0 ? 'rgba(0,0,0,0.18)' : 'rgba(0,0,0,0.1)',
@@ -338,7 +338,7 @@ export default function AuthPage({ mode: initialMode }) {
                 </div>,
                 /* Right cell */
                 <div key={`good-${i}`} style={{
-                  padding:'10px 16px',
+                  padding:'7px 14px',
                   borderBottom: i < 4 ? '1px solid rgba(255,255,255,0.045)' : 'none',
                   borderLeft:`2px solid ${row.color}45`,
                   background: i % 2 === 0 ? `linear-gradient(90deg,${row.color}09,rgba(127,119,221,0.06))` : `linear-gradient(90deg,rgba(127,119,221,0.05),${row.color}07)`,
@@ -356,7 +356,7 @@ export default function AuthPage({ mode: initialMode }) {
             {/* Price footer */}
             <div style={{ background:'linear-gradient(90deg,rgba(10,14,32,0.9),rgba(127,119,221,0.15),rgba(10,14,32,0.9))',
               borderTop:'1px solid rgba(127,119,221,0.22)',
-              padding:'11px 16px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+              padding:'8px 16px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
               <span style={{ fontSize:12, color:'rgba(255,255,255,0.42)', fontWeight:500 }}>All of this, together —</span>
               <div style={{ display:'flex', alignItems:'baseline', gap:6 }}>
                 <span style={{ fontSize:12, color:'rgba(255,255,255,0.22)', textDecoration:'line-through', fontWeight:500 }}>₹999</span>
@@ -369,9 +369,9 @@ export default function AuthPage({ mode: initialMode }) {
           </div>
 
           {/* Scrolling feature ticker */}
-          <div style={{ marginTop:'1.4rem' }}>
+          <div style={{ marginTop:'0.85rem' }}>
             {/* Heading */}
-            <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:10 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:7 }}>
               <div style={{ flex:1, height:1, background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.1))' }} />
               <span style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.3)', letterSpacing:1.5, textTransform:'uppercase', whiteSpace:'nowrap' }}>What we offer</span>
               <div style={{ flex:1, height:1, background:'linear-gradient(90deg,rgba(255,255,255,0.1),transparent)' }} />
@@ -400,7 +400,7 @@ export default function AuthPage({ mode: initialMode }) {
           </div>
 
           {/* Social links */}
-          <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:10, marginTop:'1.4rem' }}>
+          <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:8, marginTop:'0.8rem' }}>
             <span style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.22)', letterSpacing:1.5, textTransform:'uppercase' }}>Follow us</span>
             <div style={{ display:'flex', alignItems:'center', gap:16 }}>
             {[
@@ -412,7 +412,7 @@ export default function AuthPage({ mode: initialMode }) {
                 icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> },
             ].map(s => (
               <a key={s.title} href={s.href} target="_blank" rel="noreferrer" title={s.title}
-                style={{ display:'flex', alignItems:'center', justifyContent:'center', width:38, height:38, borderRadius:10, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.09)', color:'rgba(255,255,255,0.4)', transition:'all .2s', textDecoration:'none' }}
+                style={{ display:'flex', alignItems:'center', justifyContent:'center', width:32, height:32, borderRadius:9, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.09)', color:'rgba(255,255,255,0.4)', transition:'all .2s', textDecoration:'none' }}
                 onMouseEnter={e => { e.currentTarget.style.background=`${s.color}18`; e.currentTarget.style.color=s.color; e.currentTarget.style.borderColor=`${s.color}55`; e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow=`0 4px 12px ${s.color}22`; }}
                 onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.05)'; e.currentTarget.style.color='rgba(255,255,255,0.4)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.09)'; e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='none'; }}
               >{s.icon}</a>
