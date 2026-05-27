@@ -41,75 +41,105 @@ const INTERVIEW_DATA = {
   ],
 };
 
-const ROADMAP_DATA = [
+const COURSE_ROADMAPS = [
   {
-    phase: 1, week: 'Week 1–2', title: 'Core Foundations', color: '#4A90D9',
-    icon: '🏗️',
-    topics: [
-      { name: 'Excel & Google Sheets', skills: ['VLOOKUP, XLOOKUP, HLOOKUP', 'Pivot Tables & Charts', 'IF, COUNTIF, SUMIF functions', 'Data validation & cleaning in Excel'] },
-      { name: 'Basic Statistics', skills: ['Mean, Median, Mode, Range', 'Standard deviation & variance', 'Percentiles & quartiles', 'Normal distribution basics'] },
-      { name: 'SQL Fundamentals', skills: ['SELECT, WHERE, ORDER BY', 'GROUP BY, HAVING, DISTINCT', 'JOINs (INNER, LEFT, RIGHT)', 'Aggregate functions: SUM, COUNT, AVG'] },
+    id: 'sql', title: 'SQL for Data Analysis', icon: '🗄️', color: '#7F77DD',
+    desc: 'From zero to writing complex business queries with confidence',
+    stages: [
+      { id: 1, icon: '🌱', title: 'Foundations', outcome: 'Write your first queries and retrieve data from any table', skills: ['SELECT, FROM, WHERE', 'ORDER BY, DISTINCT, LIMIT', 'Filtering with AND, OR, NOT', 'Comparison & BETWEEN operators'], practice: 'Solve 5 Beginner SQL problems on Datamyze' },
+      { id: 2, icon: '📦', title: 'Grouping & Aggregation', outcome: 'Summarise and analyse data at the group level', skills: ['GROUP BY & HAVING', 'COUNT, SUM, AVG, MIN, MAX', 'CASE WHEN statements', 'NULL handling with COALESCE'], practice: 'Complete the "Aggregation" problem set' },
+      { id: 3, icon: '🔗', title: 'Joining Tables', outcome: 'Combine data from multiple tables for richer insights', skills: ['INNER JOIN', 'LEFT JOIN & RIGHT JOIN', 'FULL OUTER JOIN', 'Self joins & multi-table joins'], practice: 'Solve the "Sales & Customers" join challenge' },
+      { id: 4, icon: '🏗️', title: 'Subqueries & CTEs', outcome: 'Write modular, readable SQL for complex logic', skills: ['Scalar & correlated subqueries', 'IN, EXISTS, NOT IN', 'WITH clause (CTEs)', 'Nested CTE patterns'], practice: 'Refactor 3 queries using CTEs' },
+      { id: 5, icon: '💼', title: 'Business Analytics Queries', outcome: 'Answer real interview questions with SQL', skills: ['Month-over-month growth', 'Cohort & retention queries', 'Running totals & cumulative sums', 'Top-N per group patterns'], practice: 'Complete 2 Case Study SQL problems' },
     ],
-    resources: ['Complete the SQL for Data Analysis course', 'Solve 10 Easy SQL problems on Datamyze', 'Build one Excel dashboard from scratch'],
   },
   {
-    phase: 2, week: 'Week 3–4', title: 'Python for Analytics', color: '#5CC8A0',
-    icon: '🐍',
-    topics: [
-      { name: 'Python Basics', skills: ['Variables, loops, functions, OOP basics', 'List comprehensions & dictionaries', 'File I/O — reading CSV/JSON', 'Error handling with try/except'] },
-      { name: 'NumPy & Pandas', skills: ['ndarray operations, broadcasting', 'DataFrame creation, indexing (.loc/.iloc)', 'Merging, joining, concatenating DataFrames', 'Groupby, aggregate, pivot_table'] },
-      { name: 'Dev Environment', skills: ['Jupyter Notebooks workflow', 'Git basics: commit, push, pull', 'Virtual environments (venv)', 'VS Code for data science'] },
+    id: 'excel', title: 'Excel & Sheets', icon: '📋', color: '#1D9E75',
+    desc: 'Master spreadsheets for data cleaning, analysis and dashboards',
+    stages: [
+      { id: 1, icon: '🌱', title: 'Getting Started', outcome: 'Navigate spreadsheets and write your first formulas', skills: ['Cell references (relative & absolute)', 'SUM, AVERAGE, COUNT, MIN, MAX', 'Sorting & basic filtering', 'Formatting cells and tables'], practice: 'Build a simple monthly budget tracker' },
+      { id: 2, icon: '🔍', title: 'Lookup & Logic Functions', outcome: 'Pull data from other tables and apply conditional logic', skills: ['VLOOKUP & XLOOKUP', 'IF, AND, OR, nested IF', 'COUNTIF, SUMIF, AVERAGEIF', 'IFERROR & error handling'], practice: 'Solve the "Salary Lookup" exercise' },
+      { id: 3, icon: '📊', title: 'Pivot Tables & Charts', outcome: 'Summarise large datasets and create visual reports', skills: ['Creating Pivot Tables', 'Calculated fields in pivots', 'Slicers & timeline filters', 'Bar, Line, Pie & Combo charts'], practice: 'Build a Sales Dashboard with pivot tables' },
+      { id: 4, icon: '🧹', title: 'Data Cleaning', outcome: 'Fix messy real-world data professionally', skills: ['TRIM, CLEAN, PROPER, TEXT', 'Remove duplicates & blanks', 'Text to Columns & Flash Fill', 'Data validation rules'], practice: 'Clean a 500-row messy CSV dataset' },
+      { id: 5, icon: '🚀', title: 'Dashboard & Reporting', outcome: 'Present insights with a professional interactive dashboard', skills: ['Dynamic charts with named ranges', 'Conditional formatting heatmaps', 'Drop-down list controls', 'Dashboard layout & design'], practice: 'Build a full KPI Dashboard for a sample company' },
     ],
-    resources: ['Complete the Python for Analytics course', 'Solve GroupBy + Null Handling problems', 'Build a mini project: clean a raw CSV dataset'],
   },
   {
-    phase: 3, week: 'Week 5–6', title: 'Data Wrangling & EDA', color: '#E8A838',
-    icon: '🔍',
-    topics: [
-      { name: 'Data Cleaning', skills: ['Handling missing values (fillna, dropna)', 'Removing duplicates', 'Fixing data types (astype, to_datetime)', 'Outlier detection with IQR & Z-score'] },
-      { name: 'Exploratory Data Analysis', skills: ['Univariate & bivariate analysis', 'Correlation matrices (heatmaps)', 'Distribution plots (histograms, box plots)', 'Descriptive statistics with .describe()'] },
-      { name: 'Feature Engineering', skills: ['Creating derived columns', 'Binning & encoding categorical data', 'Date feature extraction (month, weekday)', 'Normalisation & standardisation'] },
+    id: 'python', title: 'Python for Analytics', icon: '🐍', color: '#3CB371',
+    desc: 'Write Python code to analyse, clean and visualise data',
+    stages: [
+      { id: 1, icon: '🌱', title: 'Python Basics', outcome: 'Write clean scripts and understand core Python syntax', skills: ['Variables & data types', 'Lists, dicts, tuples, sets', 'Loops, conditions & functions', 'Reading CSV/JSON files'], practice: 'Write 5 Python scripts from scratch' },
+      { id: 2, icon: '🐼', title: 'Pandas & NumPy', outcome: 'Manipulate tabular data like a pro', skills: ['DataFrame creation & indexing', '.loc / .iloc / boolean masks', 'Merging, joining & concat', 'Groupby & aggregations'], practice: 'Analyse a real dataset with Pandas' },
+      { id: 3, icon: '🧹', title: 'Data Cleaning', outcome: 'Transform messy raw data into analysis-ready datasets', skills: ['Handle missing values (fillna, dropna)', 'Remove duplicates', 'Fix data types (astype, to_datetime)', 'Outlier detection with IQR'], practice: 'Clean and reshape a raw e-commerce dataset' },
+      { id: 4, icon: '🔬', title: 'Exploratory Data Analysis', outcome: 'Surface insights from any dataset systematically', skills: ['.describe() & .info()', 'Correlation matrices', 'Value counts & crosstabs', 'Distribution analysis'], practice: 'Full EDA on the HR dataset — write a summary' },
+      { id: 5, icon: '📈', title: 'Data Visualisation', outcome: 'Create clear charts that tell a compelling story', skills: ['Matplotlib: bar, line, scatter', 'Seaborn: heatmap, violin, pairplot', 'Customising styles & themes', 'Saving charts for reports'], practice: 'Build a 5-chart EDA visual report' },
     ],
-    resources: ['Complete the Data Wrangling module', 'Solve Outlier + Aggregation problems', 'EDA on a Kaggle dataset — publish on GitHub'],
   },
   {
-    phase: 4, week: 'Week 7–8', title: 'Visualisation & Reporting', color: '#a78bfa',
-    icon: '📊',
-    topics: [
-      { name: 'Python Visualisation', skills: ['Matplotlib: line, bar, scatter, pie', 'Seaborn: heatmap, pairplot, violin', 'Plotly for interactive charts', 'Choosing the right chart type'] },
-      { name: 'BI Tools', skills: ['Tableau Desktop basics (free trial)', 'Power BI Desktop — connecting data', 'Creating calculated fields & measures', 'Publishing dashboards'] },
-      { name: 'Storytelling with Data', skills: ['The SCQA framework', 'Designing executive summaries', 'Annotation and highlighting insights', 'Slide decks for data findings'] },
+    id: 'statistics', title: 'Statistics & Probability', icon: '📊', color: '#BA7517',
+    desc: 'Understand the math behind data to make better decisions',
+    stages: [
+      { id: 1, icon: '🌱', title: 'Descriptive Statistics', outcome: 'Describe any dataset with the right metrics', skills: ['Mean, Median, Mode', 'Variance & Standard Deviation', 'Percentiles & IQR', 'Skewness & Kurtosis'], practice: 'Compute descriptive stats on a sales dataset' },
+      { id: 2, icon: '🎲', title: 'Probability', outcome: 'Reason about uncertainty like a data scientist', skills: ['Events, outcomes & sample space', 'Conditional probability & Bayes', 'Binomial & Poisson distributions', 'Normal distribution & Z-scores'], practice: 'Solve 5 probability word problems' },
+      { id: 3, icon: '🔬', title: 'Inferential Statistics', outcome: 'Draw conclusions from samples with confidence', skills: ['Null & alternative hypothesis', 't-test, chi-square test', 'p-values & significance (α = 0.05)', 'Type I & Type II errors'], practice: 'Conduct a hypothesis test on a dataset' },
+      { id: 4, icon: '🧪', title: 'A/B Testing', outcome: 'Design and analyse experiments the way tech companies do', skills: ['Experiment design & control groups', 'Sample size & power calculations', 'Confidence intervals', 'Common pitfalls (p-hacking, novelty effect)'], practice: 'Analyse an A/B test result for a checkout page' },
+      { id: 5, icon: '📈', title: 'Business Metrics', outcome: 'Apply stats to real analytics problems', skills: ['Cohort analysis basics', 'Retention & churn rates', 'Conversion funnels', 'MoM / YoY growth calculations'], practice: 'Build a retention metrics report from user data' },
     ],
-    resources: ['Build a Tableau Public dashboard (portfolio)', 'Complete a Power BI project with real data', 'Create a 5-slide data story presentation'],
   },
   {
-    phase: 5, week: 'Week 9–10', title: 'Advanced SQL & Analytics', color: '#F07B6A',
-    icon: '⚡',
-    topics: [
-      { name: 'Advanced SQL', skills: ['Window functions: ROW_NUMBER, RANK, LAG, LEAD', 'CTEs (WITH clause) & recursive queries', 'Subqueries & correlated subqueries', 'Query optimisation & indexes'] },
-      { name: 'Business Analytics', skills: ['Cohort analysis', 'Funnel analysis & drop-off', 'Month-over-month & YoY growth', 'Retention & churn metrics'] },
-      { name: 'A/B Testing', skills: ['Hypothesis testing (t-test, chi-square)', 'p-values & statistical significance', 'Sample size calculation', 'Interpreting A/B test results'] },
+    id: 'advanced-sql', title: 'Advanced SQL', icon: '⚡', color: '#534AB7',
+    desc: 'Master window functions, CTEs and query optimisation',
+    stages: [
+      { id: 1, icon: '🪟', title: 'Window Functions', outcome: 'Perform calculations across rows without collapsing data', skills: ['ROW_NUMBER, RANK, DENSE_RANK', 'NTILE & PERCENT_RANK', 'OVER (PARTITION BY … ORDER BY)', 'Cumulative SUM & AVG'], practice: 'Solve 5 window function challenges on Datamyze' },
+      { id: 2, icon: '🕐', title: 'Lag, Lead & Time Intelligence', outcome: 'Compare current rows to previous or future rows', skills: ['LAG & LEAD with offsets', 'FIRST_VALUE & LAST_VALUE', 'Month-over-month change queries', 'Rolling 7-day & 30-day averages'], practice: 'Build a MoM revenue trend query' },
+      { id: 3, icon: '🏗️', title: 'CTEs & Complex Queries', outcome: 'Write clean, modular SQL for complex business logic', skills: ['Common Table Expressions (WITH)', 'Recursive CTEs for hierarchies', 'Multi-step CTE pipelines', 'Replacing subqueries with CTEs'], practice: 'Rewrite 3 complex subqueries as CTEs' },
+      { id: 4, icon: '🚀', title: 'Performance & Optimisation', outcome: 'Write fast queries that scale to millions of rows', skills: ['EXPLAIN & query plan reading', 'Indexing strategies', 'Avoiding SELECT *', 'Filtering before joining'], practice: 'Optimise a slow query using EXPLAIN' },
+      { id: 5, icon: '💼', title: 'BI-Level Queries', outcome: 'Write analyst-level SQL for real dashboards', skills: ['User retention cohorts', 'Funnel drop-off analysis', 'Top-N per group with RANK', 'Customer segmentation with CASE'], practice: 'Write a full cohort retention query from scratch' },
     ],
-    resources: ['Solve all Hard SQL problems on Datamyze', 'Complete the Statistics & Probability module', 'Analyse a real business dataset with SQL'],
   },
   {
-    phase: 6, week: 'Week 11', title: 'Portfolio & Applications', color: '#38bdf8',
-    icon: '🚀',
-    topics: [
-      { name: 'Portfolio Projects', skills: ['2–3 end-to-end projects on GitHub', 'Project README with business context', 'Hosted dashboards (Tableau Public, Streamlit)', 'Medium / LinkedIn post about your project'] },
-      { name: 'Job Applications', skills: ['ATS-optimised resume keywords', 'LinkedIn: About, Experience, Skills sections', 'Cold messaging recruiters on LinkedIn', 'Using Datamyze Job Board'] },
+    id: 'tableau', title: 'Tableau for Analysts', icon: '📈', color: '#E8762D',
+    desc: 'Build interactive dashboards that turn data into decisions',
+    stages: [
+      { id: 1, icon: '🌱', title: 'Getting Started', outcome: 'Connect data and understand the Tableau interface', skills: ['Connecting to CSV, Excel, SQL', 'Dimensions vs Measures', 'Rows / Columns shelf basics', 'Marks card: color, size, label'], practice: 'Create your first bar chart in Tableau' },
+      { id: 2, icon: '📊', title: 'Core Charts', outcome: 'Build the most important charts for analytics reporting', skills: ['Bar, Line & Area charts', 'Scatter plots & bubble charts', 'Heat maps & highlight tables', 'Maps & filled maps'], practice: 'Recreate 4 chart types from a sample dataset' },
+      { id: 3, icon: '🖥️', title: 'Dashboards & Filters', outcome: 'Combine multiple views into one interactive dashboard', skills: ['Dashboard layout & sizing', 'Quick filters & filter actions', 'Highlight actions & URL actions', 'Device-specific layouts'], practice: 'Build a Sales Performance Dashboard' },
+      { id: 4, icon: '🧮', title: 'Calculated Fields', outcome: 'Create custom metrics and business KPIs', skills: ['Basic calculations & string functions', 'Date calculations (DATEDIFF, DATEPART)', 'IF / CASE logic', 'Level of Detail (LOD) expressions'], practice: 'Create a YoY growth calculated field' },
+      { id: 5, icon: '🎨', title: 'Storytelling & Publishing', outcome: 'Deliver polished dashboards stakeholders love', skills: ['Story points for data narratives', 'Formatting & branding', 'Annotations & reference lines', 'Publishing to Tableau Public'], practice: 'Publish a portfolio dashboard to Tableau Public' },
     ],
-    resources: ['Submit resume for expert review (Datamyze Premium)', 'Apply to 5 jobs/day from the Job Board', 'Publish at least 1 project on GitHub'],
   },
   {
-    phase: 7, week: 'Week 12', title: 'Interview Mastery', color: '#E8A838',
-    icon: '🎓',
-    topics: [
-      { name: 'Technical Interview Prep', skills: ['SQL live coding (StrataScratch, LeetCode)', 'Python/Pandas problem solving', 'Case study frameworks (MECE, SCQA)', 'Explain ML concepts in simple terms'] },
-      { name: 'HR & Behavioural', skills: ['STAR method for behavioural questions', 'Tell me about yourself (90-second pitch)', 'Why data analytics? — authentic answer', 'Questions to ask the interviewer'] },
-      { name: 'Offer & Negotiation', skills: ['Research market salary (Glassdoor, Levels.fyi)', 'Negotiation scripts: counter-offer language', 'Evaluating offer: CTC vs take-home', 'Joining formalities & notice period'] },
+    id: 'ai', title: 'AI in Analytics', icon: '🤖', color: '#8B5CF6',
+    desc: 'Use AI tools to work 10× faster as a data analyst',
+    stages: [
+      { id: 1, icon: '🌱', title: 'AI Fundamentals', outcome: 'Understand how AI/ML fits into modern analytics', skills: ['AI vs ML vs Data Science', 'How LLMs (ChatGPT, Claude) work', 'Where AI helps vs. where it fails', 'AI ethics & hallucinations'], practice: 'Write a "What is AI in Analytics?" summary' },
+      { id: 2, icon: '✍️', title: 'Prompt Engineering', outcome: 'Get better, faster answers from AI for data work', skills: ['Zero-shot vs few-shot prompts', 'Chain-of-thought prompting', 'Prompts for SQL & Python code', 'Prompts for insight summaries'], practice: 'Use ChatGPT to write 5 SQL queries from plain English' },
+      { id: 3, icon: '🛠️', title: 'AI-Powered Tools', outcome: 'Supercharge your workflow with AI-native tools', skills: ['GitHub Copilot for Python', 'ChatGPT Advanced Data Analysis', 'Copilot in Excel & Power BI', 'Claude for report writing'], practice: 'Analyse a dataset entirely using ChatGPT Code Interpreter' },
+      { id: 4, icon: '🧠', title: 'ML Concepts for Analysts', outcome: 'Work confidently alongside data scientists', skills: ['Supervised vs unsupervised learning', 'Train/test split & overfitting', 'Regression & classification basics', 'Feature importance interpretation'], practice: 'Explain a Random Forest output in plain English' },
+      { id: 5, icon: '🚀', title: 'AI-Augmented Workflows', outcome: 'Build an end-to-end AI-assisted analysis pipeline', skills: ['AI-assisted EDA & anomaly detection', 'Automated report generation', 'Natural language to dashboard', 'Staying current with AI tools'], practice: 'Build a full AI-assisted analysis report for a business case' },
     ],
-    resources: ['Complete all Mock Interview questions on Datamyze', 'Book a 1:1 mock interview with us', 'Negotiate your first offer confidently'],
+  },
+  {
+    id: 'ml', title: 'ML for Analysts', icon: '🧠', color: '#EC4899',
+    desc: 'Apply machine learning to solve real business problems',
+    stages: [
+      { id: 1, icon: '🌱', title: 'ML Foundations', outcome: 'Understand when and why to use machine learning', skills: ['Types of ML: supervised, unsupervised', 'Train / Validation / Test split', 'Bias-variance tradeoff', 'scikit-learn basics'], practice: 'Run your first scikit-learn model end-to-end' },
+      { id: 2, icon: '📈', title: 'Regression', outcome: 'Predict continuous outcomes like revenue or prices', skills: ['Linear & multiple regression', 'RMSE, MAE, R² metrics', 'Polynomial regression', 'Regularisation (Ridge, Lasso)'], practice: 'Predict house prices with Linear Regression' },
+      { id: 3, icon: '🏷️', title: 'Classification', outcome: 'Predict categories like churn, fraud or conversion', skills: ['Logistic regression', 'Decision trees & Random Forest', 'Confusion matrix & accuracy', 'Precision, Recall, F1-score'], practice: 'Build a churn prediction model' },
+      { id: 4, icon: '🎯', title: 'Model Evaluation', outcome: 'Choose the best model and validate it properly', skills: ['Cross-validation (k-fold)', 'ROC curve & AUC score', 'Hyperparameter tuning (GridSearch)', 'Feature importance & selection'], practice: 'Compare 3 classifiers and pick the best one' },
+      { id: 5, icon: '🚀', title: 'End-to-End ML Pipeline', outcome: 'Deploy a working ML solution for a real business problem', skills: ['Feature engineering pipeline', 'sklearn Pipeline & ColumnTransformer', 'Saving models with joblib/pickle', 'Model monitoring basics'], practice: 'Build and deploy a fraud detection model locally' },
+    ],
+  },
+  {
+    id: 'dataeng', title: 'Data Engineering', icon: '⚙️', color: '#F59E0B',
+    desc: 'Build the pipelines and infrastructure that power analytics',
+    stages: [
+      { id: 1, icon: '🌱', title: 'Data Infrastructure', outcome: 'Understand the data stack that powers modern companies', skills: ['OLTP vs OLAP databases', 'Data Warehouse vs Data Lake', 'Star schema & dimensional modeling', 'Modern data stack overview'], practice: 'Design a star schema for an e-commerce company' },
+      { id: 2, icon: '🔄', title: 'ETL & ELT Pipelines', outcome: 'Move and transform data between systems reliably', skills: ['Extract: APIs, databases, flat files', 'Transform: clean, reshape, enrich', 'Load: writing to warehouses', 'ELT with dbt basics'], practice: 'Build a simple ETL pipeline with Python' },
+      { id: 3, icon: '🐍', title: 'Python for Data Engineering', outcome: 'Automate and schedule data workflows with code', skills: ['pandas for batch processing', 'SQLAlchemy & database connectors', 'File formats: Parquet, JSON, CSV', 'Scheduling with cron & Airflow basics'], practice: 'Automate a daily data refresh script' },
+      { id: 4, icon: '☁️', title: 'Cloud Data Platforms', outcome: 'Work with the cloud services used in most data roles', skills: ['BigQuery basics (Google Cloud)', 'AWS S3 & Athena overview', 'Snowflake architecture', 'Loading data to the cloud'], practice: 'Query a public dataset in BigQuery' },
+      { id: 5, icon: '🚀', title: 'Building a Data Platform', outcome: 'Design an end-to-end data platform for a real use case', skills: ['Data quality & testing', 'Orchestration with Airflow/Prefect', 'Data cataloging & lineage', 'Cost management & optimisation'], practice: 'Document and present a mini data platform design' },
+    ],
   },
 ];
 
@@ -1268,7 +1298,7 @@ function OverviewTab({ sessions, reviews, navigate, setTab }) {
     { icon: '🎙️', title: 'Book Mock Interview', sub: 'Live 45-min session — SQL, Python, Case Study, or full analytics round. Get real-time feedback on your thinking.', color: '#a78bfa', action: () => setTab('interview'), badge: 'Most Popular' },
     { icon: '📅', title: 'Book 1:1 Session',    sub: '30-minute video call for resume critique, career strategy, code review, or salary negotiation prep.', color: '#4A90D9', action: () => setTab('session'), badge: null },
     { icon: '📄', title: 'Resume Review',        sub: 'Expert ATS-optimised feedback within 48 hours — line-by-line rewrites, keyword gaps, and LinkedIn tips.', color: '#E8A838', action: () => setTab('resume'), badge: '48h Turnaround' },
-    { icon: '🗺️', title: '12-Week Roadmap',      sub: 'Your personalised path from beginner to hired — 7 phases, 20+ skills, with weekly action items.', color: '#F07B6A', action: () => setTab('roadmap'), badge: null },
+    { icon: '🗺️', title: 'Course Roadmaps',       sub: 'Interactive step-by-step roadmaps for every course — know exactly what to learn and in what order.', color: '#F07B6A', action: () => setTab('roadmap'), badge: '9 Courses' },
     { icon: '📚', title: 'Study Materials',       sub: '7 exclusive guides — SQL mastery, Python handbook, resume playbook, salary scripts & more.', color: '#5CC8A0', action: () => setTab('resources'), badge: '7 Guides' },
     { icon: '🔬', title: 'Real-World Projects',    sub: '6 industry-grade projects with real datasets — e-commerce, HR analytics, fintech & more. Build your portfolio.', color: '#f59e0b', action: () => setTab('projects'), badge: '6 Projects' },
     { icon: '🎯', title: '100% Placement Assistance', sub: 'Dedicated job support until you land your first data role — resume, referrals, mock interviews & offer negotiation.', color: '#a78bfa', action: () => setTab('session'), badge: '100% Guaranteed' },
@@ -2279,115 +2309,139 @@ function ProjectsTab() {
 
 /* ── Roadmap tab ────────────────────────────────────── */
 function RoadmapTab() {
-  const [view, setView] = useState('timeline');
+  const [selected, setSelected] = useState('sql');
   const [expanded, setExpanded] = useState(null);
 
-  const allSkillsByCategory = {
-    'SQL': [], 'Python': [], 'Excel / Sheets': [], 'Statistics': [],
-    'Visualisation': [], 'BI Tools': [], 'Career': [],
-  };
-  const categoryMap = {
-    'Excel & Google Sheets': 'Excel / Sheets',
-    'Basic Statistics': 'Statistics',
-    'SQL Fundamentals': 'SQL',
-    'Python Basics': 'Python',
-    'NumPy & Pandas': 'Python',
-    'Dev Environment': 'Career',
-    'Data Cleaning': 'Python',
-    'Exploratory Data Analysis': 'Statistics',
-    'Feature Engineering': 'Python',
-    'Python Visualisation': 'Visualisation',
-    'BI Tools': 'BI Tools',
-    'Storytelling with Data': 'Career',
-    'Advanced SQL': 'SQL',
-    'Business Analytics': 'Career',
-    'A/B Testing': 'Statistics',
-    'Portfolio Projects': 'Career',
-    'Job Applications': 'Career',
-    'Technical Interview Prep': 'Career',
-    'HR & Behavioural': 'Career',
-    'Offer & Negotiation': 'Career',
-  };
-  ROADMAP_DATA.forEach(phase => {
-    phase.topics.forEach(topic => {
-      const cat = categoryMap[topic.name] || 'Career';
-      topic.skills.forEach(skill => {
-        if (!allSkillsByCategory[cat].includes(skill)) allSkillsByCategory[cat].push(skill);
-      });
-    });
-  });
+  const course = COURSE_ROADMAPS.find(c => c.id === selected);
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: 12 }}>
-        <div>
-          <div style={{ fontWeight: 700, fontSize: 17, color: '#fff', marginBottom: 4 }}>🗺️ 12-Week Data Analyst Roadmap</div>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>A proven plan to go from beginner to hired in 3 months</div>
+      <style>{`
+        @keyframes stageIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)} }
+      `}</style>
+
+      {/* Header */}
+      <div style={{ marginBottom: '1.4rem' }}>
+        <div style={{ fontWeight: 700, fontSize: 17, color: '#fff', marginBottom: 4 }}>🗺️ Course Roadmaps</div>
+        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>Pick a course — see exactly what to learn, in what order, and why it matters</div>
+      </div>
+
+      {/* Course selector pills */}
+      <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 10, marginBottom: '1.6rem', scrollbarWidth: 'none' }}>
+        {COURSE_ROADMAPS.map(c => (
+          <button
+            key={c.id}
+            onClick={() => { setSelected(c.id); setExpanded(null); }}
+            style={{
+              flexShrink: 0, display: 'flex', alignItems: 'center', gap: 6,
+              padding: '7px 15px', borderRadius: 20, border: 'none', cursor: 'pointer',
+              fontSize: 12, fontWeight: 700, transition: 'all 0.2s',
+              background: selected === c.id ? c.color : 'rgba(255,255,255,0.07)',
+              color: selected === c.id ? '#fff' : 'rgba(255,255,255,0.50)',
+              boxShadow: selected === c.id ? `0 4px 14px ${c.color}40` : 'none',
+            }}
+          >
+            <span style={{ fontSize: 14 }}>{c.icon}</span>{c.title}
+          </button>
+        ))}
+      </div>
+
+      {/* Course header */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 16, marginBottom: '1.6rem',
+        background: `linear-gradient(135deg, ${course.color}18, rgba(255,255,255,0.03))`,
+        border: `1px solid ${course.color}35`, borderRadius: 18, padding: '1rem 1.3rem',
+      }}>
+        <div style={{ width: 56, height: 56, borderRadius: 16, background: course.color + '25', border: `1px solid ${course.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0 }}>{course.icon}</div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontWeight: 800, fontSize: 16, color: '#fff', marginBottom: 4 }}>{course.title}</div>
+          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.50)' }}>{course.desc}</div>
         </div>
-        <div style={{ display: 'flex', gap: 6 }}>
-          {[{ id: 'timeline', label: '📅 Timeline' }, { id: 'skilltree', label: '🌳 Skill Tree' }].map(v => (
-            <button key={v.id} onClick={() => setView(v.id)}
-              className={view === v.id ? 'filter-chip active' : 'filter-chip'}
-              style={{ fontWeight: 700, fontSize: 13 }}>
-              {v.label}
-            </button>
-          ))}
+        <div style={{ flexShrink: 0, textAlign: 'center', background: course.color + '20', border: `1px solid ${course.color}35`, borderRadius: 14, padding: '10px 18px' }}>
+          <div style={{ fontSize: 22, fontWeight: 900, color: course.color, lineHeight: 1 }}>{course.stages.length}</div>
+          <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', fontWeight: 700, textTransform: 'uppercase', marginTop: 3 }}>Stages</div>
         </div>
       </div>
 
-      {view === 'timeline' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-          {ROADMAP_DATA.map((phase) => {
-            const isExp = expanded === phase.phase;
+      {/* Stage flow */}
+      <div style={{ position: 'relative', paddingLeft: 0 }}>
+        {/* Vertical connector line */}
+        <div style={{ position: 'absolute', left: 21, top: 28, bottom: 28, width: 2, background: `linear-gradient(to bottom, ${course.color}70, ${course.color}10)`, borderRadius: 2, zIndex: 0 }} />
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+          {course.stages.map((stage, i) => {
+            const isExp = expanded === stage.id;
             return (
-              <div key={phase.phase} style={{ background: 'rgba(255,255,255,0.055)', backdropFilter: 'blur(18px)', border: `1px solid ${isExp ? phase.color + '40' : 'rgba(255,255,255,0.09)'}`, borderRadius: 16, overflow: 'hidden', transition: 'border-color 0.2s' }}>
-                {/* Card header */}
+              <div key={stage.id} style={{ animation: `stageIn 0.3s ${i * 0.07}s ease both` }}>
+                {/* Stage row */}
                 <div
-                  onClick={() => setExpanded(isExp ? null : phase.phase)}
-                  style={{ display: 'flex', gap: 18, padding: '1.1rem 1.3rem', cursor: 'pointer', position: 'relative' }}
+                  onClick={() => setExpanded(isExp ? null : stage.id)}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer',
+                    background: isExp ? `${course.color}14` : 'rgba(255,255,255,0.04)',
+                    border: `1px solid ${isExp ? course.color + '45' : 'rgba(255,255,255,0.08)'}`,
+                    borderRadius: 14, padding: '0.8rem 1rem 0.8rem 0.7rem',
+                    transition: 'all 0.2s', position: 'relative', zIndex: 1,
+                  }}
                 >
-                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 3, background: phase.color, borderRadius: '0 3px 3px 0' }} />
-                  <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 72 }}>
-                    <div style={{ width: 44, height: 44, borderRadius: 12, background: phase.color + '20', border: `1px solid ${phase.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 5 }}>{phase.icon}</div>
-                    <div style={{ fontSize: 10, fontWeight: 700, color: phase.color, lineHeight: 1.3 }}>{phase.week}</div>
+                  {/* Stage circle */}
+                  <div style={{
+                    width: 44, height: 44, borderRadius: '50%', flexShrink: 0,
+                    background: isExp ? course.color : `${course.color}22`,
+                    border: `2px solid ${course.color}`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: isExp ? 20 : 15, transition: 'all 0.2s',
+                    boxShadow: isExp ? `0 0 18px ${course.color}50` : 'none',
+                  }}>
+                    {isExp
+                      ? <span>{stage.icon}</span>
+                      : <span style={{ fontWeight: 900, color: course.color }}>{i + 1}</span>
+                    }
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5 }}>
-                      <span style={{ fontWeight: 700, fontSize: 15, color: '#fff' }}>Phase {phase.phase}: {phase.title}</span>
-                      <span style={{ background: phase.color + '20', color: phase.color, border: `1px solid ${phase.color}40`, fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 12 }}>{phase.topics.length} topics</span>
-                    </div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                      {phase.topics.map(t => (
-                        <span key={t.name} style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', background: 'rgba(255,255,255,0.06)', padding: '2px 8px', borderRadius: 8 }}>{t.name}</span>
+
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontWeight: 700, fontSize: 14, color: '#fff', marginBottom: 5 }}>{stage.title}</div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                      {stage.skills.slice(0, 3).map(s => (
+                        <span key={s} style={{ fontSize: 11, color: 'rgba(255,255,255,0.40)', background: 'rgba(255,255,255,0.06)', padding: '2px 9px', borderRadius: 8, whiteSpace: 'nowrap' }}>{s}</span>
                       ))}
+                      {stage.skills.length > 3 && (
+                        <span style={{ fontSize: 11, color: course.color, background: `${course.color}18`, border: `1px solid ${course.color}30`, padding: '2px 9px', borderRadius: 8 }}>+{stage.skills.length - 3} more</span>
+                      )}
                     </div>
                   </div>
-                  <span style={{ color: 'rgba(255,255,255,0.30)', fontSize: 18, alignSelf: 'center', transform: isExp ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }}>⌄</span>
+
+                  <span style={{ color: course.color, fontSize: 16, flexShrink: 0, transition: 'transform 0.2s', transform: isExp ? 'rotate(180deg)' : 'none' }}>⌄</span>
                 </div>
 
-                {/* Expanded content */}
+                {/* Expanded detail panel */}
                 {isExp && (
-                  <div style={{ padding: '0 1.3rem 1.3rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.8rem', marginTop: '1rem' }}>
-                      {phase.topics.map(topic => (
-                        <div key={topic.name} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '0.9rem' }}>
-                          <div style={{ fontWeight: 700, fontSize: 13, color: phase.color, marginBottom: '0.5rem' }}>{topic.name}</div>
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                            {topic.skills.map(skill => (
-                              <span key={skill} style={{ fontSize: 11, color: 'rgba(255,255,255,0.60)', background: phase.color + '12', border: `1px solid ${phase.color}25`, padding: '3px 8px', borderRadius: 8 }}>{skill}</span>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
+                  <div style={{ marginTop: 4, marginLeft: 58, background: 'rgba(255,255,255,0.025)', border: `1px solid ${course.color}22`, borderRadius: 14, padding: '1rem 1.1rem' }}>
+                    {/* Outcome */}
+                    <div style={{ display: 'flex', gap: 10, marginBottom: '1rem', padding: '9px 12px', background: `${course.color}14`, border: `1px solid ${course.color}28`, borderRadius: 10 }}>
+                      <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>🎯</span>
+                      <div>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: course.color, textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 3 }}>You'll be able to</div>
+                        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.82)', lineHeight: 1.5 }}>{stage.outcome}</div>
+                      </div>
                     </div>
-                    <div style={{ marginTop: '1rem' }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.30)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 8 }}>Action Items</div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                        {phase.resources.map((res, j) => (
-                          <div key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: 'rgba(255,255,255,0.60)' }}>
-                            <span style={{ color: phase.color, flexShrink: 0, marginTop: 1 }}>☐</span>{res}
-                          </div>
+
+                    {/* Skills */}
+                    <div style={{ marginBottom: '0.9rem' }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 8 }}>Topics covered</div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
+                        {stage.skills.map(s => (
+                          <span key={s} style={{ fontSize: 12, color: 'rgba(255,255,255,0.78)', background: `${course.color}18`, border: `1px solid ${course.color}35`, padding: '4px 12px', borderRadius: 20 }}>{s}</span>
                         ))}
+                      </div>
+                    </div>
+
+                    {/* Practice */}
+                    <div style={{ display: 'flex', gap: 10, padding: '9px 12px', background: 'rgba(255,255,255,0.04)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.07)' }}>
+                      <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>📌</span>
+                      <div>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 3 }}>Practice task</div>
+                        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)' }}>{stage.practice}</div>
                       </div>
                     </div>
                   </div>
@@ -2396,29 +2450,7 @@ function RoadmapTab() {
             );
           })}
         </div>
-      )}
-
-      {view === 'skilltree' && (
-        <div>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', marginBottom: '1.2rem' }}>All skills you'll master across the 12-week program, grouped by category.</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
-            {Object.entries(allSkillsByCategory).filter(([, skills]) => skills.length > 0).map(([cat, skills]) => {
-              const catColor = { 'SQL': '#4A90D9', 'Python': '#5CC8A0', 'Excel / Sheets': '#a78bfa', 'Statistics': '#E8A838', 'Visualisation': '#38bdf8', 'BI Tools': '#F07B6A', 'Career': '#5CC8A0' }[cat] || '#4A90D9';
-              return (
-                <div key={cat} style={{ background: 'rgba(255,255,255,0.055)', backdropFilter: 'blur(18px)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 16, padding: '1.1rem', position: 'relative', overflow: 'hidden' }}>
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${catColor}, transparent)` }} />
-                  <div style={{ fontWeight: 700, fontSize: 14, color: catColor, marginBottom: '0.7rem' }}>{cat}</div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                    {skills.map(skill => (
-                      <span key={skill} style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)', background: catColor + '12', border: `1px solid ${catColor}25`, padding: '3px 8px', borderRadius: 8 }}>{skill}</span>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -2649,7 +2681,7 @@ const FEATURES = [
   { icon: '🎙️', label: 'Live Mock Interviews',     desc: 'Real 45-min sessions with our mentor — SQL, Python, or full analytics round. Written feedback included.',  color: '#a78bfa', bg: 'rgba(168,139,250,0.12)', border: 'rgba(168,139,250,0.22)' },
   { icon: '👤', label: '1:1 Mentorship Sessions',  desc: 'Book 30-min live sessions for career strategy, code review, or job hunt — with personalised action plans.', color: '#4A90D9', bg: 'rgba(74,144,217,0.12)',  border: 'rgba(74,144,217,0.22)'  },
   { icon: '📄', label: 'Resume Review',            desc: 'Line-by-line expert feedback within 48 hours — ATS keywords, impact rewrites, and LinkedIn optimisation.',  color: '#E8A838', bg: 'rgba(232,168,56,0.12)',  border: 'rgba(232,168,56,0.22)'  },
-  { icon: '🗺️', label: '12-Week Roadmap',          desc: 'A proven 7-phase plan: SQL → Python → EDA → Viz → Advanced SQL → Portfolio → Interviews. Never feel lost.', color: '#F07B6A', bg: 'rgba(240,123,106,0.12)', border: 'rgba(240,123,106,0.22)' },
+  { icon: '🗺️', label: 'Course Roadmaps',           desc: 'Interactive learning paths for every course — see each stage, skill and practice task. Never feel lost again.', color: '#F07B6A', bg: 'rgba(240,123,106,0.12)', border: 'rgba(240,123,106,0.22)' },
   { icon: '📚', label: 'Exclusive Study Guides',   desc: '7 premium guides — SQL mastery, Python handbook, resume playbook, salary negotiation scripts, and more.',   color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.22)'  },
   { icon: '💼', label: 'Curated Job Board',        desc: '18+ hand-picked data analytics roles at top Indian companies — updated weekly with direct apply links.',     color: '#38bdf8', bg: 'rgba(56,189,248,0.12)',  border: 'rgba(56,189,248,0.22)'  },
   { icon: '🎯', label: '100% Placement Assistance', desc: 'Dedicated job support until you land your first data role — resume, mock interviews, job referrals & offer negotiation.',  color: '#a78bfa', bg: 'rgba(168,139,250,0.12)', border: 'rgba(168,139,250,0.22)' },

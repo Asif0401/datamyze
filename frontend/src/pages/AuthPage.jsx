@@ -128,7 +128,7 @@ const TRACK_CARDS = [
     title: 'Analytics Starter',
     sub: 'Free · Beginner Friendly',
     color: '#38bdf8',
-    items: ['SQL & Python Problems', '12-Week Roadmap', 'Practice Assessments', 'Community Access'],
+    items: ['SQL & Python Problems', 'Course Roadmaps', 'Practice Assessments', 'Community Access'],
   },
   {
     emoji: <AnimatedProLogo />,
@@ -145,7 +145,7 @@ const TICKER_ROW1 = [
   { icon: '🎙️', label: 'Mock Interviews', color: '#a78bfa' },
   { icon: '💼',  label: 'Job Board',       color: '#5CC8A0' },
   { icon: '📄',  label: 'Resume Review',   color: '#f9a825' },
-  { icon: '🗺️', label: '12-Week Roadmap', color: '#f87171' },
+  { icon: '🗺️', label: 'Course Roadmaps', color: '#f87171' },
 ];
 const TICKER_ROW2 = [
   { icon: '📜',  label: 'Certificates',    color: '#e879f9' },
@@ -162,7 +162,7 @@ const HERO_FEATURES = [
   { icon: '🎙️',          label: 'Live Mock Interviews',desc: 'Real sessions with our mentor — recorded feedback' },
   { icon: '💼',           label: 'Curated Job Board',  desc: '18+ hand-picked data analytics roles' },
   { icon: '📄',           label: 'Resume Review',      desc: 'ATS-optimised expert feedback in 48 hours' },
-  { icon: '🗺️',           label: '12-Week Roadmap',    desc: 'Structured path from zero to first offer' },
+  { icon: '🗺️',           label: 'Course Roadmaps',    desc: 'Step-by-step learning path for every course' },
 ];
 const HERO_STATS = [
   { val: '1:1',  lbl: 'Mentor Session'  },
