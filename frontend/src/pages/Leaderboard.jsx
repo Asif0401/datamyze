@@ -19,7 +19,7 @@ function tier(xp) {
 
 function StatCard({ icon, label, val, color }) {
   return (
-    <div className="card" style={{ textAlign:'center', padding:'1.3rem 1rem' }}>
+    <div className="card" style={{ textAlign:'center', padding:'1.3rem 1rem', background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.1)' }}>
       <div style={{ fontSize:26, marginBottom:8 }}>{icon}</div>
       <div style={{ fontSize:26, fontWeight:900, color: color || '#fff', letterSpacing:'-0.5px', lineHeight:1 }}>{val}</div>
       <div style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.38)', textTransform:'uppercase', letterSpacing:'0.7px', marginTop:5 }}>{label}</div>
@@ -33,14 +33,14 @@ function PodiumCard({ p, rank, color }) {
   const avatarSz = { 1: 76, 2: 62, 3: 54 };
   const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉';
   const podiumBg = {
-    1: 'linear-gradient(180deg,rgba(232,168,56,0.22),rgba(232,168,56,0.06))',
-    2: 'linear-gradient(180deg,rgba(148,163,184,0.16),rgba(148,163,184,0.04))',
-    3: 'linear-gradient(180deg,rgba(180,120,60,0.16),rgba(180,120,60,0.04))',
+    1: 'linear-gradient(180deg,rgba(232,168,56,0.40),rgba(232,168,56,0.18))',
+    2: 'linear-gradient(180deg,rgba(148,163,184,0.28),rgba(148,163,184,0.12))',
+    3: 'linear-gradient(180deg,rgba(180,120,60,0.28),rgba(180,120,60,0.12))',
   };
   const podiumBorder = {
-    1: '1px solid rgba(232,168,56,0.35)',
-    2: '1px solid rgba(148,163,184,0.22)',
-    3: '1px solid rgba(180,120,60,0.22)',
+    1: '1px solid rgba(232,168,56,0.55)',
+    2: '1px solid rgba(148,163,184,0.38)',
+    3: '1px solid rgba(180,120,60,0.38)',
   };
 
   return (
@@ -48,11 +48,11 @@ function PodiumCard({ p, rank, color }) {
       {rank === 1 && <div style={{ fontSize:28, marginBottom:6, filter:'drop-shadow(0 0 10px rgba(232,168,56,0.7))' }}>👑</div>}
       <div style={{
         width:avatarSz[rank], height:avatarSz[rank], borderRadius:'50%',
-        background:`linear-gradient(135deg,${color}35,${color}15)`,
+        background:`linear-gradient(135deg,${color}55,${color}28)`,
         border:`2px solid ${color}`,
         display:'flex', alignItems:'center', justifyContent:'center',
         fontSize: rank === 1 ? 22 : 17, fontWeight:900, color,
-        boxShadow:`0 0 22px ${color}45`,
+        boxShadow:`0 0 22px ${color}60`,
         marginBottom:10,
       }}>{initials(p.name)}</div>
       <div style={{ fontSize: rank === 1 ? 14 : 12, fontWeight:800, color:'#fff', textAlign:'center', marginBottom:2 }}>{p.name}</div>
@@ -111,7 +111,7 @@ export default function Leaderboard() {
       {/* ── Podium ── */}
       {top3.length === 3 && (
         <div style={{ display:'flex', justifyContent:'center', alignItems:'flex-end', gap:'1.2rem', marginBottom:'2.5rem',
-          background:'rgba(255,255,255,0.025)', borderRadius:20, border:'1px solid rgba(255,255,255,0.07)',
+          background:'rgba(255,255,255,0.07)', borderRadius:20, border:'1px solid rgba(255,255,255,0.12)',
           padding:'2rem 2rem 0',
         }}>
           {podium.map((p, idx) => (
@@ -144,6 +144,8 @@ export default function Leaderboard() {
             <div key={p.id} className={`lb-row ${isMe ? 'me' : ''}`} style={{
               display:'grid', gridTemplateColumns:'52px 48px 1fr 180px 80px 90px',
               padding:'11px 20px', gap:12, alignItems:'center', borderRadius:14,
+              background: isMe ? 'rgba(74,144,217,0.12)' : 'rgba(255,255,255,0.04)',
+              border: isMe ? '1px solid rgba(74,144,217,0.25)' : '1px solid rgba(255,255,255,0.06)',
             }}>
 
               {/* Rank */}
@@ -154,7 +156,7 @@ export default function Leaderboard() {
 
               {/* Avatar */}
               <div style={{ width:38, height:38, borderRadius:'50%',
-                background:`${color}18`, border:`1.5px solid ${color}55`,
+                background:`${color}30`, border:`1.5px solid ${color}80`,
                 display:'flex', alignItems:'center', justifyContent:'center',
                 fontSize:12, fontWeight:800, color }}>
                 {initials(p.name)}
