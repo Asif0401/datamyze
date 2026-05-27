@@ -54,13 +54,13 @@ export default function Jobs() {
       <div className="page">
         <div className="page-header">
           <div className="page-title">💼 Data Analytics Jobs</div>
-          <div className="page-sub">18+ curated roles from top Indian companies</div>
+          <div className="page-sub">300+ curated roles from top Indian companies</div>
         </div>
         <div className="jobs-paywall">
           <span className="paywall-icon">🔒</span>
           <h2 style={{ fontWeight: 800, fontSize: 24, marginBottom: '0.5rem' }}>Pro Feature</h2>
           <p style={{ color: 'var(--muted)', maxWidth: 420, margin: '0 auto 1.5rem', lineHeight: 1.7 }}>
-            Get access to 18+ hand-picked data analytics job listings from Google, Amazon, Flipkart, Swiggy and more — updated regularly.
+            Get access to 300+ hand-picked data analytics job listings from Google, Amazon, Flipkart, Swiggy and more — updated regularly.
           </p>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginBottom: '2rem' }}>
             {['Google India', 'Amazon', 'Flipkart', 'Meesho', 'Swiggy', 'Zomato', 'PhonePe', 'Dream11'].map(c => (

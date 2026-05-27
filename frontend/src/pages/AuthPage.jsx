@@ -160,7 +160,7 @@ const HERO_FEATURES = [
   { icon: <SqlLogo />,    label: '100+ SQL Problems',  desc: 'Window functions, CTEs, real interview patterns' },
   { icon: <PythonLogo />, label: 'Python & Pandas',    desc: 'Data wrangling, EDA, GroupBy deep-dives' },
   { icon: '🎙️',          label: 'Live Mock Interviews',desc: 'Real sessions with our mentor — recorded feedback' },
-  { icon: '💼',           label: 'Curated Job Board',  desc: '18+ hand-picked data analytics roles' },
+  { icon: '💼',           label: 'Curated Job Board',  desc: '300+ hand-picked data analytics roles' },
   { icon: '📄',           label: 'Resume Review',      desc: 'ATS-optimised expert feedback in 48 hours' },
   { icon: '🗺️',           label: 'Course Roadmaps',    desc: 'Step-by-step learning path for every course' },
 ];

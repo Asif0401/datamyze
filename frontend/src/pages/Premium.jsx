@@ -1302,14 +1302,14 @@ function OverviewTab({ sessions, reviews, navigate, setTab }) {
     { icon: '📚', title: 'Study Materials',       sub: '7 exclusive guides — SQL mastery, Python handbook, resume playbook, salary scripts & more.', color: '#5CC8A0', action: () => setTab('resources'), badge: '7 Guides' },
     { icon: '🔬', title: 'Real-World Projects',    sub: '6 industry-grade projects with real datasets — e-commerce, HR analytics, fintech & more. Build your portfolio.', color: '#f59e0b', action: () => setTab('projects'), badge: '6 Projects' },
     { icon: '🎯', title: '100% Placement Assistance', sub: 'Dedicated job support until you land your first data role — resume, referrals, mock interviews & offer negotiation.', color: '#a78bfa', action: () => setTab('session'), badge: '100% Guaranteed' },
-    { icon: '💼', title: 'Job Board',             sub: '18+ hand-picked data analytics roles at top Indian companies — updated weekly.', color: '#38bdf8', action: () => navigate('/jobs'), badge: '18+ Live Jobs' },
+    { icon: '💼', title: 'Job Board',             sub: '300+ hand-picked data analytics roles at top Indian companies — updated weekly.', color: '#38bdf8', action: () => navigate('/jobs'), badge: '300+ Live Jobs' },
   ];
 
   const valueProps = [
     { icon: '🚀', stat: '3×', desc: 'faster hiring', sub: 'vs. self-study' },
     { icon: '🎙️', stat: '45 min', desc: 'live mock', sub: 'sessions' },
     { icon: '📄', stat: '48h', desc: 'resume', sub: 'feedback' },
-    { icon: '💼', stat: '18+', desc: 'curated', sub: 'live jobs' },
+    { icon: '💼', stat: '300+', desc: 'curated', sub: 'live jobs' },
   ];
 
   return (
@@ -2683,7 +2683,7 @@ const FEATURES = [
   { icon: '📄', label: 'Resume Review',            desc: 'Line-by-line expert feedback within 48 hours — ATS keywords, impact rewrites, and LinkedIn optimisation.',  color: '#E8A838', bg: 'rgba(232,168,56,0.12)',  border: 'rgba(232,168,56,0.22)'  },
   { icon: '🗺️', label: 'Course Roadmaps',           desc: 'Interactive learning paths for every course — see each stage, skill and practice task. Never feel lost again.', color: '#F07B6A', bg: 'rgba(240,123,106,0.12)', border: 'rgba(240,123,106,0.22)' },
   { icon: '📚', label: 'Exclusive Study Guides',   desc: '7 premium guides — SQL mastery, Python handbook, resume playbook, salary negotiation scripts, and more.',   color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.22)'  },
-  { icon: '💼', label: 'Curated Job Board',        desc: '18+ hand-picked data analytics roles at top Indian companies — updated weekly with direct apply links.',     color: '#38bdf8', bg: 'rgba(56,189,248,0.12)',  border: 'rgba(56,189,248,0.22)'  },
+  { icon: '💼', label: 'Curated Job Board',        desc: '300+ hand-picked data analytics roles at top Indian companies — updated weekly with direct apply links.',    color: '#38bdf8', bg: 'rgba(56,189,248,0.12)',  border: 'rgba(56,189,248,0.22)'  },
   { icon: '🎯', label: '100% Placement Assistance', desc: 'Dedicated job support until you land your first data role — resume, mock interviews, job referrals & offer negotiation.',  color: '#a78bfa', bg: 'rgba(168,139,250,0.12)', border: 'rgba(168,139,250,0.22)' },
   { icon: '⭐', label: 'Priority Support',         desc: '6-hour direct response from us — faster than public support. We personally read every message.',             color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.22)'  },
   { icon: '🔬', label: 'Real-World Projects',      desc: '6 industry-grade projects with real datasets — e-commerce, HR, fintech, marketing & more. Build your portfolio.', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  border: 'rgba(245,158,11,0.22)'  },
@@ -2814,7 +2814,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
         <div style={{ display:'flex', justifyContent:'center', gap:'1rem', marginTop:'2rem', paddingTop:'1.8rem', borderTop:'1px solid rgba(255,255,255,0.07)', flexWrap:'wrap', animation:'heroFadeUp 0.5s 0.4s ease both' }}>
           {[
             {icon:'📅', val:'1:1', lbl:'Mentor Session',  color:'#4A90D9'},
-            {icon:'💼', val:'18+', lbl:'Live Jobs',        color:'#5CC8A0'},
+            {icon:'💼', val:'300+', lbl:'Live Jobs',       color:'#5CC8A0'},
             {icon:'📄', val:'24h', lbl:'Resume Feedback',  color:'#E8A838'},
             {icon:'🎯', val:'100%',lbl:'Placement Assist', color:'#a78bfa'},
           ].map((s,i)=>(
