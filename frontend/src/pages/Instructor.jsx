@@ -118,8 +118,6 @@ function TimelineItem({ company, role, period, desc, color, logo, current = fals
         <div style={{ fontSize: 15, fontWeight: 700, color: '#f1f5f9', marginBottom: 2 }}>{role}</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
           <span style={{ fontSize: 13, fontWeight: 600, color }}>{company}</span>
-          <span style={{ width: 3, height: 3, borderRadius: '50%', background: 'rgba(255,255,255,0.2)' }} />
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>{period}</span>
         </div>
         <div style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>{desc}</div>
       </div>
@@ -146,7 +144,7 @@ function Skill({ label, icon, color }) {
         cursor: 'default', transition: 'all .2s ease',
         whiteSpace: 'nowrap',
       }}>
-      <span>{icon}</span>
+      <span style={{display:'inline-flex',alignItems:'center',lineHeight:1}}>{icon}</span>
       {label}
     </div>
   );
@@ -226,23 +224,117 @@ export default function Instructor() {
   const linkedinUrl = profile?.linkedin_url || 'https://www.linkedin.com/in/pathan-asif-khan-/';
   const instructorPhoto = profile?.photo_url || '/instructor.jpg';
 
+  const SQLIcon = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <path d="M4 7v10c0 1.657 3.582 3 8 3s8-1.343 8-3V7" fill="rgba(0,119,190,0.18)" stroke="#0095ED" strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M4 12c0 1.657 3.582 3 8 3s8-1.343 8-3" stroke="#0095ED" strokeWidth="1" opacity="0.5" fill="none"/>
+      <ellipse cx="12" cy="7" rx="8" ry="3" fill="rgba(0,149,237,0.28)" stroke="#0095ED" strokeWidth="1.5"/>
+      <text x="12" y="8.5" textAnchor="middle" fontFamily="monospace" fontWeight="900" fontSize="4.5" fill="#7dd3fc" letterSpacing="0.5">SQL</text>
+    </svg>
+  );
+
+  const PythonIcon = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <path d="M11.914 2c-4.638 0-4.344 2.017-4.344 2.017v2.09h4.413v.626H6.34S3.287 6.386 3.287 10.994c0 4.609 2.697 4.447 2.697 4.447h1.613V13.23s-.088-2.697 2.654-2.697h4.368s2.552.041 2.552-2.467V3.855S17.562 2 11.914 2zm-2.316 1.51c.466 0 .843.377.843.843a.844.844 0 1 1-1.687 0c0-.466.378-.843.844-.843z" fill="#3776AB"/>
+      <path d="M12.086 22c4.638 0 4.344-2.017 4.344-2.017v-2.09H12v-.626h5.643s3.053.347 3.053-4.261c0-4.609-2.697-4.447-2.697-4.447h-1.613v2.216s.088 2.697-2.654 2.697H9.364s-2.552-.041-2.552 2.467v4.211S6.422 22 12.086 22zm2.316-1.509a.844.844 0 1 1 0-1.687c.466 0 .843.377.843.843a.844.844 0 0 1-.843.844z" fill="#FFD343"/>
+    </svg>
+  );
+
+  const PandasIcon = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <rect width="24" height="24" rx="4" fill="#130754"/>
+      <rect x="4" y="3" width="4" height="18" rx="2" fill="white"/>
+      <rect x="16" y="3" width="4" height="18" rx="2" fill="white"/>
+      <rect x="4" y="9" width="16" height="6" rx="1.5" fill="white"/>
+    </svg>
+  );
+
+  const TableauIcon = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <rect x="10.5" y="1" width="3" height="22" rx="1.5" fill="#E8762D"/>
+      <rect x="1" y="10.5" width="22" height="3" rx="1.5" fill="#E8762D"/>
+      <rect x="6.5" y="4.5" width="2.5" height="15" rx="1.25" fill="#4E79A7"/>
+      <rect x="15" y="4.5" width="2.5" height="15" rx="1.25" fill="#4E79A7"/>
+      <rect x="4.5" y="6.5" width="15" height="2.5" rx="1.25" fill="#59A14F"/>
+      <rect x="4.5" y="15" width="15" height="2.5" rx="1.25" fill="#59A14F"/>
+    </svg>
+  );
+
+  const PowerBIIcon = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <rect width="24" height="24" rx="3" fill="#F2C811"/>
+      <rect x="4" y="12" width="4" height="9" rx="1" fill="#1A1A1A"/>
+      <rect x="10" y="7" width="4" height="14" rx="1" fill="#1A1A1A"/>
+      <rect x="16" y="3" width="4" height="18" rx="1" fill="#1A1A1A"/>
+    </svg>
+  );
+
+  const MLIcon = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="3" fill="#38bdf8"/>
+      <circle cx="4" cy="6" r="2" fill="#38bdf8" opacity="0.6"/>
+      <circle cx="20" cy="6" r="2" fill="#38bdf8" opacity="0.6"/>
+      <circle cx="4" cy="18" r="2" fill="#38bdf8" opacity="0.6"/>
+      <circle cx="20" cy="18" r="2" fill="#38bdf8" opacity="0.6"/>
+      <line x1="9.5" y1="10.5" x2="5.5" y2="7.5" stroke="#38bdf8" strokeWidth="1.2" opacity="0.5"/>
+      <line x1="14.5" y1="10.5" x2="18.5" y2="7.5" stroke="#38bdf8" strokeWidth="1.2" opacity="0.5"/>
+      <line x1="9.5" y1="13.5" x2="5.5" y2="16.5" stroke="#38bdf8" strokeWidth="1.2" opacity="0.5"/>
+      <line x1="14.5" y1="13.5" x2="18.5" y2="16.5" stroke="#38bdf8" strokeWidth="1.2" opacity="0.5"/>
+    </svg>
+  );
+
+  const DbtIcon = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2L22 19H2L12 2Z" fill="#FF6B35" opacity="0.9"/>
+      <text x="12" y="17" textAnchor="middle" fontSize="6" fontWeight="900" fill="white" fontFamily="sans-serif">dbt</text>
+    </svg>
+  );
+
+  const MixpanelIcon = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <rect width="24" height="24" rx="4" fill="#7c3aed"/>
+      <path d="M5 18V7l5.5 7.5L16 7v11" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    </svg>
+  );
+
+  const MetabaseIcon = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <rect width="24" height="24" rx="4" fill="#509EE3"/>
+      <circle cx="12" cy="12" r="5" fill="white"/>
+      <circle cx="12" cy="12" r="2.5" fill="#509EE3"/>
+    </svg>
+  );
+
+  const SparkIcon = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <path d="M13 2L4 14h7l-2 8 11-12h-7l2-8z" fill="#E25A1C"/>
+    </svg>
+  );
+
+  const ExcelIcon = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <rect width="24" height="24" rx="3" fill="#217346"/>
+      <path d="M7 7l3.5 5L7 17h2.5l2.25-3.2L14 17h2.5l-3.5-5 3.5-5H14l-2.25 3.2L9.5 7H7z" fill="white"/>
+    </svg>
+  );
+
   const SKILLS = [
-    { label: 'SQL', icon: '🗄️', color: '#7F77DD' },
-    { label: 'Python', icon: '🐍', color: '#5CC8A0' },
-    { label: 'Pandas', icon: '🐼', color: '#4A90D9' },
-    { label: 'Data Modelling', icon: '🏗️', color: '#F07B6A' },
-    { label: 'Growth Analytics', icon: '📈', color: '#22c55e' },
-    { label: 'Product Analytics', icon: '🔍', color: '#a78bfa' },
-    { label: 'A/B Testing', icon: '🧪', color: '#f59e0b' },
-    { label: 'Tableau', icon: '📊', color: '#e8762d' },
-    { label: 'Power BI', icon: '💡', color: '#F2C811' },
-    { label: 'Machine Learning', icon: '🤖', color: '#38bdf8' },
-    { label: 'dbt', icon: '🔧', color: '#FF6B35' },
-    { label: 'Mixpanel', icon: '📡', color: '#7c3aed' },
-    { label: 'Metabase', icon: '📉', color: '#509EE3' },
-    { label: 'Apache Spark', icon: '⚡', color: '#E25A1C' },
-    { label: 'Excel', icon: '📋', color: '#1D9E75' },
-    { label: 'Statistics', icon: '📐', color: '#F07B6A' },
+    { label: 'SQL',               icon: <SQLIcon />,      color: '#0095ED' },
+    { label: 'Python',            icon: <PythonIcon />,   color: '#3776AB' },
+    { label: 'Pandas',            icon: <PandasIcon />,   color: '#4A90D9' },
+    { label: 'Data Modelling',    icon: '🏗️',            color: '#F07B6A' },
+    { label: 'Growth Analytics',  icon: '📈',             color: '#22c55e' },
+    { label: 'Product Analytics', icon: '🔍',             color: '#a78bfa' },
+    { label: 'A/B Testing',       icon: '🧪',             color: '#f59e0b' },
+    { label: 'Tableau',           icon: <TableauIcon />,  color: '#E8762D' },
+    { label: 'Power BI',          icon: <PowerBIIcon />,  color: '#F2C811' },
+    { label: 'Machine Learning',  icon: <MLIcon />,       color: '#38bdf8' },
+    { label: 'dbt',               icon: <DbtIcon />,      color: '#FF6B35' },
+    { label: 'Mixpanel',          icon: <MixpanelIcon />, color: '#7c3aed' },
+    { label: 'Metabase',          icon: <MetabaseIcon />, color: '#509EE3' },
+    { label: 'Apache Spark',      icon: <SparkIcon />,    color: '#E25A1C' },
+    { label: 'Excel',             icon: <ExcelIcon />,    color: '#217346' },
+    { label: 'Statistics',        icon: '📐',             color: '#F07B6A' },
   ];
 
   return (
@@ -318,8 +410,20 @@ export default function Instructor() {
       <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(127,119,221,0.3), transparent)', marginBottom: '3rem', position: 'relative', zIndex: 1 }} />
 
       {/* ── "Meet the Mentor" label ── */}
-      <div style={{ position: 'relative', zIndex: 1, marginBottom: '1.5rem' }}>
-        <SectionHeader icon="👋" label="Meet the Mentor" sub="The person behind every lesson, every problem, every career conversation" />
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h2 style={{ fontSize:18, fontWeight:800, color:'#f1f5f9', margin:'0 0 12px', display:'flex', alignItems:'center', gap:8 }}>
+          <span>👋</span> Meet the Mentor
+        </h2>
+        <div style={{ display:'inline-flex', alignItems:'center', gap:12, background:'rgba(92,200,160,0.1)', border:'1px solid rgba(92,200,160,0.25)', borderRadius:14, padding:'10px 20px' }}>
+          <div style={{ textAlign:'center' }}>
+            <div style={{ fontSize:28, fontWeight:900, color:'#5CC8A0', lineHeight:1, letterSpacing:'-1px' }}>150+</div>
+            <div style={{ fontSize:11, color:'rgba(255,255,255,0.45)', fontWeight:600, letterSpacing:'0.5px', textTransform:'uppercase', marginTop:2 }}>Students Taught</div>
+          </div>
+          <div style={{ width:1, height:36, background:'rgba(255,255,255,0.08)' }} />
+          <div style={{ fontSize:12.5, color:'rgba(255,255,255,0.5)', lineHeight:1.6, maxWidth:320 }}>
+            Real placements at Flipkart, Swiggy, Razorpay, Meesho and more — guided from first SQL query to offer letter.
+          </div>
+        </div>
       </div>
 
       {/* ════════════════════════════════════════════════

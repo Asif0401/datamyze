@@ -3,6 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../hooks/useApi';
 
+const PyLogo = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style={{ verticalAlign:'middle', display:'inline-block' }}>
+    <path d="M11.914 2c-4.638 0-4.344 2.017-4.344 2.017v2.09h4.413v.626H6.34S3.287 6.386 3.287 10.994c0 4.609 2.697 4.447 2.697 4.447h1.613V13.23s-.088-2.697 2.654-2.697h4.368s2.552.041 2.552-2.467V3.855S17.562 2 11.914 2zm-2.316 1.51c.466 0 .843.377.843.843a.844.844 0 1 1-1.687 0c0-.466.378-.843.844-.843z" fill="#3776AB"/>
+    <path d="M12.086 22c4.638 0 4.344-2.017 4.344-2.017v-2.09H12v-.626h5.643s3.053.347 3.053-4.261c0-4.609-2.697-4.447-2.697-4.447h-1.613v2.216s.088 2.697-2.654 2.697H9.364s-2.552-.041-2.552 2.467v4.211S6.422 22 12.086 22zm2.316-1.509a.844.844 0 1 1 0-1.687c.466 0 .843.377.843.843a.844.844 0 0 1-.843.844z" fill="#FFD343"/>
+  </svg>
+);
+
 /* ── GitHub-style activity heatmap ───────────────────── */
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
@@ -407,7 +414,7 @@ export default function Dashboard() {
             <div className="skills-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.9rem' }}>
               {[
                 { label: 'SQL', solved: stats?.sqlSolved || 0, total: 20, color: '#4A90D9', icon: '🗄️' },
-                { label: 'Python', solved: stats?.pythonSolved || 0, total: 15, color: '#5CC8A0', icon: '🐍' },
+                { label: 'Python', solved: stats?.pythonSolved || 0, total: 15, color: '#5CC8A0', icon: <PyLogo /> },
               ].map(s => (
                 <div key={s.label} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 12, padding: '0.9rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
@@ -488,7 +495,7 @@ export default function Dashboard() {
                     background: p.difficulty === 'Easy' ? 'rgba(92,200,160,0.15)' : p.difficulty === 'Medium' ? 'rgba(246,160,74,0.15)' : 'rgba(240,123,106,0.15)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14,
                   }}>
-                    {p.topic === 'SQL' ? '🗄️' : '🐍'}
+                    {p.topic === 'SQL' ? '🗄️' : <PyLogo />}
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 600, fontSize: 12.5, marginBottom: 2 }}>{p.title}</div>

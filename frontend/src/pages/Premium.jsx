@@ -3,6 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../hooks/useApi';
 
+const PyLogo = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style={{ verticalAlign:'middle', display:'inline-block' }}>
+    <path d="M11.914 2c-4.638 0-4.344 2.017-4.344 2.017v2.09h4.413v.626H6.34S3.287 6.386 3.287 10.994c0 4.609 2.697 4.447 2.697 4.447h1.613V13.23s-.088-2.697 2.654-2.697h4.368s2.552.041 2.552-2.467V3.855S17.562 2 11.914 2zm-2.316 1.51c.466 0 .843.377.843.843a.844.844 0 1 1-1.687 0c0-.466.378-.843.844-.843z" fill="#3776AB"/>
+    <path d="M12.086 22c4.638 0 4.344-2.017 4.344-2.017v-2.09H12v-.626h5.643s3.053.347 3.053-4.261c0-4.609-2.697-4.447-2.697-4.447h-1.613v2.216s.088 2.697-2.654 2.697H9.364s-2.552-.041-2.552 2.467v4.211S6.422 22 12.086 22zm2.316-1.509a.844.844 0 1 1 0-1.687c.466 0 .843.377.843.843a.844.844 0 0 1-.843.844z" fill="#FFD343"/>
+  </svg>
+);
+
 const UPI_ID = 'asifjupiterr@ybl';
 const AMOUNT  = 149;
 const QR_URL  = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${UPI_ID}&pn=Datamyze&am=${AMOUNT}&cu=INR&tn=Datamyze%20Premium`)}`;
@@ -65,7 +72,7 @@ const COURSE_ROADMAPS = [
     ],
   },
   {
-    id: 'python', title: 'Python for Analytics', icon: '🐍', color: '#3CB371',
+    id: 'python', title: 'Python for Analytics', icon: <PyLogo />, color: '#3CB371',
     desc: 'Write Python code to analyse, clean and visualise data',
     stages: [
       { id: 1, icon: '🌱', title: 'Python Basics', outcome: 'Write clean scripts and understand core Python syntax', skills: ['Variables & data types', 'Lists, dicts, tuples, sets', 'Loops, conditions & functions', 'Reading CSV/JSON files'], practice: 'Write 5 Python scripts from scratch' },
@@ -136,7 +143,7 @@ const COURSE_ROADMAPS = [
     stages: [
       { id: 1, icon: '🌱', title: 'Data Infrastructure', outcome: 'Understand the data stack that powers modern companies', skills: ['OLTP vs OLAP databases', 'Data Warehouse vs Data Lake', 'Star schema & dimensional modeling', 'Modern data stack overview'], practice: 'Design a star schema for an e-commerce company' },
       { id: 2, icon: '🔄', title: 'ETL & ELT Pipelines', outcome: 'Move and transform data between systems reliably', skills: ['Extract: APIs, databases, flat files', 'Transform: clean, reshape, enrich', 'Load: writing to warehouses', 'ELT with dbt basics'], practice: 'Build a simple ETL pipeline with Python' },
-      { id: 3, icon: '🐍', title: 'Python for Data Engineering', outcome: 'Automate and schedule data workflows with code', skills: ['pandas for batch processing', 'SQLAlchemy & database connectors', 'File formats: Parquet, JSON, CSV', 'Scheduling with cron & Airflow basics'], practice: 'Automate a daily data refresh script' },
+      { id: 3, icon: <PyLogo />, title: 'Python for Data Engineering', outcome: 'Automate and schedule data workflows with code', skills: ['pandas for batch processing', 'SQLAlchemy & database connectors', 'File formats: Parquet, JSON, CSV', 'Scheduling with cron & Airflow basics'], practice: 'Automate a daily data refresh script' },
       { id: 4, icon: '☁️', title: 'Cloud Data Platforms', outcome: 'Work with the cloud services used in most data roles', skills: ['BigQuery basics (Google Cloud)', 'AWS S3 & Athena overview', 'Snowflake architecture', 'Loading data to the cloud'], practice: 'Query a public dataset in BigQuery' },
       { id: 5, icon: '🚀', title: 'Building a Data Platform', outcome: 'Design an end-to-end data platform for a real use case', skills: ['Data quality & testing', 'Orchestration with Airflow/Prefect', 'Data cataloging & lineage', 'Cost management & optimisation'], practice: 'Document and present a mini data platform design' },
     ],
@@ -256,7 +263,7 @@ GROUP BY c.cohort_month ORDER BY c.cohort_month;
 5. Practice on StrataScratch, LeetCode, HackerRank daily`
   },
   {
-    id: 'python', icon: '🐍', title: 'Python & Pandas Handbook', tag: 'Cheatsheet', color: '#5CC8A0',
+    id: 'python', icon: <PyLogo />, title: 'Python & Pandas Handbook', tag: 'Cheatsheet', color: '#5CC8A0',
     desc: 'Complete reference for Pandas, NumPy, and data manipulation with interview patterns',
     pages: 18, level: 'Beginner → Advanced',
     content: `# Python & Pandas Data Analyst Handbook
@@ -1685,7 +1692,7 @@ function InterviewTab() {
   // ── Booking state ──
   const INTERVIEW_TYPES = [
     { id: 'SQL Technical',       icon: '🗄️', color: '#4A90D9', desc: 'Window functions, CTEs, aggregations, real queries' },
-    { id: 'Python Technical',    icon: '🐍', color: '#5CC8A0', desc: 'Pandas, GroupBy, data cleaning, EDA problems' },
+    { id: 'Python Technical',    icon: <PyLogo />, color: '#5CC8A0', desc: 'Pandas, GroupBy, data cleaning, EDA problems' },
     { id: 'Case Study',          icon: '📊', color: '#E8A838', desc: 'Product metrics, root cause analysis, A/B testing' },
     { id: 'Full Analytics Round', icon: '🎓', color: '#a78bfa', desc: 'SQL + Python + Case study — complete interview simulation' },
   ];
@@ -1761,7 +1768,7 @@ function InterviewTab() {
               <button key={c} onClick={() => { setCat(c); setOpen(null); }}
                 className={cat === c ? 'filter-chip active' : 'filter-chip'}
                 style={{ fontWeight: 700 }}>
-                {c === 'CaseStudy' ? '📊 Case Studies' : c === 'HR' ? '🧑 HR / Behavioural' : c === 'SQL' ? '🗄️ SQL' : '🐍 Python'}
+                {c === 'CaseStudy' ? '📊 Case Studies' : c === 'HR' ? '🧑 HR / Behavioural' : c === 'SQL' ? '🗄️ SQL' : <><PyLogo /> Python</>}
               </button>
             ))}
             <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
