@@ -356,11 +356,11 @@ export default function AuthPage({ mode: initialMode }) {
             {/* Price footer */}
             <div style={{ background:'linear-gradient(90deg,rgba(10,14,32,0.9),rgba(127,119,221,0.15),rgba(10,14,32,0.9))',
               borderTop:'1px solid rgba(127,119,221,0.22)',
-              padding:'8px 16px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-              <span style={{ fontSize:12, color:'rgba(255,255,255,0.42)', fontWeight:500 }}>All of this, together —</span>
-              <div style={{ display:'flex', alignItems:'baseline', gap:6 }}>
-                <span style={{ fontSize:12, color:'rgba(255,255,255,0.22)', textDecoration:'line-through', fontWeight:500 }}>₹999</span>
-                <span style={{ fontSize:15, fontWeight:900,
+              padding:'8px 16px', display:'flex', alignItems:'center', justifyContent:'center', gap:10 }}>
+              <span style={{ fontSize:13, color:'rgba(255,255,255,0.5)', fontWeight:600 }}>All of this, together —</span>
+              <div style={{ display:'flex', alignItems:'baseline', gap:5, flexShrink:0 }}>
+                <span style={{ fontSize:13, color:'rgba(255,255,255,0.28)', textDecoration:'line-through', fontWeight:500 }}>₹999</span>
+                <span style={{ fontSize:16, fontWeight:900,
                   background:'linear-gradient(135deg,#E8A838 0%,#fbbf24 40%,#a78bfa 100%)',
                   WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
                   letterSpacing:'-0.3px' }}>₹149 lifetime</span>
