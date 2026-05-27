@@ -207,8 +207,8 @@ select option { background: #1a2035; color: var(--text); }
   align-items: center;
   gap: 0;
   padding: 1.6rem 1rem 1.4rem;
-  background: linear-gradient(180deg, rgba(14,36,90,0.70) 0%, rgba(6,182,212,0.06) 80%, transparent 100%);
-  border-bottom: 1px solid rgba(6,182,212,0.13);
+  background: linear-gradient(180deg, rgba(15,23,42,0.85) 0%, rgba(37,99,235,0.06) 80%, transparent 100%);
+  border-bottom: 1px solid rgba(56,189,248,0.12);
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
@@ -218,59 +218,83 @@ select option { background: #1a2035; color: var(--text); }
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(34,211,238,0.7) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(56,189,248,0.65) 50%, transparent 100%);
 }
-/* Subtle radial glow behind icon */
+/* Radial glow behind icon */
 .sidebar-logo::before {
   content: '';
   position: absolute;
   top: 0; left: 50%; transform: translateX(-50%);
-  width: 160px; height: 100px;
-  background: radial-gradient(ellipse at 50% 20%, rgba(34,211,238,0.13) 0%, transparent 70%);
+  width: 160px; height: 110px;
+  background: radial-gradient(ellipse at 50% 20%, rgba(37,99,235,0.18) 0%, transparent 70%);
   pointer-events: none;
 }
 .logo-icon {
-  width: 52px; height: 52px;
-  background: linear-gradient(145deg, #1e40af 0%, #0369a1 50%, #0891b2 100%);
-  border-radius: 16px;
+  width: 54px; height: 54px;
+  background: transparent;
+  border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 6px 28px rgba(6,182,212,0.55), 0 0 0 1px rgba(255,255,255,0.12), 0 0 0 4px rgba(6,182,212,0.10);
-  animation: logoGlow 3.5s ease-in-out infinite;
+  box-shadow: 0 6px 28px rgba(37,99,235,0.5), 0 0 0 1px rgba(56,189,248,0.18), 0 0 0 5px rgba(37,99,235,0.10);
+  animation: logoGlow 4s ease-in-out infinite;
   flex-shrink: 0;
   margin-bottom: 11px;
   position: relative; z-index: 1;
+  overflow: hidden;
 }
 @keyframes logoGlow {
-  0%, 100% { box-shadow: 0 6px 24px rgba(29,78,216,0.65), 0 0 0 1px rgba(255,255,255,0.10), 0 0 0 4px rgba(29,78,216,0.12); }
-  50%       { box-shadow: 0 6px 36px rgba(6,182,212,0.95), 0 0 0 1px rgba(6,182,212,0.35), 0 0 0 6px rgba(6,182,212,0.14); }
+  0%, 100% { box-shadow: 0 6px 24px rgba(37,99,235,0.55), 0 0 0 1px rgba(56,189,248,0.18), 0 0 0 5px rgba(37,99,235,0.10); }
+  50%       { box-shadow: 0 8px 38px rgba(56,189,248,0.80), 0 0 0 1px rgba(56,189,248,0.38), 0 0 0 8px rgba(56,189,248,0.14); }
 }
+
+/* Radar chart animations */
+.radar-fill {
+  animation: radarFill 4s ease-in-out infinite;
+}
+@keyframes radarFill {
+  0%, 100% { opacity: 0.18; }
+  50%       { opacity: 0.36; }
+}
+.radar-stroke {
+  animation: radarStroke 4s ease-in-out infinite;
+}
+@keyframes radarStroke {
+  0%, 100% { stroke: #38bdf8; stroke-width: 2.5; opacity: 0.9; }
+  50%       { stroke: #7dd3fc; stroke-width: 3;   opacity: 1;   }
+}
+.radar-dot {
+  animation: radarDot 3s ease-in-out infinite;
+}
+@keyframes radarDot {
+  0%, 100% { opacity: 0.75; transform-box: fill-box; transform-origin: center; transform: scale(1); }
+  50%       { opacity: 1;    transform: scale(1.35); }
+}
+
 /* Datamyze wordmark */
 .logo-text {
-  font-size: 22px;
+  font-family: 'Syne', var(--font-sans, system-ui);
+  font-size: 21px;
   font-weight: 800;
-  letter-spacing: -0.8px;
+  letter-spacing: -1px;
   line-height: 1;
   text-align: center;
   position: relative; z-index: 1;
 }
 .logo-data {
   color: rgba(255,255,255,0.95);
-  font-weight: 700;
 }
 .logo-lift {
-  background: linear-gradient(135deg, #22d3ee 0%, #a78bfa 100%);
+  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-weight: 900;
-  filter: drop-shadow(0 0 12px rgba(34,211,238,0.7));
+  filter: drop-shadow(0 0 10px rgba(56,189,248,0.65));
 }
 /* Tagline */
 .logo-tagline {
-  font-size: 6.8px;
-  font-weight: 700;
-  letter-spacing: 1.6px;
-  color: rgba(34,211,238,0.42);
+  font-size: 6.5px;
+  font-weight: 500;
+  letter-spacing: 1.8px;
+  color: rgba(56,189,248,0.38);
   text-transform: uppercase;
   line-height: 1;
   margin-top: 7px;
@@ -995,11 +1019,12 @@ select option { background: #1a2035; color: var(--text); }
 
 .auth-logo-icon {
   width: 36px; height: 36px;
-  background: linear-gradient(135deg, #1e3a8a, #0891b2);
+  background: transparent;
   border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 16px rgba(8,145,178,0.35);
+  box-shadow: 0 4px 18px rgba(37,99,235,0.45);
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 /* Pill toggle (replaces old boxy tabs) */
