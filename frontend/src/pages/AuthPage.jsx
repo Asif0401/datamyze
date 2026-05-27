@@ -168,7 +168,7 @@ const HERO_STATS = [
   { val: '1:1',  lbl: 'Mentor Session'  },
   { val: '100+', lbl: 'Problems'        },
   { val: '24h',  lbl: 'Resume Feedback' },
-  { val: '4.9★', lbl: 'Mentor Rating'  },
+  { val: '100%', lbl: 'Placement Assist' },
 ];
 const TESTIMONIALS = [
   {
@@ -340,7 +340,7 @@ export default function AuthPage({ mode: initialMode }) {
               { val: 'Live',  lbl: '1-on-1 Mentor'  },
               { val: '100+', lbl: 'Problems'        },
               { val: '24h',  lbl: 'Resume Feedback' },
-              { val: '4.9★', lbl: 'Mentor Rating'  },
+              { val: '100%', lbl: 'Placement Assist' },
             ].map((s, i) => (
               <div key={s.lbl} style={{ flex: 1, textAlign: 'center', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.07)' : 'none' }}>
                 <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.5px', marginBottom: 2 }}>{s.val}</div>

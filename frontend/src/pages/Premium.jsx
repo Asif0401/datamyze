@@ -1271,6 +1271,7 @@ function OverviewTab({ sessions, reviews, navigate, setTab }) {
     { icon: '🗺️', title: '12-Week Roadmap',      sub: 'Your personalised path from beginner to hired — 7 phases, 20+ skills, with weekly action items.', color: '#F07B6A', action: () => setTab('roadmap'), badge: null },
     { icon: '📚', title: 'Study Materials',       sub: '7 exclusive guides — SQL mastery, Python handbook, resume playbook, salary scripts & more.', color: '#5CC8A0', action: () => setTab('resources'), badge: '7 Guides' },
     { icon: '🔬', title: 'Real-World Projects',    sub: '6 industry-grade projects with real datasets — e-commerce, HR analytics, fintech & more. Build your portfolio.', color: '#f59e0b', action: () => setTab('projects'), badge: '6 Projects' },
+    { icon: '🎯', title: '100% Placement Assistance', sub: 'Dedicated job support until you land your first data role — resume, referrals, mock interviews & offer negotiation.', color: '#a78bfa', action: () => setTab('session'), badge: '100% Guaranteed' },
     { icon: '💼', title: 'Job Board',             sub: '18+ hand-picked data analytics roles at top Indian companies — updated weekly.', color: '#38bdf8', action: () => navigate('/jobs'), badge: '18+ Live Jobs' },
   ];
 
@@ -2651,6 +2652,7 @@ const FEATURES = [
   { icon: '🗺️', label: '12-Week Roadmap',          desc: 'A proven 7-phase plan: SQL → Python → EDA → Viz → Advanced SQL → Portfolio → Interviews. Never feel lost.', color: '#F07B6A', bg: 'rgba(240,123,106,0.12)', border: 'rgba(240,123,106,0.22)' },
   { icon: '📚', label: 'Exclusive Study Guides',   desc: '7 premium guides — SQL mastery, Python handbook, resume playbook, salary negotiation scripts, and more.',   color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.22)'  },
   { icon: '💼', label: 'Curated Job Board',        desc: '18+ hand-picked data analytics roles at top Indian companies — updated weekly with direct apply links.',     color: '#38bdf8', bg: 'rgba(56,189,248,0.12)',  border: 'rgba(56,189,248,0.22)'  },
+  { icon: '🎯', label: '100% Placement Assistance', desc: 'Dedicated job support until you land your first data role — resume, mock interviews, job referrals & offer negotiation.',  color: '#a78bfa', bg: 'rgba(168,139,250,0.12)', border: 'rgba(168,139,250,0.22)' },
   { icon: '⭐', label: 'Priority Support',         desc: '6-hour direct response from us — faster than public support. We personally read every message.',             color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.22)'  },
   { icon: '🔬', label: 'Real-World Projects',      desc: '6 industry-grade projects with real datasets — e-commerce, HR, fintech, marketing & more. Build your portfolio.', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  border: 'rgba(245,158,11,0.22)'  },
 ];
@@ -2782,7 +2784,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
             {icon:'📅', val:'1:1', lbl:'Mentor Session',  color:'#4A90D9'},
             {icon:'💼', val:'18+', lbl:'Live Jobs',        color:'#5CC8A0'},
             {icon:'📄', val:'24h', lbl:'Resume Feedback',  color:'#E8A838'},
-            {icon:'⭐', val:'4.9★',lbl:'Mentor Rating',    color:'#a78bfa'},
+            {icon:'🎯', val:'100%',lbl:'Placement Assist', color:'#a78bfa'},
           ].map((s,i)=>(
             <div key={s.lbl} style={{ display:'flex', alignItems:'center', gap:12, padding:'10px 20px', borderRadius:16, background:'rgba(255,255,255,0.04)', border:`1px solid ${s.color}28`, animation:`statSlide 0.4s ${0.5+i*0.08}s ease both` }}>
               <span style={{ fontSize:22 }}>{s.icon}</span>
