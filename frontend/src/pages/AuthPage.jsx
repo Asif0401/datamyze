@@ -282,37 +282,40 @@ export default function AuthPage({ mode: initialMode }) {
 
         {/* ── MIDDLE: Headline + cards + ticker ── */}
         <div style={{ animation: 'fadeInUp 0.45s 0.06s ease both' }}>
-          {/* Headline — escalating weight per line */}
+          {/* Headline */}
           <div style={{ marginBottom:'0.5rem' }}>
-            <div style={{
-              fontFamily:"'JetBrains Mono', monospace",
-              fontSize:'clamp(12px, 1.2vw, 16px)',
-              fontWeight:400,
-              color:'rgba(56,189,248,0.55)',
-              letterSpacing:'1.5px',
-              animation:'fadeInUp 0.4s 0.0s ease both',
-              marginBottom:'0.5rem',
-              display:'flex', alignItems:'center', gap:7,
-            }}>
-              <span style={{ color:'rgba(167,139,250,0.5)', fontSize:'1.1em' }}>//</span>
-              practice. get mentored. get hired.
-            </div>
-
             <div style={{
               fontSize:'clamp(28px, 3.0vw, 44px)',
               fontWeight:900,
-              color:'#fff',
+              color:'rgba(255,255,255,0.72)',
               letterSpacing:'-1.2px',
-              lineHeight:1.08,
-              animation:'fadeInUp 0.5s 0.15s ease both',
+              lineHeight:1.1,
+              animation:'fadeInUp 0.45s 0.0s ease both',
+              marginBottom:'0.15rem',
+            }}>Practice. Get mentored.</div>
+            <div style={{
+              fontSize:'clamp(30px, 3.3vw, 48px)',
+              fontWeight:900,
+              letterSpacing:'-1.5px',
+              lineHeight:1.05,
+              animation:'fadeInUp 0.45s 0.18s ease both',
+              position:'relative',
+              display:'inline-block',
             }}>
-              The only platform<br />
               <span style={{
-                background:'linear-gradient(135deg, #4A90D9 0%, #a78bfa 50%, #5CC8A0 100%)',
+                background:'linear-gradient(135deg, #4A90D9 0%, #a78bfa 55%, #5CC8A0 100%)',
                 backgroundSize:'200% auto',
                 WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
                 animation:'gradientShift 4s ease infinite',
-              }}>built to get you hired.</span>
+              }}>Get hired.</span>
+              {/* Animated underline */}
+              <span style={{
+                position:'absolute', bottom:-4, left:0, right:0, height:3,
+                borderRadius:4,
+                background:'linear-gradient(90deg, #4A90D9, #a78bfa, #5CC8A0)',
+                animation:'barIn 0.6s 0.55s ease both',
+                transformOrigin:'left',
+              }} />
             </div>
           </div>
           <div className="auth-hero-sub">
