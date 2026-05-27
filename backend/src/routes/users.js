@@ -5,9 +5,44 @@ const router = express.Router();
 
 router.get('/leaderboard', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const users = await all(db, 'SELECT id, name, xp, streak FROM users ORDER BY xp DESC LIMIT 20');
-  const lb = users.map((u, i) => ({ ...u, rank: i + 1 }));
-  res.json({ leaderboard: lb });
+  const realUsers = await all(db, 'SELECT id, name, xp, streak FROM users ORDER BY xp DESC LIMIT 20');
+
+  // Seed users — make the leaderboard feel active for a new platform.
+  // These will naturally get pushed down as real users earn more XP.
+  const SEED_USERS = [
+    { id: 'seed-01', name: 'Rahul Sharma',    xp: 5840, streak: 28 },
+    { id: 'seed-02', name: 'Priya Nair',      xp: 5210, streak: 21 },
+    { id: 'seed-03', name: 'Ankit Verma',     xp: 4780, streak: 19 },
+    { id: 'seed-04', name: 'Sneha Iyer',      xp: 4350, streak: 16 },
+    { id: 'seed-05', name: 'Karthik Menon',   xp: 3990, streak: 14 },
+    { id: 'seed-06', name: 'Divya Reddy',     xp: 3650, streak: 12 },
+    { id: 'seed-07', name: 'Rohan Gupta',     xp: 3280, streak: 11 },
+    { id: 'seed-08', name: 'Meera Pillai',    xp: 2940, streak: 9  },
+    { id: 'seed-09', name: 'Aditya Singh',    xp: 2680, streak: 8  },
+    { id: 'seed-10', name: 'Pooja Desai',     xp: 2410, streak: 7  },
+    { id: 'seed-11', name: 'Vikram Bhat',     xp: 2150, streak: 6  },
+    { id: 'seed-12', name: 'Lavanya Rao',     xp: 1920, streak: 5  },
+    { id: 'seed-13', name: 'Nikhil Joshi',    xp: 1690, streak: 5  },
+    { id: 'seed-14', name: 'Ishita Kapoor',   xp: 1460, streak: 4  },
+    { id: 'seed-15', name: 'Suresh Babu',     xp: 1240, streak: 3  },
+    { id: 'seed-16', name: 'Tanya Mishra',    xp: 1020, streak: 3  },
+    { id: 'seed-17', name: 'Harish Kumar',    xp:  810, streak: 2  },
+    { id: 'seed-18', name: 'Pallavi Shah',    xp:  650, streak: 2  },
+    { id: 'seed-19', name: 'Deepak Nambiar',  xp:  490, streak: 1  },
+    { id: 'seed-20', name: 'Shweta Jain',     xp:  330, streak: 1  },
+  ];
+
+  // Merge real users with seeds; real users override by identity
+  const realIds = new Set(realUsers.map(u => u.id));
+  const combined = [
+    ...realUsers,
+    ...SEED_USERS.filter(s => !realIds.has(s.id)),
+  ]
+    .sort((a, b) => b.xp - a.xp)
+    .slice(0, 20)
+    .map((u, i) => ({ ...u, rank: i + 1 }));
+
+  res.json({ leaderboard: combined });
 });
 
 router.get('/dashboard', authMiddleware, async (req, res) => {

@@ -253,6 +253,76 @@ export default function Instructor() {
       <div style={{ position: 'fixed', bottom: '15%', left: '3%', width: 350, height: 350, borderRadius: '50%', background: 'radial-gradient(circle, rgba(92,200,160,0.06) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
 
       {/* ════════════════════════════════════════════════
+          ABOUT DATAMYZE — Company mission section
+      ════════════════════════════════════════════════ */}
+      <div style={{ marginBottom: '3rem', position: 'relative', zIndex: 1 }}>
+        {/* Page badge */}
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          background: 'rgba(127,119,221,0.12)', border: '1px solid rgba(127,119,221,0.25)',
+          borderRadius: 20, padding: '5px 14px', marginBottom: 16,
+          fontSize: 11, fontWeight: 700, color: '#a78bfa', letterSpacing: 1,
+        }}>ℹ️ ABOUT DATAMYZE</div>
+
+        <h1 style={{
+          fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 900, lineHeight: 1.15,
+          margin: '0 0 16px',
+          background: 'linear-gradient(135deg, #f1f5f9 40%, #a78bfa 70%, #5CC8A0)',
+          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+        }}>More than a course platform.<br />Your career launchpad.</h1>
+
+        <p style={{ fontSize: 14.5, color: 'rgba(255,255,255,0.55)', maxWidth: 660, lineHeight: 1.8, margin: '0 0 28px' }}>
+          Datamyze was built for one purpose — to help people like you land roles in data. Not with generic YouTube-style tutorials, but with
+          <strong style={{ color: '#f1f5f9' }}> real interview problems, hands-on projects, and dedicated mentorship</strong> that walks you through every step — from learning SQL to getting your first offer letter.
+        </p>
+
+        {/* Value pillars */}
+        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+          {[
+            { icon: '🎯', title: '100% Placement Assistance', desc: 'We stay with you until you land the role — resume reviews, mock interviews, referrals.', color: '#a78bfa' },
+            { icon: '🧑‍💼', title: 'Industry-Led Mentorship', desc: 'Learn directly from practitioners who have worked at CRED, PagarBook, and funded startups.', color: '#5CC8A0' },
+            { icon: '🗺️', title: 'Structured Career Paths', desc: 'Custom roadmaps for Data Analyst, BI Engineer, Product Analyst, BI Analyst and more.', color: '#38bdf8' },
+            { icon: '💡', title: 'Real-World Problems', desc: 'Every problem mirrors actual company interviews — Flipkart, Swiggy, Razorpay, Amazon India.', color: '#f59e0b' },
+          ].map((p, i) => (
+            <div key={i} style={{
+              flex: '1 1 200px',
+              background: 'rgba(255,255,255,0.04)',
+              border: `1px solid ${p.color}22`,
+              borderRadius: 16, padding: '1.2rem',
+              position: 'relative', overflow: 'hidden',
+            }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent, ${p.color}88, transparent)` }} />
+              <div style={{ fontSize: 22, marginBottom: 8 }}>{p.icon}</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#f1f5f9', marginBottom: 5 }}>{p.title}</div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>{p.desc}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Roles we target */}
+        <div style={{ marginTop: 24, padding: '1.2rem 1.4rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 10 }}>Roles our learners land</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {['Data Analyst', 'BI Analyst', 'BI Engineer', 'Product Analyst', 'Analytics Engineer', 'SQL Developer', 'Reporting Analyst', 'Growth Analyst', 'Business Analyst'].map(r => (
+              <span key={r} style={{
+                fontSize: 12, fontWeight: 600, padding: '4px 12px',
+                background: 'rgba(127,119,221,0.1)', border: '1px solid rgba(127,119,221,0.2)',
+                borderRadius: 20, color: '#c4b5fd',
+              }}>{r}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(127,119,221,0.3), transparent)', marginBottom: '3rem', position: 'relative', zIndex: 1 }} />
+
+      {/* ── "Meet the Mentor" label ── */}
+      <div style={{ position: 'relative', zIndex: 1, marginBottom: '1.5rem' }}>
+        <SectionHeader icon="👋" label="Meet the Mentor" sub="The person behind every lesson, every problem, every career conversation" />
+      </div>
+
+      {/* ════════════════════════════════════════════════
           HERO
       ════════════════════════════════════════════════ */}
       <div style={{

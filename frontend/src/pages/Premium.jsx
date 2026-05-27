@@ -1302,7 +1302,7 @@ function OverviewTab({ sessions, reviews, navigate, setTab }) {
     { icon: '📚', title: 'Study Materials',       sub: '7 exclusive guides — SQL mastery, Python handbook, resume playbook, salary scripts & more.', color: '#5CC8A0', action: () => setTab('resources'), badge: '7 Guides' },
     { icon: '🔬', title: 'Real-World Projects',    sub: '6 industry-grade projects with real datasets — e-commerce, HR analytics, fintech & more. Build your portfolio.', color: '#f59e0b', action: () => setTab('projects'), badge: '6 Projects' },
     { icon: '🎯', title: '100% Placement Assistance', sub: 'Dedicated job support until you land your first data role — resume, referrals, mock interviews & offer negotiation.', color: '#a78bfa', action: () => setTab('session'), badge: '100% Guaranteed' },
-    { icon: '💼', title: 'Job Board',             sub: '300+ hand-picked data analytics roles at top Indian companies — updated weekly.', color: '#38bdf8', action: () => navigate('/jobs'), badge: '300+ Live Jobs' },
+    { icon: '💼', title: 'Job Board',             sub: '300+ roles for Data Analyst, BI Engineer, Product Analyst & BI Analyst at top Indian companies — updated weekly.', color: '#38bdf8', action: () => navigate('/jobs'), badge: '300+ Live Jobs' },
   ];
 
   const valueProps = [
@@ -2683,7 +2683,7 @@ const FEATURES = [
   { icon: '📄', label: 'Resume Review',            desc: 'Line-by-line expert feedback within 48 hours — ATS keywords, impact rewrites, and LinkedIn optimisation.',  color: '#E8A838', bg: 'rgba(232,168,56,0.12)',  border: 'rgba(232,168,56,0.22)'  },
   { icon: '🗺️', label: 'Course Roadmaps',           desc: 'Interactive learning paths for every course — see each stage, skill and practice task. Never feel lost again.', color: '#F07B6A', bg: 'rgba(240,123,106,0.12)', border: 'rgba(240,123,106,0.22)' },
   { icon: '📚', label: 'Exclusive Study Guides',   desc: '7 premium guides — SQL mastery, Python handbook, resume playbook, salary negotiation scripts, and more.',   color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.22)'  },
-  { icon: '💼', label: 'Curated Job Board',        desc: '300+ hand-picked data analytics roles at top Indian companies — updated weekly with direct apply links.',    color: '#38bdf8', bg: 'rgba(56,189,248,0.12)',  border: 'rgba(56,189,248,0.22)'  },
+  { icon: '💼', label: 'Curated Job Board',        desc: '300+ roles for Data Analyst, BI Engineer, Product Analyst & BI Analyst — updated weekly with direct apply links.', color: '#38bdf8', bg: 'rgba(56,189,248,0.12)',  border: 'rgba(56,189,248,0.22)'  },
   { icon: '🎯', label: '100% Placement Assistance', desc: 'Dedicated job support until you land your first data role — resume, mock interviews, job referrals & offer negotiation.',  color: '#a78bfa', bg: 'rgba(168,139,250,0.12)', border: 'rgba(168,139,250,0.22)' },
   { icon: '⭐', label: 'Priority Support',         desc: '6-hour direct response from us — faster than public support. We personally read every message.',             color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.22)'  },
   { icon: '🔬', label: 'Real-World Projects',      desc: '6 industry-grade projects with real datasets — e-commerce, HR, fintech, marketing & more. Build your portfolio.', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  border: 'rgba(245,158,11,0.22)'  },
@@ -2790,7 +2790,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
           Go Pro. Get Hired.
         </div>
         <div style={{ fontSize:16, color:'rgba(255,255,255,0.45)', marginBottom:'1.6rem', animation:'heroFadeUp 0.5s 0.2s ease both' }}>
-          Everything you need to land a data analyst job — in one ₹149 membership
+          Everything you need to land your first Data, BI or Product Analytics role — in one ₹149 membership
         </div>
 
         {/* Price + CTA */}

@@ -85,7 +85,7 @@ export default function Jobs() {
           <div className="page-title" style={{ margin: 0 }}>💼 Data Analytics Jobs</div>
           <span className="premium-badge">👑 Pro</span>
         </div>
-        <div className="page-sub">{jobs.length} curated roles from top companies — updated regularly</div>
+        <div className="page-sub">{jobs.length} curated roles — Data Analyst, BI Engineer, Product Analyst, BI Analyst & more</div>
       </div>
 
       {/* Search */}

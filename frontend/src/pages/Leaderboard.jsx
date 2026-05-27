@@ -20,7 +20,7 @@ export default function Leaderboard() {
     <div className="page">
       <div className="page-header">
         <div className="page-title">🏆 Leaderboard</div>
-        <div className="page-sub">Top learners ranked by XP — updated live</div>
+        <div className="page-sub">Top learners on their journey to Data Analyst, BI Engineer & Product Analytics roles — ranked by XP</div>
       </div>
       <div style={{ maxWidth: 560 }}>
         {lb.map((p, i) => {

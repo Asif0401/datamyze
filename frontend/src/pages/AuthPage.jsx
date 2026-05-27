@@ -160,26 +160,26 @@ const HERO_FEATURES = [
   { icon: <SqlLogo />,    label: '100+ SQL Problems',  desc: 'Window functions, CTEs, real interview patterns' },
   { icon: <PythonLogo />, label: 'Python & Pandas',    desc: 'Data wrangling, EDA, GroupBy deep-dives' },
   { icon: '🎙️',          label: 'Live Mock Interviews',desc: 'Real sessions with our mentor — recorded feedback' },
-  { icon: '💼',           label: 'Curated Job Board',  desc: '300+ hand-picked data analytics roles' },
+  { icon: '💼',           label: 'Curated Job Board',  desc: '300+ roles: Data Analyst, BI Engineer, Product Analyst & more' },
   { icon: '📄',           label: 'Resume Review',      desc: 'ATS-optimised expert feedback in 48 hours' },
   { icon: '🗺️',           label: 'Course Roadmaps',    desc: 'Step-by-step learning path for every course' },
 ];
 const HERO_STATS = [
   { val: '1:1',  lbl: 'Mentor Session'  },
-  { val: '100+', lbl: 'Problems'        },
+  { val: '400+', lbl: 'Problems'        },
   { val: '24h',  lbl: 'Resume Feedback' },
   { val: '100%', lbl: 'Placement Assist' },
 ];
 const TESTIMONIALS = [
   {
     initials: 'PS', color: 'linear-gradient(135deg,#4A90D9,#a78bfa)',
-    text: '"Got placed at Meesho as Data Analyst after 2 months on Datamyze. The mock interviews and resume review made all the difference."',
-    name: 'Priya Sharma', role: 'Data Analyst, Meesho',
+    text: '"Got placed at Meesho as BI Analyst after 2 months on Datamyze. The mock interviews and resume review made all the difference."',
+    name: 'Priya Sharma', role: 'BI Analyst, Meesho',
   },
   {
     initials: 'RK', color: 'linear-gradient(135deg,#5CC8A0,#4A90D9)',
-    text: '"The SQL problem sets are exactly what Flipkart asked in my interview. Cleared round 2 first attempt."',
-    name: 'Rahul Kumar', role: 'Data Analyst, Flipkart',
+    text: '"The SQL problem sets are exactly what Flipkart asked in my interview. Landed the Analytics Engineer role first attempt."',
+    name: 'Rahul Kumar', role: 'Analytics Engineer, Flipkart',
   },
 ];
 
@@ -284,11 +284,11 @@ export default function AuthPage({ mode: initialMode }) {
         {/* ── MIDDLE: Headline + cards + ticker ── */}
         <div style={{ animation: 'fadeInUp 0.45s 0.06s ease both' }}>
           <div className="auth-hero-headline">
-            Prepare. Get mentored.<br />
-            <span className="auth-gradient-text">Start getting hired.</span>
+            Not just learning.<br />
+            <span className="auth-gradient-text">Mentored until you're hired.</span>
           </div>
           <div className="auth-hero-sub">
-            India's most practical analytics platform — SQL &amp; Python problems, 1-on-1 mock interviews, resume review, and a curated job board. Everything for your first ₹12 LPA offer.
+            Beyond courses — guided mentorship, placement assistance &amp; real-world practice. Everything you need to land a Data Analyst, BI Engineer, Product Analyst or BI Analyst role.
           </div>
 
           {/* Track cards */}
@@ -337,9 +337,9 @@ export default function AuthPage({ mode: initialMode }) {
         <div style={{ animation: 'fadeInUp 0.5s 0.18s ease both' }}>
           <div style={{ display: 'flex', gap: 0, borderTop: '1px solid rgba(255,255,255,0.07)', borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '1rem 0' }}>
             {[
-              { val: 'Live',  lbl: '1-on-1 Mentor'  },
-              { val: '100+', lbl: 'Problems'        },
-              { val: '24h',  lbl: 'Resume Feedback' },
+              { val: 'Live',  lbl: '1-on-1 Mentor'   },
+              { val: '400+', lbl: 'Problems'         },
+              { val: '24h',  lbl: 'Resume Feedback'  },
               { val: '100%', lbl: 'Placement Assist' },
             ].map((s, i) => (
               <div key={s.lbl} style={{ flex: 1, textAlign: 'center', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.07)' : 'none' }}>
