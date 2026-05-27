@@ -783,18 +783,11 @@ select option { background: #1a2035; color: var(--text); }
 
 /* Track cards — CN-style course cards */
 .auth-track-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 16px;
-  padding: 18px 16px;
-  transition: background 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+  border-radius: 18px;
+  padding: 15px 13px;
+  position: relative;
+  overflow: hidden;
   cursor: default;
-}
-.auth-track-card:hover {
-  background: color-mix(in srgb, var(--tc, #38bdf8) 8%, rgba(255,255,255,0.04));
-  border-color: color-mix(in srgb, var(--tc, #38bdf8) 35%, transparent);
-  box-shadow: 0 8px 28px color-mix(in srgb, var(--tc, #38bdf8) 18%, transparent);
-  transform: translateY(-3px);
 }
 
 /* Feature rows — 2-col list */
