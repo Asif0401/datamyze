@@ -282,9 +282,38 @@ export default function AuthPage({ mode: initialMode }) {
 
         {/* ── MIDDLE: Headline + cards + ticker ── */}
         <div style={{ animation: 'fadeInUp 0.45s 0.06s ease both' }}>
-          <div className="auth-hero-headline">
-            Practice. Get mentored.<br />
-            <span className="auth-gradient-text">Get hired.</span>
+          {/* Headline — escalating weight per line */}
+          <div style={{ marginBottom:'0.5rem' }}>
+            <div style={{
+              fontFamily:"'JetBrains Mono', monospace",
+              fontSize:'clamp(12px, 1.2vw, 16px)',
+              fontWeight:400,
+              color:'rgba(56,189,248,0.55)',
+              letterSpacing:'1.5px',
+              animation:'fadeInUp 0.4s 0.0s ease both',
+              marginBottom:'0.5rem',
+              display:'flex', alignItems:'center', gap:7,
+            }}>
+              <span style={{ color:'rgba(167,139,250,0.5)', fontSize:'1.1em' }}>//</span>
+              practice. get mentored. get hired.
+            </div>
+
+            <div style={{
+              fontSize:'clamp(28px, 3.0vw, 44px)',
+              fontWeight:900,
+              color:'#fff',
+              letterSpacing:'-1.2px',
+              lineHeight:1.08,
+              animation:'fadeInUp 0.5s 0.15s ease both',
+            }}>
+              The only platform<br />
+              <span style={{
+                background:'linear-gradient(135deg, #4A90D9 0%, #a78bfa 50%, #5CC8A0 100%)',
+                backgroundSize:'200% auto',
+                WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
+                animation:'gradientShift 4s ease infinite',
+              }}>built to get you hired.</span>
+            </div>
           </div>
           <div className="auth-hero-sub">
             Beyond courses — guided mentorship, placement assistance &amp; real-world practice. Everything you need to land a Data Analyst, BI Engineer, Product Analyst or BI Analyst role.
