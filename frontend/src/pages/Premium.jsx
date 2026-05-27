@@ -2766,6 +2766,10 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
         @keyframes heroFadeUp  { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
         @keyframes statSlide   { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
         @keyframes pricingEnter{ from{opacity:0;transform:translateY(28px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+        @keyframes marqueeScroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+        @keyframes tagFloat1   { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-7px) rotate(2deg)} }
+        @keyframes tagFloat2   { 0%,100%{transform:translateY(0) rotate(2deg)}  50%{transform:translateY(-5px) rotate(-2deg)} }
+        @keyframes tagFloat3   { 0%,100%{transform:translateY(-4px) rotate(1deg)} 50%{transform:translateY(4px) rotate(-1deg)} }
       `}</style>
 
       {/* ── Hero ─────────────────────────────────────── */}
@@ -2785,11 +2789,23 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
           <span>✦</span> Trusted by 500+ aspiring data analysts
         </div>
 
-        {/* Crown with rings */}
+        {/* Crown + floating skill tags */}
         <div style={{ position:'relative', display:'inline-block', marginBottom:'1rem' }}>
           <div style={{ position:'absolute', inset:'-20px', borderRadius:'50%', border:'1px solid rgba(232,168,56,0.30)', animation:'ringPulse 2s ease-out infinite' }} />
           <div style={{ position:'absolute', inset:'-10px', borderRadius:'50%', border:'1px solid rgba(232,168,56,0.20)', animation:'ringPulse 2s 0.5s ease-out infinite' }} />
           <span style={{ fontSize:64, display:'block', animation:'crownFloat 4s ease-in-out infinite', filter:'drop-shadow(0 8px 28px rgba(232,168,56,0.55))' }}>👑</span>
+          {/* Floating skill tags */}
+          {[
+            { label:'🗄️ SQL',        left:'-110px', top:'5px',   anim:'tagFloat1 3.2s ease-in-out infinite',        color:'#4A90D9' },
+            { label:'Python',        right:'-105px', top:'0px',  anim:'tagFloat2 2.8s ease-in-out infinite',        color:'#3776AB' },
+            { label:'📊 Power BI',   left:'-115px',  bottom:'-5px', anim:'tagFloat3 3.5s ease-in-out infinite',    color:'#F2C811' },
+            { label:'📈 Analytics',  right:'-115px', bottom:'-5px', anim:'tagFloat1 3.0s 0.4s ease-in-out infinite', color:'#5CC8A0' },
+          ].map(t => (
+            <div key={t.label} style={{ position:'absolute', left:t.left, right:t.right, top:t.top, bottom:t.bottom, display:'flex', alignItems:'center', gap:5, whiteSpace:'nowrap', padding:'5px 11px', borderRadius:20, background:`${t.color}18`, border:`1px solid ${t.color}40`, fontSize:11, fontWeight:700, color:t.color, animation:t.anim }}>
+              {t.label === 'Python' && <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M11.914 2c-4.638 0-4.344 2.017-4.344 2.017v2.09h4.413v.626H6.34S3.287 6.386 3.287 10.994c0 4.609 2.697 4.447 2.697 4.447h1.613V13.23s-.088-2.697 2.654-2.697h4.368s2.552.041 2.552-2.467V3.855S17.562 2 11.914 2z" fill="#3776AB"/><path d="M12.086 22c4.638 0 4.344-2.017 4.344-2.017v-2.09H12v-.626h5.643s3.053.347 3.053-4.261c0-4.609-2.697-4.447-2.697-4.447h-1.613v2.216s.088 2.697-2.654 2.697H9.364s-2.552-.041-2.552 2.467v4.211S6.422 22 12.086 22z" fill="#FFD343"/></svg>}
+              {t.label}
+            </div>
+          ))}
         </div>
 
         {/* Title */}
@@ -2834,6 +2850,42 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
             </div>
           ))}
         </div>
+
+        {/* Placement companies ticker */}
+        <div style={{ marginTop:'1.8rem', paddingTop:'1.5rem', borderTop:'1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.22)', textTransform:'uppercase', letterSpacing:'2px', marginBottom:'0.9rem' }}>
+            🎓 Students placed at
+          </div>
+          <div style={{ overflow:'hidden', maskImage:'linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)' }}>
+            <div style={{ display:'flex', gap:16, width:'max-content', animation:'marqueeScroll 18s linear infinite' }}>
+              {['Flipkart','Swiggy','Amazon India','Razorpay','Meesho','Zomato','CRED','Paytm','PhonePe','Nykaa','Dream11','MakeMyTrip','Ola','Deloitte','Wipro',
+                'Flipkart','Swiggy','Amazon India','Razorpay','Meesho','Zomato','CRED','Paytm','PhonePe','Nykaa','Dream11','MakeMyTrip','Ola','Deloitte','Wipro'].map((c,i) => (
+                <span key={i} style={{ padding:'5px 14px', borderRadius:20, background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.45)', whiteSpace:'nowrap' }}>{c}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Mini testimonials */}
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10, marginTop:'1.5rem', animation:'heroFadeUp 0.5s 0.5s ease both' }}>
+          {[
+            { text:'"Got my Flipkart offer 3 months after joining. The SQL problems are exactly what they ask."', name:'Priya S.', role:'Data Analyst @ Flipkart', color:'#5CC8A0' },
+            { text:'"The 1:1 mentor sessions gave me the confidence to crack my Swiggy interview."',             name:'Rahul M.', role:'BI Engineer @ Swiggy',    color:'#4A90D9' },
+            { text:'"Best ₹149 I ever spent. Resume review alone was worth 10x the price."',                   name:'Ankit V.', role:'Analyst @ Razorpay',      color:'#a78bfa' },
+          ].map(t => (
+            <div key={t.name} style={{ padding:'12px 14px', borderRadius:14, background:'rgba(255,255,255,0.03)', border:`1px solid ${t.color}20`, textAlign:'left' }}>
+              <div style={{ fontSize:11, color:'rgba(255,255,255,0.45)', lineHeight:1.6, marginBottom:8, fontStyle:'italic' }}>{t.text}</div>
+              <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                <div style={{ width:26, height:26, borderRadius:'50%', background:t.color+'25', border:`1px solid ${t.color}50`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:10, fontWeight:800, color:t.color, flexShrink:0 }}>{t.name[0]}</div>
+                <div>
+                  <div style={{ fontSize:11, fontWeight:700, color:'#fff' }}>{t.name}</div>
+                  <div style={{ fontSize:10, color:t.color }}>{t.role}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
       </div>
 
       <div className="page-header">
