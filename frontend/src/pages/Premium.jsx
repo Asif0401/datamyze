@@ -2789,31 +2789,34 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
           <span>⚡</span> One-time payment · Lifetime access · No renewals
         </div>
 
-        {/* Crown + floating skill tags */}
+        {/* Crown */}
         <div style={{ position:'relative', display:'inline-block', marginBottom:'1rem' }}>
           <div style={{ position:'absolute', inset:'-20px', borderRadius:'50%', border:'1px solid rgba(232,168,56,0.30)', animation:'ringPulse 2s ease-out infinite' }} />
           <div style={{ position:'absolute', inset:'-10px', borderRadius:'50%', border:'1px solid rgba(232,168,56,0.20)', animation:'ringPulse 2s 0.5s ease-out infinite' }} />
           <span style={{ fontSize:64, display:'block', animation:'crownFloat 4s ease-in-out infinite', filter:'drop-shadow(0 8px 28px rgba(232,168,56,0.55))' }}>👑</span>
-          {/* Floating skill tags */}
-          {[
-            { label:'🗄️ SQL',        left:'-120px', top:'4px',    anim:'tagFloat1 3.2s ease-in-out infinite',         color:'#4A90D9' },
-            { label:'Python',        right:'-120px', top:'4px',   anim:'tagFloat2 2.8s ease-in-out infinite',         color:'#3776AB' },
-            { label:'📊 Power BI',   left:'-125px',  top:'40px',  anim:'tagFloat3 3.5s ease-in-out infinite',         color:'#2B79D4' },
-            { label:'📈 Analytics',  right:'-125px', top:'40px',  anim:'tagFloat1 3.0s 0.4s ease-in-out infinite',    color:'#5CC8A0' },
-          ].map(t => (
-            <div key={t.label} style={{ position:'absolute', left:t.left, right:t.right, top:t.top, bottom:t.bottom, display:'flex', alignItems:'center', gap:5, whiteSpace:'nowrap', padding:'5px 11px', borderRadius:20, background:`${t.color}18`, border:`1px solid ${t.color}40`, fontSize:11, fontWeight:700, color:t.color, animation:t.anim }}>
-              {t.label === 'Python' && <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M11.914 2c-4.638 0-4.344 2.017-4.344 2.017v2.09h4.413v.626H6.34S3.287 6.386 3.287 10.994c0 4.609 2.697 4.447 2.697 4.447h1.613V13.23s-.088-2.697 2.654-2.697h4.368s2.552.041 2.552-2.467V3.855S17.562 2 11.914 2z" fill="#3776AB"/><path d="M12.086 22c4.638 0 4.344-2.017 4.344-2.017v-2.09H12v-.626h5.643s3.053.347 3.053-4.261c0-4.609-2.697-4.447-2.697-4.447h-1.613v2.216s.088 2.697-2.654 2.697H9.364s-2.552-.041-2.552 2.467v4.211S6.422 22 12.086 22z" fill="#FFD343"/></svg>}
-              {t.label}
-            </div>
-          ))}
         </div>
 
         {/* Title */}
         <div style={{ fontSize:42, fontWeight:900, letterSpacing:'-1px', marginBottom:'0.7rem', background:'linear-gradient(135deg, #fff 0%, #E8A838 45%, #fff 100%)', backgroundSize:'200% auto', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', animation:'shimmer 4s linear infinite, heroFadeUp 0.5s 0.1s ease both' }}>
           Go Pro. Get Hired.
         </div>
-        <div style={{ fontSize:16, color:'rgba(255,255,255,0.45)', marginBottom:'1.6rem', animation:'heroFadeUp 0.5s 0.2s ease both' }}>
+        <div style={{ fontSize:16, color:'rgba(255,255,255,0.45)', marginBottom:'1.2rem', animation:'heroFadeUp 0.5s 0.2s ease both' }}>
           Everything you need to land your first Data, BI or Product Analytics role — in one ₹149 membership
+        </div>
+
+        {/* Skill chips */}
+        <div style={{ display:'flex', gap:8, justifyContent:'center', flexWrap:'wrap', marginBottom:'1.6rem', animation:'heroFadeUp 0.5s 0.25s ease both' }}>
+          {[
+            { label:'SQL',      icon:'🗄️',  color:'#4A90D9' },
+            { label:'Python',   icon:null,   color:'#3776AB', python:true },
+            { label:'Power BI', icon:'📊',  color:'#2B79D4' },
+            { label:'Excel',    icon:'📗',  color:'#1D9E75' },
+            { label:'Analytics',icon:'📈',  color:'#5CC8A0' },
+          ].map(t => (
+            <span key={t.label} style={{ display:'inline-flex', alignItems:'center', gap:5, padding:'5px 13px', borderRadius:20, background:`${t.color}18`, border:`1px solid ${t.color}40`, fontSize:12, fontWeight:700, color:t.color, whiteSpace:'nowrap' }}>
+              {t.python ? <PyLogo /> : t.icon} {t.label}
+            </span>
+          ))}
         </div>
 
         {/* Price + CTA */}
