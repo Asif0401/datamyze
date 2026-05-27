@@ -2906,6 +2906,31 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
                 <div style={{ display:'flex', alignItems:'center', gap:6 }}><span>🔒</span> One-time payment • Instant access</div>
                 <div style={{ display:'flex', alignItems:'center', gap:6 }}><span>📱</span> UPI, PhonePe, GPay, Cards accepted</div>
               </div>
+
+              {/* Divider */}
+              <div style={{ margin:'1rem 0', height:1, background:'rgba(255,255,255,0.07)' }} />
+
+              {/* Why learners choose this */}
+              <div style={{ fontSize:10, fontWeight:800, color:'rgba(255,255,255,0.28)', textTransform:'uppercase', letterSpacing:'1.5px', marginBottom:8 }}>Why learners choose this</div>
+              <div style={{ display:'flex', flexDirection:'column', gap:7 }}>
+                {[
+                  { icon:'🎯', text:'Interview-ready SQL & Python problems from real companies' },
+                  { icon:'🧑‍💼', text:'Live 1:1 mentorship with an industry expert' },
+                  { icon:'🏆', text:'Verified LinkedIn certificates on course completion' },
+                  { icon:'📈', text:'Full analytics career roadmap — zero to offer letter' },
+                ].map(b => (
+                  <div key={b.text} style={{ display:'flex', alignItems:'flex-start', gap:8 }}>
+                    <span style={{ fontSize:13, flexShrink:0, marginTop:1 }}>{b.icon}</span>
+                    <span style={{ fontSize:11.5, color:'rgba(255,255,255,0.45)', lineHeight:1.5 }}>{b.text}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* No-renewal guarantee */}
+              <div style={{ marginTop:'1rem', padding:'8px 12px', borderRadius:10, background:'rgba(92,200,160,0.06)', border:'1px solid rgba(92,200,160,0.18)', display:'flex', alignItems:'center', gap:8 }}>
+                <span style={{ fontSize:15 }}>🛡️</span>
+                <span style={{ fontSize:11.5, color:'rgba(92,200,160,0.75)', lineHeight:1.5 }}>No auto-renewal. No hidden charges. Ever.</span>
+              </div>
             </div>
 
             {/* Right: Feature list */}
