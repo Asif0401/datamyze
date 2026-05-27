@@ -295,49 +295,63 @@ export default function AuthPage({ mode: initialMode }) {
           <div style={{ marginTop:'1.2rem', borderRadius:18, overflow:'hidden', position:'relative',
             boxShadow:'0 0 0 1px rgba(127,119,221,0.22), 0 8px 32px rgba(127,119,221,0.1)' }}>
 
-            {/* Column headers — centered */}
+            {/* Single unified grid — all cells are direct children so rows are guaranteed equal height */}
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr' }}>
-              <div style={{ background:'rgba(255,255,255,0.025)', padding:'11px 14px', borderBottom:'1px solid rgba(255,255,255,0.06)', borderRight:'1px solid rgba(255,255,255,0.06)', textAlign:'center' }}>
+
+              {/* ── Header: Others ── */}
+              <div style={{ background:'rgba(255,255,255,0.025)', padding:'11px 16px',
+                borderBottom:'1px solid rgba(255,255,255,0.06)', borderRight:'1px solid rgba(255,255,255,0.06)',
+                display:'flex', alignItems:'center', justifyContent:'center' }}>
                 <span style={{ fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.28)', letterSpacing:1, textTransform:'uppercase' }}>Others</span>
               </div>
-              <div style={{ background:'linear-gradient(135deg,rgba(127,119,221,0.18),rgba(56,189,248,0.1))', padding:'11px 14px', borderBottom:'1px solid rgba(127,119,221,0.25)', position:'relative', overflow:'hidden', textAlign:'center' }}>
+
+              {/* ── Header: Datamyze ── */}
+              <div style={{ background:'linear-gradient(135deg,rgba(127,119,221,0.18),rgba(56,189,248,0.1))',
+                padding:'11px 16px', borderBottom:'1px solid rgba(127,119,221,0.25)',
+                position:'relative', overflow:'hidden',
+                display:'flex', alignItems:'center', justifyContent:'center' }}>
                 <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'linear-gradient(90deg,#7F77DD,#38bdf8)' }} />
                 <div style={{ position:'absolute', bottom:-18, right:-18, width:60, height:60, borderRadius:'50%', background:'radial-gradient(circle,rgba(127,119,221,0.3),transparent)', pointerEvents:'none' }} />
                 <span style={{ fontSize:12, fontWeight:800, background:'linear-gradient(135deg,#c4b5fd,#67e8f9)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', letterSpacing:0.8, textTransform:'uppercase', position:'relative' }}>✦ Datamyze</span>
               </div>
-            </div>
 
-            {/* Rows */}
-            {[
-              { bad:'Generic video tutorials',    good:'Real company interview Qs',  color:'#38bdf8' },
-              { bad:'No mentor, you\'re alone',   good:'1-on-1 industry mentor',     color:'#a78bfa' },
-              { bad:'Zero placement support',     good:'100% placement assistance',  color:'#5CC8A0' },
-              { bad:'No mock interviews',         good:'Live mock + written feedback',color:'#f9a825' },
-              { bad:'No job listings',            good:'300+ curated jobs board',    color:'#f87171' },
-            ].map((row, i) => (
-              <div key={i} style={{ display:'grid', gridTemplateColumns:'1fr 1fr',
-                borderBottom: i < 4 ? '1px solid rgba(255,255,255,0.045)' : 'none' }}>
-                {/* Left — dull */}
-                <div style={{ padding:'10px 16px', borderRight:'1px solid rgba(255,255,255,0.05)',
+              {/* ── Data rows as flat cell pairs ── */}
+              {[
+                { bad:'Generic video tutorials',    good:'Real company interview Qs',   color:'#38bdf8' },
+                { bad:'No mentor, you\'re alone',   good:'1-on-1 industry mentor',      color:'#a78bfa' },
+                { bad:'Zero placement support',     good:'100% placement assistance',   color:'#5CC8A0' },
+                { bad:'No mock interviews',         good:'Live mock + written feedback', color:'#f9a825' },
+                { bad:'No job listings',            good:'300+ curated jobs board',     color:'#f87171' },
+              ].flatMap((row, i) => [
+                /* Left cell */
+                <div key={`bad-${i}`} style={{
+                  padding:'10px 16px',
+                  borderRight:'1px solid rgba(255,255,255,0.05)',
+                  borderBottom: i < 4 ? '1px solid rgba(255,255,255,0.045)' : 'none',
                   background: i % 2 === 0 ? 'rgba(0,0,0,0.18)' : 'rgba(0,0,0,0.1)',
-                  display:'flex', alignItems:'center', gap:8 }}>
+                  display:'flex', alignItems:'center', gap:8,
+                }}>
                   <div style={{ width:17, height:17, borderRadius:'50%', background:'rgba(248,113,113,0.12)', border:'1px solid rgba(248,113,113,0.3)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
                     <span style={{ fontSize:9, color:'#f87171', fontWeight:900, lineHeight:1 }}>✕</span>
                   </div>
                   <span style={{ fontSize:12, fontWeight:500, color:'rgba(255,255,255,0.32)', lineHeight:1.4 }}>{row.bad}</span>
-                </div>
-                {/* Right — vibrant */}
-                <div style={{ padding:'10px 16px',
+                </div>,
+                /* Right cell */
+                <div key={`good-${i}`} style={{
+                  padding:'10px 16px',
+                  borderBottom: i < 4 ? '1px solid rgba(255,255,255,0.045)' : 'none',
+                  borderLeft:`2px solid ${row.color}45`,
                   background: i % 2 === 0 ? `linear-gradient(90deg,${row.color}09,rgba(127,119,221,0.06))` : `linear-gradient(90deg,rgba(127,119,221,0.05),${row.color}07)`,
                   display:'flex', alignItems:'center', gap:8,
-                  borderLeft:`2px solid ${row.color}45` }}>
+                }}>
                   <div style={{ width:17, height:17, borderRadius:'50%', background:`${row.color}22`, border:`1px solid ${row.color}55`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
                     <span style={{ fontSize:9, color:row.color, fontWeight:900, lineHeight:1 }}>✓</span>
                   </div>
                   <span style={{ fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.9)', lineHeight:1.4 }}>{row.good}</span>
-                </div>
-              </div>
-            ))}
+                </div>,
+              ])}
+
+            </div>
 
             {/* Price footer */}
             <div style={{ background:'linear-gradient(90deg,rgba(10,14,32,0.9),rgba(127,119,221,0.15),rgba(10,14,32,0.9))',
