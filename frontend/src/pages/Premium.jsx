@@ -2800,23 +2800,8 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
         <div style={{ fontSize:42, fontWeight:900, letterSpacing:'-1px', marginBottom:'0.7rem', background:'linear-gradient(135deg, #fff 0%, #E8A838 45%, #fff 100%)', backgroundSize:'200% auto', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', animation:'shimmer 4s linear infinite, heroFadeUp 0.5s 0.1s ease both' }}>
           Go Pro. Get Hired.
         </div>
-        <div style={{ fontSize:16, color:'rgba(255,255,255,0.45)', marginBottom:'1.2rem', animation:'heroFadeUp 0.5s 0.2s ease both' }}>
+        <div style={{ fontSize:16, color:'rgba(255,255,255,0.45)', marginBottom:'1.6rem', animation:'heroFadeUp 0.5s 0.2s ease both' }}>
           Everything you need to land your first Data, BI or Product Analytics role — in one ₹149 membership
-        </div>
-
-        {/* Skill chips */}
-        <div style={{ display:'flex', gap:8, justifyContent:'center', flexWrap:'wrap', marginBottom:'1.6rem', animation:'heroFadeUp 0.5s 0.25s ease both' }}>
-          {[
-            { label:'SQL',      icon:'🗄️',  color:'#4A90D9' },
-            { label:'Python',   icon:null,   color:'#3776AB', python:true },
-            { label:'Power BI', icon:'📊',  color:'#2B79D4' },
-            { label:'Excel',    icon:'📗',  color:'#1D9E75' },
-            { label:'Analytics',icon:'📈',  color:'#5CC8A0' },
-          ].map(t => (
-            <span key={t.label} style={{ display:'inline-flex', alignItems:'center', gap:5, padding:'5px 13px', borderRadius:20, background:`${t.color}18`, border:`1px solid ${t.color}40`, fontSize:12, fontWeight:700, color:t.color, whiteSpace:'nowrap' }}>
-              {t.python ? <PyLogo /> : t.icon} {t.label}
-            </span>
-          ))}
         </div>
 
         {/* Price + CTA */}
