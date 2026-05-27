@@ -2854,7 +2854,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
         {/* Placement companies ticker */}
         <div style={{ marginTop:'1.8rem', paddingTop:'1.5rem', borderTop:'1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.22)', textTransform:'uppercase', letterSpacing:'2px', marginBottom:'0.9rem' }}>
-            🎓 Students placed at
+            💼 Opportunities from
           </div>
           <div style={{ overflow:'hidden', maskImage:'linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)' }}>
             <div style={{ display:'flex', gap:16, width:'max-content', animation:'marqueeScroll 18s linear infinite' }}>
