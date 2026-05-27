@@ -283,8 +283,8 @@ export default function AuthPage({ mode: initialMode }) {
         {/* ── MIDDLE: Headline + cards + ticker ── */}
         <div style={{ animation: 'fadeInUp 0.45s 0.06s ease both' }}>
           <div className="auth-hero-headline">
-            Not just learning.<br />
-            <span className="auth-gradient-text">Mentored until you're hired.</span>
+            Practice. Get mentored.<br />
+            <span className="auth-gradient-text">Get hired.</span>
           </div>
           <div className="auth-hero-sub">
             Beyond courses — guided mentorship, placement assistance &amp; real-world practice. Everything you need to land a Data Analyst, BI Engineer, Product Analyst or BI Analyst role.
