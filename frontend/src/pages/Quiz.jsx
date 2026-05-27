@@ -121,11 +121,61 @@ export default function Quiz() {
 
   // ── Course Selection ──────────────────────────────────────────────────────
   if (screen === SCREEN.COURSE_SELECT) {
+    const totalQ   = courses.reduce((s, c) => s + (c.question_count || 0), 0);
+    const totalXP  = totalQ * 30;
+    const totalTopics = courses.reduce((s, c) => s + (c.topic_count || 0), 0);
+
     return (
       <div className="page">
-        <div className="page-header">
-          <div className="page-title">Quiz Center</div>
-          <div className="page-sub">Choose a course to test your knowledge and earn XP</div>
+
+        {/* ── Header ── */}
+        <div style={{ marginBottom: '1.8rem' }}>
+          <div className="page-title">⚡ Quiz Center</div>
+          <div className="page-sub" style={{ marginTop: 4 }}>Test your knowledge, sharpen your skills, and earn XP</div>
+        </div>
+
+        {/* ── Stats strip ── */}
+        {courses.length > 0 && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.9rem', marginBottom: '2rem' }}>
+            {[
+              { icon: '📚', label: 'Courses',   val: courses.length,   color: '#4A90D9' },
+              { icon: '❓', label: 'Questions', val: totalQ,            color: '#a78bfa' },
+              { icon: '🏷️', label: 'Topics',    val: totalTopics,       color: '#5CC8A0' },
+              { icon: '⚡', label: 'Max XP',    val: `${(totalXP).toLocaleString()}`, color: '#E8A838' },
+            ].map(s => (
+              <div key={s.label} className="card" style={{ textAlign: 'center', padding: '1rem 0.8rem' }}>
+                <div style={{ fontSize: 22, marginBottom: 5 }}>{s.icon}</div>
+                <div style={{ fontSize: 22, fontWeight: 900, color: s.color, lineHeight: 1 }}>{s.val}</div>
+                <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.8px', marginTop: 4 }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ── How quizzes work ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '0.8rem', marginBottom: '2rem' }}>
+          {[
+            { icon: '🎯', title: 'Pick a topic', desc: 'Choose any course and topic to focus your practice' },
+            { icon: '✅', title: 'Answer & learn', desc: 'Each question reveals a detailed explanation after you answer' },
+            { icon: '🏆', title: 'Earn +30 XP', desc: 'Gain 30 XP per correct answer and climb the leaderboard' },
+          ].map(s => (
+            <div key={s.title} style={{
+              display: 'flex', alignItems: 'flex-start', gap: 12,
+              padding: '12px 16px', borderRadius: 12,
+              background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.06)',
+            }}>
+              <div style={{ fontSize: 20, flexShrink: 0, marginTop: 1 }}>{s.icon}</div>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 12.5, color: '#fff', marginBottom: 3 }}>{s.title}</div>
+                <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.38)', lineHeight: 1.55 }}>{s.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ── Section label ── */}
+        <div style={{ fontSize: 10, fontWeight: 800, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.9rem' }}>
+          Choose a course
         </div>
 
         {courses.length === 0 ? (
@@ -133,7 +183,7 @@ export default function Quiz() {
             No quizzes available yet. Complete a course to unlock quizzes.
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem', maxWidth: 900 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(270px, 1fr))', gap: '1rem' }}>
             {courses.map(course => (
               <button
                 key={course.id}
@@ -141,44 +191,95 @@ export default function Quiz() {
                 style={{
                   background: 'var(--card)',
                   border: '1.5px solid var(--border)',
-                  borderRadius: 'var(--radius)',
-                  padding: '1.25rem',
+                  borderRadius: 14,
+                  padding: '1.3rem',
                   cursor: 'pointer',
                   textAlign: 'left',
-                  transition: 'border-color 0.15s, transform 0.1s',
+                  transition: 'border-color 0.15s, transform 0.1s, box-shadow 0.15s',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '0.75rem',
+                  gap: '0.8rem',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = course.color || '#7F77DD'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'none'; }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = course.color || '#7F77DD';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = `0 8px 28px ${course.color || '#7F77DD'}22`;
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'var(--border)';
+                  e.currentTarget.style.transform = 'none';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
               >
+                {/* Icon + Title */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                   <div style={{
-                    width: 44, height: 44, borderRadius: 10,
-                    background: `${course.color || '#7F77DD'}22`,
+                    width: 46, height: 46, borderRadius: 11,
+                    background: `${course.color || '#7F77DD'}20`,
+                    border: `1px solid ${course.color || '#7F77DD'}35`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: 22, flexShrink: 0,
                   }}>
                     {course.icon || '📊'}
                   </div>
-                  <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', lineHeight: 1.3 }}>{course.title}</div>
+                  <div style={{ fontWeight: 800, fontSize: 14, color: 'var(--text)', lineHeight: 1.3 }}>{course.title}</div>
                 </div>
+
+                {/* Divider */}
+                <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }} />
+
+                {/* Stats row */}
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: 11, background: 'var(--bg)', borderRadius: 20, padding: '3px 10px', color: 'var(--muted)', border: '1px solid var(--border)' }}>
-                    {course.topic_count} topic{course.topic_count !== 1 ? 's' : ''}
+                  <span style={{ fontSize: 11, background: 'rgba(255,255,255,0.05)', borderRadius: 20, padding: '3px 10px', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                    📂 {course.topic_count} topic{course.topic_count !== 1 ? 's' : ''}
                   </span>
-                  <span style={{ fontSize: 11, background: 'var(--bg)', borderRadius: 20, padding: '3px 10px', color: 'var(--muted)', border: '1px solid var(--border)' }}>
-                    {course.question_count} questions
+                  <span style={{ fontSize: 11, background: 'rgba(255,255,255,0.05)', borderRadius: 20, padding: '3px 10px', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                    ❓ {course.question_count} questions
+                  </span>
+                  <span style={{ fontSize: 11, background: `${course.color || '#7F77DD'}12`, borderRadius: 20, padding: '3px 10px', color: course.color || '#7F77DD', border: `1px solid ${course.color || '#7F77DD'}28`, fontWeight: 700 }}>
+                    ⚡ up to +{(course.question_count || 0) * 30} XP
                   </span>
                 </div>
-                <div style={{ color: course.color || '#7F77DD', fontSize: 13, fontWeight: 600 }}>
-                  Start Quiz →
+
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ color: course.color || '#7F77DD', fontSize: 13, fontWeight: 700 }}>
+                    Start Quiz →
+                  </div>
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', fontWeight: 600 }}>
+                    30 XP / correct
+                  </div>
                 </div>
               </button>
             ))}
           </div>
         )}
+
+        {/* ── Tips banner ── */}
+        {courses.length > 0 && (
+          <div style={{
+            marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(220px,1fr))', gap: '0.7rem',
+          }}>
+            <div style={{ fontSize: 10, fontWeight: 800, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '2px', gridColumn: '1 / -1', marginBottom: 4 }}>
+              Quick tips
+            </div>
+            {[
+              { icon: '🔁', tip: 'Retake quizzes to reinforce weak areas and maximise retention' },
+              { icon: '📅', tip: 'Quiz daily to maintain your streak and keep XP climbing' },
+              { icon: '🎯', tip: 'Pick a specific topic for targeted prep before interviews' },
+              { icon: '💡', tip: 'Read every explanation — even for questions you get right' },
+            ].map(t => (
+              <div key={t.tip} style={{
+                display: 'flex', alignItems: 'flex-start', gap: 10,
+                padding: '10px 13px', borderRadius: 10,
+                background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)',
+              }}>
+                <span style={{ fontSize: 16, flexShrink: 0 }}>{t.icon}</span>
+                <span style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.35)', lineHeight: 1.55 }}>{t.tip}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
       </div>
     );
   }

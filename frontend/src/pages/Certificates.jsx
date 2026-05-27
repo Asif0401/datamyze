@@ -3,6 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../hooks/useApi';
 
+const PyLogo = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style={{ verticalAlign:'middle', display:'inline-block' }}>
+    <path d="M11.914 2c-4.638 0-4.344 2.017-4.344 2.017v2.09h4.413v.626H6.34S3.287 6.386 3.287 10.994c0 4.609 2.697 4.447 2.697 4.447h1.613V13.23s-.088-2.697 2.654-2.697h4.368s2.552.041 2.552-2.467V3.855S17.562 2 11.914 2zm-2.316 1.51c.466 0 .843.377.843.843a.844.844 0 1 1-1.687 0c0-.466.378-.843.844-.843z" fill="#3776AB"/>
+    <path d="M12.086 22c4.638 0 4.344-2.017 4.344-2.017v-2.09H12v-.626h5.643s3.053.347 3.053-4.261c0-4.609-2.697-4.447-2.697-4.447h-1.613v2.216s.088 2.697-2.654 2.697H9.364s-2.552-.041-2.552 2.467v4.211S6.422 22 12.086 22zm2.316-1.509a.844.844 0 1 1 0-1.687c.466 0 .843.377.843.843a.844.844 0 0 1-.843.844z" fill="#FFD343"/>
+  </svg>
+);
+
 /* ── Decorative SVG seal ─────────────────────────────── */
 const CertSeal = () => (
   <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -113,32 +120,141 @@ export default function Certificates() {
 
   /* ── Premium gate ── */
   if (!isPremium) return (
-    <div className="page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '70vh' }}>
-      <div style={{ textAlign: 'center', maxWidth: 460 }}>
-        <div style={{ fontSize: 72, marginBottom: '1rem', filter: 'grayscale(0.3)' }}>🎓</div>
-        <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: '0.6rem', letterSpacing: '-0.4px' }}>
-          Certificates are a <span style={{ background: 'linear-gradient(135deg,#E8A838,#f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Pro</span> feature
+    <div className="page">
+
+      {/* ── Header ── */}
+      <div style={{ marginBottom: '1.8rem' }}>
+        <div className="page-title">🎓 Certificates</div>
+        <div className="page-sub" style={{ marginTop: 4 }}>Earn verified credentials that employers actually trust</div>
+      </div>
+
+      {/* ── Hero: CTA left + Certificate preview right ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', alignItems: 'center', marginBottom: '2.5rem' }}>
+
+        {/* Left */}
+        <div>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            background: 'rgba(232,168,56,0.1)', border: '1px solid rgba(232,168,56,0.28)',
+            borderRadius: 20, padding: '4px 12px', marginBottom: '1.1rem',
+          }}>
+            <span style={{ fontSize: 12 }}>👑</span>
+            <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: '1.4px', color: '#E8A838', textTransform: 'uppercase' }}>Pro Feature</span>
+          </div>
+          <div style={{ fontSize: 'clamp(22px,2.2vw,32px)', fontWeight: 900, color: '#fff', lineHeight: 1.2, marginBottom: '0.8rem', letterSpacing: '-0.5px' }}>
+            Earn certificates that<br/>
+            <span style={{ background: 'linear-gradient(135deg,#E8A838,#f59e0b 60%,#a78bfa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>get you hired</span>
+          </div>
+          <div style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.48)', lineHeight: 1.8, marginBottom: '1.6rem', maxWidth: 380 }}>
+            Complete any course and instantly receive a verified, LinkedIn-ready certificate with a unique credential ID — proof of your skills that recruiters can verify.
+          </div>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: '1.4rem' }}>
+            <button className="btn-primary" onClick={() => navigate('/premium')}
+              style={{ background: 'linear-gradient(135deg,#E8A838,#f59e0b)', border: 'none', fontSize: 14, padding: '11px 22px' }}>
+              👑 Upgrade to Pro — ₹149
+            </button>
+            <button onClick={() => navigate('/courses')}
+              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.65)', borderRadius: 12, fontSize: 13, padding: '11px 18px', cursor: 'pointer' }}>
+              Browse Courses
+            </button>
+          </div>
+          <div style={{ display: 'flex', gap: 7, flexWrap: 'wrap' }}>
+            {['LinkedIn-ready', 'Verified credential ID', 'Shareable link', 'Lifetime valid'].map(f => (
+              <span key={f} style={{ fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 20, background: 'rgba(92,200,160,0.08)', border: '1px solid rgba(92,200,160,0.22)', color: '#5CC8A0' }}>✓ {f}</span>
+            ))}
+          </div>
         </div>
-        <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, marginBottom: '2rem' }}>
-          Complete courses and earn verified, LinkedIn-ready certificates — exclusive to Pro members. Upgrade to unlock yours.
+
+        {/* Right: blurred mock certificate with lock overlay */}
+        <div style={{ position: 'relative' }}>
+          <div style={{
+            background: 'linear-gradient(145deg,#0d1f3c,#0a1628)',
+            borderRadius: 16, padding: '1.8rem 2rem',
+            border: '1px solid rgba(246,211,101,0.22)',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+            filter: 'blur(2.5px)', userSelect: 'none', pointerEvents: 'none',
+          }}>
+            <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+              <div style={{ fontSize: 9, letterSpacing: '3px', color: 'rgba(246,211,101,0.5)', textTransform: 'uppercase', marginBottom: 8 }}>━━  Certificate of Completion  ━━</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginBottom: 6 }}>This is to proudly certify that</div>
+              <div style={{ fontFamily: 'Georgia, serif', fontSize: 22, fontWeight: 700, color: 'rgba(255,255,255,0.65)', marginBottom: 6 }}>Your Name Here</div>
+              <div style={{ width: 70, height: 1, background: 'rgba(246,211,101,0.3)', margin: '0 auto 10px' }} />
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', marginBottom: 5 }}>has successfully completed</div>
+              <div style={{ fontSize: 15, fontWeight: 800, color: 'rgba(255,255,255,0.55)', marginBottom: 4 }}>🗄️ SQL for Data Analytics</div>
+              <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.2)' }}>Datamyze · Verified Learning Programme</div>
+            </div>
+            <div style={{ borderTop: '1px solid rgba(246,211,101,0.1)', paddingTop: '0.8rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic', fontSize: 13, color: 'rgba(168,200,240,0.5)' }}>Datamyze Team</div>
+                <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.18)', marginTop: 2 }}>Instructor & Founder</div>
+              </div>
+              <div style={{ width: 38, height: 38, borderRadius: '50%', background: 'rgba(246,211,101,0.08)', border: '1.5px solid rgba(246,211,101,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: 'rgba(246,211,101,0.5)', fontWeight: 700, letterSpacing: 1 }}>DM</div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: 8, color: 'rgba(246,211,101,0.4)', letterSpacing: '1px', marginBottom: 3 }}>CREDENTIAL ID</div>
+                <div style={{ fontFamily: 'monospace', fontSize: 10, color: 'rgba(96,165,250,0.5)' }}>DM-SQL-XXXX-XXXX</div>
+                <div style={{ marginTop: 5, fontSize: 8, fontWeight: 700, color: 'rgba(92,200,160,0.5)', background: 'rgba(92,200,160,0.08)', borderRadius: 10, padding: '1px 6px', display: 'inline-block' }}>✓ VERIFIED</div>
+              </div>
+            </div>
+          </div>
+          {/* Lock overlay */}
+          <div style={{
+            position: 'absolute', inset: 0, borderRadius: 16,
+            background: 'rgba(5,12,25,0.55)', backdropFilter: 'blur(1px)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8,
+          }}>
+            <div style={{ fontSize: 30, filter: 'drop-shadow(0 0 12px rgba(232,168,56,0.4))' }}>🔒</div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.65)' }}>Unlock with Pro</div>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button className="btn-primary" onClick={() => navigate('/premium')}
-            style={{ background: 'linear-gradient(135deg,#E8A838,#f59e0b)', border: 'none', fontSize: 15, padding: '12px 28px' }}>
-            👑 Upgrade to Pro
-          </button>
-          <button onClick={() => navigate('/courses')}
-            style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.7)', borderRadius: 12, fontSize: 14, padding: '12px 24px' }}>
-            Browse Courses
-          </button>
-        </div>
-        {/* Feature highlights */}
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: '2rem', flexWrap: 'wrap' }}>
-          {['LinkedIn-ready', 'Verified credential ID', 'Shareable link'].map(f => (
-            <span key={f} style={{ fontSize: 12, fontWeight: 600, padding: '5px 12px', borderRadius: 20, background: 'rgba(232,168,56,0.10)', border: '1px solid rgba(232,168,56,0.25)', color: '#E8A838' }}>✓ {f}</span>
+      </div>
+
+      {/* ── How it works ── */}
+      <div style={{ marginBottom: '2rem' }}>
+        <div style={{ fontSize: 10, fontWeight: 800, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1rem' }}>How it works</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+          {[
+            { step: '01', icon: '📚', title: 'Complete a Course', desc: 'Finish any full course on Datamyze with all lessons done and the final assessment passed' },
+            { step: '02', icon: '🎓', title: 'Get Your Certificate', desc: 'A verified certificate with a unique credential ID is instantly generated for your profile' },
+            { step: '03', icon: '💼', title: 'Add to LinkedIn', desc: 'Share it on LinkedIn, copy your credential ID for applications, or download it as a PDF' },
+          ].map(s => (
+            <div key={s.step} className="card" style={{ padding: '1.2rem', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 8, right: 12, fontSize: 32, fontWeight: 900, color: 'rgba(255,255,255,0.035)', fontFamily: 'monospace' }}>{s.step}</div>
+              <div style={{ fontSize: 26, marginBottom: 8 }}>{s.icon}</div>
+              <div style={{ fontWeight: 800, fontSize: 13, color: '#fff', marginBottom: 5 }}>{s.title}</div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)', lineHeight: 1.6 }}>{s.desc}</div>
+            </div>
           ))}
         </div>
       </div>
+
+      {/* ── Available certificate tracks ── */}
+      <div>
+        <div style={{ fontSize: 10, fontWeight: 800, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1rem' }}>Certificate tracks</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: '0.7rem' }}>
+          {[
+            { icon: '🗄️',                                              title: 'SQL for Data Analytics',  color: '#4A90D9' },
+            { icon: <PyLogo />,                                         title: 'Python for Analytics',    color: '#3776AB' },
+            { icon: '📊',                                               title: 'Power BI Fundamentals',   color: '#F2C811' },
+            { icon: '📗',                                               title: 'Excel for Data Analysis', color: '#1D6F42' },
+            { icon: '📈',                                               title: 'Statistics & Probability', color: '#BA7517' },
+            { icon: '🤖',                                               title: 'Machine Learning Basics', color: '#a78bfa' },
+          ].map(t => (
+            <div key={t.title} style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              padding: '10px 14px', borderRadius: 12,
+              background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)',
+            }}>
+              <div style={{ width: 34, height: 34, borderRadius: 9, background: `${t.color}18`, border: `1px solid ${t.color}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, flexShrink: 0 }}>{t.icon}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#fff', lineHeight: 1.3 }}>{t.title}</div>
+                <div style={{ fontSize: 10, color: t.color, fontWeight: 600, marginTop: 2 }}>Certificate available</div>
+              </div>
+              <div style={{ fontSize: 12, opacity: 0.4 }}>🔒</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div>
   );
 
