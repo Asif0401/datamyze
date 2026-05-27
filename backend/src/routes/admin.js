@@ -184,7 +184,7 @@ router.get('/instructor', authMiddleware, async (req, res) => {
 
   res.json({
     name: admin?.name || 'Asif Khan',
-    title: admin?.job_title || 'Lead Instructor',
+    title: admin?.job_title || 'Lead Mentor',
     bio: admin?.bio || null,
     location: admin?.location || 'India',
     linkedin_url: admin?.linkedin_url || 'https://www.linkedin.com/in/pathan-asif-khan-/',
