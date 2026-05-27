@@ -291,46 +291,75 @@ export default function AuthPage({ mode: initialMode }) {
             Beyond courses — guided mentorship, placement assistance &amp; real-world practice. Everything you need to land a Data Analyst, BI Engineer, Product Analyst or BI Analyst role.
           </div>
 
-          {/* Why Datamyze — single card */}
+          {/* Platform overview card */}
           <div style={{
             marginTop: '1.2rem',
-            background: 'linear-gradient(145deg, rgba(56,189,248,0.06) 0%, rgba(127,119,221,0.06) 50%, rgba(10,18,42,0.5) 100%)',
+            background: 'linear-gradient(150deg, rgba(56,189,248,0.05) 0%, rgba(127,119,221,0.07) 55%, rgba(10,18,42,0.55) 100%)',
             border: '1px solid rgba(255,255,255,0.09)',
             borderRadius: 18,
-            padding: '16px 16px 14px',
+            padding: '15px 15px 13px',
             position: 'relative',
             overflow: 'hidden',
           }}>
-            {/* Top accent */}
+            {/* Top accent line */}
             <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'linear-gradient(90deg, transparent, #38bdf8 30%, #a78bfa 70%, transparent)' }} />
-            {/* Glow blob */}
-            <div style={{ position:'absolute', top:-40, right:-40, width:120, height:120, borderRadius:'50%', background:'radial-gradient(circle, rgba(127,119,221,0.12), transparent)', pointerEvents:'none' }} />
+            {/* Corner glow */}
+            <div style={{ position:'absolute', top:-50, right:-50, width:130, height:130, borderRadius:'50%', background:'radial-gradient(circle, rgba(127,119,221,0.1), transparent)', pointerEvents:'none' }} />
 
-            {/* Header */}
-            <div style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.35)', letterSpacing:1.2, textTransform:'uppercase', marginBottom:10 }}>
-              Why Datamyze?
+            {/* ── Section 1: What you get ── */}
+            <div style={{ fontSize:9.5, fontWeight:700, color:'rgba(255,255,255,0.3)', letterSpacing:1.3, textTransform:'uppercase', marginBottom:8 }}>
+              Everything in one place
+            </div>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:'7px 8px', marginBottom:13 }}>
+              {[
+                { icon:'🗄️', label:'SQL Practice',      color:'#38bdf8' },
+                { icon:'🐍', label:'Python & Pandas',   color:'#5CC8A0' },
+                { icon:'🎙️', label:'Mock Interviews',   color:'#a78bfa' },
+                { icon:'💼', label:'Job Board',         color:'#38bdf8' },
+                { icon:'📄', label:'Resume Review',     color:'#E8A838' },
+                { icon:'🗺️', label:'Course Roadmaps',   color:'#f87171' },
+                { icon:'📜', label:'Certificates',      color:'#5CC8A0' },
+                { icon:'🔬', label:'Case Studies',      color:'#a78bfa' },
+                { icon:'🧠', label:'Quizzes',           color:'#38bdf8' },
+              ].map(f => (
+                <div key={f.label} style={{
+                  display:'flex', alignItems:'center', gap:5,
+                  background:'rgba(255,255,255,0.04)',
+                  border:`1px solid ${f.color}18`,
+                  borderRadius:9, padding:'5px 7px',
+                }}>
+                  <span style={{ fontSize:12, flexShrink:0 }}>{f.icon}</span>
+                  <span style={{ fontSize:9.5, fontWeight:600, color:'rgba(255,255,255,0.55)', lineHeight:1.2 }}>{f.label}</span>
+                </div>
+              ))}
             </div>
 
-            {/* 4 differentiators */}
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px 12px', marginBottom:13 }}>
+            {/* ── Divider ── */}
+            <div style={{ height:1, background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent)', marginBottom:11 }} />
+
+            {/* ── Section 2: Why we're different ── */}
+            <div style={{ fontSize:9.5, fontWeight:700, color:'rgba(255,255,255,0.3)', letterSpacing:1.3, textTransform:'uppercase', marginBottom:9 }}>
+              Why we're different
+            </div>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'7px 14px', marginBottom:13 }}>
               {[
-                { icon:'🧑‍💼', title:'1-on-1 Mentorship',   desc:'Guided by a real industry analyst' },
-                { icon:'🎯', title:'Placement Support',   desc:'We stay with you until you\'re hired' },
-                { icon:'💡', title:'Real Interview Qs',   desc:'From Flipkart, Swiggy, Razorpay & more' },
-                { icon:'🗺️', title:'Career Roadmaps',     desc:'Know exactly what to learn & when' },
+                { icon:'🧑‍💼', title:'1-on-1 Mentorship',  desc:'Real guidance from an industry analyst' },
+                { icon:'🎯', title:'Placement Support',  desc:'With you until you get the offer letter' },
+                { icon:'💡', title:'Industry Problems',  desc:'Flipkart, Swiggy, Razorpay interview Qs' },
+                { icon:'🏆', title:'All Data Roles',     desc:'Analyst, BI Engineer, Product Analyst & more' },
               ].map(p => (
-                <div key={p.title} style={{ display:'flex', gap:8, alignItems:'flex-start' }}>
-                  <span style={{ fontSize:15, flexShrink:0, marginTop:1 }}>{p.icon}</span>
+                <div key={p.title} style={{ display:'flex', gap:7, alignItems:'flex-start' }}>
+                  <span style={{ fontSize:14, flexShrink:0, marginTop:1 }}>{p.icon}</span>
                   <div>
-                    <div style={{ fontSize:11.5, fontWeight:700, color:'#f1f5f9', lineHeight:1.2 }}>{p.title}</div>
-                    <div style={{ fontSize:10, color:'rgba(255,255,255,0.38)', lineHeight:1.4, marginTop:1 }}>{p.desc}</div>
+                    <div style={{ fontSize:11, fontWeight:700, color:'#e2e8f0', lineHeight:1.2 }}>{p.title}</div>
+                    <div style={{ fontSize:9.5, color:'rgba(255,255,255,0.35)', lineHeight:1.4, marginTop:1.5 }}>{p.desc}</div>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Bottom stat strip */}
-            <div style={{ display:'flex', gap:0, borderTop:'1px solid rgba(255,255,255,0.06)', paddingTop:11 }}>
+            {/* ── Section 3: Stats strip ── */}
+            <div style={{ display:'flex', borderTop:'1px solid rgba(255,255,255,0.06)', paddingTop:11 }}>
               {[
                 { n:'400+', l:'Problems', c:'#38bdf8' },
                 { n:'9',    l:'Courses',  c:'#a78bfa' },
@@ -339,10 +368,11 @@ export default function AuthPage({ mode: initialMode }) {
               ].map((s, i) => (
                 <div key={s.l} style={{ flex:1, textAlign:'center', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
                   <div style={{ fontSize:14, fontWeight:900, color:s.c, lineHeight:1 }}>{s.n}</div>
-                  <div style={{ fontSize:8.5, color:'rgba(255,255,255,0.32)', marginTop:2, fontWeight:600, letterSpacing:0.4, textTransform:'uppercase' }}>{s.l}</div>
+                  <div style={{ fontSize:8, color:'rgba(255,255,255,0.3)', marginTop:2, fontWeight:600, letterSpacing:0.4, textTransform:'uppercase' }}>{s.l}</div>
                 </div>
               ))}
             </div>
+
           </div>
 
           {/* Scrolling feature ticker */}
