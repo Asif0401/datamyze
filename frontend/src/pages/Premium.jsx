@@ -2881,46 +2881,46 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
 
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1.4fr', gap:0, position:'relative' }}>
             {/* Left: Price + CTA */}
-            <div style={{ padding:'2.5rem 2rem', borderRight:'1px solid rgba(255,255,255,0.07)', display:'flex', flexDirection:'column', justifyContent:'space-between' }}>
-              <div style={{ fontSize:11, fontWeight:800, color:'#E8A838', textTransform:'uppercase', letterSpacing:'1.5px', marginBottom:14 }}>✦ Lifetime Access</div>
+            <div style={{ padding:'2rem 1.8rem', borderRight:'1px solid rgba(255,255,255,0.07)', display:'flex', flexDirection:'column', justifyContent:'flex-start' }}>
+              <div style={{ fontSize:11, fontWeight:800, color:'#E8A838', textTransform:'uppercase', letterSpacing:'1.5px', marginBottom:10 }}>✦ Lifetime Access</div>
 
               {/* Price */}
-              <div style={{ display:'flex', alignItems:'flex-start', gap:4, marginBottom:6 }}>
-                <span style={{ fontSize:68, fontWeight:900, letterSpacing:'-3px', lineHeight:1, background:'linear-gradient(135deg, #E8A838, #F07B6A)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>₹{AMOUNT}</span>
+              <div style={{ display:'flex', alignItems:'flex-start', gap:4, marginBottom:2 }}>
+                <span style={{ fontSize:62, fontWeight:900, letterSpacing:'-3px', lineHeight:1, background:'linear-gradient(135deg, #E8A838, #F07B6A)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>₹{AMOUNT}</span>
               </div>
-              <div style={{ fontSize:13, color:'rgba(255,255,255,0.35)', marginBottom:12 }}>one-time · no subscription ever</div>
+              <div style={{ fontSize:12, color:'rgba(255,255,255,0.35)', marginBottom:8 }}>one-time · no subscription ever</div>
 
               {/* Savings badge */}
-              <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:'2rem' }}>
-                <span style={{ fontSize:15, color:'rgba(255,255,255,0.25)', textDecoration:'line-through' }}>₹999</span>
+              <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:'1.2rem' }}>
+                <span style={{ fontSize:14, color:'rgba(255,255,255,0.25)', textDecoration:'line-through' }}>₹999</span>
                 <span style={{ fontSize:11, fontWeight:800, padding:'3px 10px', borderRadius:20, background:'rgba(92,200,160,0.14)', border:'1px solid rgba(92,200,160,0.30)', color:'#5CC8A0' }}>Save ₹850 (85% OFF)</span>
               </div>
 
               {/* CTA */}
-              <button className="btn-gold" style={{ width:'100%', justifyContent:'center', fontSize:16, padding:'15px 20px' }} onClick={() => setShowModal(true)}>
+              <button className="btn-gold" style={{ width:'100%', justifyContent:'center', fontSize:15, padding:'13px 20px' }} onClick={() => setShowModal(true)}>
                 <span>👑</span> Get Pro — ₹{AMOUNT}
               </button>
 
               {/* Trust */}
-              <div style={{ marginTop:'1rem', fontSize:12, color:'rgba(255,255,255,0.22)', display:'flex', flexDirection:'column', gap:5 }}>
+              <div style={{ marginTop:'0.75rem', fontSize:11.5, color:'rgba(255,255,255,0.22)', display:'flex', flexDirection:'column', gap:4 }}>
                 <div style={{ display:'flex', alignItems:'center', gap:6 }}><span>🔒</span> One-time payment • Instant access</div>
                 <div style={{ display:'flex', alignItems:'center', gap:6 }}><span>📱</span> UPI, PhonePe, GPay, Cards accepted</div>
               </div>
             </div>
 
             {/* Right: Feature list */}
-            <div style={{ padding:'2.5rem 2rem', display:'flex', flexDirection:'column' }}>
-              <div style={{ fontSize:11, fontWeight:800, color:'rgba(255,255,255,0.35)', textTransform:'uppercase', letterSpacing:'1.5px', marginBottom:16 }}>Everything included</div>
-              <div style={{ display:'flex', flexDirection:'column', gap:6, flex:1 }}>
+            <div style={{ padding:'2rem 1.8rem' }}>
+              <div style={{ fontSize:11, fontWeight:800, color:'rgba(255,255,255,0.35)', textTransform:'uppercase', letterSpacing:'1.5px', marginBottom:10 }}>Everything included</div>
+              <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
                 {FEATURES.map(f => (
-                  <div key={f.label} style={{ display:'flex', alignItems:'center', gap:12, padding:'8px 12px', borderRadius:12, background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.06)', transition:'background 0.15s' }}
+                  <div key={f.label} style={{ display:'flex', alignItems:'center', gap:10, padding:'7px 10px', borderRadius:10, background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.06)', transition:'background 0.15s' }}
                     onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.06)'}
                     onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.03)'}>
-                    <div style={{ width:36, height:36, borderRadius:10, background:f.color+'18', border:`1px solid ${f.color}30`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:17, flexShrink:0 }}>{f.icon}</div>
+                    <div style={{ width:30, height:30, borderRadius:8, background:f.color+'18', border:`1px solid ${f.color}30`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:15, flexShrink:0 }}>{f.icon}</div>
                     <div style={{ flex:1 }}>
-                      <div style={{ fontSize:13, fontWeight:700, color:'#fff', lineHeight:1.3 }}>{f.label}</div>
+                      <div style={{ fontSize:12.5, fontWeight:700, color:'#fff', lineHeight:1.3 }}>{f.label}</div>
                     </div>
-                    <div style={{ width:20, height:20, borderRadius:'50%', background:f.color+'20', border:`1px solid ${f.color}44`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:10, color:f.color, fontWeight:800, flexShrink:0 }}>✓</div>
+                    <div style={{ width:18, height:18, borderRadius:'50%', background:f.color+'20', border:`1px solid ${f.color}44`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:9, color:f.color, fontWeight:800, flexShrink:0 }}>✓</div>
                   </div>
                 ))}
               </div>
