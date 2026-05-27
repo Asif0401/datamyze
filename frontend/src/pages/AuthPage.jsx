@@ -401,7 +401,7 @@ export default function AuthPage({ mode: initialMode }) {
             {/* Heading */}
             <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:7 }}>
               <div style={{ flex:1, height:1, background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.1))' }} />
-              <span style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.3)', letterSpacing:1.5, textTransform:'uppercase', whiteSpace:'nowrap' }}>What we offer</span>
+              <span style={{ fontSize:11, fontWeight:800, color:'rgba(255,255,255,0.55)', letterSpacing:2, textTransform:'uppercase', whiteSpace:'nowrap' }}>What we offer</span>
               <div style={{ flex:1, height:1, background:'linear-gradient(90deg,rgba(255,255,255,0.1),transparent)' }} />
             </div>
             <div style={{
