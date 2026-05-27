@@ -2998,57 +2998,96 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
 
       {showModal && (
         <div className="modal-backdrop" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
-          <div className="modal" style={{ maxWidth: 420 }}>
-            <button className="modal-close" onClick={() => { setShowModal(false); setStep(1); setPayMethod('cashfree'); }}>✕</button>
+          <div className="modal" style={{ maxWidth: 440, padding: 0, overflow: 'hidden' }}>
+            <button className="modal-close" style={{ zIndex: 10 }} onClick={() => { setShowModal(false); setStep(1); setPayMethod('cashfree'); }}>✕</button>
 
-            {/* Payment method toggle */}
-            <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: '1.2rem' }}>
-              {[{ id: 'cashfree', label: '⚡ Pay Online' }, { id: 'upi', label: '📱 UPI Manual' }].map(m => (
-                <button key={m.id} onClick={() => setPayMethod(m.id)}
-                  style={{
-                    padding: '9px 20px', borderRadius: 12, fontWeight: 700, fontSize: 13, cursor: 'pointer',
-                    border: payMethod === m.id ? '1px solid rgba(74,144,217,0.50)' : '1px solid rgba(255,255,255,0.12)',
-                    background: payMethod === m.id ? 'rgba(74,144,217,0.15)' : 'rgba(255,255,255,0.05)',
-                    color: payMethod === m.id ? '#4A90D9' : 'rgba(255,255,255,0.50)',
-                    transition: 'all 0.15s',
-                  }}>
-                  {m.label}
-                </button>
-              ))}
+            {/* ── Rich Header ── */}
+            <div style={{ background: 'linear-gradient(135deg, rgba(232,168,56,0.18) 0%, rgba(240,123,106,0.12) 60%, rgba(74,144,217,0.10) 100%)', borderBottom: '1px solid rgba(232,168,56,0.18)', padding: '1.6rem 1.8rem 1.3rem', textAlign: 'center', position: 'relative' }}>
+              {/* Glow blob */}
+              <div style={{ position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)', width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(232,168,56,0.15), transparent 70%)', pointerEvents: 'none' }} />
+              <div style={{ fontSize: 36, marginBottom: 6 }}>👑</div>
+              <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: '-0.5px', background: 'linear-gradient(135deg, #F5C842, #E8A838, #F07B6A)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', marginBottom: 3 }}>
+                Datamyze Pro
+              </div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.40)', marginBottom: 14 }}>Unlock your full data analytics career toolkit</div>
+
+              {/* What's included — 3 pills */}
+              <div style={{ display: 'flex', gap: 7, justifyContent: 'center', flexWrap: 'wrap' }}>
+                {[
+                  { icon: '🎓', text: 'All Courses' },
+                  { icon: '💼', text: '300+ Jobs' },
+                  { icon: '🏆', text: 'Certificates' },
+                  { icon: '🧑‍💼', text: '1:1 Mentorship' },
+                ].map(f => (
+                  <span key={f.text} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, padding: '4px 11px', borderRadius: 20, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.65)' }}>
+                    {f.icon} {f.text}
+                  </span>
+                ))}
+              </div>
             </div>
 
-            {payMethod === 'cashfree' && (
-              <div className="payment-step" style={{ textAlign: 'center' }}>
-                {/* Amount */}
-                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 4 }}>One-time payment · Lifetime access</div>
-                <div style={{ fontSize: 42, fontWeight: 900, color: '#fff', letterSpacing: '-1.5px', marginBottom: 2 }}>
-                  ₹149
-                </div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.30)', marginBottom: '1.6rem' }}>Datamyze Pro</div>
+            {/* ── Body ── */}
+            <div style={{ padding: '1.4rem 1.8rem 1.8rem' }}>
 
+              {/* Price row */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: '1.2rem' }}>
+                <span style={{ fontSize: 46, fontWeight: 900, letterSpacing: '-2px', background: 'linear-gradient(135deg, #F5C842, #E8A838, #F07B6A)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1 }}>₹149</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', textDecoration: 'line-through' }}>₹999</span>
+                  <span style={{ fontSize: 11, fontWeight: 800, padding: '2px 9px', borderRadius: 20, background: 'rgba(92,200,160,0.14)', border: '1px solid rgba(92,200,160,0.30)', color: '#5CC8A0', whiteSpace: 'nowrap' }}>85% OFF</span>
+                </div>
+              </div>
+
+              {/* Payment method toggle */}
+              <div style={{ display: 'flex', gap: 0, marginBottom: '1.2rem', background: 'rgba(255,255,255,0.05)', borderRadius: 12, padding: 4, border: '1px solid rgba(255,255,255,0.08)' }}>
+                {[{ id: 'cashfree', label: '⚡ Pay Online' }, { id: 'upi', label: '📱 UPI Manual' }].map(m => (
+                  <button key={m.id} onClick={() => setPayMethod(m.id)}
+                    style={{
+                      flex: 1, padding: '9px 12px', borderRadius: 9, fontWeight: 700, fontSize: 13, cursor: 'pointer',
+                      border: 'none',
+                      background: payMethod === m.id ? 'rgba(74,144,217,0.22)' : 'transparent',
+                      color: payMethod === m.id ? '#fff' : 'rgba(255,255,255,0.40)',
+                      boxShadow: payMethod === m.id ? '0 2px 8px rgba(0,0,0,0.25)' : 'none',
+                      transition: 'all 0.15s',
+                    }}>
+                    {m.label}
+                  </button>
+                ))}
+              </div>
+
+            {payMethod === 'cashfree' && (
+              <div style={{ textAlign: 'center' }}>
                 {/* Pay button */}
                 <button
                   className="btn-gold"
-                  style={{ width: '100%', justifyContent: 'center', fontSize: 17, padding: '14px 24px', opacity: cfLoading ? 0.7 : 1 }}
+                  style={{ width: '100%', justifyContent: 'center', fontSize: 16, padding: '15px 24px', opacity: cfLoading ? 0.7 : 1 }}
                   onClick={handleCashfreePay}
                   disabled={cfLoading}
                 >
                   {cfLoading
-                    ? <><span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite', marginRight: 10 }} />Processing…</>
+                    ? <><span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} /> Processing…</>
                     : <><span>⚡</span> Pay ₹149 Now</>
                   }
                 </button>
 
                 {/* Accepted methods */}
-                <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
-                  {['UPI', 'PhonePe', 'GPay', 'Paytm', 'Cards', 'NetBanking'].map(m => (
-                    <span key={m} style={{ fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.45)' }}>{m}</span>
+                <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center', gap: 6, flexWrap: 'wrap' }}>
+                  {[
+                    { label: 'UPI',        color: '#4A90D9' },
+                    { label: 'PhonePe',    color: '#5F259F' },
+                    { label: 'GPay',       color: '#34A853' },
+                    { label: 'Paytm',      color: '#00BAF2' },
+                    { label: 'Cards',      color: '#E8A838' },
+                    { label: 'NetBanking', color: '#5CC8A0' },
+                  ].map(m => (
+                    <span key={m.label} style={{ fontSize: 11, fontWeight: 700, padding: '4px 11px', borderRadius: 20, background: `${m.color}12`, border: `1px solid ${m.color}30`, color: m.color }}>{m.label}</span>
                   ))}
                 </div>
 
                 {/* Trust line */}
-                <div style={{ marginTop: '1.2rem', fontSize: 12, color: 'rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                  <span>🔒</span> Secured by Cashfree Payments · 256-bit SSL
+                <div style={{ marginTop: '1.1rem', padding: '9px 14px', borderRadius: 10, background: 'rgba(92,200,160,0.05)', border: '1px solid rgba(92,200,160,0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 14 }}>🔒</span>
+                  <span style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.35)' }}>Secured by <strong style={{ color: 'rgba(255,255,255,0.55)' }}>Cashfree Payments</strong> · 256-bit SSL</span>
                 </div>
               </div>
             )}
@@ -3142,6 +3181,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
               </>
             )}
 
+            </div>{/* end body */}
           </div>
         </div>
       )}
