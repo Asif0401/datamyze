@@ -278,7 +278,6 @@ export default function AuthPage({ mode: initialMode }) {
               fontWeight: 900,
             }}>myze</span>
           </span>
-          <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 9px', borderRadius: 20, background: 'rgba(92,200,160,0.15)', border: '1px solid rgba(92,200,160,0.35)', color: '#5CC8A0', boxShadow: '0 0 8px rgba(92,200,160,0.2)' }}>BETA</span>
         </div>
 
         {/* ── MIDDLE: Headline + cards + ticker ── */}
