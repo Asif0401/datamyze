@@ -2785,8 +2785,8 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
         ))}
 
         {/* Social proof badge */}
-        <div style={{ display:'inline-flex', alignItems:'center', gap:7, fontSize:12, fontWeight:700, padding:'5px 14px', borderRadius:20, background:'rgba(92,200,160,0.12)', border:'1px solid rgba(92,200,160,0.28)', color:'#5CC8A0', marginBottom:'1.4rem', animation:'heroFadeUp 0.4s ease both' }}>
-          <span>✦</span> Trusted by 500+ aspiring data analysts
+        <div style={{ display:'inline-flex', alignItems:'center', gap:7, fontSize:12, fontWeight:700, padding:'5px 14px', borderRadius:20, background:'rgba(232,168,56,0.10)', border:'1px solid rgba(232,168,56,0.28)', color:'#E8A838', marginBottom:'1.4rem', animation:'heroFadeUp 0.4s ease both' }}>
+          <span>⚡</span> One-time payment · Lifetime access · No renewals
         </div>
 
         {/* Crown + floating skill tags */}
