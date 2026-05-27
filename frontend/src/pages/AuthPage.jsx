@@ -291,71 +291,58 @@ export default function AuthPage({ mode: initialMode }) {
             Beyond courses — guided mentorship, placement assistance &amp; real-world practice. Everything you need to land a Data Analyst, BI Engineer, Product Analyst or BI Analyst role.
           </div>
 
-          {/* Track cards — redesigned */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: '1.2rem' }}>
+          {/* Why Datamyze — single card */}
+          <div style={{
+            marginTop: '1.2rem',
+            background: 'linear-gradient(145deg, rgba(56,189,248,0.06) 0%, rgba(127,119,221,0.06) 50%, rgba(10,18,42,0.5) 100%)',
+            border: '1px solid rgba(255,255,255,0.09)',
+            borderRadius: 18,
+            padding: '16px 16px 14px',
+            position: 'relative',
+            overflow: 'hidden',
+          }}>
+            {/* Top accent */}
+            <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'linear-gradient(90deg, transparent, #38bdf8 30%, #a78bfa 70%, transparent)' }} />
+            {/* Glow blob */}
+            <div style={{ position:'absolute', top:-40, right:-40, width:120, height:120, borderRadius:'50%', background:'radial-gradient(circle, rgba(127,119,221,0.12), transparent)', pointerEvents:'none' }} />
 
-            {/* ── Free card ── */}
-            <div style={{
-              background: 'linear-gradient(150deg, rgba(56,189,248,0.08) 0%, rgba(10,22,50,0.55) 100%)',
-              border: '1px solid rgba(56,189,248,0.18)',
-              borderRadius: 18, padding: '15px 13px',
-              position: 'relative', overflow: 'hidden',
-              transition: 'transform .22s, box-shadow .22s',
-            }}
-              onMouseEnter={e => { e.currentTarget.style.transform='translateY(-3px)'; e.currentTarget.style.boxShadow='0 10px 32px rgba(56,189,248,0.14)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='none'; }}
-            >
-              <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'linear-gradient(90deg,transparent,#38bdf8,transparent)' }} />
-              {/* Badge */}
-              <div style={{ display:'inline-flex', alignItems:'center', gap:4, background:'rgba(56,189,248,0.1)', border:'1px solid rgba(56,189,248,0.22)', borderRadius:20, padding:'2px 9px', marginBottom:9, fontSize:9.5, fontWeight:700, color:'#38bdf8', letterSpacing:0.8, textTransform:'uppercase' }}>
-                Free Forever
-              </div>
-              <div style={{ fontSize:14.5, fontWeight:800, color:'#f1f5f9', marginBottom:10, letterSpacing:'-0.3px', lineHeight:1.2 }}>Analytics<br/>Starter</div>
-              {/* Stat pills */}
-              <div style={{ display:'flex', gap:6, marginBottom:11 }}>
-                {[{n:'400+',l:'Problems'},{n:'9',l:'Courses'}].map(s => (
-                  <div key={s.l} style={{ flex:1, textAlign:'center', background:'rgba(56,189,248,0.07)', border:'1px solid rgba(56,189,248,0.12)', borderRadius:10, padding:'5px 2px' }}>
-                    <div style={{ fontSize:15, fontWeight:900, color:'#38bdf8', lineHeight:1 }}>{s.n}</div>
-                    <div style={{ fontSize:8.5, color:'rgba(255,255,255,0.38)', marginTop:2, fontWeight:600, letterSpacing:0.5, textTransform:'uppercase' }}>{s.l}</div>
+            {/* Header */}
+            <div style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.35)', letterSpacing:1.2, textTransform:'uppercase', marginBottom:10 }}>
+              Why Datamyze?
+            </div>
+
+            {/* 4 differentiators */}
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px 12px', marginBottom:13 }}>
+              {[
+                { icon:'🧑‍💼', title:'1-on-1 Mentorship',   desc:'Guided by a real industry analyst' },
+                { icon:'🎯', title:'Placement Support',   desc:'We stay with you until you\'re hired' },
+                { icon:'💡', title:'Real Interview Qs',   desc:'From Flipkart, Swiggy, Razorpay & more' },
+                { icon:'🗺️', title:'Career Roadmaps',     desc:'Know exactly what to learn & when' },
+              ].map(p => (
+                <div key={p.title} style={{ display:'flex', gap:8, alignItems:'flex-start' }}>
+                  <span style={{ fontSize:15, flexShrink:0, marginTop:1 }}>{p.icon}</span>
+                  <div>
+                    <div style={{ fontSize:11.5, fontWeight:700, color:'#f1f5f9', lineHeight:1.2 }}>{p.title}</div>
+                    <div style={{ fontSize:10, color:'rgba(255,255,255,0.38)', lineHeight:1.4, marginTop:1 }}>{p.desc}</div>
                   </div>
-                ))}
-              </div>
-              {/* Feature chips */}
-              <div style={{ display:'flex', flexWrap:'wrap', gap:5 }}>
-                {['🗄️ SQL','🐍 Python','🧠 Quizzes','📜 Certs'].map(f => (
-                  <span key={f} style={{ fontSize:10, padding:'3px 8px', background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.08)', borderRadius:20, color:'rgba(255,255,255,0.5)', fontWeight:600 }}>{f}</span>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
 
-            {/* ── Pro card ── */}
-            <div style={{
-              background: 'linear-gradient(150deg, rgba(167,139,250,0.13) 0%, rgba(232,168,56,0.05) 55%, rgba(10,16,38,0.65) 100%)',
-              border: '1px solid rgba(167,139,250,0.28)',
-              borderRadius: 18, padding: '15px 13px',
-              position: 'relative', overflow: 'hidden',
-              transition: 'transform .22s, box-shadow .22s',
-            }}
-              onMouseEnter={e => { e.currentTarget.style.transform='translateY(-3px)'; e.currentTarget.style.boxShadow='0 10px 32px rgba(167,139,250,0.18)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='none'; }}
-            >
-              <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'linear-gradient(90deg,transparent,#a78bfa 40%,#E8A838,transparent)' }} />
-              {/* Shimmer glow blob */}
-              <div style={{ position:'absolute', top:-30, right:-30, width:90, height:90, borderRadius:'50%', background:'radial-gradient(circle, rgba(167,139,250,0.18), transparent)', pointerEvents:'none' }} />
-              {/* Badge */}
-              <div style={{ display:'inline-flex', alignItems:'center', gap:4, background:'linear-gradient(135deg,rgba(167,139,250,0.18),rgba(232,168,56,0.12))', border:'1px solid rgba(167,139,250,0.32)', borderRadius:20, padding:'2px 9px', marginBottom:9, fontSize:9.5, fontWeight:700, color:'#c4b5fd', letterSpacing:0.8, textTransform:'uppercase' }}>
-                👑 Pro · ₹149
-              </div>
-              <div style={{ fontSize:14.5, fontWeight:800, color:'#f1f5f9', marginBottom:10, letterSpacing:'-0.3px', lineHeight:1.2 }}>Career<br/>Fast-Track</div>
-              {/* Feature chips */}
-              <div style={{ display:'flex', flexWrap:'wrap', gap:5, marginBottom:9 }}>
-                {['🎙️ Mock Interview','💼 Job Board','📄 Resume','🎯 Placement'].map(f => (
-                  <span key={f} style={{ fontSize:10, padding:'3px 8px', background:'rgba(167,139,250,0.1)', border:'1px solid rgba(167,139,250,0.2)', borderRadius:20, color:'#c4b5fd', fontWeight:600 }}>{f}</span>
-                ))}
-              </div>
-              <div style={{ fontSize:10, color:'rgba(255,255,255,0.28)', fontWeight:500 }}>+ everything in Free</div>
+            {/* Bottom stat strip */}
+            <div style={{ display:'flex', gap:0, borderTop:'1px solid rgba(255,255,255,0.06)', paddingTop:11 }}>
+              {[
+                { n:'400+', l:'Problems', c:'#38bdf8' },
+                { n:'9',    l:'Courses',  c:'#a78bfa' },
+                { n:'300+', l:'Jobs',     c:'#5CC8A0' },
+                { n:'100%', l:'Placement',c:'#E8A838' },
+              ].map((s, i) => (
+                <div key={s.l} style={{ flex:1, textAlign:'center', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
+                  <div style={{ fontSize:14, fontWeight:900, color:s.c, lineHeight:1 }}>{s.n}</div>
+                  <div style={{ fontSize:8.5, color:'rgba(255,255,255,0.32)', marginTop:2, fontWeight:600, letterSpacing:0.4, textTransform:'uppercase' }}>{s.l}</div>
+                </div>
+              ))}
             </div>
-
           </div>
 
           {/* Scrolling feature ticker */}
