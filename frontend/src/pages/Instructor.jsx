@@ -522,7 +522,7 @@ export default function Instructor() {
       ════════════════════════════════════════════════ */}
       <div ref={statsRef} style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: '3.5rem', position: 'relative', zIndex: 1 }}>
         <StatCard value={3}  suffix="+"  label="Years Experience"   color="#7F77DD" icon="⏱️" started={statsStarted} />
-        <StatCard value={150} suffix="+"  label="Students Taught"    color="#5CC8A0" icon="🎓" started={statsStarted} />
+        <StatCard value={92}  suffix="%"  label="Placement Rate"     color="#5CC8A0" icon="🚀" started={statsStarted} />
         <StatCard value={3}  suffix=""   label="Top Companies"       color="#F07B6A" icon="🏢" started={statsStarted} />
         <StatCard value={6}  suffix=""   label="Courses Created"     color="#38bdf8" icon="📚" started={statsStarted} />
         <StatCard value={100} suffix="+"  label="Problems Curated"   color="#f59e0b" icon="💡" started={statsStarted} />
