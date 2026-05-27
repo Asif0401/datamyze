@@ -434,10 +434,10 @@ export default function Dashboard() {
           </div>
 
           {/* Continue Learning */}
-          {courseProgress?.length > 0 && (
+          {courseProgress?.filter(c => c.progress_percent < 100 && c.progress_percent > 0).length > 0 && (
             <div className="card dash-fadein" style={{ animationDelay: '.3s' }}>
               <div className="card-title">📚 Continue Learning</div>
-              {courseProgress.filter(c => c.progress_percent < 100).slice(0, 3).map(c => (
+              {courseProgress.filter(c => c.progress_percent < 100 && c.progress_percent > 0).slice(0, 3).map(c => (
                 <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
                   <div style={{ fontSize: 28 }}>{c.icon}</div>
                   <div style={{ flex: 1 }}>
@@ -450,6 +450,59 @@ export default function Dashboard() {
               ))}
             </div>
           )}
+
+          {/* Your Roadmap — always visible */}
+          <div className="card dash-fadein" style={{ animationDelay: '.35s' }}>
+            <div className="card-title">🗺️ Your Roadmap</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+              {[
+                { step: 1, icon: '🗄️', title: 'SQL Fundamentals',       sub: 'Joins, CTEs, Window functions',       color: '#4A90D9', done: (stats?.sqlSolved || 0) >= 5 },
+                { step: 2, icon: '🐼', title: 'Python & Pandas',         sub: 'DataFrames, Groupby, EDA',            color: '#5CC8A0', done: (stats?.pythonSolved || 0) >= 5 },
+                { step: 3, icon: '📊', title: 'Case Studies',            sub: 'Real company analytics problems',     color: '#E8A838', done: false },
+                { step: 4, icon: '🎤', title: 'Mock Interview',          sub: 'Live 1:1 with mentor feedback',       color: '#a78bfa', done: false },
+              ].map((s, i) => (
+                <div key={s.step} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 0', borderBottom: i < 3 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                  {/* Line + dot */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
+                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: s.done ? s.color + '25' : 'rgba(255,255,255,0.05)', border: `1.5px solid ${s.done ? s.color : 'rgba(255,255,255,0.12)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: s.done ? 13 : 12 }}>
+                      {s.done ? <span style={{ color: s.color, fontWeight: 900 }}>✓</span> : <span style={{ opacity: 0.4, fontWeight: 700, fontSize: 10 }}>{s.step}</span>}
+                    </div>
+                    {i < 3 && <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.07)', marginTop: 3 }} />}
+                  </div>
+                  {/* Content */}
+                  <div style={{ flex: 1, paddingBottom: 2 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 2 }}>
+                      <span style={{ fontSize: 14 }}>{s.icon}</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: s.done ? 'rgba(255,255,255,0.5)' : '#fff' }}>{s.title}</span>
+                      {s.done && <span style={{ fontSize: 10, fontWeight: 700, color: s.color, background: s.color + '18', borderRadius: 20, padding: '1px 7px' }}>Done</span>}
+                    </div>
+                    <div style={{ fontSize: 11, color: 'var(--muted)' }}>{s.sub}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="card dash-fadein" style={{ animationDelay: '.4s' }}>
+            <div className="card-title">⚡ Quick Actions</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.7rem' }}>
+              {[
+                { icon: '💻', label: 'Solve a Problem', color: '#4A90D9', path: '/problems' },
+                { icon: '⚡', label: 'Take a Quiz',     color: '#a78bfa', path: '/quiz' },
+                { icon: '📚', label: 'Browse Courses',  color: '#5CC8A0', path: '/courses' },
+                { icon: '🏆', label: 'Leaderboard',     color: '#E8A838', path: '/leaderboard' },
+              ].map(a => (
+                <button key={a.label} onClick={() => navigate(a.path)}
+                  style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '10px 12px', borderRadius: 11, background: a.color + '10', border: `1px solid ${a.color}28`, cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = a.color + '20'; e.currentTarget.style.borderColor = a.color + '50'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = a.color + '10'; e.currentTarget.style.borderColor = a.color + '28'; }}>
+                  <span style={{ fontSize: 18 }}>{a.icon}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: a.color }}>{a.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* RIGHT COLUMN */}
