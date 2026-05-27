@@ -496,35 +496,70 @@ select option { background: #1a2035; color: var(--text); }
 }
 .btn-teal:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(92,200,160,0.45); }
 
+@keyframes goldShift {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+@keyframes goldGlow {
+  0%,100% { box-shadow: 0 0 0 1px rgba(240,186,50,0.35), 0 4px 22px rgba(232,168,56,0.50), 0 10px 44px rgba(200,130,30,0.28); }
+  50%     { box-shadow: 0 0 0 1px rgba(240,186,50,0.55), 0 6px 32px rgba(232,168,56,0.75), 0 14px 56px rgba(200,130,30,0.48); }
+}
+
 .btn-gold {
   position: relative; overflow: hidden;
-  background: linear-gradient(135deg, #F5C842 0%, #E8A838 35%, #F07B6A 80%, #E85D40 100%);
-  color: #fff; padding: 12px 28px; font-weight: 800; border-radius: var(--radius);
-  box-shadow: 0 4px 18px rgba(232,168,56,0.45), 0 1px 0 rgba(255,255,255,0.18) inset;
-  font-size: 15px; letter-spacing: 0.3px;
+  background: linear-gradient(120deg,
+    #FFE566 0%,
+    #F0B429 20%,
+    #E8A838 40%,
+    #FFD060 55%,
+    #F0B429 70%,
+    #C97B2F 85%,
+    #F0B429 100%
+  );
+  background-size: 300% 100%;
+  color: #fff;
+  padding: 12px 28px; font-weight: 800; border-radius: var(--radius);
+  font-size: 15px; letter-spacing: 0.45px;
   display: inline-flex; align-items: center; gap: 8px;
-  transition: all 0.22s cubic-bezier(.4,0,.2,1);
-  border: 1px solid rgba(255,220,100,0.30);
-  text-shadow: 0 1px 2px rgba(0,0,0,0.20);
+  transition: transform 0.22s cubic-bezier(.4,0,.2,1), border-color 0.22s;
+  border: 1.5px solid rgba(255,225,90,0.45);
+  text-shadow: 0 1px 3px rgba(90,45,0,0.40);
   cursor: pointer;
+  animation: goldShift 5s ease-in-out infinite, goldGlow 2.8s ease-in-out infinite;
 }
+/* Top-half glass highlight — gives 3-D raised look */
+.btn-gold::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 48%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.22), transparent);
+  pointer-events: none;
+  border-radius: var(--radius) var(--radius) 0 0;
+  z-index: 1;
+}
+/* Shimmer sweep on hover */
 .btn-gold::after {
   content: '';
   position: absolute; top: 0; left: -100%;
-  width: 60%; height: 100%;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.22) 50%, transparent 100%);
-  transform: skewX(-18deg);
-  transition: left 0.55s ease;
+  width: 55%; height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.32) 50%, transparent 100%);
+  transform: skewX(-16deg);
+  transition: left 0.5s ease;
   pointer-events: none;
+  z-index: 2;
 }
+/* Ensure all direct children (text nodes rendered as flex items) sit above pseudo overlays */
+.btn-gold > * { position: relative; z-index: 3; }
+.btn-gold { isolation: isolate; }
 .btn-gold:hover {
-  transform: translateY(-2px) scale(1.015);
-  box-shadow: 0 8px 32px rgba(232,168,56,0.60), 0 2px 0 rgba(255,255,255,0.20) inset;
-  border-color: rgba(255,220,100,0.55);
+  transform: translateY(-3px) scale(1.02);
+  border-color: rgba(255,230,80,0.70);
+  animation: goldShift 2s ease-in-out infinite, goldGlow 1.2s ease-in-out infinite;
 }
 .btn-gold:hover::after { left: 140%; }
-.btn-gold:active { transform: translateY(0) scale(0.99); box-shadow: 0 3px 12px rgba(232,168,56,0.40); }
-.btn-gold:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-gold:active  { transform: translateY(0) scale(0.98); animation: none; }
+.btn-gold:disabled { opacity: 0.45; cursor: not-allowed; transform: none; animation: none; }
 
 /* ── Glassmorphism Card ──────────────────────────────── */
 .card {
