@@ -2921,55 +2921,57 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
 
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1.4fr', gap:0, position:'relative' }}>
             {/* Left: Price + CTA */}
-            <div style={{ padding:'2rem 1.8rem', borderRight:'1px solid rgba(255,255,255,0.07)', display:'flex', flexDirection:'column', justifyContent:'flex-start' }}>
-              <div style={{ fontSize:11, fontWeight:800, color:'#E8A838', textTransform:'uppercase', letterSpacing:'1.5px', marginBottom:10 }}>✦ Lifetime Access</div>
+            <div style={{ padding:'2.2rem 2rem', borderRight:'1px solid rgba(255,255,255,0.07)', display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center' }}>
+
+              {/* Label */}
+              <div style={{ fontSize:11, fontWeight:800, color:'#E8A838', textTransform:'uppercase', letterSpacing:'2px', marginBottom:14 }}>✦ Lifetime Access</div>
 
               {/* Price */}
-              <div style={{ display:'flex', alignItems:'flex-start', gap:4, marginBottom:2 }}>
-                <span style={{ fontSize:62, fontWeight:900, letterSpacing:'-3px', lineHeight:1, background:'linear-gradient(135deg, #E8A838, #F07B6A)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>₹{AMOUNT}</span>
+              <div style={{ fontSize:72, fontWeight:900, letterSpacing:'-4px', lineHeight:1, background:'linear-gradient(135deg, #F5C842, #E8A838, #F07B6A)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', marginBottom:4 }}>
+                ₹{AMOUNT}
               </div>
-              <div style={{ fontSize:12, color:'rgba(255,255,255,0.35)', marginBottom:8 }}>one-time · no subscription ever</div>
+              <div style={{ fontSize:12, color:'rgba(255,255,255,0.30)', marginBottom:14, letterSpacing:'0.3px' }}>one-time · no subscription ever</div>
 
               {/* Savings badge */}
-              <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:'1.2rem' }}>
-                <span style={{ fontSize:14, color:'rgba(255,255,255,0.25)', textDecoration:'line-through' }}>₹999</span>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, marginBottom:20 }}>
+                <span style={{ fontSize:13, color:'rgba(255,255,255,0.22)', textDecoration:'line-through' }}>₹999</span>
                 <span style={{ fontSize:11, fontWeight:800, padding:'3px 10px', borderRadius:20, background:'rgba(92,200,160,0.14)', border:'1px solid rgba(92,200,160,0.30)', color:'#5CC8A0' }}>Save ₹850 (85% OFF)</span>
               </div>
 
               {/* CTA */}
-              <button className="btn-gold" style={{ width:'100%', justifyContent:'center', fontSize:15, padding:'13px 20px' }} onClick={() => setShowModal(true)}>
+              <button className="btn-gold" style={{ width:'100%', justifyContent:'center', fontSize:15, padding:'14px 20px' }} onClick={() => setShowModal(true)}>
                 <span>👑</span> Get Pro — ₹{AMOUNT}
               </button>
 
-              {/* Trust */}
-              <div style={{ marginTop:'0.75rem', fontSize:11.5, color:'rgba(255,255,255,0.22)', display:'flex', flexDirection:'column', gap:4 }}>
-                <div style={{ display:'flex', alignItems:'center', gap:6 }}><span>🔒</span> One-time payment • Instant access</div>
-                <div style={{ display:'flex', alignItems:'center', gap:6 }}><span>📱</span> UPI, PhonePe, GPay, Cards accepted</div>
+              {/* Trust microcopy */}
+              <div style={{ marginTop:10, fontSize:11, color:'rgba(255,255,255,0.20)', display:'flex', flexDirection:'column', alignItems:'center', gap:3 }}>
+                <div>🔒 One-time payment • Instant access</div>
+                <div>📱 UPI · PhonePe · GPay · Cards</div>
               </div>
 
               {/* Divider */}
-              <div style={{ margin:'1rem 0', height:1, background:'rgba(255,255,255,0.07)' }} />
+              <div style={{ margin:'1.2rem 0', width:'100%', height:1, background:'rgba(255,255,255,0.07)' }} />
 
               {/* Why learners choose this */}
-              <div style={{ fontSize:10, fontWeight:800, color:'rgba(255,255,255,0.28)', textTransform:'uppercase', letterSpacing:'1.5px', marginBottom:8 }}>Why learners choose this</div>
-              <div style={{ display:'flex', flexDirection:'column', gap:7 }}>
+              <div style={{ fontSize:10, fontWeight:800, color:'rgba(255,255,255,0.25)', textTransform:'uppercase', letterSpacing:'1.8px', marginBottom:10 }}>Why learners choose this</div>
+              <div style={{ display:'flex', flexDirection:'column', gap:8, width:'100%', textAlign:'left' }}>
                 {[
-                  { icon:'🎯', text:'Interview-ready SQL & Python problems from real companies' },
-                  { icon:'🧑‍💼', text:'Live 1:1 mentorship with an industry expert' },
-                  { icon:'🏆', text:'Verified LinkedIn certificates on course completion' },
-                  { icon:'📈', text:'Full analytics career roadmap — zero to offer letter' },
+                  { icon:'🎯', text:'Interview-ready SQL & Python problems' },
+                  { icon:'🧑‍💼', text:'Live 1:1 mentorship with an expert' },
+                  { icon:'🏆', text:'Verified certificates on completion' },
+                  { icon:'📈', text:'Career roadmap — zero to offer letter' },
                 ].map(b => (
-                  <div key={b.text} style={{ display:'flex', alignItems:'flex-start', gap:8 }}>
-                    <span style={{ fontSize:13, flexShrink:0, marginTop:1 }}>{b.icon}</span>
-                    <span style={{ fontSize:11.5, color:'rgba(255,255,255,0.45)', lineHeight:1.5 }}>{b.text}</span>
+                  <div key={b.text} style={{ display:'flex', alignItems:'center', gap:9 }}>
+                    <span style={{ fontSize:13, flexShrink:0 }}>{b.icon}</span>
+                    <span style={{ fontSize:12, color:'rgba(255,255,255,0.50)', lineHeight:1.4 }}>{b.text}</span>
                   </div>
                 ))}
               </div>
 
               {/* No-renewal guarantee */}
-              <div style={{ marginTop:'1rem', padding:'8px 12px', borderRadius:10, background:'rgba(92,200,160,0.06)', border:'1px solid rgba(92,200,160,0.18)', display:'flex', alignItems:'center', gap:8 }}>
-                <span style={{ fontSize:15 }}>🛡️</span>
-                <span style={{ fontSize:11.5, color:'rgba(92,200,160,0.75)', lineHeight:1.5 }}>No auto-renewal. No hidden charges. Ever.</span>
+              <div style={{ marginTop:14, width:'100%', padding:'9px 12px', borderRadius:10, background:'rgba(92,200,160,0.06)', border:'1px solid rgba(92,200,160,0.18)', display:'flex', alignItems:'center', justifyContent:'center', gap:7 }}>
+                <span style={{ fontSize:14 }}>🛡️</span>
+                <span style={{ fontSize:11.5, color:'rgba(92,200,160,0.75)' }}>No auto-renewal. No hidden charges. Ever.</span>
               </div>
             </div>
 
