@@ -255,32 +255,25 @@ export default function AuthPage({ mode: initialMode }) {
 
         {/* ── TOP: Logo ── */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, animation: 'fadeInUp 0.4s ease both' }}>
-          <div className="auth-logo-icon" style={{ width: 46, height: 46, borderRadius: 13, background: 'transparent', boxShadow: '0 0 22px rgba(37,99,235,0.5), 0 4px 16px rgba(0,0,0,0.4)' }}>
-            {/* Radar chart icon */}
-            <svg viewBox="0 0 130 130" width="46" height="46" xmlns="http://www.w3.org/2000/svg">
-              <rect x="0" y="0" width="130" height="130" rx="28" fill="#0f172a"/>
-              <polygon points="65,14 107,39 107,89 65,114 23,89 23,39" fill="none" stroke="#1e3a8a" strokeWidth="1.2"/>
-              <polygon points="65,30 95,47 95,83 65,100 35,83 35,47"   fill="none" stroke="#1e3a8a" strokeWidth="1.2"/>
-              <polygon points="65,46 83,56 83,76 65,86 47,76 47,56"    fill="none" stroke="#1e3a8a" strokeWidth="1.2"/>
-              <line x1="65" y1="14" x2="65"  y2="114" stroke="#1e3a8a" strokeWidth="1.2"/>
-              <line x1="23" y1="39" x2="107" y2="89"  stroke="#1e3a8a" strokeWidth="1.2"/>
-              <line x1="107" y1="39" x2="23" y2="89"  stroke="#1e3a8a" strokeWidth="1.2"/>
-              <polygon points="65,18 103,42 101,88 65,108 27,85 29,40" fill="#2563eb" opacity="0.25"/>
-              <polygon points="65,18 103,42 101,88 65,108 27,85 29,40" fill="none" stroke="#38bdf8" strokeWidth="2.5"/>
-              <circle cx="65"  cy="18"  r="5" fill="#38bdf8" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5"/>
-              <circle cx="103" cy="42"  r="5" fill="#38bdf8" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5"/>
-              <circle cx="101" cy="88"  r="5" fill="#38bdf8" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5"/>
-              <circle cx="65"  cy="108" r="5" fill="#38bdf8" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5"/>
-              <circle cx="27"  cy="85"  r="5" fill="#38bdf8" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5"/>
-              <circle cx="29"  cy="40"  r="5" fill="#38bdf8" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5"/>
-              <circle cx="65" cy="64" r="5"   fill="#2563eb"/>
-              <circle cx="65" cy="64" r="2.5" fill="#38bdf8"/>
+          <div className="auth-logo-icon" style={{ width: 46, height: 46, borderRadius: 13, boxShadow: '0 0 20px rgba(34,211,238,0.4), 0 4px 16px rgba(0,0,0,0.4)' }}>
+            <svg viewBox="0 0 22 22" fill="none" width="24" height="24">
+              <defs>
+                <linearGradient id="ab1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="white" stopOpacity="0.7"/><stop offset="100%" stopColor="white" stopOpacity="0.1"/></linearGradient>
+                <linearGradient id="ab4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#22d3ee" stopOpacity="1"/><stop offset="100%" stopColor="#22d3ee" stopOpacity="0.18"/></linearGradient>
+                <filter id="aglow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <rect x="1.5" y="17" width="3.5" height="4.5" rx="1.3" fill="url(#ab1)"/>
+              <rect x="6.5" y="13" width="3.5" height="8.5" rx="1.3" fill="url(#ab1)"/>
+              <rect x="11.5" y="9" width="3.5" height="12.5" rx="1.3" fill="url(#ab1)"/>
+              <rect x="16.5" y="5" width="3.5" height="16.5" rx="1.3" fill="url(#ab4)"/>
+              <line x1="3.25" y1="16.5" x2="18.25" y2="4.5" stroke="#22d3ee" strokeWidth="1.8" strokeLinecap="round" filter="url(#aglow)" opacity="0.9"/>
+              <path d="M18.25,2 L19.6,4.5 L18.25,7 L16.9,4.5 Z" fill="#22d3ee" filter="url(#aglow)"/>
             </svg>
           </div>
-          <span style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-1px', fontFamily: "'Syne', system-ui", filter: 'drop-shadow(0 0 12px rgba(56,189,248,0.3))' }}>
-            <span style={{ color: 'rgba(255,255,255,0.92)' }}>Data</span>
+          <span style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.5px', filter: 'drop-shadow(0 0 12px rgba(34,211,238,0.35))' }}>
+            <span style={{ color: 'rgba(255,255,255,0.72)', fontWeight: 600 }}>Data</span>
             <span style={{
-              background: 'linear-gradient(135deg, #38bdf8 0%, #818cf8 100%)',
+              background: 'linear-gradient(135deg, #fff 0%, #22d3ee 60%, #a78bfa 100%)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
               fontWeight: 900,
             }}>myze</span>

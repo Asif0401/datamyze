@@ -126,44 +126,50 @@ export default function Layout() {
         {/* ── Brand / Logo ── */}
         <div className="sidebar-logo">
           <div className="logo-icon">
-            {/* Radar chart icon */}
-            <svg viewBox="0 0 130 130" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
-              {/* Backing square */}
-              <rect x="0" y="0" width="130" height="130" rx="28" fill="#0f172a"/>
-
-              {/* Grid rings */}
-              <polygon points="65,14 107,39 107,89 65,114 23,89 23,39" fill="none" stroke="#1e3a8a" strokeWidth="1.2"/>
-              <polygon points="65,30 95,47 95,83 65,100 35,83 35,47"   fill="none" stroke="#1e3a8a" strokeWidth="1.2"/>
-              <polygon points="65,46 83,56 83,76 65,86 47,76 47,56"    fill="none" stroke="#1e3a8a" strokeWidth="1.2"/>
-
-              {/* Axis lines */}
-              <line x1="65" y1="14" x2="65"  y2="114" stroke="#1e3a8a" strokeWidth="1.2"/>
-              <line x1="23" y1="39" x2="107" y2="89"  stroke="#1e3a8a" strokeWidth="1.2"/>
-              <line x1="107" y1="39" x2="23" y2="89"  stroke="#1e3a8a" strokeWidth="1.2"/>
-
-              {/* Data polygon fill — animated */}
-              <polygon className="radar-fill" points="65,18 103,42 101,88 65,108 27,85 29,40" fill="#2563eb" opacity="0.22"/>
-              {/* Data polygon stroke — animated */}
-              <polygon className="radar-stroke" points="65,18 103,42 101,88 65,108 27,85 29,40" fill="none" stroke="#38bdf8" strokeWidth="2.5"/>
-
-              {/* Vertex dots — staggered pulse */}
-              <circle className="radar-dot" style={{ animationDelay: '0s' }}    cx="65"  cy="18"  r="5" fill="#38bdf8" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5"/>
-              <circle className="radar-dot" style={{ animationDelay: '0.5s' }}  cx="103" cy="42"  r="5" fill="#38bdf8" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5"/>
-              <circle className="radar-dot" style={{ animationDelay: '1s' }}    cx="101" cy="88"  r="5" fill="#38bdf8" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5"/>
-              <circle className="radar-dot" style={{ animationDelay: '1.5s' }}  cx="65"  cy="108" r="5" fill="#38bdf8" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5"/>
-              <circle className="radar-dot" style={{ animationDelay: '2s' }}    cx="27"  cy="85"  r="5" fill="#38bdf8" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5"/>
-              <circle className="radar-dot" style={{ animationDelay: '2.5s' }}  cx="29"  cy="40"  r="5" fill="#38bdf8" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5"/>
-
-              {/* Center dot */}
-              <circle cx="65" cy="64" r="5"   fill="#2563eb"/>
-              <circle cx="65" cy="64" r="2.5" fill="#38bdf8"/>
+            <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
+              <defs>
+                <linearGradient id="dmb1" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="white" stopOpacity="0.7"/>
+                  <stop offset="100%" stopColor="white" stopOpacity="0.1"/>
+                </linearGradient>
+                <linearGradient id="dmb2" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="white" stopOpacity="0.85"/>
+                  <stop offset="100%" stopColor="white" stopOpacity="0.12"/>
+                </linearGradient>
+                <linearGradient id="dmb3" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#67e8f9" stopOpacity="0.9"/>
+                  <stop offset="100%" stopColor="#67e8f9" stopOpacity="0.12"/>
+                </linearGradient>
+                <linearGradient id="dmb4" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#22d3ee" stopOpacity="1"/>
+                  <stop offset="100%" stopColor="#22d3ee" stopOpacity="0.18"/>
+                </linearGradient>
+                <filter id="dmglow" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="1" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              {/* Base line */}
+              <line x1="1" y1="21.5" x2="23" y2="21.5" stroke="rgba(255,255,255,0.1)" strokeWidth="0.8"/>
+              {/* Bars — gradient fills, taller = more cyan */}
+              <rect x="1.5" y="17"  width="3.5" height="4.5" rx="1.3" fill="url(#dmb1)"/>
+              <rect x="6.5" y="13"  width="3.5" height="8.5" rx="1.3" fill="url(#dmb2)"/>
+              <rect x="11.5" y="9"  width="3.5" height="12.5" rx="1.3" fill="url(#dmb3)"/>
+              <rect x="16.5" y="5"  width="3.5" height="16.5" rx="1.3" fill="url(#dmb4)"/>
+              {/* Glowing trend line */}
+              <line x1="3.25" y1="16.5" x2="18.25" y2="4.5"
+                stroke="#22d3ee" strokeWidth="1.8" strokeLinecap="round"
+                filter="url(#dmglow)" opacity="0.95"/>
+              {/* Peak star — 4-point diamond */}
+              <path d="M18.25,2 L19.6,4.5 L18.25,7 L16.9,4.5 Z"
+                fill="#22d3ee" filter="url(#dmglow)"/>
             </svg>
           </div>
           <div style={{ textAlign: 'center' }}>
             <div className="logo-text">
               <span className="logo-data">Data</span><span className="logo-lift">myze</span>
             </div>
-            <div className="logo-tagline">YOUR DATA CAREER STARTS HERE.</div>
+            <div className="logo-tagline">MASTER DATA. MASTER YOUR FUTURE.</div>
           </div>
         </div>
 
