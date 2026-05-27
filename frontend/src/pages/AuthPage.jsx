@@ -323,14 +323,14 @@ export default function AuthPage({ mode: initialMode }) {
           </div>
 
           {/* Comparison card */}
-          <div style={{ marginTop:'0.7rem', borderRadius:18, overflow:'hidden', position:'relative',
+          <div style={{ marginTop:'1rem', borderRadius:18, overflow:'hidden', position:'relative',
             boxShadow:'0 0 0 1px rgba(127,119,221,0.22), 0 8px 32px rgba(127,119,221,0.1)' }}>
 
             {/* Single unified grid — all cells are direct children so rows are guaranteed equal height */}
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr' }}>
 
               {/* ── Header: Others ── */}
-              <div style={{ background:'rgba(255,255,255,0.025)', padding:'8px 16px',
+              <div style={{ background:'rgba(255,255,255,0.025)', padding:'10px 16px',
                 borderBottom:'1px solid rgba(255,255,255,0.06)', borderRight:'1px solid rgba(255,255,255,0.06)',
                 display:'flex', alignItems:'center', justifyContent:'center' }}>
                 <span style={{ fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.28)', letterSpacing:1, textTransform:'uppercase' }}>Others</span>
@@ -338,7 +338,7 @@ export default function AuthPage({ mode: initialMode }) {
 
               {/* ── Header: Datamyze ── */}
               <div style={{ background:'linear-gradient(135deg,rgba(127,119,221,0.18),rgba(56,189,248,0.1))',
-                padding:'8px 16px', borderBottom:'1px solid rgba(127,119,221,0.25)',
+                padding:'10px 16px', borderBottom:'1px solid rgba(127,119,221,0.25)',
                 position:'relative', overflow:'hidden',
                 display:'flex', alignItems:'center', justifyContent:'center' }}>
                 <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'linear-gradient(90deg,#7F77DD,#38bdf8)' }} />
@@ -356,7 +356,7 @@ export default function AuthPage({ mode: initialMode }) {
               ].flatMap((row, i) => [
                 /* Left cell */
                 <div key={`bad-${i}`} style={{
-                  padding:'7px 14px',
+                  padding:'9px 16px',
                   borderRight:'1px solid rgba(255,255,255,0.05)',
                   borderBottom: i < 4 ? '1px solid rgba(255,255,255,0.045)' : 'none',
                   background: i % 2 === 0 ? 'rgba(0,0,0,0.18)' : 'rgba(0,0,0,0.1)',
@@ -369,7 +369,7 @@ export default function AuthPage({ mode: initialMode }) {
                 </div>,
                 /* Right cell */
                 <div key={`good-${i}`} style={{
-                  padding:'7px 14px',
+                  padding:'9px 16px',
                   borderBottom: i < 4 ? '1px solid rgba(255,255,255,0.045)' : 'none',
                   borderLeft:`2px solid ${row.color}45`,
                   background: i % 2 === 0 ? `linear-gradient(90deg,${row.color}09,rgba(127,119,221,0.06))` : `linear-gradient(90deg,rgba(127,119,221,0.05),${row.color}07)`,
@@ -397,15 +397,15 @@ export default function AuthPage({ mode: initialMode }) {
           </div>
 
           {/* Scrolling feature ticker */}
-          <div style={{ marginTop:'0.85rem' }}>
+          <div style={{ marginTop:'1.1rem' }}>
             {/* Heading */}
-            <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:7 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:10 }}>
               <div style={{ flex:1, height:1, background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.1))' }} />
               <span style={{ fontSize:11, fontWeight:800, color:'rgba(255,255,255,0.55)', letterSpacing:2, textTransform:'uppercase', whiteSpace:'nowrap' }}>What we offer</span>
               <div style={{ flex:1, height:1, background:'linear-gradient(90deg,rgba(255,255,255,0.1),transparent)' }} />
             </div>
             <div style={{
-              display:'flex', flexDirection:'column', gap:10,
+              display:'flex', flexDirection:'column', gap:8,
               overflow:'hidden',
               maskImage:'linear-gradient(to right,transparent 0%,black 10%,black 90%,transparent 100%)',
               WebkitMaskImage:'linear-gradient(to right,transparent 0%,black 10%,black 90%,transparent 100%)',

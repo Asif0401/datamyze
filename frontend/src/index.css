@@ -582,7 +582,7 @@ select option { background: #1a2035; color: var(--text); }
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 2.5rem 3.5rem;
+  padding: 2.8rem 4rem;
   position: relative;
   z-index: 1;
   overflow: hidden;
