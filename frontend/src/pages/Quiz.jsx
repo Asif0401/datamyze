@@ -2,6 +2,15 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../hooks/useApi';
 
+const PyLogo = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style={{ verticalAlign:'middle', display:'inline-block' }}>
+    <path d="M11.914 2c-4.638 0-4.344 2.017-4.344 2.017v2.09h4.413v.626H6.34S3.287 6.386 3.287 10.994c0 4.609 2.697 4.447 2.697 4.447h1.613V13.23s-.088-2.697 2.654-2.697h4.368s2.552.041 2.552-2.467V3.855S17.562 2 11.914 2zm-2.316 1.51c.466 0 .843.377.843.843a.844.844 0 1 1-1.687 0c0-.466.378-.843.844-.843z" fill="#3776AB"/>
+    <path d="M12.086 22c4.638 0 4.344-2.017 4.344-2.017v-2.09H12v-.626h5.643s3.053.347 3.053-4.261c0-4.609-2.697-4.447-2.697-4.447h-1.613v2.216s.088 2.697-2.654 2.697H9.364s-2.552-.041-2.552 2.467v4.211S6.422 22 12.086 22zm2.316-1.509a.844.844 0 1 1 0-1.687c.466 0 .843.377.843.843a.844.844 0 0 1-.843.844z" fill="#FFD343"/>
+  </svg>
+);
+
+const renderIcon = (icon) => icon === '🐍' ? <PyLogo /> : (icon || '📊');
+
 // Screen states
 const SCREEN = {
   COURSE_SELECT: 'course_select',
@@ -220,7 +229,7 @@ export default function Quiz() {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: 22, flexShrink: 0,
                   }}>
-                    {course.icon || '📊'}
+                    {renderIcon(course.icon)}
                   </div>
                   <div style={{ fontWeight: 800, fontSize: 14, color: 'var(--text)', lineHeight: 1.3 }}>{course.title}</div>
                 </div>
@@ -296,7 +305,7 @@ export default function Quiz() {
             ← Back to courses
           </button>
           <div className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            {selectedCourse.icon} {selectedCourse.title}
+            {renderIcon(selectedCourse.icon)} {selectedCourse.title}
           </div>
           <div className="page-sub">Choose a topic and how many questions</div>
         </div>
@@ -391,7 +400,7 @@ export default function Quiz() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
               <div className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: 18 }}>
-                {selectedCourse.icon} {selectedCourse.title}
+                {renderIcon(selectedCourse.icon)} {selectedCourse.title}
               </div>
               <div className="page-sub">
                 {selectedTopic !== 'All' ? selectedTopic + ' · ' : ''}Question {current + 1} of {questions.length}
@@ -516,7 +525,7 @@ export default function Quiz() {
       <div className="page">
         <div className="page-header">
           <div className="page-title">Quiz Complete</div>
-          <div className="page-sub">{selectedCourse.icon} {selectedCourse.title}{selectedTopic !== 'All' ? ` · ${selectedTopic}` : ''}</div>
+          <div className="page-sub">{renderIcon(selectedCourse.icon)} {selectedCourse.title}{selectedTopic !== 'All' ? ` · ${selectedTopic}` : ''}</div>
         </div>
 
         <div style={{ maxWidth: 500 }}>
