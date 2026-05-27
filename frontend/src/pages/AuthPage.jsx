@@ -302,7 +302,7 @@ export default function AuthPage({ mode: initialMode }) {
               <div style={{ background:'rgba(255,255,255,0.025)', padding:'8px 16px',
                 borderBottom:'1px solid rgba(255,255,255,0.06)', borderRight:'1px solid rgba(255,255,255,0.06)',
                 display:'flex', alignItems:'center', justifyContent:'center' }}>
-                <span style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.28)', letterSpacing:1, textTransform:'uppercase' }}>Others</span>
+                <span style={{ fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.28)', letterSpacing:1, textTransform:'uppercase' }}>Others</span>
               </div>
 
               {/* ── Header: Datamyze ── */}
@@ -312,7 +312,7 @@ export default function AuthPage({ mode: initialMode }) {
                 display:'flex', alignItems:'center', justifyContent:'center' }}>
                 <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'linear-gradient(90deg,#7F77DD,#38bdf8)' }} />
                 <div style={{ position:'absolute', bottom:-18, right:-18, width:60, height:60, borderRadius:'50%', background:'radial-gradient(circle,rgba(127,119,221,0.3),transparent)', pointerEvents:'none' }} />
-                <span style={{ fontSize:12, fontWeight:800, background:'linear-gradient(135deg,#c4b5fd,#67e8f9)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', letterSpacing:0.8, textTransform:'uppercase', position:'relative' }}>✦ Datamyze</span>
+                <span style={{ fontSize:13, fontWeight:800, background:'linear-gradient(135deg,#c4b5fd,#67e8f9)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', letterSpacing:0.8, textTransform:'uppercase', position:'relative' }}>✦ Datamyze</span>
               </div>
 
               {/* ── Data rows as flat cell pairs ── */}
@@ -332,9 +332,9 @@ export default function AuthPage({ mode: initialMode }) {
                   display:'flex', alignItems:'center', gap:8,
                 }}>
                   <div style={{ width:17, height:17, borderRadius:'50%', background:'rgba(248,113,113,0.12)', border:'1px solid rgba(248,113,113,0.3)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                    <span style={{ fontSize:9, color:'#f87171', fontWeight:900, lineHeight:1 }}>✕</span>
+                    <span style={{ fontSize:10, color:'#f87171', fontWeight:900, lineHeight:1 }}>✕</span>
                   </div>
-                  <span style={{ fontSize:12, fontWeight:500, color:'rgba(255,255,255,0.32)', lineHeight:1.4 }}>{row.bad}</span>
+                  <span style={{ fontSize:13, fontWeight:500, color:'rgba(255,255,255,0.32)', lineHeight:1.4 }}>{row.bad}</span>
                 </div>,
                 /* Right cell */
                 <div key={`good-${i}`} style={{
@@ -345,9 +345,9 @@ export default function AuthPage({ mode: initialMode }) {
                   display:'flex', alignItems:'center', gap:8,
                 }}>
                   <div style={{ width:17, height:17, borderRadius:'50%', background:`${row.color}22`, border:`1px solid ${row.color}55`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                    <span style={{ fontSize:9, color:row.color, fontWeight:900, lineHeight:1 }}>✓</span>
+                    <span style={{ fontSize:10, color:row.color, fontWeight:900, lineHeight:1 }}>✓</span>
                   </div>
-                  <span style={{ fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.9)', lineHeight:1.4 }}>{row.good}</span>
+                  <span style={{ fontSize:13, fontWeight:700, color:'rgba(255,255,255,0.9)', lineHeight:1.4 }}>{row.good}</span>
                 </div>,
               ])}
 
@@ -357,10 +357,10 @@ export default function AuthPage({ mode: initialMode }) {
             <div style={{ background:'linear-gradient(90deg,rgba(10,14,32,0.9),rgba(127,119,221,0.15),rgba(10,14,32,0.9))',
               borderTop:'1px solid rgba(127,119,221,0.22)',
               padding:'8px 16px', display:'flex', alignItems:'center', justifyContent:'center', gap:10 }}>
-              <span style={{ fontSize:13, color:'rgba(255,255,255,0.5)', fontWeight:600 }}>All of this, together —</span>
+              <span style={{ fontSize:14, color:'rgba(255,255,255,0.5)', fontWeight:600 }}>All of this, together —</span>
               <div style={{ display:'flex', alignItems:'baseline', gap:5, flexShrink:0 }}>
-                <span style={{ fontSize:13, color:'rgba(255,255,255,0.28)', textDecoration:'line-through', fontWeight:500 }}>₹999</span>
-                <span style={{ fontSize:16, fontWeight:900,
+                <span style={{ fontSize:14, color:'rgba(255,255,255,0.28)', textDecoration:'line-through', fontWeight:500 }}>₹999</span>
+                <span style={{ fontSize:18, fontWeight:900,
                   background:'linear-gradient(135deg,#E8A838 0%,#fbbf24 40%,#a78bfa 100%)',
                   WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
                   letterSpacing:'-0.3px' }}>₹149 lifetime</span>
@@ -373,7 +373,7 @@ export default function AuthPage({ mode: initialMode }) {
             {/* Heading */}
             <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:7 }}>
               <div style={{ flex:1, height:1, background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.1))' }} />
-              <span style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.3)', letterSpacing:1.5, textTransform:'uppercase', whiteSpace:'nowrap' }}>What we offer</span>
+              <span style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.3)', letterSpacing:1.5, textTransform:'uppercase', whiteSpace:'nowrap' }}>What we offer</span>
               <div style={{ flex:1, height:1, background:'linear-gradient(90deg,rgba(255,255,255,0.1),transparent)' }} />
             </div>
             <div style={{
@@ -411,8 +411,8 @@ export default function AuthPage({ mode: initialMode }) {
               { val: '100%', lbl: 'Placement Assist' },
             ].map((s, i) => (
               <div key={s.lbl} style={{ flex: 1, textAlign: 'center', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.07)' : 'none' }}>
-                <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.5px', marginBottom: 2 }}>{s.val}</div>
-                <div style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{s.lbl}</div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.5px', marginBottom: 2 }}>{s.val}</div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{s.lbl}</div>
               </div>
             ))}
           </div>
