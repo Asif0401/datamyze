@@ -151,8 +151,8 @@ export default function Quiz() {
               { icon: '❓', label: 'Questions', val: totalQ,            color: '#a78bfa' },
               { icon: '🏷️', label: 'Topics',    val: totalTopics,       color: '#5CC8A0' },
               { icon: '⚡', label: 'Max XP',    val: `${(totalXP).toLocaleString()}`, color: '#E8A838' },
-            ].map(s => (
-              <div key={s.label} className="card" style={{ textAlign: 'center', padding: '1rem 0.8rem' }}>
+            ].map((s, idx) => (
+              <div key={s.label} className="card" style={{ textAlign: 'center', padding: '1rem 0.8rem', animation: 'popIn 0.32s ease both', animationDelay: `${idx * 0.07}s` }}>
                 <div style={{ fontSize: 22, marginBottom: 5 }}>{s.icon}</div>
                 <div style={{ fontSize: 22, fontWeight: 900, color: s.color, lineHeight: 1 }}>{s.val}</div>
                 <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.8px', marginTop: 4 }}>{s.label}</div>
@@ -167,11 +167,12 @@ export default function Quiz() {
             { icon: '🎯', title: 'Pick a topic', desc: 'Choose any course and topic to focus your practice' },
             { icon: '✅', title: 'Answer & learn', desc: 'Each question reveals a detailed explanation after you answer' },
             { icon: '🏆', title: 'Earn +30 XP', desc: 'Gain 30 XP per correct answer and climb the leaderboard' },
-          ].map(s => (
+          ].map((s, idx) => (
             <div key={s.title} style={{
               display: 'flex', alignItems: 'flex-start', gap: 12,
               padding: '12px 16px', borderRadius: 12,
               background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.06)',
+              animation: 'fadeInUp 0.35s ease both', animationDelay: `${idx * 0.09}s`,
             }}>
               <div style={{ fontSize: 20, flexShrink: 0, marginTop: 1 }}>{s.icon}</div>
               <div>
@@ -193,7 +194,7 @@ export default function Quiz() {
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(270px, 1fr))', gap: '1rem' }}>
-            {courses.map(course => (
+            {courses.map((course, idx) => (
               <button
                 key={course.id}
                 onClick={() => selectCourse(course)}
@@ -208,6 +209,8 @@ export default function Quiz() {
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '0.8rem',
+                  animation: 'fadeInUp 0.4s ease both',
+                  animationDelay: `${idx * 0.08}s`,
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = course.color || '#7F77DD';

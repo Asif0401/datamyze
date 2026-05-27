@@ -173,10 +173,11 @@ export default function CaseStudies() {
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(480px, 1fr))', gap: '1.2rem' }}>
-          {filtered.map(cs => (
+          {filtered.map((cs, i) => (
             <CaseStudyCard
               key={cs.id}
               cs={cs}
+              idx={i}
               onClick={() => handleCardClick(cs)}
               parseTags={parseTags}
             />
@@ -229,7 +230,7 @@ export default function CaseStudies() {
 }
 
 /* ── Case Study Card ─────────────────────────────── */
-function CaseStudyCard({ cs, onClick, parseTags }) {
+function CaseStudyCard({ cs, idx, onClick, parseTags }) {
   const tags        = parseTags(cs.tags);
   const compColor   = COMPANY_COLORS[cs.company] || { bg: 'rgba(108,99,255,0.15)', border: 'rgba(108,99,255,0.3)', text: '#6C63FF' };
   const diffConfig  = DIFFICULTY_CONFIG[cs.difficulty] || DIFFICULTY_CONFIG.Medium;
@@ -248,6 +249,8 @@ function CaseStudyCard({ cs, onClick, parseTags }) {
         transition: 'all 0.22s',
         position: 'relative',
         overflow: 'hidden',
+        animation: 'popIn 0.35s ease both',
+        animationDelay: `${idx * 0.07}s`,
       }}
       onMouseEnter={e => {
         e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)';

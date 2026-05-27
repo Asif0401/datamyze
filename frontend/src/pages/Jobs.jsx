@@ -115,7 +115,7 @@ export default function Jobs() {
       ) : (
         <div className="jobs-grid">
           {filtered.map((job, i) => (
-            <div key={job.id} className="job-card" style={{ animationDelay: `${i * 0.04}s` }}>
+            <div key={job.id} className="job-card" style={{ animation: 'fadeInUp 0.38s ease both', animationDelay: `${i * 0.05}s` }}>
               <div className="job-header">
                 <div className="job-company-logo" style={{ background: COMPANY_COLORS[job.company] ? COMPANY_COLORS[job.company] + '18' : undefined, color: COMPANY_COLORS[job.company] || 'var(--primary-dark)' }}>
                   {getInitials(job.company)}

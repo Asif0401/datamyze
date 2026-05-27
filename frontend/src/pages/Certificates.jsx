@@ -132,7 +132,7 @@ export default function Certificates() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', alignItems: 'center', marginBottom: '2.5rem' }}>
 
         {/* Left */}
-        <div>
+        <div style={{ animation: 'slideInLeft 0.45s 0.1s ease both' }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
             background: 'rgba(232,168,56,0.1)', border: '1px solid rgba(232,168,56,0.28)',
@@ -166,7 +166,7 @@ export default function Certificates() {
         </div>
 
         {/* Right: blurred mock certificate with lock overlay */}
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', animation: 'slideInRight 0.45s 0.18s ease both' }}>
           <div style={{
             background: 'linear-gradient(145deg,#0d1f3c,#0a1628)',
             borderRadius: 16, padding: '1.8rem 2rem',
@@ -216,8 +216,8 @@ export default function Certificates() {
             { step: '01', icon: '📚', title: 'Complete a Course', desc: 'Finish any full course on Datamyze with all lessons done and the final assessment passed' },
             { step: '02', icon: '🎓', title: 'Get Your Certificate', desc: 'A verified certificate with a unique credential ID is instantly generated for your profile' },
             { step: '03', icon: '💼', title: 'Add to LinkedIn', desc: 'Share it on LinkedIn, copy your credential ID for applications, or download it as a PDF' },
-          ].map(s => (
-            <div key={s.step} className="card" style={{ padding: '1.2rem', position: 'relative', overflow: 'hidden' }}>
+          ].map((s, idx) => (
+            <div key={s.step} className="card" style={{ padding: '1.2rem', position: 'relative', overflow: 'hidden', animation: 'popIn 0.35s ease both', animationDelay: `${idx * 0.09}s` }}>
               <div style={{ position: 'absolute', top: 8, right: 12, fontSize: 32, fontWeight: 900, color: 'rgba(255,255,255,0.035)', fontFamily: 'monospace' }}>{s.step}</div>
               <div style={{ fontSize: 26, marginBottom: 8 }}>{s.icon}</div>
               <div style={{ fontWeight: 800, fontSize: 13, color: '#fff', marginBottom: 5 }}>{s.title}</div>
@@ -238,11 +238,12 @@ export default function Certificates() {
             { icon: '📗',                                               title: 'Excel for Data Analysis', color: '#1D6F42' },
             { icon: '📈',                                               title: 'Statistics & Probability', color: '#BA7517' },
             { icon: '🤖',                                               title: 'Machine Learning Basics', color: '#a78bfa' },
-          ].map(t => (
+          ].map((t, idx) => (
             <div key={t.title} style={{
               display: 'flex', alignItems: 'center', gap: 10,
               padding: '10px 14px', borderRadius: 12,
               background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)',
+              animation: 'fadeInUp 0.3s ease both', animationDelay: `${idx * 0.05}s`,
             }}>
               <div style={{ width: 34, height: 34, borderRadius: 9, background: `${t.color}18`, border: `1px solid ${t.color}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, flexShrink: 0 }}>{t.icon}</div>
               <div style={{ flex: 1 }}>

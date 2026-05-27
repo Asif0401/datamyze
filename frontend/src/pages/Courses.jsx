@@ -852,6 +852,8 @@ export default function Courses() {
                   border: '1.5px dashed rgba(139,92,246,0.3)',
                   borderRadius: 20, overflow: 'hidden',
                   display: 'flex', flexDirection: 'column',
+                  animation: 'fadeInUp 0.4s ease both',
+                  animationDelay: `${cardIdx * 0.06}s`,
                 }}>
                 {/* Top accent */}
                 <div style={{ height: 3, background: 'linear-gradient(90deg,#7c3aed,#a78bfa88)', flexShrink: 0 }} />
@@ -901,7 +903,8 @@ export default function Courses() {
                 boxShadow: isHov
                   ? `0 22px 52px rgba(0,0,0,0.58), 0 0 0 1px ${c.color}28, 0 0 44px ${c.color}18`
                   : '0 2px 8px rgba(0,0,0,0.2)',
-                animationDelay: `${cardIdx * 0.07}s`,
+                animation: 'fadeInUp 0.4s ease both',
+                animationDelay: `${cardIdx * 0.06}s`,
               }}
             >
               {/* ── 3-px colour top stripe ── */}

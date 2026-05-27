@@ -17,9 +17,9 @@ function tier(xp) {
   return             { label: 'Fresher',  color: 'rgba(255,255,255,0.35)' };
 }
 
-function StatCard({ icon, label, val, color }) {
+function StatCard({ icon, label, val, color, delay = '0s' }) {
   return (
-    <div className="card" style={{ textAlign:'center', padding:'1.3rem 1rem', background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.1)' }}>
+    <div className="card" style={{ textAlign:'center', padding:'1.3rem 1rem', background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.1)', animation:'popIn 0.35s ease both', animationDelay: delay }}>
       <div style={{ fontSize:26, marginBottom:8 }}>{icon}</div>
       <div style={{ fontSize:26, fontWeight:900, color: color || '#fff', letterSpacing:'-0.5px', lineHeight:1 }}>{val}</div>
       <div style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.38)', textTransform:'uppercase', letterSpacing:'0.7px', marginTop:5 }}>{label}</div>
@@ -102,17 +102,17 @@ export default function Leaderboard() {
 
       {/* ── Stats strip ── */}
       <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'1rem', marginBottom:'2rem' }}>
-        <StatCard icon="👥" label="On Leaderboard" val={lb.length} />
-        <StatCard icon="🎯" label="Your Rank"      val={me ? `#${me.rank}` : '—'}       color="#4A90D9" />
-        <StatCard icon="🔥" label="Top Streak"     val={`${maxStreak}d`}                color="#f9a825" />
-        <StatCard icon="⚡" label="Your XP"        val={me ? (me.xp||0).toLocaleString() : '0'} color="#a78bfa" />
+        <StatCard icon="👥" label="On Leaderboard" val={lb.length} delay="0s" />
+        <StatCard icon="🎯" label="Your Rank"      val={me ? `#${me.rank}` : '—'}       color="#4A90D9" delay="0.07s" />
+        <StatCard icon="🔥" label="Top Streak"     val={`${maxStreak}d`}                color="#f9a825" delay="0.14s" />
+        <StatCard icon="⚡" label="Your XP"        val={me ? (me.xp||0).toLocaleString() : '0'} color="#a78bfa" delay="0.21s" />
       </div>
 
       {/* ── Podium ── */}
       {top3.length === 3 && (
         <div style={{ display:'flex', justifyContent:'center', alignItems:'flex-end', gap:'1.2rem', marginBottom:'2.5rem',
           background:'rgba(255,255,255,0.07)', borderRadius:20, border:'1px solid rgba(255,255,255,0.12)',
-          padding:'2rem 2rem 0',
+          padding:'2rem 2rem 0', animation:'fadeInUp 0.5s 0.15s ease both',
         }}>
           {podium.map((p, idx) => (
             <PodiumCard key={p.id} p={p} rank={podiumRanks[idx]} color={COLORS[lb.indexOf(p) % COLORS.length]} />

@@ -333,7 +333,7 @@ export default function Dashboard() {
                 <span style={{ fontSize: 16 }}>{s.icon}</span>
                 <span style={{ fontSize: 11, color: 'var(--muted)', fontWeight: 600 }}>{s.label}</span>
               </div>
-              <div style={{ fontSize: 22, fontWeight: 900, color: s.color, lineHeight: 1 }}>{s.val}</div>
+              <div style={{ fontSize: 22, fontWeight: 900, color: s.color, lineHeight: 1, animation: 'numberPop 0.4s ease both', animationDelay: `${i * 0.08}s` }}>{s.val}</div>
               <div style={{ fontSize: 10.5, color: s.subColor || 'var(--muted)' }}>{s.sub} {s.subLabel && <span style={{ color: s.subColor, fontSize: 10 }}>({s.subLabel})</span>}</div>
               {/* Mini progress bar */}
               <div style={{ height: 3, borderRadius: 99, background: 'rgba(255,255,255,0.08)', marginTop: 6 }}>
@@ -413,10 +413,10 @@ export default function Dashboard() {
             <div className="card-title">⚡ Skill Breakdown</div>
             <div className="skills-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.9rem' }}>
               {[
-                { label: 'SQL', solved: stats?.sqlSolved || 0, total: 20, color: '#4A90D9', icon: '🗄️' },
-                { label: 'Python', solved: stats?.pythonSolved || 0, total: 15, color: '#5CC8A0', icon: <PyLogo /> },
+                { label: 'SQL', solved: stats?.sqlSolved || 0, total: 20, color: '#4A90D9', icon: '🗄️', delay: '0s' },
+                { label: 'Python', solved: stats?.pythonSolved || 0, total: 15, color: '#5CC8A0', icon: <PyLogo />, delay: '0.09s' },
               ].map(s => (
-                <div key={s.label} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 12, padding: '0.9rem' }}>
+                <div key={s.label} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 12, padding: '0.9rem', animationDelay: s.delay }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
                     <span style={{ fontSize: 16 }}>{s.icon}</span>
                     <span style={{ fontWeight: 700, fontSize: 13 }}>{s.label}</span>

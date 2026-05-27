@@ -411,19 +411,9 @@ export default function Instructor() {
 
       {/* ── "Meet the Mentor" label ── */}
       <div style={{ marginBottom: '1.5rem' }}>
-        <h2 style={{ fontSize:18, fontWeight:800, color:'#f1f5f9', margin:'0 0 12px', display:'flex', alignItems:'center', gap:8 }}>
+        <h2 style={{ fontSize:18, fontWeight:800, color:'#f1f5f9', margin:0, display:'flex', alignItems:'center', gap:8 }}>
           <span>👋</span> Meet the Mentor
         </h2>
-        <div style={{ display:'inline-flex', alignItems:'center', gap:12, background:'rgba(92,200,160,0.1)', border:'1px solid rgba(92,200,160,0.25)', borderRadius:14, padding:'10px 20px' }}>
-          <div style={{ textAlign:'center' }}>
-            <div style={{ fontSize:28, fontWeight:900, color:'#5CC8A0', lineHeight:1, letterSpacing:'-1px' }}>150+</div>
-            <div style={{ fontSize:11, color:'rgba(255,255,255,0.45)', fontWeight:600, letterSpacing:'0.5px', textTransform:'uppercase', marginTop:2 }}>Students Taught</div>
-          </div>
-          <div style={{ width:1, height:36, background:'rgba(255,255,255,0.08)' }} />
-          <div style={{ fontSize:12.5, color:'rgba(255,255,255,0.5)', lineHeight:1.6, maxWidth:320 }}>
-            Real placements at Flipkart, Swiggy, Razorpay, Meesho and more — guided from first SQL query to offer letter.
-          </div>
-        </div>
       </div>
 
       {/* ════════════════════════════════════════════════
