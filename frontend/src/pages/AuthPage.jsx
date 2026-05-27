@@ -292,49 +292,65 @@ export default function AuthPage({ mode: initialMode }) {
           </div>
 
           {/* Comparison card */}
-          <div style={{
-            marginTop: '1.2rem',
-            borderRadius: 18,
-            overflow: 'hidden',
-            border: '1px solid rgba(255,255,255,0.08)',
-          }}>
+          <div style={{ marginTop:'1.2rem', borderRadius:18, overflow:'hidden', position:'relative',
+            boxShadow:'0 0 0 1px rgba(127,119,221,0.22), 0 8px 32px rgba(127,119,221,0.1)' }}>
+
             {/* Column headers */}
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr' }}>
-              <div style={{ background:'rgba(255,255,255,0.03)', padding:'9px 14px', borderBottom:'1px solid rgba(255,255,255,0.07)', borderRight:'1px solid rgba(255,255,255,0.07)' }}>
-                <div style={{ fontSize:10.5, fontWeight:700, color:'rgba(255,255,255,0.28)', letterSpacing:0.5 }}>Others</div>
+              <div style={{ background:'rgba(255,255,255,0.025)', padding:'10px 14px', borderBottom:'1px solid rgba(255,255,255,0.06)', borderRight:'1px solid rgba(255,255,255,0.06)' }}>
+                <span style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.22)', letterSpacing:0.8, textTransform:'uppercase' }}>Others</span>
               </div>
-              <div style={{ background:'rgba(127,119,221,0.1)', padding:'9px 14px', borderBottom:'1px solid rgba(127,119,221,0.2)', position:'relative', overflow:'hidden' }}>
+              <div style={{ background:'linear-gradient(135deg, rgba(127,119,221,0.18), rgba(56,189,248,0.1))', padding:'10px 14px', borderBottom:'1px solid rgba(127,119,221,0.25)', position:'relative', overflow:'hidden' }}>
                 <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'linear-gradient(90deg,#7F77DD,#38bdf8)' }} />
-                <div style={{ fontSize:10.5, fontWeight:800, color:'#a78bfa', letterSpacing:0.5 }}>Datamyze ✦</div>
+                <div style={{ position:'absolute', bottom:-18, right:-18, width:60, height:60, borderRadius:'50%', background:'radial-gradient(circle,rgba(127,119,221,0.3),transparent)', pointerEvents:'none' }} />
+                <span style={{ fontSize:11, fontWeight:800, background:'linear-gradient(135deg,#c4b5fd,#67e8f9)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', letterSpacing:0.5, textTransform:'uppercase', position:'relative' }}>✦ Datamyze</span>
               </div>
             </div>
 
             {/* Rows */}
             {[
-              { bad:'Generic tutorials',          good:'Real company interview Qs' },
-              { bad:'No mentor, learn alone',     good:'1-on-1 mentor guidance'    },
-              { bad:'No placement help',          good:'100% placement support'    },
-              { bad:'No mock interviews',         good:'Live mock + feedback'       },
-              { bad:'No job listings',            good:'300+ curated job board'    },
+              { bad:'Generic video tutorials',    good:'Real company interview Qs',  color:'#38bdf8' },
+              { bad:'No mentor, you\'re alone',   good:'1-on-1 industry mentor',     color:'#a78bfa' },
+              { bad:'Zero placement support',     good:'100% placement assistance',  color:'#5CC8A0' },
+              { bad:'No mock interviews',         good:'Live mock + written feedback',color:'#f9a825' },
+              { bad:'No job listings',            good:'300+ curated jobs board',    color:'#f87171' },
             ].map((row, i) => (
-              <div key={i} style={{ display:'grid', gridTemplateColumns:'1fr 1fr', borderBottom: i < 4 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
-                <div style={{ padding:'9px 14px', borderRight:'1px solid rgba(255,255,255,0.05)', background:'rgba(0,0,0,0.15)', display:'flex', alignItems:'center', gap:7 }}>
-                  <span style={{ fontSize:11, color:'#f87171', flexShrink:0 }}>✕</span>
-                  <span style={{ fontSize:11, color:'rgba(255,255,255,0.32)', lineHeight:1.35 }}>{row.bad}</span>
+              <div key={i} style={{ display:'grid', gridTemplateColumns:'1fr 1fr',
+                borderBottom: i < 4 ? '1px solid rgba(255,255,255,0.045)' : 'none' }}>
+                {/* Left — dull */}
+                <div style={{ padding:'9px 13px', borderRight:'1px solid rgba(255,255,255,0.05)',
+                  background: i % 2 === 0 ? 'rgba(0,0,0,0.18)' : 'rgba(0,0,0,0.1)',
+                  display:'flex', alignItems:'center', gap:8 }}>
+                  <div style={{ width:16, height:16, borderRadius:'50%', background:'rgba(248,113,113,0.12)', border:'1px solid rgba(248,113,113,0.25)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                    <span style={{ fontSize:8, color:'#f87171', fontWeight:900, lineHeight:1 }}>✕</span>
+                  </div>
+                  <span style={{ fontSize:10.5, color:'rgba(255,255,255,0.28)', lineHeight:1.35 }}>{row.bad}</span>
                 </div>
-                <div style={{ padding:'9px 14px', background:'rgba(127,119,221,0.05)', display:'flex', alignItems:'center', gap:7 }}>
-                  <span style={{ fontSize:11, color:'#5CC8A0', flexShrink:0 }}>✓</span>
-                  <span style={{ fontSize:11, fontWeight:600, color:'rgba(255,255,255,0.72)', lineHeight:1.35 }}>{row.good}</span>
+                {/* Right — vibrant */}
+                <div style={{ padding:'9px 13px',
+                  background: i % 2 === 0 ? `linear-gradient(90deg,${row.color}08,rgba(127,119,221,0.06))` : `linear-gradient(90deg,rgba(127,119,221,0.05),${row.color}06)`,
+                  display:'flex', alignItems:'center', gap:8,
+                  borderLeft:`2px solid ${row.color}40` }}>
+                  <div style={{ width:16, height:16, borderRadius:'50%', background:`${row.color}20`, border:`1px solid ${row.color}50`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                    <span style={{ fontSize:8, color:row.color, fontWeight:900, lineHeight:1 }}>✓</span>
+                  </div>
+                  <span style={{ fontSize:10.5, fontWeight:600, color:'rgba(255,255,255,0.82)', lineHeight:1.35 }}>{row.good}</span>
                 </div>
               </div>
             ))}
 
             {/* Price footer */}
-            <div style={{ background:'linear-gradient(90deg, rgba(127,119,221,0.12), rgba(56,189,248,0.08))', padding:'10px 14px', display:'flex', alignItems:'center', justifyContent:'space-between', borderTop:'1px solid rgba(127,119,221,0.18)' }}>
-              <span style={{ fontSize:11, color:'rgba(255,255,255,0.45)', fontWeight:500 }}>All of the above —</span>
-              <span style={{ fontSize:13, fontWeight:900, background:'linear-gradient(135deg,#E8A838,#a78bfa)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', letterSpacing:'-0.3px' }}>
-                just ₹149 lifetime
-              </span>
+            <div style={{ background:'linear-gradient(90deg,rgba(10,14,32,0.9),rgba(127,119,221,0.15),rgba(10,14,32,0.9))',
+              borderTop:'1px solid rgba(127,119,221,0.22)',
+              padding:'11px 14px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+              <span style={{ fontSize:11, color:'rgba(255,255,255,0.4)', fontWeight:500 }}>All of this, together —</span>
+              <div style={{ display:'flex', alignItems:'baseline', gap:5 }}>
+                <span style={{ fontSize:11, color:'rgba(255,255,255,0.22)', textDecoration:'line-through', fontWeight:500 }}>₹999</span>
+                <span style={{ fontSize:14, fontWeight:900,
+                  background:'linear-gradient(135deg,#E8A838 0%,#fbbf24 40%,#a78bfa 100%)',
+                  WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
+                  letterSpacing:'-0.3px' }}>₹149 lifetime</span>
+              </div>
             </div>
           </div>
 
