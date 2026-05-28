@@ -239,23 +239,11 @@ function OtpInput({ value, onChange }) {
 /* ══════════════════════════════════════════════════
    MAIN AUTH PAGE
 ══════════════════════════════════════════════════ */
-const CYCLE_ROLES = ['Data Analyst', 'BI Engineer', 'Product Analyst', 'Analytics Engineer'];
-
 export default function AuthPage({ mode: initialMode }) {
   const [panel, setPanel]   = useState(initialMode || 'login'); // 'login' | 'signup'
   const [loginType, setLoginType] = useState('email');           // 'email' | 'phone'
-  const [roleIdx,  setRoleIdx]  = useState(0);
-  const [roleVis,  setRoleVis]  = useState(true);
   const { login } = useAuth();
   const navigate  = useNavigate();
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setRoleVis(false);
-      setTimeout(() => { setRoleIdx(i => (i + 1) % CYCLE_ROLES.length); setRoleVis(true); }, 320);
-    }, 2400);
-    return () => clearInterval(id);
-  }, []);
 
   return (
     <div className="auth-wrap">
@@ -330,47 +318,8 @@ export default function AuthPage({ mode: initialMode }) {
               }} />
             </div>
           </div>
-          {/* Animated subtitle */}
-          <div style={{ marginBottom: '0.9rem', marginTop: '0.2rem' }}>
-            {/* Line 1: static hook */}
-            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', fontWeight: 500, letterSpacing: '0.1px', marginBottom: 10 }}>
-              Most platforms stop at teaching.
-            </div>
-            {/* Line 2: cycling role */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
-              <span style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.55)', fontWeight: 500 }}>We're built to make you a</span>
-              <span style={{
-                fontSize: 14, fontWeight: 800,
-                background: 'linear-gradient(135deg, #4A90D9, #a78bfa, #5CC8A0)',
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                opacity: roleVis ? 1 : 0,
-                transform: roleVis ? 'translateY(0)' : 'translateY(6px)',
-                transition: 'opacity 0.32s ease, transform 0.32s ease',
-                display: 'inline-block',
-                borderBottom: '1.5px solid rgba(167,139,250,0.40)',
-                paddingBottom: 1,
-              }}>
-                {CYCLE_ROLES[roleIdx]}
-              </span>
-            </div>
-            {/* Line 3: feature dots */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-              {[
-                { icon: '⚡', text: 'Real problems', color: '#4A90D9' },
-                { icon: '🧑‍💼', text: '1:1 Mentorship', color: '#a78bfa' },
-                { icon: '🎯', text: 'Placement support', color: '#5CC8A0' },
-              ].map((f, i) => (
-                <span key={f.text} style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 5,
-                  fontSize: 11.5, fontWeight: 700,
-                  padding: '4px 10px', borderRadius: 20,
-                  background: `${f.color}12`, border: `1px solid ${f.color}35`, color: f.color,
-                  animation: `popIn 0.4s ${0.1 + i * 0.08}s ease both`,
-                }}>
-                  {f.icon} {f.text}
-                </span>
-              ))}
-            </div>
+          <div className="auth-hero-sub">
+            Built to get you <span style={{ fontWeight: 700, color: 'rgba(255,255,255,0.82)' }}>hired</span> — not just <span style={{ fontWeight: 700, color: 'rgba(255,255,255,0.82)' }}>taught</span>.
           </div>
 
           {/* Comparison card */}
