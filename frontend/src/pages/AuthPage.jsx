@@ -319,7 +319,7 @@ export default function AuthPage({ mode: initialMode }) {
             </div>
           </div>
           <div className="auth-hero-sub">
-            Built to get you <span style={{ fontWeight: 700, color: 'rgba(255,255,255,0.82)' }}>hired</span> — not just <span style={{ fontWeight: 700, color: 'rgba(255,255,255,0.82)' }}>taught</span>.
+            This is where data careers begin. Go beyond tutorials with 1:1 mentorship, industry-grade projects, placement assistance and 300+ curated jobs — purpose-built to get you hired.
           </div>
 
           {/* Comparison card */}
