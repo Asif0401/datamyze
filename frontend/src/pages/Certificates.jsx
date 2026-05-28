@@ -267,11 +267,62 @@ export default function Certificates() {
       </div>
 
       {certs.length === 0 ? (
-        <div className="card" style={{ textAlign: 'center', maxWidth: 500 }}>
-          <div style={{ fontSize: 52, marginBottom: '1rem' }}>🎓</div>
-          <div style={{ fontWeight: 700, fontSize: 16, marginBottom: '0.5rem' }}>No certificates yet</div>
-          <div style={{ color: 'var(--muted)', marginBottom: '1.5rem' }}>Complete any course to earn your verified Pro certificate</div>
-          <button className="btn-primary" onClick={() => navigate('/courses')}>Browse Courses →</button>
+        <div>
+          {/* Hero */}
+          <div style={{ textAlign:'center', padding:'2.2rem 1rem 1.6rem', animation:'fadeInUp 0.4s ease both' }}>
+            <div style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', width:80, height:80, borderRadius:'50%', background:'rgba(232,168,56,0.10)', border:'1px solid rgba(232,168,56,0.25)', marginBottom:'1.2rem', boxShadow:'0 0 40px rgba(232,168,56,0.15)' }}>
+              <CertSeal />
+            </div>
+            <div style={{ fontSize:22, fontWeight:900, letterSpacing:'-0.5px', marginBottom:8 }}>Your first certificate is waiting</div>
+            <div style={{ fontSize:14, color:'rgba(255,255,255,0.40)', maxWidth:420, margin:'0 auto 1.6rem', lineHeight:1.7 }}>
+              Complete any course to earn a verified Datamyze certificate — shareable on LinkedIn, downloadable as PDF.
+            </div>
+            <button className="btn-primary" style={{ fontSize:14, padding:'11px 28px' }} onClick={() => navigate('/courses')}>
+              Start a Course →
+            </button>
+          </div>
+
+          {/* Certificate tracks you can earn */}
+          <div style={{ marginTop:'0.5rem' }}>
+            <div style={{ fontSize:11, fontWeight:800, color:'rgba(255,255,255,0.25)', textTransform:'uppercase', letterSpacing:'2px', marginBottom:'1rem', textAlign:'center' }}>
+              Certificates you can earn
+            </div>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'0.85rem' }}>
+              {[
+                { icon:'🗄️',         title:'SQL for Data Analysis',    color:'#4A90D9', desc:'Master querying, joins, window functions & business analytics' },
+                { icon:<PyLogo />,   title:'Python for Analytics',     color:'#3776AB', desc:'Pandas, NumPy, data cleaning, EDA and visualisation' },
+                { icon:'📊',         title:'Power BI & Tableau',       color:'#E8A838', desc:'Build interactive dashboards and BI reports' },
+                { icon:'📋',         title:'Excel & Sheets',           color:'#1D9E75', desc:'Pivot tables, lookups, data cleaning and dashboards' },
+                { icon:'📈',         title:'Statistics & Probability', color:'#a78bfa', desc:'Hypothesis testing, A/B testing and business metrics' },
+                { icon:'⚡',         title:'Advanced SQL',             color:'#5CC8A0', desc:'Window functions, CTEs, performance & BI-level queries' },
+              ].map((t, i) => (
+                <div key={t.title} onClick={() => navigate('/courses')}
+                  style={{ background:'rgba(255,255,255,0.03)', border:`1px solid ${t.color}22`, borderRadius:14, padding:'1.1rem 1rem', cursor:'pointer', transition:'all 0.2s', animation:`fadeInUp 0.4s ${0.05+i*0.06}s ease both` }}
+                  onMouseEnter={e => { e.currentTarget.style.background=`${t.color}10`; e.currentTarget.style.borderColor=`${t.color}44`; e.currentTarget.style.transform='translateY(-2px)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor=`${t.color}22`; e.currentTarget.style.transform='translateY(0)'; }}
+                >
+                  <div style={{ fontSize:24, marginBottom:8, display:'flex', alignItems:'center' }}>{t.icon}</div>
+                  <div style={{ fontSize:13, fontWeight:700, color:'rgba(255,255,255,0.85)', marginBottom:5 }}>{t.title}</div>
+                  <div style={{ fontSize:11.5, color:'rgba(255,255,255,0.35)', lineHeight:1.5 }}>{t.desc}</div>
+                  <div style={{ marginTop:10, fontSize:11, fontWeight:700, color:t.color }}>Start earning →</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom trust bar */}
+          <div style={{ marginTop:'1.5rem', padding:'1rem 1.4rem', borderRadius:14, background:'rgba(255,255,255,0.025)', border:'1px solid rgba(255,255,255,0.07)', display:'flex', alignItems:'center', justifyContent:'center', gap:'2.5rem', flexWrap:'wrap' }}>
+            {[
+              { icon:'🏆', text:'Verified by Datamyze' },
+              { icon:'💼', text:'Shareable on LinkedIn' },
+              { icon:'📄', text:'Downloadable PDF' },
+              { icon:'✅', text:'Credential ID included' },
+            ].map(f => (
+              <div key={f.text} style={{ display:'flex', alignItems:'center', gap:8, fontSize:12, color:'rgba(255,255,255,0.40)', fontWeight:600 }}>
+                <span>{f.icon}</span>{f.text}
+              </div>
+            ))}
+          </div>
         </div>
       ) : (
         certs.map(cert => (
