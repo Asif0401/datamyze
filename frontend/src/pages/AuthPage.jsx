@@ -319,7 +319,7 @@ export default function AuthPage({ mode: initialMode }) {
             </div>
           </div>
           <div className="auth-hero-sub">
-            Beyond courses — guided mentorship, placement assistance &amp; real-world practice. Everything you need to land a Data Analyst, BI Engineer, Product Analyst or BI Analyst role.
+            Most platforms teach. We place. Structured courses, live mentorship, industry-grade projects &amp; placement support — purpose-built to get you hired as a Data Analyst, BI Engineer or Product Analyst.
           </div>
 
           {/* Comparison card */}
