@@ -298,8 +298,8 @@ router.get('/cashfree/mobile-checkout', (req, res) => {
     );
   }
   const cfMode = env === 'production' ? 'production' : 'sandbox';
-  const backendUrl = process.env.BACKEND_URL || 'https://datamyze-backend.onrender.com';
-  const returnUrl = `${backendUrl}/api/premium/cashfree/mobile-return?order_id=${encodeURIComponent(orderId)}&cf_status={order_status}`;
+  const frontendUrl = process.env.FRONTEND_URL || 'https://datamyze.in';
+  const returnUrl = `${frontendUrl}/payment-complete?order_id=${encodeURIComponent(orderId)}&cf_status={order_status}`;
 
   res.setHeader('Content-Type', 'text/html');
   res.send(`<!DOCTYPE html>
