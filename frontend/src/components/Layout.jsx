@@ -301,6 +301,30 @@ export default function Layout() {
       <main className="main-content">
         <Outlet />
       </main>
+
+      {/* ── Mobile bottom nav ── */}
+      <nav className="mobile-bottom-nav">
+        <NavLink to="/" end className={({ isActive }) => `mbn-item${isActive ? ' mbn-active' : ''}`}>
+          <span className="mbn-icon"><Icons.Dashboard /></span>
+          <span className="mbn-label">Home</span>
+        </NavLink>
+        <NavLink to="/courses" className={({ isActive }) => `mbn-item${isActive ? ' mbn-active' : ''}`}>
+          <span className="mbn-icon"><Icons.Courses /></span>
+          <span className="mbn-label">Courses</span>
+        </NavLink>
+        <NavLink to="/problems" className={({ isActive }) => `mbn-item${isActive ? ' mbn-active' : ''}`}>
+          <span className="mbn-icon"><Icons.Problems /></span>
+          <span className="mbn-label">Problems</span>
+        </NavLink>
+        <NavLink to="/jobs" className={({ isActive }) => `mbn-item${isActive ? ' mbn-active' : ''}`}>
+          <span className="mbn-icon"><Icons.Jobs /></span>
+          <span className="mbn-label">Jobs</span>
+        </NavLink>
+        <NavLink to="/settings" className={({ isActive }) => `mbn-item${isActive ? ' mbn-active' : ''}`}>
+          <span className="mbn-icon"><Icons.Settings /></span>
+          <span className="mbn-label">Profile</span>
+        </NavLink>
+      </nav>
     </div>
   );
 }

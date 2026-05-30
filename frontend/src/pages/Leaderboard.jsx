@@ -203,8 +203,15 @@ export default function Leaderboard() {
           background: 'rgba(255,255,255,0.04)',
           borderBottom: '1px solid rgba(255,255,255,0.07)',
         }}>
-          {['Rank', '', 'Name', 'Progress', 'Streak', 'XP'].map(h => (
-            <div key={h} style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.8px', textAlign: h === 'XP' || h === 'Streak' ? 'right' : 'left' }}>{h}</div>
+          {[
+            { label: 'Rank',     cls: '' },
+            { label: '',         cls: '' },
+            { label: 'Name',     cls: '' },
+            { label: 'Progress', cls: 'lb-mobile-hide' },
+            { label: 'Streak',   cls: '' },
+            { label: 'XP',       cls: '' },
+          ].map(({ label, cls }) => (
+            <div key={label} className={cls} style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.8px', textAlign: label === 'XP' || label === 'Streak' ? 'right' : 'left' }}>{label}</div>
           ))}
         </div>
 
@@ -263,8 +270,8 @@ export default function Leaderboard() {
                 <span style={{ fontSize: 10, fontWeight: 700, padding: '1px 8px', background: t.bg, border: `1px solid ${t.border}`, borderRadius: 20, color: t.color, marginTop: 3, display: 'inline-block' }}>{t.label}</span>
               </div>
 
-              {/* XP progress bar */}
-              <div>
+              {/* XP progress bar — hidden on mobile */}
+              <div className="lb-mobile-hide">
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(255,255,255,0.3)', marginBottom: 5 }}>
                   <span>{xpPct}% of #1</span>
                 </div>

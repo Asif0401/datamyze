@@ -1720,9 +1720,81 @@ select option { background: #1a2035; color: var(--text); }
   .features-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
-  .stats-grid  { grid-template-columns: repeat(2, 1fr); }
-  .course-grid { grid-template-columns: 1fr; }
-  .page { padding: 1.2rem; }
-  .main-content { margin-left: 0; }
-  .sidebar { display: none; }
+  .stats-grid   { grid-template-columns: repeat(2, 1fr); }
+  .course-grid  { grid-template-columns: 1fr; }
+  .page         { padding: 1rem 0.9rem 6rem; } /* extra bottom for nav bar */
+  .main-content { margin-left: 0; padding-bottom: 72px; }
+  .sidebar      { display: none; }
+}
+
+/* ── Mobile bottom nav ──────────────────────────────── */
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 62px;
+    background: rgba(8, 12, 26, 0.97);
+    border-top: 1px solid rgba(255,255,255,0.09);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 200;
+    align-items: stretch;
+    padding: 0 4px;
+    padding-bottom: env(safe-area-inset-bottom); /* iPhone notch */
+  }
+
+  .mbn-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    text-decoration: none;
+    color: rgba(255,255,255,0.38);
+    padding: 6px 4px;
+    border-radius: 10px;
+    transition: color 0.18s ease, background 0.18s ease;
+    position: relative;
+    margin: 6px 2px;
+  }
+
+  .mbn-item.mbn-active {
+    color: #4A90D9;
+    background: rgba(74,144,217,0.12);
+  }
+
+  .mbn-item.mbn-active::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20%; right: 20%;
+    height: 2.5px;
+    background: linear-gradient(90deg, transparent, #4A90D9, transparent);
+    border-radius: 0 0 4px 4px;
+  }
+
+  .mbn-icon {
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .mbn-icon svg {
+    width: 100%; height: 100%;
+    stroke: currentColor;
+  }
+
+  .mbn-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    line-height: 1;
+  }
+
+  /* Leaderboard — hide progress col, shrink rank col on mobile */
+  .lb-mobile-hide { display: none !important; }
 }
