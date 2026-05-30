@@ -151,7 +151,7 @@ export default function Certificates() {
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: '1.4rem' }}>
             <button className="btn-primary" onClick={() => navigate('/premium')}
               style={{ background: 'linear-gradient(135deg,#E8A838,#f59e0b)', border: 'none', fontSize: 14, padding: '11px 22px' }}>
-              👑 Upgrade to Pro — ₹149
+              👑 Upgrade to Pro — ₹199
             </button>
             <button onClick={() => navigate('/courses')}
               style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.65)', borderRadius: 12, fontSize: 13, padding: '11px 18px', cursor: 'pointer' }}>

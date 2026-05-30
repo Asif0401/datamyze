@@ -347,7 +347,7 @@ export default function Instructor() {
         <StatCard value={92}   suffix="%"  label="Placement Rate"         color="#5CC8A0" icon="🚀" started={statsStarted} />
         <StatCard value={100}  suffix="+"  label="Interview Problems"     color="#38bdf8" icon="💡" started={statsStarted} />
         <StatCard value={6}    suffix=""   label="Courses & Tracks"       color="#f59e0b" icon="📚" started={statsStarted} />
-        <StatCard value={149}  suffix="₹"  label="Lifetime · One-Time"   color="#E8A838" icon="👑" started={statsStarted} />
+        <StatCard value={199}  suffix="₹"  label="Lifetime · One-Time"   color="#E8A838" icon="👑" started={statsStarted} />
       </div>
 
       {/* ════════════════════════════════════════════════
@@ -420,7 +420,7 @@ export default function Instructor() {
           WHAT'S INSIDE — Platform features
       ════════════════════════════════════════════════ */}
       <div style={{ marginBottom: '3rem', position: 'relative', zIndex: 1 }}>
-        <SectionHeader icon="📦" label="What's Inside Pro" sub="Everything bundled in your ₹149 lifetime membership" />
+        <SectionHeader icon="📦" label="What's Inside Pro" sub="Everything bundled in your ₹199 lifetime membership" />
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 14 }}>
           {[
@@ -504,8 +504,8 @@ export default function Instructor() {
         <SectionHeader icon="❓" label="Frequently Asked Questions" sub="Quick answers to what most people ask before joining" />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           <FAQItem
-            q="Is ₹149 really a one-time payment with no hidden fees?"
-            a="Yes, 100%. You pay ₹149 once and get lifetime access to everything — all courses, job listings, mentorship sessions, certificates, and future updates. No subscription, no renewal, no surprise charges."
+            q="Is ₹199 really a one-time payment with no hidden fees?"
+            a="Yes, 100%. You pay ₹199 once and get lifetime access to everything — all courses, job listings, mentorship sessions, certificates, and future updates. No subscription, no renewal, no surprise charges."
             color="#5CC8A0"
             delay={0}
           />
@@ -557,7 +557,7 @@ export default function Instructor() {
           Ready to fast-track your data career?
         </h2>
         <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.5)', margin: '0 auto 20px', maxWidth: 460, lineHeight: 1.7 }}>
-          Join Datamyze Pro for ₹149 — one payment, lifetime access. Start learning today, get placed tomorrow.
+          Join Datamyze Pro for ₹199 — one payment, lifetime access. Start learning today, get placed tomorrow.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href="/courses" style={{
@@ -579,7 +579,7 @@ export default function Instructor() {
           }}
             onMouseEnter={e => { e.currentTarget.style.background='rgba(255,255,255,0.12)'; }}
             onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.07)'; }}
-          >👑 Go Pro — ₹149</a>
+          >👑 Go Pro — ₹199</a>
         </div>
       </div>
 

@@ -391,7 +391,7 @@ export default function AuthPage({ mode: initialMode }) {
               <span style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.45)' }}>✦ Full access for</span>
               <span style={{ fontSize:18, fontWeight:900, letterSpacing:'-0.4px',
                 background:'linear-gradient(135deg,#E8A838 0%,#fbbf24 50%,#a78bfa 100%)',
-                WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>₹149 lifetime</span>
+                WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>₹199 lifetime</span>
               <span style={{ fontSize:13, color:'rgba(255,255,255,0.22)', textDecoration:'line-through', fontWeight:500 }}>₹999</span>
             </div>
           </div>

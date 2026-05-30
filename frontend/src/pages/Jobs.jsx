@@ -124,7 +124,7 @@ export default function Jobs() {
             </div>
             <a href="/premium">
               <button className="btn-gold" style={{ fontSize:15, padding:'13px 32px' }}>
-                <span>👑</span> Get Pro — ₹149 lifetime
+                <span>👑</span> Get Pro — ₹199 lifetime
               </button>
             </a>
             <div style={{ marginTop:10, fontSize:11.5, color:'rgba(255,255,255,0.25)' }}>One-time payment · No subscription · Instant access</div>

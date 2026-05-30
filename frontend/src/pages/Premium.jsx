@@ -11,7 +11,7 @@ const PyLogo = () => (
 );
 
 const UPI_ID = 'asifjupiterr@ybl';
-const AMOUNT  = 149;
+const AMOUNT  = 199;
 const QR_URL  = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${UPI_ID}&pn=Datamyze&am=${AMOUNT}&cu=INR&tn=Datamyze%20Premium`)}`;
 
 /* ── Interview Q&A data ──────────────────────────────── */
@@ -2801,7 +2801,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
           Go Pro. Get Hired.
         </div>
         <div style={{ fontSize:16, color:'rgba(255,255,255,0.45)', marginBottom:'1.6rem', animation:'heroFadeUp 0.5s 0.2s ease both' }}>
-          Everything you need to land your first Data, BI or Product Analytics role — in one ₹149 membership
+          Everything you need to land your first Data, BI or Product Analytics role — in one ₹199 membership
         </div>
 
         {/* Price + CTA */}
@@ -2812,7 +2812,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
           </div>
           <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:10, marginBottom:'1.5rem' }}>
             <span style={{ fontSize:14, color:'rgba(255,255,255,0.25)', textDecoration:'line-through' }}>₹999</span>
-            <span style={{ fontSize:11, fontWeight:800, padding:'2px 9px', borderRadius:20, background:'rgba(92,200,160,0.15)', border:'1px solid rgba(92,200,160,0.30)', color:'#5CC8A0' }}>85% OFF — Limited Offer</span>
+            <span style={{ fontSize:11, fontWeight:800, padding:'2px 9px', borderRadius:20, background:'rgba(92,200,160,0.15)', border:'1px solid rgba(92,200,160,0.30)', color:'#5CC8A0' }}>80% OFF — Limited Offer</span>
           </div>
           {!isPending && (
             <button className="btn-gold" style={{ fontSize:17, padding:'15px 40px' }} onClick={() => setShowModal(true)}>
@@ -2859,7 +2859,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
           {[
             { text:'"Got my Flipkart offer 3 months after joining. The SQL problems are exactly what they ask."', name:'Priya S.', role:'Data Analyst @ Flipkart', color:'#5CC8A0' },
             { text:'"The 1:1 mentor sessions gave me the confidence to crack my Swiggy interview."',             name:'Rahul M.', role:'BI Engineer @ Swiggy',    color:'#4A90D9' },
-            { text:'"Best ₹149 I ever spent. Resume review alone was worth 10x the price."',                   name:'Ankit V.', role:'Analyst @ Razorpay',      color:'#a78bfa' },
+            { text:'"Best ₹199 I ever spent. Resume review alone was worth 10x the price."',                   name:'Ankit V.', role:'Analyst @ Razorpay',      color:'#a78bfa' },
           ].map(t => (
             <div key={t.name} style={{ padding:'12px 14px', borderRadius:14, background:'rgba(255,255,255,0.03)', border:`1px solid ${t.color}20`, textAlign:'left' }}>
               <div style={{ fontSize:11, color:'rgba(255,255,255,0.45)', lineHeight:1.6, marginBottom:8, fontStyle:'italic' }}>{t.text}</div>
@@ -2935,7 +2935,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
               {/* Savings badge */}
               <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, marginBottom:20 }}>
                 <span style={{ fontSize:13, color:'rgba(255,255,255,0.22)', textDecoration:'line-through' }}>₹999</span>
-                <span style={{ fontSize:11, fontWeight:800, padding:'3px 10px', borderRadius:20, background:'rgba(92,200,160,0.14)', border:'1px solid rgba(92,200,160,0.30)', color:'#5CC8A0' }}>Save ₹850 (85% OFF)</span>
+                <span style={{ fontSize:11, fontWeight:800, padding:'3px 10px', borderRadius:20, background:'rgba(92,200,160,0.14)', border:'1px solid rgba(92,200,160,0.30)', color:'#5CC8A0' }}>Save ₹800 (80% OFF)</span>
               </div>
 
               {/* CTA */}
@@ -3031,10 +3031,10 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
 
               {/* Price row */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: '1.2rem' }}>
-                <span style={{ fontSize: 46, fontWeight: 900, letterSpacing: '-2px', background: 'linear-gradient(135deg, #F5C842, #E8A838, #F07B6A)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1 }}>₹149</span>
+                <span style={{ fontSize: 46, fontWeight: 900, letterSpacing: '-2px', background: 'linear-gradient(135deg, #F5C842, #E8A838, #F07B6A)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1 }}>₹199</span>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                   <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', textDecoration: 'line-through' }}>₹999</span>
-                  <span style={{ fontSize: 11, fontWeight: 800, padding: '2px 9px', borderRadius: 20, background: 'rgba(92,200,160,0.14)', border: '1px solid rgba(92,200,160,0.30)', color: '#5CC8A0', whiteSpace: 'nowrap' }}>85% OFF</span>
+                  <span style={{ fontSize: 11, fontWeight: 800, padding: '2px 9px', borderRadius: 20, background: 'rgba(92,200,160,0.14)', border: '1px solid rgba(92,200,160,0.30)', color: '#5CC8A0', whiteSpace: 'nowrap' }}>80% OFF</span>
                 </div>
               </div>
 
@@ -3066,7 +3066,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
                 >
                   {cfLoading
                     ? <><span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} /> Processing…</>
-                    : <><span>⚡</span> Pay ₹149 Now</>
+                    : <><span>⚡</span> Pay ₹199 Now</>
                   }
                 </button>
 
