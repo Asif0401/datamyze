@@ -86,7 +86,7 @@ router.post('/subscribe', authMiddleware, async (req, res) => {
   const id = uuidv4();
   const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
   const { receipt_filename, receipt_original } = req.body;
-  await run(db, 'INSERT INTO premium_subscriptions (id, user_id, amount, utr_number, status, expires_at, receipt_filename, receipt_original) VALUES (?, ?, 149, ?, ?, ?, ?, ?)',
+  await run(db, 'INSERT INTO premium_subscriptions (id, user_id, amount, utr_number, status, expires_at, receipt_filename, receipt_original) VALUES (?, ?, 199, ?, ?, ?, ?, ?)',
     [id, req.user.id, utr_number.trim(), 'pending', expiresAt, receipt_filename || null, receipt_original || null]);
   res.status(201).json({ message: 'Payment submitted! Your account will be activated within 2 hours.', status: 'pending' });
 });
@@ -169,7 +169,7 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
     const orderId = `DQ-${req.user.id.replace(/-/g,'').slice(0,8)}-${Date.now()}`;
     const orderRequest = {
       order_id:       orderId,
-      order_amount:   149,
+      order_amount:   199,
       order_currency: 'INR',
       customer_details: {
         customer_id:    user.id.replace(/-/g, '').slice(0, 50),
@@ -189,7 +189,7 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
 
     // Persist pending order (utr_number column reused to store orderId for lookup)
     await run(db, `INSERT INTO premium_subscriptions (id, user_id, amount, utr_number, status, expires_at)
-             VALUES (?, ?, 149, ?, 'cashfree_pending', ?)`,
+             VALUES (?, ?, 199, ?, 'cashfree_pending', ?)`,
       [uuidv4(), user.id, orderId, new Date(Date.now() + 365*24*60*60*1000).toISOString()]);
 
     res.json({ payment_session_id, order_id: orderId, cf_env: process.env.CASHFREE_ENV === 'PRODUCTION' ? 'production' : 'sandbox' });
@@ -286,6 +286,106 @@ router.get('/mock-interview', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
   const interviews = await all(db, 'SELECT * FROM mock_interviews WHERE user_id = ? ORDER BY created_at DESC', [req.user.id]);
   res.json({ interviews });
+});
+
+// ── Cashfree: Mobile Checkout HTML (served as real HTTPS page for WebView) ──
+// No auth needed — the paymentSessionId IS the credential
+router.get('/cashfree/mobile-checkout', (req, res) => {
+  const { sessionId, orderId, env } = req.query;
+  if (!sessionId || !orderId) {
+    return res.status(400).send(
+      '<html><body><p style="color:#FF4757;font-family:sans-serif;padding:24px;text-align:center">Missing payment parameters. Please go back and try again.</p></body></html>'
+    );
+  }
+  const cfMode = env === 'production' ? 'production' : 'sandbox';
+  const backendUrl = process.env.BACKEND_URL || 'https://datamyze-backend.onrender.com';
+  const returnUrl = `${backendUrl}/api/premium/cashfree/mobile-return?order_id=${encodeURIComponent(orderId)}&cf_status={order_status}`;
+
+  res.setHeader('Content-Type', 'text/html');
+  res.send(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <title>Datamyze Pro — Checkout</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; background:#0f1117; }
+    #loading {
+      display:flex; flex-direction:column; align-items:center;
+      justify-content:center; height:100vh; color:#fff;
+      font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      gap:16px;
+    }
+    .spinner {
+      width:40px; height:40px; border:3px solid #2A2A3E;
+      border-top-color:#6C63FF; border-radius:50%;
+      animation:spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .label { font-size:15px; color:#A0A0B0; }
+    .amount { font-size:28px; font-weight:800; color:#fff; }
+    .sub { font-size:13px; color:#A0A0B0; }
+    #error { display:none; color:#FF4757; padding:24px; text-align:center; font-family:sans-serif; }
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <div class="spinner"></div>
+    <p class="label">Preparing secure checkout…</p>
+    <p class="amount">&#8377;199</p>
+    <p class="sub">Datamyze Pro — Lifetime Access</p>
+  </div>
+  <div id="error"></div>
+  <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+  <script>
+    function startCheckout() {
+      try {
+        var cashfree = Cashfree({ mode: "${cfMode}" });
+        cashfree.checkout({
+          paymentSessionId: "${sessionId}",
+          returnUrl: "${returnUrl}",
+          redirectTarget: "_self"
+        });
+      } catch(err) {
+        document.getElementById('loading').style.display = 'none';
+        var el = document.getElementById('error');
+        el.style.display = 'block';
+        el.textContent = 'Failed to load payment: ' + err.message;
+      }
+    }
+    if (typeof Cashfree !== 'undefined') {
+      startCheckout();
+    } else {
+      window.onload = startCheckout;
+    }
+  </script>
+</body>
+</html>`);
+});
+
+// ── Cashfree: Mobile Return URL (intercepted by WebView before it loads) ──
+router.get('/cashfree/mobile-return', (req, res) => {
+  res.setHeader('Content-Type', 'text/html');
+  res.send(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <title>Processing Payment…</title>
+  <style>
+    body { background:#0f1117; display:flex; align-items:center; justify-content:center;
+           height:100vh; margin:0; flex-direction:column; gap:16px; }
+    .spinner { width:36px; height:36px; border:3px solid #2A2A3E;
+               border-top-color:#6C63FF; border-radius:50%; animation:spin 0.8s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    p { color:#A0A0B0; font-family:sans-serif; font-size:15px; }
+  </style>
+</head>
+<body>
+  <div class="spinner"></div>
+  <p>Confirming your payment…</p>
+</body>
+</html>`);
 });
 
 module.exports = router;
