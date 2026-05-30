@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <title>Datamyze Pro — Checkout</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; background:#0f1117; }
+    #loading {
+      display:flex; flex-direction:column; align-items:center;
+      justify-content:center; height:100vh; color:#fff;
+      font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      gap:16px;
+    }
+    .spinner {
+      width:40px; height:40px; border:3px solid #2A2A3E;
+      border-top-color:#6C63FF; border-radius:50%;
+      animation:spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .label { font-size:15px; color:#A0A0B0; }
+    .amount { font-size:28px; font-weight:800; color:#fff; }
+    .sub { font-size:13px; color:#A0A0B0; }
+    #error {
+      display:none; color:#FF4757; padding:24px;
+      text-align:center; font-family:sans-serif; font-size:15px;
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <div class="spinner"></div>
+    <p class="label">Preparing secure checkout…</p>
+    <p class="amount">&#8377;199</p>
+    <p class="sub">Datamyze Pro — Lifetime Access</p>
+  </div>
+  <div id="error"></div>
+
+  <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+  <script>
+    var params     = new URLSearchParams(window.location.search);
+    var sessionId  = params.get('sessionId');
+    var orderId    = params.get('orderId');
+    var env        = params.get('env') || 'sandbox';
+    var cfMode     = env === 'production' ? 'production' : 'sandbox';
+    var returnUrl  = 'https://datamyze.in/payment-complete?order_id='
+                     + encodeURIComponent(orderId)
+                     + '&cf_status={order_status}';
+
+    function showError(msg) {
+      document.getElementById('loading').style.display = 'none';
+      var el = document.getElementById('error');
+      el.style.display = 'block';
+      el.textContent = msg;
+    }
+
+    function startCheckout() {
+      if (!sessionId || !orderId) {
+        showError('Missing payment parameters. Please go back and try again.');
+        return;
+      }
+      try {
+        var cashfree = Cashfree({ mode: cfMode });
+        cashfree.checkout({
+          paymentSessionId: sessionId,
+          returnUrl: returnUrl,
+          redirectTarget: '_self'
+        });
+      } catch(err) {
+        showError('Failed to load payment: ' + err.message);
+      }
+    }
+
+    if (typeof Cashfree !== 'undefined') {
+      startCheckout();
+    } else {
+      window.onload = startCheckout;
+    }
+  </script>
+</body>
+</html>
