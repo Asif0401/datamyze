@@ -2857,9 +2857,9 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
         {/* Mini testimonials */}
         <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10, marginTop:'1.5rem', animation:'heroFadeUp 0.5s 0.5s ease both' }}>
           {[
-            { text:'"Got my Flipkart offer 3 months after joining. The SQL problems are exactly what they ask."', name:'Priya S.', role:'Data Analyst @ Flipkart', color:'#5CC8A0' },
-            { text:'"The 1:1 mentor sessions gave me the confidence to crack my Swiggy interview."',             name:'Rahul M.', role:'BI Engineer @ Swiggy',    color:'#4A90D9' },
-            { text:'"Best ₹199 I ever spent. Resume review alone was worth 10x the price."',                   name:'Ankit V.', role:'Analyst @ Razorpay',      color:'#a78bfa' },
+            { text:'"Got my Flipkart offer 3 months after joining. The SQL problems are exactly what they ask."', name:'Priya S.', role:'Data Analyst', color:'#5CC8A0' },
+            { text:'"The 1:1 mentor sessions gave me the confidence to crack my Swiggy interview."',             name:'Rahul M.', role:'BI Engineer',    color:'#4A90D9' },
+            { text:'"Best ₹199 I ever spent. Resume review alone was worth 10x the price."',                   name:'Ankit V.', role:'Data Analyst',      color:'#a78bfa' },
           ].map(t => (
             <div key={t.name} style={{ padding:'12px 14px', borderRadius:14, background:'rgba(255,255,255,0.03)', border:`1px solid ${t.color}20`, textAlign:'left' }}>
               <div style={{ fontSize:11, color:'rgba(255,255,255,0.45)', lineHeight:1.6, marginBottom:8, fontStyle:'italic' }}>{t.text}</div>

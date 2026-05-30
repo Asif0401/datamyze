@@ -461,9 +461,9 @@ export default function Instructor() {
         <SectionHeader icon="💬" label="What Students Say" sub="Real results, real placements" />
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
           {[
-            { name: 'Priya S.', role: 'Data Analyst @ Flipkart', text: 'The SQL problems here are exactly what I was asked in my Flipkart interview. Got an offer within 3 months of joining Datamyze.', color: '#5CC8A0', avatar: 'PS' },
-            { name: 'Rahul M.', role: 'Analytics Engineer @ Swiggy', text: 'The real-world examples made everything click. The cohort analysis module alone landed me 2 interviews in the same week.', color: '#7F77DD', avatar: 'RM' },
-            { name: 'Ananya K.', role: 'BI Developer @ Razorpay', text: 'Best investment I made. The course content is way ahead of any YouTube tutorial — it teaches you how companies actually use data.', color: '#38bdf8', avatar: 'AK' },
+            { name: 'Priya S.', role: 'Data Analyst', text: 'The SQL problems here are exactly what I was asked in my Flipkart interview. Got an offer within 3 months of joining Datamyze.', color: '#5CC8A0', avatar: 'PS' },
+            { name: 'Rahul M.', role: 'Analytics Engineer', text: 'The real-world examples made everything click. The cohort analysis module alone landed me 2 interviews in the same week.', color: '#7F77DD', avatar: 'RM' },
+            { name: 'Ananya K.', role: 'BI Developer', text: 'Best investment I made. The course content is way ahead of any YouTube tutorial — it teaches you how companies actually use data.', color: '#38bdf8', avatar: 'AK' },
           ].map((t, i) => (
             <div key={i} style={{
               flex: '1 1 240px',
