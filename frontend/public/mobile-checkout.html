@@ -25,6 +25,7 @@
     #error {
       display:none; color:#FF4757; padding:24px;
       text-align:center; font-family:sans-serif; font-size:15px;
+      line-height:1.5;
     }
   </style>
 </head>
@@ -39,14 +40,17 @@
 
   <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
   <script>
-    var params     = new URLSearchParams(window.location.search);
-    var sessionId  = params.get('sessionId');
-    var orderId    = params.get('orderId');
-    var env        = params.get('env') || 'sandbox';
-    var cfMode     = env === 'production' ? 'production' : 'sandbox';
-    var returnUrl  = 'https://datamyze.in/payment-complete?order_id='
-                     + encodeURIComponent(orderId)
-                     + '&cf_status={order_status}';
+    // Read params from hash (#) so they are never stripped by server redirects
+    // URL format: /mobile-checkout.html#sessionId=X&orderId=Y&env=Z
+    var hash      = window.location.hash.replace(/^#/, '');
+    var params    = new URLSearchParams(hash);
+    var sessionId = params.get('sessionId');
+    var orderId   = params.get('orderId');
+    var env       = params.get('env') || 'sandbox';
+    var cfMode    = env === 'production' ? 'production' : 'sandbox';
+    var returnUrl = 'https://datamyze.in/payment-complete?order_id='
+                    + encodeURIComponent(orderId)
+                    + '&cf_status={order_status}';
 
     function showError(msg) {
       document.getElementById('loading').style.display = 'none';
