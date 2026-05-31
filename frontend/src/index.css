@@ -1799,9 +1799,4 @@ select option { background: #1a2035; color: var(--text); }
   .lb-mobile-hide { display: none !important; }
 }
 
-/* ── Mobile warning overlay ─────────────────────────── */
-@media (max-width: 768px) {
-  .mobile-warning-overlay {
-    display: flex !important;
-  }
-}
+/* Mobile warning overlay is controlled via JS (window.innerWidth) */

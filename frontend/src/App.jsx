@@ -1,15 +1,26 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
+import { useState, useEffect } from 'react';
 
 function MobileWarning() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const check = () => setVisible(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  if (!visible) return null;
+
   return (
     <div style={{
-      display: 'none',
       position: 'fixed', inset: 0, zIndex: 9999,
       background: 'linear-gradient(160deg, #03060f 0%, #070e20 100%)',
-      flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       padding: '2rem', textAlign: 'center',
-    }} className="mobile-warning-overlay">
+    }}>
       {/* Logo icon */}
       <div style={{
         width: 64, height: 64, borderRadius: 18, marginBottom: '1.4rem',
@@ -91,11 +102,29 @@ function MobileWarning() {
       <div style={{
         borderTop: '1px solid rgba(255,255,255,0.08)',
         paddingTop: '1.4rem', width: '100%', maxWidth: 280,
+        marginBottom: '1.4rem',
       }}>
         <div style={{ fontSize: 13, color: 'rgba(34,211,238,0.55)', letterSpacing: 1, fontWeight: 600 }}>
           datamyze.in
         </div>
       </div>
+
+      {/* Continue anyway */}
+      <button
+        onClick={() => setVisible(false)}
+        style={{
+          background: 'transparent',
+          border: '1px solid rgba(255,255,255,0.15)',
+          borderRadius: 10, padding: '0.6rem 1.4rem',
+          color: 'rgba(255,255,255,0.35)', fontSize: 12.5,
+          cursor: 'pointer', letterSpacing: 0.3,
+          transition: 'all 0.2s',
+        }}
+        onMouseEnter={e => e.target.style.color = 'rgba(255,255,255,0.65)'}
+        onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.35)'}
+      >
+        Continue anyway →
+      </button>
     </div>
   );
 }
