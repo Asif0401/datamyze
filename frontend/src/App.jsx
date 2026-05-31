@@ -52,6 +52,41 @@ function MobileWarning() {
         Datamyze is packed with courses, practice problems, and tools — open it on your laptop or desktop for the full experience.
       </div>
 
+      {/* Desktop view tip */}
+      <div style={{
+        background: 'rgba(255,255,255,0.05)',
+        border: '1px solid rgba(255,255,255,0.09)',
+        borderRadius: 12, padding: '0.85rem 1.2rem',
+        maxWidth: 310, marginBottom: '1.2rem',
+        display: 'flex', alignItems: 'flex-start', gap: 10, textAlign: 'left',
+      }}>
+        <span style={{ fontSize: 18, lineHeight: 1, marginTop: 1 }}>💡</span>
+        <div style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>
+          Want to continue on mobile? Tap your browser's{' '}
+          <span style={{ color: 'rgba(255,255,255,0.75)', fontWeight: 600 }}>menu → Request Desktop Site</span>
+          {' '}(or "Desktop View") to proceed.
+        </div>
+      </div>
+
+      {/* Mobile app coming soon */}
+      <div style={{
+        background: 'linear-gradient(135deg, rgba(108,99,255,0.15), rgba(34,211,238,0.08))',
+        border: '1px solid rgba(108,99,255,0.28)',
+        borderRadius: 12, padding: '0.85rem 1.2rem',
+        maxWidth: 310, marginBottom: '2rem',
+        display: 'flex', alignItems: 'center', gap: 10,
+      }}>
+        <span style={{ fontSize: 22, lineHeight: 1 }}>📱</span>
+        <div style={{ textAlign: 'left' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.85)', marginBottom: 2 }}>
+            Datamyze App — Coming Soon
+          </div>
+          <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.38)', lineHeight: 1.5 }}>
+            A native mobile app is on the way. Stay tuned!
+          </div>
+        </div>
+      </div>
+
       {/* Divider + domain */}
       <div style={{
         borderTop: '1px solid rgba(255,255,255,0.08)',
