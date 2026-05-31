@@ -1,6 +1,150 @@
-import { Outlet, NavLink, useNavigate, Link } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Background from './Background';
+import { useState, useEffect } from 'react';
+
+/* ── Free-user welcome popup ─────────────────────── */
+function FreeUserPopup({ onClose, onUpgrade }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setVisible(true), 400); return () => clearTimeout(t); }, []);
+
+  const perks = [
+    { icon: '💼', text: '300+ curated job listings — Data Analyst, BI & more' },
+    { icon: '🧑‍💼', text: '1:1 live mentorship sessions with an expert' },
+    { icon: '📄', text: 'Personalised resume review + mock interviews' },
+    { icon: '🏆', text: 'Verified certificates ready for LinkedIn' },
+    { icon: '🎯', text: '100% placement assistance till you get hired' },
+  ];
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9999,
+      background: 'rgba(0,0,0,0.72)',
+      backdropFilter: 'blur(6px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: '1rem',
+      opacity: visible ? 1 : 0,
+      transition: 'opacity .35s ease',
+    }}
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div style={{
+        width: '100%', maxWidth: 480,
+        background: '#0d1117',
+        borderRadius: 24,
+        overflow: 'hidden',
+        boxShadow: '0 0 0 1px rgba(232,168,56,0.3), 0 32px 80px rgba(0,0,0,0.7), 0 0 60px rgba(232,168,56,0.08)',
+        transform: visible ? 'translateY(0) scale(1)' : 'translateY(32px) scale(0.96)',
+        transition: 'transform .4s cubic-bezier(.4,0,.2,1)',
+      }}>
+
+        {/* ── Gold header ── */}
+        <div style={{
+          background: 'linear-gradient(135deg, #1a1200 0%, #2a1c00 40%, #1a1200 100%)',
+          borderBottom: '1px solid rgba(232,168,56,0.25)',
+          padding: '1.8rem 1.8rem 1.5rem',
+          position: 'relative', overflow: 'hidden',
+          textAlign: 'center',
+        }}>
+          {/* Glow blob */}
+          <div style={{ position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)', width: 200, height: 160, borderRadius: '50%', background: 'radial-gradient(circle, rgba(232,168,56,0.25), transparent)', pointerEvents: 'none' }} />
+          {/* Top stripe */}
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, #F5C842, #E8A838, #F07B6A)' }} />
+
+          {/* Close btn */}
+          <button onClick={onClose} style={{
+            position: 'absolute', top: 12, right: 14,
+            background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '50%', width: 28, height: 28,
+            color: 'rgba(255,255,255,0.5)', fontSize: 14, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'all .2s',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.14)'; e.currentTarget.style.color = '#fff'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; }}
+          >✕</button>
+
+          <div style={{ fontSize: 44, marginBottom: 10, filter: 'drop-shadow(0 0 16px rgba(232,168,56,0.8))' }}>👑</div>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            background: 'rgba(232,168,56,0.12)', border: '1px solid rgba(232,168,56,0.3)',
+            borderRadius: 20, padding: '3px 12px', marginBottom: 10,
+            fontSize: 10, fontWeight: 700, color: '#E8A838', letterSpacing: 1,
+          }}>FREE PLAN</div>
+
+          <h2 style={{
+            fontSize: 22, fontWeight: 900, margin: '0 0 6px', letterSpacing: '-0.5px',
+            background: 'linear-gradient(135deg, #f1f5f9 30%, #E8A838 70%)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+          }}>You're missing the best part</h2>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', margin: 0, lineHeight: 1.6 }}>
+            Upgrade to Pro and unlock everything you need to land your first data role.
+          </p>
+        </div>
+
+        {/* ── Perks list ── */}
+        <div style={{ padding: '1.4rem 1.8rem 0' }}>
+          {perks.map((p, i) => (
+            <div key={i} style={{
+              display: 'flex', alignItems: 'center', gap: 12,
+              padding: '9px 0',
+              borderBottom: i < perks.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+            }}>
+              <span style={{ fontSize: 18, flexShrink: 0 }}>{p.icon}</span>
+              <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.72)', fontWeight: 500, lineHeight: 1.4 }}>{p.text}</span>
+              <span style={{ marginLeft: 'auto', color: '#5CC8A0', fontSize: 16, flexShrink: 0 }}>✓</span>
+            </div>
+          ))}
+        </div>
+
+        {/* ── Price + CTA ── */}
+        <div style={{ padding: '1.4rem 1.8rem 1.8rem' }}>
+          {/* Price row */}
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center',
+            marginBottom: '1rem',
+            background: 'rgba(232,168,56,0.06)', border: '1px solid rgba(232,168,56,0.15)',
+            borderRadius: 14, padding: '10px 16px',
+          }}>
+            <span style={{ fontSize: 32, fontWeight: 900, background: 'linear-gradient(135deg, #F5C842, #E8A838)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', letterSpacing: '-1px' }}>₹199</span>
+            <div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', textDecoration: 'line-through' }}>₹999</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#5CC8A0' }}>80% OFF · Lifetime access</div>
+            </div>
+            <span style={{
+              marginLeft: 'auto',
+              fontSize: 10, fontWeight: 800, padding: '3px 10px',
+              background: 'rgba(92,200,160,0.15)', border: '1px solid rgba(92,200,160,0.35)',
+              borderRadius: 20, color: '#5CC8A0', letterSpacing: 0.5,
+            }}>ONE-TIME</span>
+          </div>
+
+          {/* CTA */}
+          <button
+            onClick={onUpgrade}
+            className="btn-gold"
+            style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: 16, borderRadius: 14 }}
+          >
+            👑 Get Pro Now — ₹199 Lifetime
+          </button>
+
+          <button onClick={onClose} style={{
+            width: '100%', marginTop: 10,
+            background: 'none', border: 'none',
+            color: 'rgba(255,255,255,0.28)', fontSize: 12, cursor: 'pointer',
+            padding: '6px', fontWeight: 500,
+            transition: 'color .2s',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.28)'; }}
+          >
+            Maybe later — continue with free plan
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /* ── SVG nav icons ─────────────────────────── */
 const Icons = {
@@ -111,6 +255,7 @@ const PREMIUM_NAV = [
 export default function Layout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const initials    = user?.name?.split(' ').filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase() || '??';
   const xpPercent   = Math.min(100, Math.round((user?.xp || 0) / 150));
@@ -118,6 +263,26 @@ export default function Layout() {
   const isAdmin     = user?.role === 'admin' || user?.email === 'ak384837@gmail.com';
   const avatarColor = user?.avatar_color || '#4A90D9';
   const avatarSrc   = user?.avatar_url ? `/uploads/avatars/${user.avatar_url}` : null;
+
+  /* Show popup once per session for non-premium users */
+  const [showPopup, setShowPopup] = useState(false);
+  useEffect(() => {
+    if (!isPremium && !sessionStorage.getItem('dm_promo_seen')) {
+      const t = setTimeout(() => setShowPopup(true), 1200);
+      return () => clearTimeout(t);
+    }
+  }, [isPremium]);
+
+  const closePopup = () => {
+    setShowPopup(false);
+    sessionStorage.setItem('dm_promo_seen', '1');
+  };
+
+  const goUpgrade = () => {
+    setShowPopup(false);
+    sessionStorage.setItem('dm_promo_seen', '1');
+    navigate('/premium');
+  };
 
   return (
     <div className="app-layout">
@@ -301,6 +466,9 @@ export default function Layout() {
       <main className="main-content">
         <Outlet />
       </main>
+
+      {/* ── Free user promo popup ── */}
+      {showPopup && <FreeUserPopup onClose={closePopup} onUpgrade={goUpgrade} />}
 
       {/* ── Mobile bottom nav ── */}
       <nav className="mobile-bottom-nav">
