@@ -1,5 +1,69 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
+
+function MobileWarning() {
+  return (
+    <div style={{
+      display: 'none',
+      position: 'fixed', inset: 0, zIndex: 9999,
+      background: 'linear-gradient(160deg, #03060f 0%, #070e20 100%)',
+      flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      padding: '2rem', textAlign: 'center',
+    }} className="mobile-warning-overlay">
+      {/* Logo icon */}
+      <div style={{
+        width: 64, height: 64, borderRadius: 18, marginBottom: '1.4rem',
+        background: 'linear-gradient(145deg, #1e40af 0%, #0369a1 50%, #0891b2 100%)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 0 40px rgba(34,211,238,0.45), 0 0 0 1px rgba(255,255,255,0.12)',
+      }}>
+        <svg viewBox="0 0 24 24" fill="none" width="32" height="32">
+          <rect x="1.5" y="17" width="3.5" height="6" rx="1.3" fill="rgba(255,255,255,0.65)"/>
+          <rect x="6.5" y="13" width="3.5" height="10" rx="1.3" fill="rgba(255,255,255,0.75)"/>
+          <rect x="11.5" y="9"  width="3.5" height="14" rx="1.3" fill="rgba(103,232,249,0.9)"/>
+          <rect x="16.5" y="5"  width="3.5" height="18" rx="1.3" fill="#22d3ee"/>
+          <line x1="3.25" y1="16.5" x2="18.25" y2="4.5" stroke="#22d3ee" strokeWidth="1.8" strokeLinecap="round"/>
+          <path d="M18.25,2 L19.6,4.5 L18.25,7 L16.9,4.5 Z" fill="#22d3ee"/>
+        </svg>
+      </div>
+
+      {/* Wordmark */}
+      <div style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.5px', marginBottom: '1.8rem', lineHeight: 1 }}>
+        <span style={{ color: 'rgba(255,255,255,0.72)', fontWeight: 600 }}>Data</span>
+        <span style={{ color: '#22d3ee', fontWeight: 900 }}>myze</span>
+      </div>
+
+      {/* Laptop icon */}
+      <div style={{ fontSize: 52, marginBottom: '1.2rem', lineHeight: 1 }}>💻</div>
+
+      {/* Heading */}
+      <div style={{
+        fontSize: 22, fontWeight: 800, color: '#fff',
+        letterSpacing: '-0.5px', marginBottom: '0.75rem', lineHeight: 1.25,
+      }}>
+        Best viewed on a laptop<br />or larger screen
+      </div>
+
+      {/* Sub text */}
+      <div style={{
+        fontSize: 14, color: 'rgba(255,255,255,0.45)',
+        maxWidth: 300, lineHeight: 1.6, marginBottom: '2rem',
+      }}>
+        Datamyze is packed with courses, practice problems, and tools — open it on your laptop or desktop for the full experience.
+      </div>
+
+      {/* Divider + domain */}
+      <div style={{
+        borderTop: '1px solid rgba(255,255,255,0.08)',
+        paddingTop: '1.4rem', width: '100%', maxWidth: 280,
+      }}>
+        <div style={{ fontSize: 13, color: 'rgba(34,211,238,0.55)', letterSpacing: 1, fontWeight: 600 }}>
+          datamyze.in
+        </div>
+      </div>
+    </div>
+  );
+}
 import AuthPage from './pages/AuthPage';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
@@ -29,6 +93,9 @@ export default function App() {
 
   return (
     <>
+      {/* Mobile warning — shown on screens < 768px */}
+      <MobileWarning />
+
       {/* Profile completion overlay — shown once after first signup */}
       {user && user.profile_completed === 0 && <ProfileCompletion />}
 
