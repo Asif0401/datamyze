@@ -3,10 +3,12 @@ const { get, all } = require('../db/database');
 const authMiddleware = require('../middleware/auth');
 const router = express.Router();
 
+const ADMIN_EMAIL = 'ak384837@gmail.com';
+
 router.get('/', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const user = await get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
-  const isAdmin = req.user.role === 'admin';
+  const user = await get(db, 'SELECT is_premium, role, email FROM users WHERE id = ?', [req.user.id]);
+  const isAdmin = user?.role === 'admin' || user?.email === ADMIN_EMAIL;
   if (!isAdmin && !user?.is_premium) return res.status(403).json({ error: 'Premium membership required', premium_required: true });
   const { search, type, location } = req.query;
   let sql = 'SELECT * FROM job_listings WHERE is_active = 1';
