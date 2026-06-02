@@ -254,6 +254,9 @@ async function initDb() {
   try { await c.execute('ALTER TABLE users ADD COLUMN target_role TEXT'); } catch(e) {}
   try { await c.execute('ALTER TABLE users ADD COLUMN avatar_url TEXT'); } catch(e) {}
   try { await c.execute('ALTER TABLE users ADD COLUMN profile_completed INTEGER DEFAULT 0'); } catch(e) {}
+  // Mark all pre-existing users (registered before ProfileCompletion feature) as complete
+  // so they don't get the onboarding popup and don't show as Incomplete in admin
+  try { await c.execute("UPDATE users SET profile_completed = 1 WHERE profile_completed = 0 AND name IS NOT NULL AND name != ''"); } catch(e) {}
   try { await c.execute('ALTER TABLE courses ADD COLUMN is_coming_soon INTEGER DEFAULT 0'); } catch(e) {}
   try { await c.execute('ALTER TABLE problems ADD COLUMN hint TEXT'); } catch(e) {}
   try { await c.execute("UPDATE problems SET starter_code = '' WHERE starter_code IS NOT NULL"); } catch(e) {}
