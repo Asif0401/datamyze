@@ -130,13 +130,21 @@ function UsersTab({ data }) {
       </div>
       <Table
         cols={[
-          { key: 'name',  label: 'Name', render: (v, row) => (
-            <div>
-              <div style={{ fontWeight: 600, color: '#e2e8f0' }}>{v}</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)' }}>{row.email}</div>
-              {row.phone && <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>📱 {row.phone}</div>}
-            </div>
-          )},
+          { key: 'name',  label: 'Name', render: (v, row) => {
+            // Phone-signup users have email like phone_9177133236@datamyze.in
+            const phoneFromEmail = row.email?.startsWith('phone_')
+              ? row.email.replace('phone_', '').split('@')[0]
+              : null;
+            const phone = row.phone || phoneFromEmail;
+            const displayEmail = row.email?.startsWith('phone_') ? null : row.email;
+            return (
+              <div>
+                <div style={{ fontWeight: 600, color: '#e2e8f0' }}>{v}</div>
+                {displayEmail && <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)' }}>{displayEmail}</div>}
+                {phone && <div style={{ fontSize: 11, color: 'rgba(92,200,160,0.7)' }}>📱 {phone}</div>}
+              </div>
+            );
+          }},
           { key: 'is_premium', label: 'Plan', render: (v, row) => {
             const isPro = v === 1 || row.role === 'admin';
             return (
