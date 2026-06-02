@@ -148,7 +148,7 @@ const TECH_LOGOS = {
 const COURSE_META = {
   'SQL for Data Analysis': {
     outcomes: ['Write complex JOIN and aggregation queries','Master window functions used at FAANG','Analyse Zomato/Flipkart-scale datasets','Crack SQL rounds at any data analyst interview'],
-    prereqs: 'No prior experience needed — just curiosity.',
+    prereqs: 'No prior experience needed. Just curiosity.',
     jobs: ['Data Analyst','Business Analyst','Product Analyst'],
     upsell: 'Unlock live SQL mock interviews with a senior analyst at Flipkart. Available for Pro members.',
   },
@@ -305,7 +305,7 @@ function LiveSessionPanel({ courseId, courseName, initialVoted = false }) {
 
   const WHAT_YOU_GET = [
     { icon: '🎥', text: '2-hour focused live coding session on this course' },
-    { icon: '💬', text: 'Real-time Q&A — ask us anything, live' },
+    { icon: '💬', text: 'Real-time Q&A: ask us anything, live' },
     { icon: '🔍', text: 'Top interview problems worked through step-by-step' },
     { icon: '📝', text: 'Live code review & instant feedback on your approach' },
     { icon: '🎞️', text: 'Recording shared with you for 7 days after the session' },
@@ -336,7 +336,7 @@ function LiveSessionPanel({ courseId, courseName, initialVoted = false }) {
             <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.50)', lineHeight: 1.65, maxWidth: 440 }}>
               {requested
                 ? `Got it! Our team has been notified. You'll receive a calendar invite as soon as the session is scheduled. Check your email for updates.`
-                : `Tell us you need a live coaching session on this topic. We schedule them based on demand — the more requests, the sooner it happens.`
+                : `Tell us you need a live coaching session on this topic. We schedule them based on demand. More requests means it happens sooner!`
               }
             </div>
           </div>
@@ -360,7 +360,7 @@ function LiveSessionPanel({ courseId, courseName, initialVoted = false }) {
             onMouseLeave={e => { e.currentTarget.style.transform = 'none'; }}
           >
             <span style={{ fontSize: 16 }}>{loading ? '⏳' : requested ? '✓' : '🙋'}</span>
-            {loading ? 'Updating…' : requested ? 'Requested — Click to Withdraw' : 'I Need This Live Session'}
+            {loading ? 'Updating…' : requested ? 'Requested · Click to Withdraw' : 'I Need This Live Session'}
           </button>
 
           <a
@@ -685,7 +685,7 @@ function CourseModal({ course, onClose, onEnroll }) {
             <div style={{ marginTop: '1.2rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
               {!progress ? (
                 <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={enroll} disabled={enrolling}>
-                  {enrolling ? 'Enrolling…' : '🚀 Enroll for Free — Start Learning'}
+                  {enrolling ? 'Enrolling…' : '🚀 Enroll for Free and Start Learning'}
                 </button>
               ) : (
                 <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => { setTab('lessons'); const first = lessons.find(l => !completed.includes(l.id)) || lessons[0]; if (first) setActiveLesson(first); }}>
@@ -729,7 +729,7 @@ export default function Courses() {
     <div className="page">
       <div className="page-header">
         <div className="page-title">📚 Course Catalog</div>
-        <div className="page-sub">Master data analytics from fundamentals to advanced — {courses.length} courses, interview-focused</div>
+        <div className="page-sub">Master data analytics from fundamentals to advanced. {courses.length} courses, interview-focused</div>
       </div>
 
       <div style={{ display: 'flex', gap: 8, marginBottom: '1.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
@@ -880,7 +880,7 @@ export default function Courses() {
                   <div style={{ fontWeight: 700, fontSize: 15, color: 'rgba(255,255,255,0.65)', lineHeight: 1.3 }}>{c.title}</div>
                   <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{c.description}</div>
                   <div style={{ marginTop: 'auto', padding: '8px 12px', borderRadius: 10, background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', fontSize: 11, color: '#a78bfa', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span>🚀</span> Launching Soon — Stay tuned!
+                    <span>🚀</span> Launching Soon. Stay tuned!
                   </div>
                 </div>
               </div>

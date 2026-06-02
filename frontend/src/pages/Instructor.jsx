@@ -178,17 +178,17 @@ export default function Instructor() {
         }}>More than a course platform.<br />Your career launchpad.</h1>
 
         <p style={{ fontSize: 14.5, color: 'rgba(255,255,255,0.55)', maxWidth: 660, lineHeight: 1.8, margin: '0 0 28px' }}>
-          Datamyze was built for one purpose — to help people like you land roles in data. Not with generic YouTube-style tutorials, but with
-          <strong style={{ color: '#f1f5f9' }}> real interview problems, hands-on projects, and dedicated mentorship</strong> that walks you through every step — from learning SQL to getting your first offer letter.
+          Datamyze was built for one purpose: to help people like you land roles in data. Not with generic YouTube-style tutorials, but with
+          <strong style={{ color: '#f1f5f9' }}> real interview problems, hands-on projects, and dedicated mentorship</strong> that walks you through every step, from learning SQL to getting your first offer letter.
         </p>
 
         {/* Value pillars */}
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
           {[
-            { icon: '🎯', title: '100% Placement Assistance', desc: 'We stay with you until you land the role — resume reviews, mock interviews, referrals.', color: '#a78bfa' },
+            { icon: '🎯', title: '100% Placement Assistance', desc: 'We stay with you until you land the role: resume reviews, mock interviews, referrals.', color: '#a78bfa' },
             { icon: '🧑‍💼', title: 'Industry-Led Mentorship', desc: 'Learn directly from practitioners with real startup and product company experience.', color: '#5CC8A0' },
             { icon: '🗺️', title: 'Structured Career Paths', desc: 'Custom roadmaps for Data Analyst, BI Engineer, Product Analyst, BI Analyst and more.', color: '#38bdf8' },
-            { icon: '💡', title: 'Real-World Problems', desc: 'Every problem mirrors actual company interviews — Flipkart, Swiggy, Razorpay, Amazon India.', color: '#f59e0b' },
+            { icon: '💡', title: 'Real-World Problems', desc: 'Every problem mirrors actual company interviews: Flipkart, Swiggy, Razorpay, Amazon India.', color: '#f59e0b' },
           ].map((p, i) => (
             <div key={i} style={{
               flex: '1 1 200px',
@@ -292,7 +292,7 @@ export default function Instructor() {
 
             <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.75, margin: '0 0 16px', maxWidth: 520 }}>
               Data analytics practitioner with hands-on experience at Indian product companies and funded startups.
-              Built Datamyze after noticing that most learners were stuck on tutorials but couldn't crack interviews —
+              Built Datamyze after noticing that most learners were stuck on tutorials but couldn't crack interviews,
               because platforms teach concepts, not how companies actually use data.
               Everything on this platform is designed from real interview experience, not a textbook.
             </p>
@@ -362,7 +362,7 @@ export default function Instructor() {
               step: '01',
               icon: '📖',
               title: 'Learn with Purpose',
-              desc: 'Master SQL, Python, Power BI and Excel through real company interview problems — not theory videos. Every lesson is built around what hiring managers actually test.',
+              desc: 'Master SQL, Python, Power BI and Excel through real company interview problems, not theory videos. Every lesson is built around what hiring managers actually test.',
               color: '#4A90D9',
               tags: ['SQL', 'Python', 'Power BI', 'Excel'],
             },
@@ -370,7 +370,7 @@ export default function Instructor() {
               step: '02',
               icon: '🧑‍💼',
               title: 'Get Guided',
-              desc: '1:1 live mentorship sessions, personalised resume feedback, and mock interviews with expert feedback — so you\'re never figuring it out alone.',
+              desc: '1:1 live mentorship sessions, personalised resume feedback, and mock interviews with expert feedback. You never have to figure it out alone.',
               color: '#a78bfa',
               tags: ['1:1 Mentorship', 'Mock Interviews', 'Resume Review'],
             },
@@ -424,9 +424,9 @@ export default function Instructor() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 14 }}>
           {[
-            { icon: '🗄️', title: 'SQL Mastery Track', desc: 'Window functions, CTEs, subqueries, joins — from basics to advanced interview level.', color: '#0095ED' },
+            { icon: '🗄️', title: 'SQL Mastery Track', desc: 'Window functions, CTEs, subqueries, joins: from basics to advanced interview level.', color: '#0095ED' },
             { icon: '🐍', title: 'Python for Data', desc: 'Pandas, NumPy, data cleaning, EDA and visualisation using real datasets.', color: '#3776AB' },
-            { icon: '📊', title: 'Power BI & Excel', desc: 'Dashboards, DAX, pivot tables and reporting — tools companies actually use.', color: '#F2C811' },
+            { icon: '📊', title: 'Power BI & Excel', desc: 'Dashboards, DAX, pivot tables and reporting. Tools companies actually use.', color: '#F2C811' },
             { icon: '🏆', title: 'Verified Certificates', desc: 'Course certificates with credential IDs, shareable directly to LinkedIn.', color: '#5CC8A0' },
             { icon: '💼', title: '300+ Job Listings', desc: 'Hand-curated openings at Flipkart, Swiggy, Razorpay, Meesho, PhonePe and more.', color: '#E8A838' },
             { icon: '📄', title: 'Resume & Mock Prep', desc: 'Personalised resume reviews and live mock interviews with structured feedback.', color: '#F07B6A' },
@@ -463,7 +463,7 @@ export default function Instructor() {
           {[
             { name: 'Priya S.', role: 'Data Analyst', text: 'The SQL problems here are exactly what I was asked in my Flipkart interview. Got an offer within 3 months of joining Datamyze.', color: '#5CC8A0', avatar: 'PS' },
             { name: 'Rahul M.', role: 'Analytics Engineer', text: 'The real-world examples made everything click. The cohort analysis module alone landed me 2 interviews in the same week.', color: '#7F77DD', avatar: 'RM' },
-            { name: 'Ananya K.', role: 'BI Developer', text: 'Best investment I made. The course content is way ahead of any YouTube tutorial — it teaches you how companies actually use data.', color: '#38bdf8', avatar: 'AK' },
+            { name: 'Ananya K.', role: 'BI Developer', text: 'Best investment I made. The course content is way ahead of any YouTube tutorial. It teaches you how companies actually use data.', color: '#38bdf8', avatar: 'AK' },
           ].map((t, i) => (
             <div key={i} style={{
               flex: '1 1 240px',
@@ -505,7 +505,7 @@ export default function Instructor() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           <FAQItem
             q="Is ₹199 really a one-time payment with no hidden fees?"
-            a="Yes, 100%. You pay ₹199 once and get lifetime access to everything — all courses, job listings, mentorship sessions, certificates, and future updates. No subscription, no renewal, no surprise charges."
+            a="Yes, 100%. You pay ₹199 once and get lifetime access to everything: all courses, job listings, mentorship sessions, certificates, and future updates. No subscription, no renewal, no surprise charges."
             color="#5CC8A0"
             delay={0}
           />
@@ -523,13 +523,13 @@ export default function Instructor() {
           />
           <FAQItem
             q="What kind of jobs are in the 300+ listings?"
-            a="All roles are hand-curated for data careers — Data Analyst, BI Analyst, BI Engineer, Product Analyst, Analytics Engineer, and more. We focus on Indian companies: Flipkart, Swiggy, Meesho, Razorpay, PhonePe, and funded startups."
+            a="All roles are hand-curated for data careers: Data Analyst, BI Analyst, BI Engineer, Product Analyst, Analytics Engineer, and more. We focus on Indian companies: Flipkart, Swiggy, Meesho, Razorpay, PhonePe, and funded startups."
             color="#E8A838"
             delay={240}
           />
           <FAQItem
             q="How is Datamyze different from free YouTube tutorials?"
-            a="YouTube teaches concepts. Datamyze gets you hired. We focus on company-specific interview problems, structured roadmaps, hands-on projects for your portfolio, and active placement support — things no free tutorial can give you."
+            a="YouTube teaches concepts. Datamyze gets you hired. We focus on company-specific interview problems, structured roadmaps, hands-on projects for your portfolio, and active placement support. Things no free tutorial can give you."
             color="#F07B6A"
             delay={320}
           />
@@ -557,7 +557,7 @@ export default function Instructor() {
           Ready to fast-track your data career?
         </h2>
         <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.5)', margin: '0 auto 20px', maxWidth: 460, lineHeight: 1.7 }}>
-          Join Datamyze Pro for ₹199 — one payment, lifetime access. Start learning today, get placed tomorrow.
+          Join Datamyze Pro for ₹199. One payment, lifetime access. Start learning today, get placed tomorrow.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href="/courses" style={{
@@ -579,7 +579,7 @@ export default function Instructor() {
           }}
             onMouseEnter={e => { e.currentTarget.style.background='rgba(255,255,255,0.12)'; }}
             onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.07)'; }}
-          >👑 Go Pro — ₹199</a>
+          >👑 Go Pro · ₹199</a>
         </div>
       </div>
 

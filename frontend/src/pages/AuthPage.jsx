@@ -159,7 +159,7 @@ const TICKER_ROW2 = [
 const HERO_FEATURES = [
   { icon: <SqlLogo />,    label: '100+ SQL Problems',  desc: 'Window functions, CTEs, real interview patterns' },
   { icon: <PythonLogo />, label: 'Python & Pandas',    desc: 'Data wrangling, EDA, GroupBy deep-dives' },
-  { icon: '🎙️',          label: 'Live Mock Interviews',desc: 'Real sessions with our mentor — recorded feedback' },
+  { icon: '🎙️',          label: 'Live Mock Interviews',desc: 'Real sessions with our mentor, with recorded feedback' },
   { icon: '💼',           label: 'Curated Job Board',  desc: '300+ roles: Data Analyst, BI Engineer, Product Analyst & more' },
   { icon: '📄',           label: 'Resume Review',      desc: 'ATS-optimised expert feedback in 48 hours' },
   { icon: '🗺️',           label: 'Course Roadmaps',    desc: 'Step-by-step learning path for every course' },
@@ -319,7 +319,7 @@ export default function AuthPage({ mode: initialMode }) {
             </div>
           </div>
           <div className="auth-hero-sub">
-            This is where data careers begin. Go beyond tutorials with 1:1 mentorship, industry-grade projects, placement assistance and 300+ curated jobs — purpose-built to get you hired.
+            This is where data careers begin. Go beyond tutorials with 1:1 mentorship, industry-grade projects, placement assistance and 300+ curated jobs. Purpose-built to get you hired.
           </div>
 
           {/* Comparison card */}
@@ -464,7 +464,7 @@ export default function AuthPage({ mode: initialMode }) {
               {panel === 'login' ? 'Welcome back 👋' : 'Start your journey 🚀'}
             </div>
             <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>
-              {panel === 'login' ? 'Sign in to continue your journey' : 'Free to join — no credit card needed'}
+              {panel === 'login' ? 'Sign in to continue your journey' : 'Free to join. No credit card needed.'}
             </div>
           </div>
 
@@ -824,7 +824,7 @@ function SignupForm({ onSuccess, switchToLogin }) {
       {step === 3 && (
         <div>
           <div style={{ background: 'rgba(92,200,160,0.08)', border: '1px solid rgba(92,200,160,0.20)', borderRadius: 10, padding: '9px 14px', fontSize: 13, color: '#5CC8A0', marginBottom: '1.2rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span>✅</span> {identType === 'email' ? 'Email' : 'Phone'} verified — {ident}
+            <span>✅</span> {identType === 'email' ? 'Email' : 'Phone'} verified: {ident}
           </div>
 
           <div className="field">

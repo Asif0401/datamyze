@@ -249,7 +249,7 @@ function ActivityTab({ data }) {
   const max = Math.max(...rows.map(r => r.active_users), 1);
   return (
     <div>
-      <div style={{ fontWeight: 700, marginBottom: '1rem', fontSize: 15, color: '#fff' }}>Daily Active Users — Last 30 Days</div>
+      <div style={{ fontWeight: 700, marginBottom: '1rem', fontSize: 15, color: '#fff' }}>Daily Active Users · Last 30 Days</div>
       {rows.length === 0
         ? <div style={{ textAlign: 'center', padding: '2rem', color: 'rgba(255,255,255,0.30)' }}>No activity recorded yet. Activity is logged on each login.</div>
         : (
@@ -341,7 +341,7 @@ function PaymentsTab({ data, reload }) {
             ) : (
               <div style={{ textAlign: 'center', padding: '2rem', color: 'rgba(255,255,255,0.40)' }}>
                 <div style={{ fontSize: 48, marginBottom: 12 }}>📄</div>
-                <div>PDF receipt — click Download to view</div>
+                <div>PDF receipt. Click Download to view.</div>
               </div>
             )}
           </div>

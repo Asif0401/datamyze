@@ -9,7 +9,8 @@ function FreeUserPopup({ onClose, onUpgrade }) {
   useEffect(() => { const t = setTimeout(() => setVisible(true), 400); return () => clearTimeout(t); }, []);
 
   const perks = [
-    { icon: '💼', text: '300+ curated job listings — Data Analyst, BI & more' },
+    { icon: '🎥', text: 'Live classes every week with the instructor' },
+    { icon: '💼', text: '300+ curated job listings: Data Analyst, BI & more' },
     { icon: '🧑‍💼', text: '1:1 live mentorship sessions with an expert' },
     { icon: '📄', text: 'Personalised resume review + mock interviews' },
     { icon: '🏆', text: 'Verified certificates ready for LinkedIn' },
@@ -128,7 +129,7 @@ function FreeUserPopup({ onClose, onUpgrade }) {
             className="btn-gold"
             style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: 16, borderRadius: 14 }}
           >
-            👑 Get Pro Now — ₹199 Lifetime
+            👑 Get Pro Now · ₹199 Lifetime
           </button>
 
           <button onClick={onClose} style={{
@@ -141,7 +142,7 @@ function FreeUserPopup({ onClose, onUpgrade }) {
             onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; }}
             onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.28)'; }}
           >
-            Maybe later — continue with free plan
+            Maybe later, continue with free plan
           </button>
         </div>
       </div>

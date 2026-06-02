@@ -3,21 +3,22 @@ import { useNavigate } from 'react-router-dom';
 
 const COURSES = [
   { icon: '🗄️', title: 'SQL for Data Analysis',       desc: 'Write real queries used at Flipkart, Swiggy & more' },
-  { icon: '🐍', title: 'Python for Analytics',         desc: 'Pandas, NumPy, real datasets — job-ready fast' },
+  { icon: '🐍', title: 'Python for Analytics',         desc: 'Pandas, NumPy, real datasets. Job-ready fast.' },
   { icon: '📊', title: 'Statistics & A/B Testing',     desc: 'Probability, hypothesis testing, business decisions' },
   { icon: '📈', title: 'Tableau for Analysts',         desc: 'Build dashboards that get you hired' },
-  { icon: '💡', title: 'Power BI',                     desc: 'India\'s most in-demand BI tool — master it' },
+  { icon: '💡', title: 'Power BI',                     desc: 'India\'s most in-demand BI tool. Master it.' },
   { icon: '📋', title: 'Excel & Google Sheets',        desc: 'Power functions, pivot tables, dashboards' },
   { icon: '🔍', title: 'Advanced SQL',                 desc: 'Window functions, CTEs, query optimisation' },
 ];
 
 const FEATURES = [
-  { icon: '🎯', text: '300+ curated job listings — updated daily' },
+  { icon: '🎥', text: 'Live classes every week with the instructor' },
+  { icon: '🎯', text: '300+ curated job listings, updated daily' },
   { icon: '🧑‍💼', text: '1:1 live mentorship with industry experts' },
   { icon: '📝', text: 'Mock interviews + resume review' },
   { icon: '🏆', text: 'Verified certificates ready for LinkedIn' },
   { icon: '💻', text: '500+ practice problems with instant feedback' },
-  { icon: '♾️', text: 'Lifetime access — pay once, learn forever' },
+  { icon: '♾️', text: 'Lifetime access: pay once, learn forever' },
 ];
 
 export default function Instagram() {
@@ -26,7 +27,7 @@ export default function Instagram() {
 
   // Track UTM source
   useEffect(() => {
-    document.title = 'Datamyze — Master Data. Get Placed.';
+    document.title = 'Datamyze: Master Data. Get Placed.';
     window.scrollTo(0, 0);
   }, []);
 
@@ -92,7 +93,7 @@ export default function Instagram() {
           fontSize: 16, color: 'rgba(255,255,255,0.50)',
           lineHeight: 1.6, maxWidth: 340, margin: '0 auto 2rem',
         }}>
-          SQL, Python, Tableau, Power BI & more — everything you need to land a data job in India.
+          SQL, Python, Tableau, Power BI & more. Everything you need to land a data job in India.
         </p>
 
         {/* Price pill */}
@@ -119,7 +120,7 @@ export default function Instagram() {
           boxShadow: '0 8px 28px rgba(232,168,56,0.40)',
           width: '100%', maxWidth: 320,
         }}>
-          Get Lifetime Access — ₹199 🎯
+          Get Lifetime Access · ₹199 🎯
         </button>
         <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.28)', marginTop: '0.6rem' }}>
           One-time payment · No subscription · No hidden fees

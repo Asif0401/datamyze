@@ -98,7 +98,7 @@ export default function ProfileCompletion() {
             Welcome to Datamyze, {user?.name?.split(' ')[0]}!
           </h2>
           <p style={{ margin: '0.5rem 0 0', fontSize: 13.5, color: 'rgba(255,255,255,0.42)', lineHeight: 1.5 }}>
-            Help us personalise your learning path — takes 30 seconds.
+            Help us personalise your learning path. Takes 30 seconds.
           </p>
           {/* Progress bar */}
           <div style={{ height: 3, background: 'rgba(255,255,255,0.07)', borderRadius: 99, marginTop: '1.2rem', overflow: 'hidden' }}>
@@ -197,7 +197,7 @@ export default function ProfileCompletion() {
           <div style={{ marginBottom: '1.2rem', animation: 'fadeInUp 0.25s ease' }}>
             <label style={labelStyle}>
               Phone Number
-              <span style={{ fontWeight: 400, color: 'rgba(255,255,255,0.28)', marginLeft: 5 }}>(optional — for WhatsApp updates)</span>
+              <span style={{ fontWeight: 400, color: 'rgba(255,255,255,0.28)', marginLeft: 5 }}>(optional, for WhatsApp updates)</span>
             </label>
             <input
               type="tel"
@@ -230,7 +230,7 @@ export default function ProfileCompletion() {
             disabled={loading}
             style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.28)', fontSize: 12, cursor: 'pointer', fontWeight: 500 }}
           >
-            Skip for now — I'll fill this in later
+            Skip for now. I'll fill this in later.
           </button>
         </div>
 

@@ -19,7 +19,7 @@ const INTERVIEW_DATA = {
   SQL: [
     { q: 'What is the difference between WHERE and HAVING?', a: 'WHERE filters rows before grouping; HAVING filters groups after GROUP BY. WHERE cannot reference aggregate functions, HAVING can.', level: 'Easy' },
     { q: 'Explain the difference between INNER JOIN, LEFT JOIN, and FULL OUTER JOIN.', a: 'INNER JOIN: returns only matching rows from both tables.\nLEFT JOIN: returns all rows from left table + matched rows from right (NULLs for no match).\nFULL OUTER JOIN: returns all rows from both tables, NULLs where no match exists.', level: 'Easy' },
-    { q: 'What are window functions? Give an example.', a: 'Window functions perform calculations across a set of rows related to the current row without collapsing them.\nExample: ROW_NUMBER() OVER (PARTITION BY dept ORDER BY salary DESC) — ranks employees within each department.', level: 'Medium' },
+    { q: 'What are window functions? Give an example.', a: 'Window functions perform calculations across a set of rows related to the current row without collapsing them.\nExample: ROW_NUMBER() OVER (PARTITION BY dept ORDER BY salary DESC): ranks employees within each department.', level: 'Medium' },
     { q: 'How would you find the second highest salary in a table?', a: 'SELECT MAX(salary) FROM employees WHERE salary < (SELECT MAX(salary) FROM employees);\n-- Or using DENSE_RANK:\nSELECT salary FROM (SELECT salary, DENSE_RANK() OVER (ORDER BY salary DESC) AS rnk FROM employees) WHERE rnk = 2;', level: 'Medium' },
     { q: 'What is the difference between RANK(), DENSE_RANK(), and ROW_NUMBER()?', a: 'ROW_NUMBER(): Assigns unique sequential integers. No ties.\nRANK(): Same rank for ties, skips next ranks (1,2,2,4).\nDENSE_RANK(): Same rank for ties, no gaps (1,2,2,3).', level: 'Medium' },
     { q: 'How do you calculate month-over-month growth in SQL?', a: 'Use LAG() window function:\nSELECT month, revenue,\n  LAG(revenue) OVER (ORDER BY month) AS prev_revenue,\n  ROUND((revenue - LAG(revenue) OVER (ORDER BY month)) * 100.0 / LAG(revenue) OVER (ORDER BY month), 2) AS mom_growth\nFROM monthly_sales;', level: 'Hard' },
@@ -31,20 +31,20 @@ const INTERVIEW_DATA = {
     { q: 'How do you handle missing values in a DataFrame?', a: 'Detection: df.isnull().sum()\nDrop: df.dropna() or df.dropna(subset=["col"])\nFill: df.fillna(0) or df["col"].fillna(df["col"].median())\nForward fill: df.fillna(method="ffill")', level: 'Easy' },
     { q: 'Explain groupby().agg() with an example.', a: 'df.groupby("category").agg(\n    total_sales=("amount", "sum"),\n    avg_order=("amount", "mean"),\n    order_count=("id", "count")\n).reset_index()\n\nThis groups by category and calculates multiple aggregations in one step.', level: 'Easy' },
     { q: 'How do you detect and remove outliers using IQR?', a: 'Q1 = df["col"].quantile(0.25)\nQ3 = df["col"].quantile(0.75)\nIQR = Q3 - Q1\nlower = Q1 - 1.5 * IQR\nupper = Q3 + 1.5 * IQR\ndf_clean = df[(df["col"] >= lower) & (df["col"] <= upper)]', level: 'Medium' },
-    { q: 'What is the difference between apply(), map(), and applymap()?', a: 'map(): Element-wise on a Series. Great for value replacement.\napply(): Applies function along axis (row/col) on DataFrame or Series.\napplymap(): Element-wise on entire DataFrame (deprecated in newer Pandas — use map()).', level: 'Medium' },
+    { q: 'What is the difference between apply(), map(), and applymap()?', a: 'map(): Element-wise on a Series. Great for value replacement.\napply(): Applies function along axis (row/col) on DataFrame or Series.\napplymap(): Element-wise on entire DataFrame (deprecated in newer Pandas: use map()).', level: 'Medium' },
     { q: 'How do you merge two DataFrames and what are the join types?', a: 'pd.merge(df1, df2, on="id", how="inner")  # Only matching\npd.merge(df1, df2, on="id", how="left")   # All left + matched right\npd.merge(df1, df2, on="id", how="outer")  # All rows from both', level: 'Easy' },
-    { q: 'How would you create a pivot table in Pandas?', a: 'df.pivot_table(\n    values="sales",\n    index="region",\n    columns="category",\n    aggfunc="sum",\n    fill_value=0\n)\n\nEquivalent to Excel pivot tables — reshapes data from long to wide format.', level: 'Medium' },
+    { q: 'How would you create a pivot table in Pandas?', a: 'df.pivot_table(\n    values="sales",\n    index="region",\n    columns="category",\n    aggfunc="sum",\n    fill_value=0\n)\n\nEquivalent to Excel pivot tables: reshapes data from long to wide format.', level: 'Medium' },
   ],
   CaseStudy: [
     { q: 'Swiggy\'s order volume dropped 15% last week. How would you investigate?', a: '1. Segment: Is it all cities or specific ones? All categories or specific cuisines?\n2. Check supply side: Restaurant availability, delivery partner supply\n3. Check demand side: Pricing changes, discount withdrawal, app issues\n4. Check external: Competitor campaigns, weather, local events\n5. Timeline: Did it happen suddenly (tech issue) or gradually (product change)?', level: 'Hard' },
     { q: 'How would you define and measure "user engagement" for an e-learning platform?', a: 'Key metrics:\n• DAU/MAU ratio (stickiness)\n• Lesson completion rate\n• Time spent per session\n• Streak maintenance rate\n• Problem submission rate\n\nNorth Star Metric: "Weekly Active Learners" who complete ≥1 lesson.', level: 'Medium' },
-    { q: 'A/B test shows feature X increases CTR by 10% but decreases revenue by 5%. Ship it?', a: 'Do NOT ship immediately. Questions to ask:\n1. What\'s the statistical significance of both metrics?\n2. What\'s the absolute revenue impact?\n3. Is there a long-term vs short-term trade-off?\n4. Can we segment — does X help new users but hurt power users?\nConclusion: Depends on company\'s growth vs revenue stage. Likely investigate more.', level: 'Hard' },
+    { q: 'A/B test shows feature X increases CTR by 10% but decreases revenue by 5%. Ship it?', a: 'Do NOT ship immediately. Questions to ask:\n1. What\'s the statistical significance of both metrics?\n2. What\'s the absolute revenue impact?\n3. Is there a long-term vs short-term trade-off?\n4. Can we segment: does X help new users but hurt power users?\nConclusion: Depends on company\'s growth vs revenue stage. Likely investigate more.', level: 'Hard' },
     { q: 'How would you build a churn prediction model for a SaaS product?', a: 'Features: Login frequency, feature usage, support tickets, plan type, contract age\nApproach:\n1. Define churn (e.g. no login for 30 days)\n2. Label historical data\n3. Train classifier (XGBoost/Logistic Regression)\n4. Evaluate with Precision/Recall (cost of false negative > false positive)\n5. Act: trigger retention campaign for high-risk users', level: 'Hard' },
   ],
   HR: [
     { q: 'Tell me about yourself.', a: 'Structure: Present → Past → Future\nExample: "I\'m a data analyst with [X] years working with SQL and Python. I\'ve built dashboards and models at [company]. I\'m now looking to move into a more senior role where I can own end-to-end analytics."\n\nKeep it under 90 seconds. Focus on relevant experience.', level: 'Easy' },
     { q: 'Why do you want to work as a Data Analyst?', a: 'Highlight: Curiosity for data, impact of insights on business decisions, specific projects or moments that drew you to analytics.\nAvoid: "It pays well" or generic answers.\nGood answer: Connect personal interest + a specific example + alignment with the role.', level: 'Easy' },
-    { q: 'Describe a time you found an insight that impacted a business decision.', a: 'Use STAR: Situation → Task → Action → Result\nExample: "In my previous role, I noticed our repeat purchase rate was dropping. I dug into cohort data and found a specific product category was driving churn. I presented this to the PM team — they changed the recommendation algorithm and repeat purchases recovered 12% in 6 weeks."', level: 'Medium' },
+    { q: 'Describe a time you found an insight that impacted a business decision.', a: 'Use STAR: Situation → Task → Action → Result\nExample: "In my previous role, I noticed our repeat purchase rate was dropping. I dug into cohort data and found a specific product category was driving churn. I presented this to the PM team, they changed the recommendation algorithm and repeat purchases recovered 12% in 6 weeks."', level: 'Medium' },
   ],
 };
 
@@ -78,7 +78,7 @@ const COURSE_ROADMAPS = [
       { id: 1, icon: '🌱', title: 'Python Basics', outcome: 'Write clean scripts and understand core Python syntax', skills: ['Variables & data types', 'Lists, dicts, tuples, sets', 'Loops, conditions & functions', 'Reading CSV/JSON files'], practice: 'Write 5 Python scripts from scratch' },
       { id: 2, icon: '🐼', title: 'Pandas & NumPy', outcome: 'Manipulate tabular data like a pro', skills: ['DataFrame creation & indexing', '.loc / .iloc / boolean masks', 'Merging, joining & concat', 'Groupby & aggregations'], practice: 'Analyse a real dataset with Pandas' },
       { id: 3, icon: '🧹', title: 'Data Cleaning', outcome: 'Transform messy raw data into analysis-ready datasets', skills: ['Handle missing values (fillna, dropna)', 'Remove duplicates', 'Fix data types (astype, to_datetime)', 'Outlier detection with IQR'], practice: 'Clean and reshape a raw e-commerce dataset' },
-      { id: 4, icon: '🔬', title: 'Exploratory Data Analysis', outcome: 'Surface insights from any dataset systematically', skills: ['.describe() & .info()', 'Correlation matrices', 'Value counts & crosstabs', 'Distribution analysis'], practice: 'Full EDA on the HR dataset — write a summary' },
+      { id: 4, icon: '🔬', title: 'Exploratory Data Analysis', outcome: 'Surface insights from any dataset systematically', skills: ['.describe() & .info()', 'Correlation matrices', 'Value counts & crosstabs', 'Distribution analysis'], practice: 'Full EDA on the HR dataset: write a summary' },
       { id: 5, icon: '📈', title: 'Data Visualisation', outcome: 'Create clear charts that tell a compelling story', skills: ['Matplotlib: bar, line, scatter', 'Seaborn: heatmap, violin, pairplot', 'Customising styles & themes', 'Saving charts for reports'], practice: 'Build a 5-chart EDA visual report' },
     ],
   },
@@ -163,7 +163,7 @@ const STUDY_MATERIALS = [
 **Q1. What is the difference between WHERE and HAVING?**
 WHERE filters rows BEFORE grouping. HAVING filters groups AFTER GROUP BY.
 Rule: WHERE cannot use aggregate functions; HAVING can.
-Interview tip: Always mention this distinction — it comes up in 80% of SQL rounds.
+Interview tip: Always mention this distinction, it comes up in 80% of SQL rounds.
 
 **Q2. Write a query to find duplicate emails in a users table.**
 \`\`\`sql
@@ -226,10 +226,10 @@ Use subquery when: one-time use, performance-critical (subqueries sometimes opti
 ### SECTION 3: ADVANCED (Questions 26–40)
 
 **Q26. Explain EXPLAIN ANALYZE and query optimization.**
-EXPLAIN ANALYZE shows the query execution plan — how PostgreSQL executes your query.
+EXPLAIN ANALYZE shows the query execution plan, how PostgreSQL executes your query.
 Optimization tips:
 1. Add indexes on columns used in WHERE, JOIN, ORDER BY
-2. Avoid SELECT * — specify columns
+2. Avoid SELECT *. specify columns
 3. Use EXISTS instead of IN for large subqueries
 4. Partition large tables for range queries
 
@@ -256,7 +256,7 @@ GROUP BY c.cohort_month ORDER BY c.cohort_month;
 
 ### SECTION 4: CRACK THE INTERVIEW (Tips)
 
-1. Think aloud — interviewers want to see your reasoning
+1. Think aloud: interviewers want to see your reasoning
 2. Ask clarifying questions before writing SQL
 3. Start with the simplest query, then optimize
 4. Know your NULL handling (IS NULL, COALESCE, IFNULL)
@@ -292,12 +292,12 @@ df.isnull().sum() # missing values per column
 
 ### Selecting Data
 \`\`\`python
-# .loc — label-based
+# .loc: label-based
 df.loc[0]                    # row by index label
 df.loc[0:5, 'name':'city']   # row range + col range
 df.loc[df['age'] > 25]       # boolean filter
 
-# .iloc — position-based
+# .iloc: position-based
 df.iloc[0]                   # first row
 df.iloc[0:5, 0:2]            # first 5 rows, first 2 cols
 df.iloc[-1]                  # last row
@@ -409,14 +409,14 @@ Every FAANG-style data analyst interview includes at least 1–2 statistics ques
 - **Median**: Middle value. Robust to outliers. Use for skewed distributions (salaries, house prices).
 - **Mode**: Most frequent value. Useful for categorical data.
 
-**Interview Q**: "A product has 100 reviews. 90 are 5-star, 10 are 1-star. Which is a better measure — mean or median rating?"
+**Interview Q**: "A product has 100 reviews. 90 are 5-star, 10 are 1-star. Which is a better measure: mean or median rating?"
 Answer: Median, because the distribution is bimodal and mean is pulled by extremes.
 
 ### Measures of Spread
 - **Standard Deviation**: Average distance from the mean. σ for population, s for sample.
-- **Variance**: σ² — harder to interpret (different units)
+- **Variance**: σ²: harder to interpret (different units)
 - **IQR (Interquartile Range)**: Q3 - Q1. Robust outlier measure.
-- **Coefficient of Variation**: (SD/Mean) × 100 — compares variability across different scales
+- **Coefficient of Variation**: (SD/Mean) × 100. compares variability across different scales
 
 ### Distributions
 - **Normal Distribution**: Bell curve, mean=median=mode, 68-95-99.7 rule
@@ -428,9 +428,9 @@ Answer: Median, because the distribution is bimodal and mean is pulled by extrem
 
 ### Key Concepts
 - **P(A)**: Probability of event A = favourable outcomes / total outcomes
-- **P(A∩B)**: Joint probability — P(A) × P(B) if independent
-- **P(A∪B)**: Union — P(A) + P(B) - P(A∩B)
-- **P(A|B)**: Conditional probability — P(A∩B) / P(B)
+- **P(A∩B)**: Joint probability. P(A) × P(B) if independent
+- **P(A∪B)**: Union. P(A) + P(B) - P(A∩B)
+- **P(A|B)**: Conditional probability. P(A∩B) / P(B)
 - **Bayes' Theorem**: P(A|B) = P(B|A) × P(A) / P(B)
 
 **Interview Q**: "A model identifies 95% of fraudulent transactions (recall). But 80% of its 'fraud' alerts are actually legitimate (precision = 20%). How do you balance this?"
@@ -456,7 +456,7 @@ Answer: Use F1-Score = 2×(Precision×Recall)/(Precision+Recall). Tune threshold
 ### A/B Testing (Most Asked!)
 **Setup**: Control (A) vs Treatment (B). Randomly assign users.
 **Metrics**: Primary metric (conversion rate) + guardrail metrics (revenue, churn)
-**Sample Size**: Calculated before running — based on MDE, α, and power (1-β)
+**Sample Size**: Calculated before running, based on MDE, α, and power (1-β)
 **Duration**: Run for complete business cycles (min. 1–2 weeks)
 
 \`\`\`python
@@ -553,8 +553,8 @@ AVERAGEIFS, MAXIFS, MINIFS (same pattern)
 ### Pro Tips
 - **Calculated Fields**: Analyze tab → Fields, Items & Sets → Calculated Field (e.g., Margin = Revenue - Cost)
 - **Grouping Dates**: Right-click a date → Group → choose Month/Quarter/Year
-- **Slicers**: Insert → Slicer — interactive filters that update pivot and charts
-- **Timeline**: Insert → Timeline — filter by date ranges visually
+- **Slicers**: Insert → Slicer: interactive filters that update pivot and charts
+- **Timeline**: Insert → Timeline: filter by date ranges visually
 
 ## CHARTS & DASHBOARDS
 
@@ -580,9 +580,9 @@ AVERAGEIFS, MAXIFS, MINIFS (same pattern)
 
 \`\`\`
 Remove duplicates: Data tab → Remove Duplicates
-Flash Fill: Ctrl+E — pattern-based fill
+Flash Fill: Ctrl+E: pattern-based fill
 Text to Columns: Split on delimiter (comma, space)
-Find & Replace: Ctrl+H — bulk replace, including blank cells
+Find & Replace: Ctrl+H: bulk replace, including blank cells
 Filter then delete: Filter → select blanks → delete visible rows
 \`\`\`
 
@@ -624,19 +624,19 @@ Power Query (Data → Get Data) handles:
 
 **Scenario**: Swiggy's order volume dropped 15% in the last 7 days. CEO asks you to investigate. You have access to all data.
 
-**Step 1 — Clarifying Questions to Ask:**
+**Step 1: Clarifying Questions to Ask:**
 - Is the drop in all cities or specific ones?
 - All food categories or specific cuisines?
 - Is the app working correctly (no crashes)?
 - Did any pricing/discount changes happen?
 - Is a competitor running a campaign?
 
-**Step 2 — Breakdown Framework:**
+**Step 2: Breakdown Framework:**
 Supply side: Restaurant availability ↓ → fewer options shown
 Demand side: CTR drop → conversion drop → basket size drop
 External: Weather, local holidays, competitor promotions, app store reviews
 
-**Step 3 — Analysis Approach:**
+**Step 3: Analysis Approach:**
 \`\`\`sql
 -- Check by city
 SELECT city,
@@ -649,7 +649,7 @@ FROM orders
 GROUP BY city ORDER BY pct_change;
 \`\`\`
 
-**Step 4 — Recommendation:**
+**Step 4: Recommendation:**
 If city-specific: investigate local supply, weather, event
 If all cities: check app performance, recent product changes, competitor activity
 Metric to watch: Daily Active Users → App Opens → Search → Add to Cart → Order Placed (funnel)
@@ -669,7 +669,7 @@ North Star = the single metric that best captures the value delivered to users A
 - Weekly Active Learners who complete ≥1 lesson (engagement + learning)
 - Lessons completed per week (activity quality)
 
-**Recommendation**: "Weekly Lesson Completions" — captures habit formation, learning progress, and correlates with premium conversion.
+**Recommendation**: "Weekly Lesson Completions". captures habit formation, learning progress, and correlates with premium conversion.
 
 **Supporting metrics (health metrics):**
 - Completion rate per course (content quality signal)
@@ -679,7 +679,7 @@ North Star = the single metric that best captures the value delivered to users A
 
 ---
 
-### CASE 3: A/B Test — 10% CTR Increase But 5% Revenue Drop
+### CASE 3: A/B Test. 10% CTR Increase But 5% Revenue Drop
 
 **Q**: "Feature X boosts header banner CTR by 10% but revenue is down 5%. Do you ship?"
 
@@ -715,7 +715,7 @@ North Star = the single metric that best captures the value delivered to users A
 **Modelling Approach:**
 1. Label: 1 = churned (no login for 30d), 0 = retained
 2. Train XGBoost or Logistic Regression (explain to stakeholder: "logistic regression is interpretable")
-3. Evaluate with Precision-Recall curve (care more about recall — don't miss churners)
+3. Evaluate with Precision-Recall curve (care more about recall, don't miss churners)
 4. Set threshold at F1-optimised point
 
 **Action**: Email campaign for users with churn probability > 0.7. Offer 30% discount. Track recovery rate.
@@ -762,15 +762,15 @@ If a chart doesn't communicate its insight within 5 seconds, redesign it.
 1. Use ONE colour for a single variable (varying shades for magnitude)
 2. Use contrasting colours for categories (max 7 distinct colours)
 3. Red = bad/negative, Green = good/positive (universal)
-4. Grey out unimportant data points — make the insight pop in colour
+4. Grey out unimportant data points, make the insight pop in colour
 
 ### Common Mistakes to Avoid
-❌ 3D charts — distort perception
+❌ 3D charts: distort perception
 ❌ Pie charts with >5 slices
 ❌ Dual-axis charts without clear labelling
 ❌ Starting the Y-axis at a non-zero value (misleading)
 ❌ Too many colours on one chart
-❌ Chartjunk — unnecessary gridlines, borders, backgrounds
+❌ Chartjunk: unnecessary gridlines, borders, backgrounds
 
 ## SECTION 3: TABLEAU ESSENTIALS
 
@@ -812,8 +812,8 @@ Sales Rank = RANKX(ALL(Products[Category]), [Total Revenue])
 \`\`\`
 
 ### Star Schema (Critical concept for BI interviews)
-Fact Table: transactional data (orders, events) — large, numeric
-Dimension Tables: descriptive data (customers, products, dates) — smaller, categorical
+Fact Table: transactional data (orders, events): large, numeric
+Dimension Tables: descriptive data (customers, products, dates): smaller, categorical
 Relationship: Fact.customer_id → Customers.id (many-to-one)
 
 ## SECTION 5: PORTFOLIO ADVICE
@@ -860,7 +860,7 @@ Name | Email | Phone | LinkedIn URL | GitHub (if relevant) | City, State
 Reduced reporting time by 40% through automated dashboards at XYZ Corp.
 Seeking Senior Analyst role in a product-first company."
 
-3. SKILLS SECTION (put this high — ATS scans here first)
+3. SKILLS SECTION (put this high. ATS scans here first)
 SQL: Advanced (window functions, CTEs, query optimisation)
 Python: Pandas, NumPy, Matplotlib, Seaborn, Scikit-learn
 BI Tools: Tableau (Public certified), Power BI, Looker, Metabase
@@ -899,7 +899,7 @@ Excel, Dashboard, Stakeholder Management, Data Storytelling
 
 **3. Featured Section**
 - Pin your best project (Tableau Public dashboard, GitHub project, Medium article)
-- This is the first thing recruiters click — make it count
+- This is the first thing recruiters click, make it count
 
 **4. Skills Section**
 Add 10–20 skills, starting with your strongest. Ask connections to endorse.
@@ -918,7 +918,7 @@ Hi [Name],
 I noticed [Company] is hiring a Data Analyst for the [team] team.
 
 Quick background: I'm a data analyst with [X] years experience in
-[SQL/Python/Tableau]. Recently [one specific achievement — 1 line].
+[SQL/Python/Tableau]. Recently [one specific achievement. 1 line].
 
 I'd love to learn more about the role. Would you be open to a
 5-minute call this week?
@@ -962,13 +962,13 @@ Would love to connect and learn from your journey at [Company]."
 ## THE 4 RULES OF NEGOTIATION
 
 **Rule 1**: Never give a number first
-"I'm open to discussing compensation — what's the budgeted range for this role?"
+"I'm open to discussing compensation: what's the budgeted range for this role?"
 
 **Rule 2**: Always negotiate (even if you're happy with the offer)
 Companies expect it. 90% will go up at least 10–15%.
 
 **Rule 3**: Negotiate the total package, not just base
-Stock options/ESOPs, joining bonus, variable pay, WFH policy, learning budget — all negotiable.
+Stock options/ESOPs, joining bonus, variable pay, WFH policy, learning budget: all negotiable.
 
 **Rule 4**: Silence is your superpower
 After stating your number, stop talking. Let them respond.
@@ -976,7 +976,7 @@ After stating your number, stop talking. Let them respond.
 ## THE EXACT SCRIPTS
 
 ### Script 1: Responding to an Offer (Phone Call)
-"Thank you so much for the offer — I'm genuinely excited about this opportunity and the team.
+"Thank you so much for the offer. I'm genuinely excited about this opportunity and the team.
 I've been doing some market research and looking at my experience with [specific skills],
 I was expecting something closer to ₹[X].
 Is there flexibility to move towards that range?"
@@ -987,12 +987,12 @@ For example, a joining bonus, additional ESOPs, or an earlier performance review
 at 6 months instead of a year?"
 
 ### Script 3: Competing Offer Leverage
-"I want to be transparent with you — I do have another offer at ₹[X].
+"I want to be transparent with you. I do have another offer at ₹[X].
 [Company] is my first choice because of [specific reason].
 If you can come close to that number, I'm ready to sign today."
 
 ### Script 4: Email Follow-up After Verbal Offer
-Subject: Re: Job Offer — Data Analyst Role
+Subject: Re: Job Offer. Data Analyst Role
 
 Dear [Name],
 
@@ -1100,7 +1100,7 @@ export default function Premium() {
         return;
       }
 
-      // Payment completed — verify with backend
+      // Payment completed: verify with backend
       setToast('Verifying payment…');
       const verify = await api.get(`/premium/cashfree/verify/${order_id}`);
       if (verify.data.status === 'PAID') {
@@ -1231,7 +1231,7 @@ function PremiumHub({ status, user }) {
               <span style={{ background:'linear-gradient(135deg, rgba(232,168,56,0.22), rgba(240,200,100,0.12))', border:'1px solid rgba(232,168,56,0.44)', color:'#E8A838', fontSize:10, fontWeight:800, padding:'3px 12px', borderRadius:20, letterSpacing:'1px', textTransform:'uppercase', animation:'activePulse 2s ease-in-out infinite' }}>✦ Active</span>
             </div>
             <div style={{ fontSize:14, color:'rgba(255,255,255,0.52)', lineHeight:1.5, marginBottom:10 }}>
-              Welcome back, <strong style={{ color:'rgba(255,255,255,0.92)' }}>{user?.name?.split(' ')[0]}</strong> — all Pro features are unlocked for you.
+              Welcome back, <strong style={{ color:'rgba(255,255,255,0.92)' }}>{user?.name?.split(' ')[0]}</strong>. All Pro features are unlocked for you.
               {expiryDate && <span style={{ color:'rgba(255,255,255,0.28)', fontSize:12 }}> · Valid until {expiryDate}</span>}
             </div>
             {/* Perks pills */}
@@ -1302,14 +1302,14 @@ function PremiumHub({ status, user }) {
 /* ── Overview tab ──────────────────────────────────── */
 function OverviewTab({ sessions, reviews, navigate, setTab }) {
   const quick = [
-    { icon: '🎙️', title: 'Book Mock Interview', sub: 'Live 45-min session — SQL, Python, Case Study, or full analytics round. Get real-time feedback on your thinking.', color: '#a78bfa', action: () => setTab('interview'), badge: 'Most Popular' },
+    { icon: '🎙️', title: 'Book Mock Interview', sub: 'Live 45-min session: SQL, Python, Case Study, or full analytics round. Get real-time feedback on your thinking.', color: '#a78bfa', action: () => setTab('interview'), badge: 'Most Popular' },
     { icon: '📅', title: 'Book 1:1 Session',    sub: '30-minute video call for resume critique, career strategy, code review, or salary negotiation prep.', color: '#4A90D9', action: () => setTab('session'), badge: null },
-    { icon: '📄', title: 'Resume Review',        sub: 'Expert ATS-optimised feedback within 48 hours — line-by-line rewrites, keyword gaps, and LinkedIn tips.', color: '#E8A838', action: () => setTab('resume'), badge: '48h Turnaround' },
-    { icon: '🗺️', title: 'Course Roadmaps',       sub: 'Interactive step-by-step roadmaps for every course — know exactly what to learn and in what order.', color: '#F07B6A', action: () => setTab('roadmap'), badge: '9 Courses' },
-    { icon: '📚', title: 'Study Materials',       sub: '7 exclusive guides — SQL mastery, Python handbook, resume playbook, salary scripts & more.', color: '#5CC8A0', action: () => setTab('resources'), badge: '7 Guides' },
-    { icon: '🔬', title: 'Real-World Projects',    sub: '6 industry-grade projects with real datasets — e-commerce, HR analytics, fintech & more. Build your portfolio.', color: '#f59e0b', action: () => setTab('projects'), badge: '6 Projects' },
-    { icon: '🎯', title: '100% Placement Assistance', sub: 'Dedicated job support until you land your first data role — resume, referrals, mock interviews & offer negotiation.', color: '#a78bfa', action: () => setTab('session'), badge: '100% Guaranteed' },
-    { icon: '💼', title: 'Job Board',             sub: '300+ roles for Data Analyst, BI Engineer, Product Analyst & BI Analyst at top Indian companies — updated weekly.', color: '#38bdf8', action: () => navigate('/jobs'), badge: '300+ Live Jobs' },
+    { icon: '📄', title: 'Resume Review',        sub: 'Expert ATS-optimised feedback within 48 hours: line-by-line rewrites, keyword gaps, and LinkedIn tips.', color: '#E8A838', action: () => setTab('resume'), badge: '48h Turnaround' },
+    { icon: '🗺️', title: 'Course Roadmaps',       sub: 'Interactive step-by-step roadmaps for every course. Know exactly what to learn and in what order.', color: '#F07B6A', action: () => setTab('roadmap'), badge: '9 Courses' },
+    { icon: '📚', title: 'Study Materials',       sub: '7 exclusive guides: SQL mastery, Python handbook, resume playbook, salary scripts & more.', color: '#5CC8A0', action: () => setTab('resources'), badge: '7 Guides' },
+    { icon: '🔬', title: 'Real-World Projects',    sub: '6 industry-grade projects with real datasets: e-commerce, HR analytics, fintech & more. Build your portfolio.', color: '#f59e0b', action: () => setTab('projects'), badge: '6 Projects' },
+    { icon: '🎯', title: '100% Placement Assistance', sub: 'Dedicated job support until you land your first data role: resume, referrals, mock interviews & offer negotiation.', color: '#a78bfa', action: () => setTab('session'), badge: '100% Guaranteed' },
+    { icon: '💼', title: 'Job Board',             sub: '300+ roles for Data Analyst, BI Engineer, Product Analyst & BI Analyst at top Indian companies, updated weekly.', color: '#38bdf8', action: () => navigate('/jobs'), badge: '300+ Live Jobs' },
   ];
 
   const valueProps = [
@@ -1559,7 +1559,7 @@ function ResumeTab({ reviews, setReviews, setToast }) {
       <div className="card">
         <div className="card-title">📄 Submit for Review</div>
         <div style={{ background: 'rgba(74,144,217,0.08)', border: '1px solid rgba(74,144,217,0.18)', borderRadius: 10, padding: '10px 14px', marginBottom: '1.2rem', fontSize: 13, color: 'rgba(255,255,255,0.60)', lineHeight: 1.6 }}>
-          💡 <strong style={{ color: '#4A90D9' }}>What you get:</strong> Detailed line-by-line feedback, ATS keyword optimisation, impact statement rewrites, and LinkedIn profile suggestions — tailored to your target role.
+          💡 <strong style={{ color: '#4A90D9' }}>What you get:</strong> Detailed line-by-line feedback, ATS keyword optimisation, impact statement rewrites, and LinkedIn profile suggestions, tailored to your target role.
         </div>
 
         {/* Drag-and-drop upload zone */}
@@ -1643,7 +1643,7 @@ function ResumeTab({ reviews, setReviews, setToast }) {
         {reviews.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '2rem 0', color: 'rgba(255,255,255,0.30)' }}>
             <div style={{ fontSize: 36, marginBottom: '0.8rem' }}>📄</div>
-            No reviews yet — submit your profile!
+            No reviews yet. Submit your profile!
           </div>
         ) : reviews.map(r => (
           <div key={r.id} style={{ padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
@@ -1694,7 +1694,7 @@ function InterviewTab() {
     { id: 'SQL Technical',       icon: '🗄️', color: '#4A90D9', desc: 'Window functions, CTEs, aggregations, real queries' },
     { id: 'Python Technical',    icon: <PyLogo />, color: '#5CC8A0', desc: 'Pandas, GroupBy, data cleaning, EDA problems' },
     { id: 'Case Study',          icon: '📊', color: '#E8A838', desc: 'Product metrics, root cause analysis, A/B testing' },
-    { id: 'Full Analytics Round', icon: '🎓', color: '#a78bfa', desc: 'SQL + Python + Case study — complete interview simulation' },
+    { id: 'Full Analytics Round', icon: '🎓', color: '#a78bfa', desc: 'SQL + Python + Case study: complete interview simulation' },
   ];
   const TIMES = ['9:00 AM','10:00 AM','11:00 AM','12:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM','6:00 PM','7:00 PM','8:00 PM'];
   const DIFFICULTIES = [
@@ -1964,7 +1964,7 @@ function InterviewTab() {
               {[
                 'Revise the Question Bank before your session',
                 'Have your editor / SQL IDE open and ready',
-                'Keep your resume handy — our mentor may ask about projects',
+                'Keep your resume handy, our mentor may ask about projects',
                 'Note 2–3 companies you\'re targeting',
                 'Join the meeting link 2 minutes early',
               ].map((tip, i) => (
@@ -2054,10 +2054,10 @@ const PROJECTS = [
     deliverables: ['SQL query file (.sql)', 'Python EDA notebook (.ipynb)', 'Tableau dashboard (published on Tableau Public)', 'README with 3 key insights'],
     dataset: 'Provided: ecommerce_orders.csv (50k rows) + products.csv + customers.csv',
     steps: [
-      'Load and explore the dataset — check nulls, dtypes, row counts',
+      'Load and explore the dataset: check nulls, dtypes, row counts',
       'SQL: Find top 10 products by revenue per quarter using window functions',
       'Python: Plot monthly revenue trend and identify the best/worst months',
-      'Python: Cohort analysis — retention rate by signup month',
+      'Python: Cohort analysis, retention rate by signup month',
       'Tableau: Build an interactive dashboard with filters for date & category',
       'Write a 3-bullet insight summary for your README',
     ],
@@ -2076,9 +2076,9 @@ const PROJECTS = [
     deliverables: ['Python notebook (.ipynb)', 'Summary slide (PDF or PowerPoint)', 'Top 5 attrition drivers with charts'],
     dataset: 'IBM HR Analytics Employee Attrition dataset (publicly available on Kaggle)',
     steps: [
-      'Load dataset — understand all 35 columns and their meaning',
+      'Load dataset and understand all 35 columns and their meaning',
       'Calculate overall attrition rate and segment by department, role, age',
-      'Correlation heatmap — which features correlate most with attrition?',
+      'Correlation heatmap: which features correlate most with attrition?',
       'Plot: Attrition rate by overtime, job satisfaction, years at company',
       'Identify the top 3 factors driving attrition with evidence',
       'Create a 5-slide summary: Problem → Data → Findings → Recommendation → Impact',
@@ -2098,10 +2098,10 @@ const PROJECTS = [
     deliverables: ['SQL attribution queries', 'Python ROAS & CAC analysis', 'Channel performance comparison chart', 'Recommendations doc'],
     dataset: 'Provided: marketing_events.csv + orders.csv + ad_spend.csv',
     steps: [
-      'Map the customer journey — first touch, last touch, and linear attribution',
+      'Map the customer journey: first touch, last touch, and linear attribution',
       'SQL CTE: Calculate revenue attributed to each channel per month',
       'Python: Calculate CAC (Cost per Acquisition) and ROAS per channel',
-      'Funnel analysis — drop-off rates from ad click to purchase',
+      'Funnel analysis: drop-off rates from ad click to purchase',
       'Identify the highest ROI channel and the most inefficient spend',
       'Write a brief recommendation: where should the brand increase/decrease budget?',
     ],
@@ -2118,13 +2118,13 @@ const PROJECTS = [
     desc: 'Build a fraud detection model on 6M+ financial transactions. Apply EDA, feature engineering, and a classification model to flag suspicious activity.',
     skills: ['Imbalanced classification', 'Feature engineering', 'Precision/Recall trade-off', 'XGBoost', 'Confusion matrix'],
     deliverables: ['Python ML notebook (.ipynb)', 'Model performance report (Precision, Recall, F1)', 'Feature importance chart', 'Business impact summary'],
-    dataset: 'PaySim financial transactions dataset (available on Kaggle — 6.3M rows)',
+    dataset: 'PaySim financial transactions dataset (available on Kaggle. 6.3M rows)',
     steps: [
       'EDA: Understand transaction types, amounts, fraud distribution (class imbalance)',
       'Feature engineering: create time-based features, amount deviation from mean',
-      'Handle class imbalance — use SMOTE or class_weight parameter',
+      'Handle class imbalance: use SMOTE or class_weight parameter',
       'Train Logistic Regression baseline → then XGBoost',
-      'Evaluate with Precision, Recall, F1, ROC-AUC — explain why accuracy is misleading here',
+      'Evaluate with Precision, Recall, F1, ROC-AUC: explain why accuracy is misleading here',
       'Business framing: what is the cost of a false negative vs false positive?',
     ],
   },
@@ -2137,7 +2137,7 @@ const PROJECTS = [
     difficulty: 'Intermediate',
     tools: ['SQL', 'Python', 'Mixpanel-style'],
     duration: '4–5 hours',
-    desc: 'Analyse user behaviour in a SaaS app — from signup to activation to retention. Find where users drop off and what drives long-term engagement.',
+    desc: 'Analyse user behaviour in a SaaS app: from signup to activation to retention. Find where users drop off and what drives long-term engagement.',
     skills: ['Funnel analysis', 'Cohort retention', 'DAU/MAU ratio', 'SQL window functions', 'North Star Metric'],
     deliverables: ['SQL funnel queries', 'Python cohort retention heatmap', 'Retention curve chart', 'Drop-off analysis with recommendations'],
     dataset: 'Provided: user_events.csv (signups, activations, feature usage, churns)',
@@ -2145,8 +2145,8 @@ const PROJECTS = [
       'Define the activation funnel: Signup → Onboarding → First key action → DAU',
       'SQL: Calculate conversion rate at each funnel step using COUNT + CTEs',
       'Python: Build a cohort retention table (monthly cohorts × retention weeks)',
-      'Plot the retention curve — identify the "retention cliff" week',
-      'DAU/MAU ratio — is the product sticky enough?',
+      'Plot the retention curve: identify the "retention cliff" week',
+      'DAU/MAU ratio: is the product sticky enough?',
       'Propose 2 product changes to improve the worst drop-off step',
     ],
   },
@@ -2187,7 +2187,7 @@ function ProjectsTab() {
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: 12 }}>
         <div>
           <div style={{ fontWeight: 800, fontSize: 18, color: '#fff', marginBottom: 4 }}>🔬 Real-World Projects</div>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>Industry-grade projects with real datasets — build your portfolio, impress recruiters</div>
+          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>Industry-grade projects with real datasets: build your portfolio, impress recruiters</div>
         </div>
         <div style={{ display: 'flex', gap: 6 }}>
           {difficulties.map(d => (
@@ -2330,7 +2330,7 @@ function RoadmapTab() {
       {/* Header */}
       <div style={{ marginBottom: '1.4rem' }}>
         <div style={{ fontWeight: 700, fontSize: 17, color: '#fff', marginBottom: 4 }}>🗺️ Course Roadmaps</div>
-        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>Pick a course — see exactly what to learn, in what order, and why it matters</div>
+        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>Pick a course: see exactly what to learn, in what order, and why it matters</div>
       </div>
 
       {/* Course selector pills */}
@@ -2635,7 +2635,7 @@ function SupportTab({ setToast, user }) {
       <div className="card">
         <div className="card-title">⭐ Priority Support</div>
         <div style={{ background: 'rgba(92,200,160,0.08)', border: '1px solid rgba(92,200,160,0.18)', borderRadius: 10, padding: '10px 14px', marginBottom: '1.5rem', fontSize: 13, color: '#5CC8A0', lineHeight: 1.6 }}>
-          As a pro member you get <strong>6-hour response time</strong> — faster than public support. We personally read every message.
+          As a pro member you get <strong>6-hour response time</strong>. faster than public support. We personally read every message.
         </div>
 
         <div className="field">
@@ -2685,15 +2685,16 @@ function SupportTab({ setToast, user }) {
    UPGRADE PAGE (non-premium users)
 ═══════════════════════════════════════════════════ */
 const FEATURES = [
-  { icon: '🎙️', label: 'Live Mock Interviews',     desc: 'Real 45-min sessions with our mentor — SQL, Python, or full analytics round. Written feedback included.',  color: '#a78bfa', bg: 'rgba(168,139,250,0.12)', border: 'rgba(168,139,250,0.22)' },
-  { icon: '👤', label: '1:1 Mentorship Sessions',  desc: 'Book 30-min live sessions for career strategy, code review, or job hunt — with personalised action plans.', color: '#4A90D9', bg: 'rgba(74,144,217,0.12)',  border: 'rgba(74,144,217,0.22)'  },
-  { icon: '📄', label: 'Resume Review',            desc: 'Line-by-line expert feedback within 48 hours — ATS keywords, impact rewrites, and LinkedIn optimisation.',  color: '#E8A838', bg: 'rgba(232,168,56,0.12)',  border: 'rgba(232,168,56,0.22)'  },
-  { icon: '🗺️', label: 'Course Roadmaps',           desc: 'Interactive learning paths for every course — see each stage, skill and practice task. Never feel lost again.', color: '#F07B6A', bg: 'rgba(240,123,106,0.12)', border: 'rgba(240,123,106,0.22)' },
-  { icon: '📚', label: 'Exclusive Study Guides',   desc: '7 premium guides — SQL mastery, Python handbook, resume playbook, salary negotiation scripts, and more.',   color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.22)'  },
-  { icon: '💼', label: 'Curated Job Board',        desc: '300+ roles for Data Analyst, BI Engineer, Product Analyst & BI Analyst — updated weekly with direct apply links.', color: '#38bdf8', bg: 'rgba(56,189,248,0.12)',  border: 'rgba(56,189,248,0.22)'  },
-  { icon: '🎯', label: '100% Placement Assistance', desc: 'Dedicated job support until you land your first data role — resume, mock interviews, job referrals & offer negotiation.',  color: '#a78bfa', bg: 'rgba(168,139,250,0.12)', border: 'rgba(168,139,250,0.22)' },
-  { icon: '⭐', label: 'Priority Support',         desc: '6-hour direct response from us — faster than public support. We personally read every message.',             color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.22)'  },
-  { icon: '🔬', label: 'Real-World Projects',      desc: '6 industry-grade projects with real datasets — e-commerce, HR, fintech, marketing & more. Build your portfolio.', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  border: 'rgba(245,158,11,0.22)'  },
+  { icon: '🎥', label: 'Live Classes',              desc: 'Weekly live sessions with the instructor. Ask questions in real time, get explanations on the spot.',       color: '#F07B6A', bg: 'rgba(240,123,106,0.12)', border: 'rgba(240,123,106,0.22)' },
+  { icon: '🎙️', label: 'Live Mock Interviews',     desc: 'Real 45-min sessions with our mentor. SQL, Python, or full analytics round. Written feedback included.',   color: '#a78bfa', bg: 'rgba(168,139,250,0.12)', border: 'rgba(168,139,250,0.22)' },
+  { icon: '👤', label: '1:1 Mentorship Sessions',  desc: 'Book 30-min live sessions for career strategy, code review, or job hunt. Get a personalised action plan.',  color: '#4A90D9', bg: 'rgba(74,144,217,0.12)',  border: 'rgba(74,144,217,0.22)'  },
+  { icon: '📄', label: 'Resume Review',            desc: 'Line-by-line expert feedback within 48 hours. ATS keywords, impact rewrites, and LinkedIn optimisation.',  color: '#E8A838', bg: 'rgba(232,168,56,0.12)',  border: 'rgba(232,168,56,0.22)'  },
+  { icon: '🗺️', label: 'Course Roadmaps',           desc: 'Interactive learning paths for every course: see each stage, skill and practice task. Never feel lost again.', color: '#F07B6A', bg: 'rgba(240,123,106,0.12)', border: 'rgba(240,123,106,0.22)' },
+  { icon: '📚', label: 'Exclusive Study Guides',   desc: '7 premium guides. SQL mastery, Python handbook, resume playbook, salary negotiation scripts, and more.',   color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.22)'  },
+  { icon: '💼', label: 'Curated Job Board',        desc: '300+ roles for Data Analyst, BI Engineer, Product Analyst & BI Analyst: updated weekly with direct apply links.', color: '#38bdf8', bg: 'rgba(56,189,248,0.12)',  border: 'rgba(56,189,248,0.22)'  },
+  { icon: '🎯', label: '100% Placement Assistance', desc: 'Dedicated job support until you land your first data role: resume, mock interviews, job referrals & offer negotiation.',  color: '#a78bfa', bg: 'rgba(168,139,250,0.12)', border: 'rgba(168,139,250,0.22)' },
+  { icon: '⭐', label: 'Priority Support',         desc: '6-hour direct response from us: faster than public support. We personally read every message.',             color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.22)'  },
+  { icon: '🔬', label: 'Real-World Projects',      desc: '6 industry-grade projects with real datasets: e-commerce, HR, fintech, marketing & more. Build your portfolio.', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  border: 'rgba(245,158,11,0.22)'  },
 ];
 
 function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep, utr, setUtr, submitting, submitUTR, copied, copyUPI, toast, cfLoading, handleCashfreePay }) {
@@ -2801,7 +2802,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
           Go Pro. Get Hired.
         </div>
         <div style={{ fontSize:16, color:'rgba(255,255,255,0.45)', marginBottom:'1.6rem', animation:'heroFadeUp 0.5s 0.2s ease both' }}>
-          Everything you need to land your first Data, BI or Product Analytics role — in one ₹199 membership
+          Everything you need to land your first Data, BI or Product Analytics role: in one ₹199 membership
         </div>
 
         {/* Price + CTA */}
@@ -2812,7 +2813,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
           </div>
           <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:10, marginBottom:'1.5rem' }}>
             <span style={{ fontSize:14, color:'rgba(255,255,255,0.25)', textDecoration:'line-through' }}>₹999</span>
-            <span style={{ fontSize:11, fontWeight:800, padding:'2px 9px', borderRadius:20, background:'rgba(92,200,160,0.15)', border:'1px solid rgba(92,200,160,0.30)', color:'#5CC8A0' }}>80% OFF — Limited Offer</span>
+            <span style={{ fontSize:11, fontWeight:800, padding:'2px 9px', borderRadius:20, background:'rgba(92,200,160,0.15)', border:'1px solid rgba(92,200,160,0.30)', color:'#5CC8A0' }}>80% OFF. Limited Offer</span>
           </div>
           {!isPending && (
             <button className="btn-gold" style={{ fontSize:17, padding:'15px 40px' }} onClick={() => setShowModal(true)}>
@@ -2940,7 +2941,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
 
               {/* CTA */}
               <button className="btn-gold" style={{ width:'100%', justifyContent:'center', fontSize:15, padding:'14px 20px' }} onClick={() => setShowModal(true)}>
-                <span>👑</span> Get Pro — ₹{AMOUNT}
+                <span>👑</span> Get Pro. ₹{AMOUNT}
               </button>
 
               {/* Trust microcopy */}
@@ -2956,10 +2957,11 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
               <div style={{ fontSize:10, fontWeight:800, color:'rgba(255,255,255,0.25)', textTransform:'uppercase', letterSpacing:'1.8px', marginBottom:10 }}>Why learners choose this</div>
               <div style={{ display:'flex', flexDirection:'column', gap:8, width:'100%', textAlign:'left' }}>
                 {[
+                  { icon:'🎥', text:'Live classes every week with the instructor' },
                   { icon:'🎯', text:'Interview-ready SQL & Python problems' },
                   { icon:'🧑‍💼', text:'Live 1:1 mentorship with an expert' },
                   { icon:'🏆', text:'Verified certificates on completion' },
-                  { icon:'📈', text:'Career roadmap — zero to offer letter' },
+                  { icon:'📈', text:'Career roadmap: zero to offer letter' },
                 ].map(b => (
                   <div key={b.text} style={{ display:'flex', alignItems:'center', gap:9 }}>
                     <span style={{ fontSize:13, flexShrink:0 }}>{b.icon}</span>
@@ -3011,7 +3013,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
               </div>
               <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.40)', marginBottom: 14 }}>Unlock your full data analytics career toolkit</div>
 
-              {/* What's included — 3 pills */}
+              {/* What's included. 3 pills */}
               <div style={{ display: 'flex', gap: 7, justifyContent: 'center', flexWrap: 'wrap' }}>
                 {[
                   { icon: '🎓', text: 'All Courses' },
@@ -3117,10 +3119,10 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
                     {/* NetBanking/Wallet extra option */}
                     <div style={{ marginTop: '0.6rem', padding: '8px 12px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, fontSize: 12, color: 'rgba(255,255,255,0.40)', display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span>🏦</span>
-                      <span>NetBanking / Wallet — use your bank's UPI handle or scan QR above</span>
+                      <span>NetBanking / Wallet: use your bank's UPI handle or scan QR above</span>
                     </div>
                     <button className="btn-teal" style={{ width: '100%', justifyContent: 'center', marginTop: '0.8rem' }} onClick={() => setStep(2)}>
-                      ✅ I've Paid — Enter UTR →
+                      ✅ I've Paid. Enter UTR →
                     </button>
                   </div>
                 ) : (

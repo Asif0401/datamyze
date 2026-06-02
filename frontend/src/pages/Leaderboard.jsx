@@ -139,7 +139,7 @@ export default function Leaderboard() {
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
             }}>Leaderboard</h1>
             <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', margin: '4px 0 0', fontWeight: 500 }}>
-              Top learners ranked by XP — Data Analyst · BI Engineer · Product Analytics
+              Top learners ranked by XP · Data Analyst · BI Engineer · Product Analytics
             </p>
           </div>
 

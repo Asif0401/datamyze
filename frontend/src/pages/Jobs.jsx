@@ -120,11 +120,11 @@ export default function Jobs() {
             <div style={{ background:'rgba(232,168,56,0.10)', border:'1px solid rgba(232,168,56,0.25)', borderRadius:'50%', width:64, height:64, display:'flex', alignItems:'center', justifyContent:'center', fontSize:28, marginBottom:14, boxShadow:'0 0 32px rgba(232,168,56,0.20)' }}>🔒</div>
             <div style={{ fontSize:20, fontWeight:800, marginBottom:6, letterSpacing:'-0.3px' }}>Unlock 300+ Jobs</div>
             <div style={{ fontSize:13, color:'rgba(255,255,255,0.40)', marginBottom:20, textAlign:'center', maxWidth:320, lineHeight:1.6 }}>
-              Curated Data Analyst, BI & Product roles from India's top companies — verified and updated daily.
+              Curated Data Analyst, BI & Product roles from India's top companies, verified and updated daily.
             </div>
             <a href="/premium">
               <button className="btn-gold" style={{ fontSize:15, padding:'13px 32px' }}>
-                <span>👑</span> Get Pro — ₹199 lifetime
+                <span>👑</span> Get Pro · ₹199 lifetime
               </button>
             </a>
             <div style={{ marginTop:10, fontSize:11.5, color:'rgba(255,255,255,0.25)' }}>One-time payment · No subscription · Instant access</div>
@@ -139,9 +139,9 @@ export default function Jobs() {
               { icon:'🎯', title:'Role-Specific Listings', desc:'Data Analyst, BI Engineer, Product Analyst, Analytics Engineer & more', color:'#4A90D9' },
               { icon:'🏢', title:'Top Companies', desc:'Google, Amazon, Flipkart, Swiggy, Razorpay, CRED and 40+ more', color:'#E8A838' },
               { icon:'💰', title:'Salary Ranges', desc:'Transparent compensation data so you always know your worth', color:'#5CC8A0' },
-              { icon:'🛠️', title:'Skills Required', desc:'See exactly which skills each role demands — SQL, Python, Power BI', color:'#a78bfa' },
-              { icon:'📍', title:'Location & Type', desc:'Filter by city, remote or hybrid — find what fits your lifestyle', color:'#F07B6A' },
-              { icon:'🔗', title:'Direct Apply Links', desc:'One-click apply to official job pages — no middlemen', color:'#34D399' },
+              { icon:'🛠️', title:'Skills Required', desc:'See exactly which skills each role demands: SQL, Python, Power BI', color:'#a78bfa' },
+              { icon:'📍', title:'Location & Type', desc:'Filter by city, remote or hybrid. Find what fits your lifestyle.', color:'#F07B6A' },
+              { icon:'🔗', title:'Direct Apply Links', desc:'One-click apply to official job pages, no middlemen', color:'#34D399' },
             ].map((f,i) => (
               <div key={f.title} style={{ background:'rgba(255,255,255,0.03)', border:`1px solid ${f.color}22`, borderRadius:14, padding:'1.1rem 1rem', animation:`fadeInUp 0.4s ${0.1+i*0.07}s ease both` }}>
                 <div style={{ fontSize:22, marginBottom:7 }}>{f.icon}</div>
@@ -175,7 +175,7 @@ export default function Jobs() {
           <div className="page-title" style={{ margin: 0 }}>💼 Data Analytics Jobs</div>
           <span className="premium-badge">👑 Pro</span>
         </div>
-        <div className="page-sub">{jobs.length} curated roles — Data Analyst, BI Engineer, Product Analyst, BI Analyst & more</div>
+        <div className="page-sub">{jobs.length} curated roles: Data Analyst, BI Engineer, Product Analyst, BI Analyst & more</div>
       </div>
 
       {/* Search */}
