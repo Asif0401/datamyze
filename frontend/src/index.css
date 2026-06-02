@@ -1133,9 +1133,21 @@ select option { background: #1a2035; color: var(--text); }
 }
 
 @media (max-width: 900px) {
-  .auth-hero { display: none; }
-  .auth-right { width: 100%; border-left: none; background: none; }
+  .auth-hero { display: none !important; }
+  .auth-wrap { height: auto; min-height: 100vh; }
+  .auth-right {
+    width: 100%;
+    border-left: none;
+    background: none;
+    align-items: flex-start;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
   .auth-card  { max-width: 420px; }
+}
+@media (max-width: 480px) {
+  .auth-right { padding: 1.5rem 1rem 2.5rem; }
+  .auth-card  { max-width: 100%; border-radius: 16px; padding: 1.6rem 1.4rem; }
 }
 
 /* ── Tables ─────────────────────────────────────────── */
@@ -1719,12 +1731,19 @@ select option { background: #1a2035; color: var(--text); }
   .premium-hero-title { font-size: 28px; }
   .features-grid { grid-template-columns: 1fr; }
 }
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .stats-grid   { grid-template-columns: repeat(2, 1fr); }
   .course-grid  { grid-template-columns: 1fr; }
-  .page         { padding: 1rem 0.9rem 6rem; } /* extra bottom for nav bar */
-  .main-content { margin-left: 0; padding-bottom: 72px; }
-  .sidebar      { display: none; }
+  .section-grid { grid-template-columns: 1fr; }
+  .features-grid{ grid-template-columns: 1fr; }
+  .page         { padding: 1rem 0.9rem 6rem; }
+  .main-content { margin-left: 0 !important; padding-bottom: 72px; }
+  .sidebar      { display: none !important; }
+  /* Tables: horizontal scroll on mobile */
+  .data-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .data-table   { min-width: 520px; }
+  /* Leaderboard: hide less important columns */
+  .lb-mobile-hide { display: none !important; }
 }
 
 /* ── Mobile bottom nav ──────────────────────────────── */
@@ -1732,7 +1751,7 @@ select option { background: #1a2035; color: var(--text); }
   display: none;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .mobile-bottom-nav {
     display: flex;
     position: fixed;
@@ -1799,4 +1818,4 @@ select option { background: #1a2035; color: var(--text); }
   .lb-mobile-hide { display: none !important; }
 }
 
-/* Mobile warning overlay is controlled via JS (window.innerWidth) */
+/* Mobile warning overlay removed — app is now fully mobile responsive */

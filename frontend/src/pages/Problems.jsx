@@ -565,12 +565,48 @@ function SpinIcon() {
 /* ════════════════════════════════════════════════════
    Problems list page
 ════════════════════════════════════════════════════ */
+function MobileCodingPrompt() {
+  return (
+    <div style={{
+      minHeight: '80vh', display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      padding: '2rem 1.5rem', textAlign: 'center',
+    }}>
+      <div style={{ fontSize: 64, marginBottom: '1.2rem', lineHeight: 1 }}>💻</div>
+      <h2 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.5px', marginBottom: '0.6rem', lineHeight: 1.25 }}>
+        Coding is better<br />on a laptop
+      </h2>
+      <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', maxWidth: 280, lineHeight: 1.6, marginBottom: '1.8rem' }}>
+        The code editor works best on a larger screen. Open Datamyze on your laptop or desktop to practise SQL & Python problems.
+      </p>
+      <div style={{
+        background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)',
+        borderRadius: 14, padding: '1rem 1.2rem', maxWidth: 290,
+        display: 'flex', alignItems: 'flex-start', gap: 10, textAlign: 'left',
+      }}>
+        <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>💡</span>
+        <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>
+          On Safari: tap <strong style={{ color: 'rgba(255,255,255,0.7)' }}>AA → Request Desktop Website</strong>
+          <br />On Chrome: tap <strong style={{ color: 'rgba(255,255,255,0.7)' }}>⋮ → Desktop site</strong>
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function Problems() {
   const [problems, setProblems]     = useState([]);
   const [loading, setLoading]       = useState(true);
   const [topicFilter, setTopicFilter] = useState('All');
   const [diffFilter, setDiffFilter]  = useState('All');
   const [selected, setSelected]      = useState(null);
+  const [isMobile, setIsMobile]      = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   function load() {
     api.get('/problems').then(r => setProblems(r.data.problems)).finally(() => setLoading(false));
@@ -584,6 +620,7 @@ export default function Problems() {
   const solved = problems.filter(p => p.solved).length;
 
   if (loading) return <div className="loading"><div className="spinner" />Loading problems…</div>;
+  if (isMobile) return <MobileCodingPrompt />;
 
   return (
     <>
