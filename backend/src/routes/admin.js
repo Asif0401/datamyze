@@ -66,6 +66,9 @@ router.get('/overview', authMiddleware, adminOnly, async (req, res) => {
 
 router.get('/users', authMiddleware, adminOnly, async (req, res) => {
   const db = req.app.locals.db;
+  // One-time fix: mark pre-existing users as profile complete
+  // (migration via c.execute doesn't reliably run on Turso)
+  await run(db, "UPDATE users SET profile_completed = 1 WHERE (profile_completed IS NULL OR profile_completed = 0) AND name IS NOT NULL AND name != '' AND created_at < date('now','-1 day')");
   const users = await all(db, `
     SELECT u.id, u.name, u.email, u.phone, u.xp, u.streak, u.role, u.last_active, u.created_at,
       u.is_premium, u.profile_completed,
