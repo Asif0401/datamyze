@@ -6,7 +6,8 @@ const router = express.Router();
 router.get('/', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
   const user = await get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
-  if (!user?.is_premium) return res.status(403).json({ error: 'Premium membership required', premium_required: true });
+  const isAdmin = req.user.role === 'admin';
+  if (!isAdmin && !user?.is_premium) return res.status(403).json({ error: 'Premium membership required', premium_required: true });
   const { search, type, location } = req.query;
   let sql = 'SELECT * FROM job_listings WHERE is_active = 1';
   const params = [];

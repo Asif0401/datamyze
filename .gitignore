@@ -9,6 +9,9 @@ frontend/.vite/
 
 # Environment variables (sensitive — add manually on server)
 backend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.*.local
 
 # Database (optional — comment out if you want to include it)
 # backend/dataquest.db
