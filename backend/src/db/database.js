@@ -333,6 +333,9 @@ async function initDb() {
     )
   `);
 
+  // Always ensure admin account has premium access and correct role
+  try { await c.execute("UPDATE users SET is_premium=1, role='admin' WHERE email='ak384837@gmail.com'"); } catch(e) {}
+
   console.log('✅ Database ready');
   return null;
 }
