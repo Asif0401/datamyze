@@ -1465,7 +1465,7 @@ Home → Get Data →
 \`\`\`
 
 💡 **Interview Tip:** Many analyst JDs in banks and IT companies say "Power BI preferred." Even knowing the basics (data import, simple DAX, publish to service) puts you ahead of 80% of candidates.`,
-      video_url: 'ykvAWKML9Zg',
+      video_url: 'NNSHu0rkew8',
       dur: 20,
     },
     {
@@ -1527,7 +1527,7 @@ Power Query uses M language under the hood:
 \`\`\`
 
 💡 **Interview Tip:** Knowing Power Query separates you from people who just drag fields. Being able to clean messy Excel data and explain your transformation steps shows maturity.`,
-      video_url: 'ykvAWKML9Zg',
+      video_url: 'Dk25lwdTKow',
       dur: 25,
     },
     {
@@ -1582,7 +1582,7 @@ Last 30 Days = CALCULATE([Revenue], DATESINPERIOD('Date'[Date], TODAY(), -30, DA
 \`\`\`
 
 💡 **Interview Tip:** CALCULATE is asked in almost every Power BI interview. Memorise: "CALCULATE evaluates an expression in a modified filter context." Then give an example.`,
-      video_url: 'ykvAWKML9Zg',
+      video_url: 'WmiUdpmrG3g',
       dur: 30,
     },
     {
@@ -1645,7 +1645,7 @@ Format → Edit Interactions → control which visuals filter each other
 \`\`\`
 
 💡 **Interview Tip:** Build a portfolio project: connect Power BI to a public dataset (Kaggle sales data), build a 3-page report (Overview, Products, Geography), publish to Power BI Public, and share the link in your resume. This alone gets callbacks.`,
-      video_url: 'ykvAWKML9Zg',
+      video_url: 'nn1N0YNx7Uo',
       dur: 35,
     },
   ],
