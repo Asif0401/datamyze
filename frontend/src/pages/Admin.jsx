@@ -149,16 +149,20 @@ function UsersTab({ data }) {
               </span>
             );
           }},
-          { key: 'profile_completed', label: 'Profile', render: v => (
-            <span style={{
-              fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 20,
-              background: v ? 'rgba(92,200,160,0.15)' : 'rgba(240,123,106,0.12)',
-              color: v ? '#5CC8A0' : '#F07B6A',
-              border: `1px solid ${v ? 'rgba(92,200,160,0.25)' : 'rgba(240,123,106,0.20)'}`,
-            }}>
-              {v ? '✓ Complete' : '✗ Incomplete'}
-            </span>
-          )},
+          { key: 'profile_completed', label: 'Profile', render: (v, row) => {
+            // treat NULL or 0 the same — NULL happens in Turso for rows pre-dating the column
+            const done = v === 1 || v === true;
+            return (
+              <span style={{
+                fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 20,
+                background: done ? 'rgba(92,200,160,0.15)' : 'rgba(240,123,106,0.12)',
+                color: done ? '#5CC8A0' : '#F07B6A',
+                border: `1px solid ${done ? 'rgba(92,200,160,0.25)' : 'rgba(240,123,106,0.20)'}`,
+              }}>
+                {done ? '✓ Complete' : '✗ Incomplete'}
+              </span>
+            );
+          }},
           { key: 'created_at', label: 'Joined', render: v => v ? (
             <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>
               {new Date(v).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
