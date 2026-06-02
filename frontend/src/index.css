@@ -1744,6 +1744,26 @@ select option { background: #1a2035; color: var(--text); }
   .data-table   { min-width: 520px; }
   /* Leaderboard: hide less important columns */
   .lb-mobile-hide { display: none !important; }
+
+  /* ── Modal: mobile tweaks ── */
+  .modal-backdrop {
+    align-items: flex-start;        /* tall modals scroll from top, not overflow */
+    padding: 1rem 0.75rem calc(70px + env(safe-area-inset-bottom));
+  }
+  .modal {
+    padding: 1.2rem;                /* less padding on small screens */
+    width: 100%;
+    max-width: 100%;
+    border-radius: 18px;
+  }
+
+  /* ── Toast: lift above bottom nav ── */
+  .toast {
+    bottom: calc(72px + env(safe-area-inset-bottom) + 0.75rem);
+    right: 0.75rem;
+    left: 0.75rem;
+    text-align: center;
+  }
 }
 
 /* ── Mobile bottom nav ──────────────────────────────── */

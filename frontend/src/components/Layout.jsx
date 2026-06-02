@@ -21,8 +21,11 @@ function FreeUserPopup({ onClose, onUpgrade }) {
       position: 'fixed', inset: 0, zIndex: 9999,
       background: 'rgba(0,0,0,0.72)',
       backdropFilter: 'blur(6px)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      padding: '1rem',
+      display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+      padding: 'clamp(0.75rem, 3vw, 1.5rem)',
+      paddingTop: 'max(1rem, env(safe-area-inset-top, 1rem))',
+      paddingBottom: 'max(80px, calc(72px + env(safe-area-inset-bottom, 0px)))',
+      overflowY: 'auto',
       opacity: visible ? 1 : 0,
       transition: 'opacity .35s ease',
     }}

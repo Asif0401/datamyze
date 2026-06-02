@@ -70,8 +70,10 @@ export default function ProfileCompletion() {
       position: 'fixed', inset: 0, zIndex: 9999,
       background: 'rgba(7,9,18,0.92)',
       backdropFilter: 'blur(18px)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      padding: '1.5rem',
+      display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+      padding: 'clamp(0.75rem, 3vw, 1.5rem)',
+      paddingTop: 'max(1rem, env(safe-area-inset-top, 1rem))',
+      paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 1rem))',
       overflowY: 'auto',
     }}>
       {/* Ambient glow blobs */}
@@ -84,7 +86,7 @@ export default function ProfileCompletion() {
         border: '1px solid rgba(255,255,255,0.09)',
         borderRadius: 24,
         backdropFilter: 'blur(28px)',
-        padding: '2.4rem 2.2rem',
+        padding: 'clamp(1.2rem, 4vw, 2.4rem) clamp(1rem, 4vw, 2.2rem)',
         animation: 'fadeInUp 0.45s ease both',
         position: 'relative',
       }}>
