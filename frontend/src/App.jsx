@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from './context/AuthContext';
 import AuthPage from './pages/AuthPage';
 import Instagram from './pages/Instagram';
 import Layout from './components/Layout';
