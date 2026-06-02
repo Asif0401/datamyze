@@ -172,6 +172,14 @@ function UsersTab({ data }) {
               </span>
             );
           }},
+          { key: 'phone', label: 'Phone', render: (v, row) => {
+            const phoneFromEmail = row.email?.startsWith('phone_')
+              ? row.email.replace('phone_', '').split('@')[0] : null;
+            const display = v || phoneFromEmail;
+            return display
+              ? <span style={{ fontSize: 12, color: '#5CC8A0', fontFamily: 'monospace' }}>{display}</span>
+              : <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>—</span>;
+          }},
           { key: 'created_at', label: 'Joined', render: v => v ? (
             <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>
               {new Date(v).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
