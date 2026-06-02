@@ -174,7 +174,7 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
       customer_details: {
         customer_id:    user.id.replace(/-/g, '').slice(0, 50),
         customer_email: user.email,
-        customer_phone: user.phone || '9999999999',
+        customer_phone: '9999999999',
         customer_name:  user.name,
       },
       order_meta: {
