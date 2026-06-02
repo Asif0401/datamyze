@@ -1,25 +1,32 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import { useState, useEffect } from 'react';
 
 const DISMISS_KEY = 'dm_mobile_ok';
+// Pages that should never show the mobile blocker
+const MOBILE_FRIENDLY = ['/instagram'];
 
 function MobileWarning() {
+  const { pathname } = useLocation();
   const [visible, setVisible] = useState(() => {
+    if (MOBILE_FRIENDLY.includes(pathname)) return false;
     // Already dismissed before? Never show again.
     if (localStorage.getItem(DISMISS_KEY) === '1') return false;
     return window.innerWidth < 768;
   });
 
   useEffect(() => {
+    // Never show on mobile-friendly pages
+    if (MOBILE_FRIENDLY.includes(pathname)) { setVisible(false); return; }
     // Re-check on resize only (not on every render)
     const check = () => {
       if (localStorage.getItem(DISMISS_KEY) === '1') return;
       setVisible(window.innerWidth < 768);
     };
+    check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
-  }, []);
+  }, [pathname]);
 
   const dismiss = () => {
     localStorage.setItem(DISMISS_KEY, '1');
@@ -143,6 +150,7 @@ function MobileWarning() {
   );
 }
 import AuthPage from './pages/AuthPage';
+import Instagram from './pages/Instagram';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
@@ -178,6 +186,8 @@ export default function App() {
       {user && user.profile_completed === 0 && <ProfileCompletion />}
 
       <Routes>
+        {/* Public pages — no auth required */}
+        <Route path="/instagram" element={<Instagram />} />
         <Route path="/login"  element={user ? <Navigate to="/" /> : <AuthPage mode="login" />} />
         <Route path="/signup" element={user ? <Navigate to="/" /> : <AuthPage mode="signup" />} />
         <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
