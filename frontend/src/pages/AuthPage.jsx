@@ -348,17 +348,18 @@ export default function AuthPage({ mode: initialMode }) {
 
               {/* ── Data rows as flat cell pairs ── */}
               {[
-                { bad:'Generic video tutorials',    good:'Real company interview Qs',   color:'#38bdf8' },
-                { bad:'No mentor, you\'re alone',   good:'1-on-1 industry mentor',      color:'#a78bfa' },
-                { bad:'Zero placement support',     good:'100% placement assistance',   color:'#5CC8A0' },
-                { bad:'No mock interviews',         good:'Live mock + written feedback', color:'#f9a825' },
-                { bad:'No job listings',            good:'300+ curated jobs board',     color:'#f87171' },
+                { bad:'Only video tutorials',       good:'Real interview Qs from top companies', color:'#38bdf8' },
+                { bad:'No live sessions',           good:'Live classes every week',              color:'#F07B6A' },
+                { bad:'No mentorship support',      good:'Dedicated 1:1 industry mentor',        color:'#a78bfa' },
+                { bad:'No placement support',       good:'100% placement assistance',            color:'#5CC8A0' },
+                { bad:'No mock interviews',         good:'Live mock interviews + feedback',      color:'#f9a825' },
+                { bad:'No curated job board',       good:'300+ data roles, updated weekly',      color:'#34d399' },
               ].flatMap((row, i) => [
                 /* Left cell */
                 <div key={`bad-${i}`} style={{
                   padding:'9px 16px',
                   borderRight:'1px solid rgba(255,255,255,0.05)',
-                  borderBottom: i < 4 ? '1px solid rgba(255,255,255,0.045)' : 'none',
+                  borderBottom: i < 5 ? '1px solid rgba(255,255,255,0.045)' : 'none',
                   background: i % 2 === 0 ? 'rgba(0,0,0,0.18)' : 'rgba(0,0,0,0.1)',
                   display:'flex', alignItems:'center', gap:8,
                 }}>
@@ -370,7 +371,7 @@ export default function AuthPage({ mode: initialMode }) {
                 /* Right cell */
                 <div key={`good-${i}`} style={{
                   padding:'9px 16px',
-                  borderBottom: i < 4 ? '1px solid rgba(255,255,255,0.045)' : 'none',
+                  borderBottom: i < 5 ? '1px solid rgba(255,255,255,0.045)' : 'none',
                   borderLeft:`2px solid ${row.color}45`,
                   background: i % 2 === 0 ? `linear-gradient(90deg,${row.color}09,rgba(127,119,221,0.06))` : `linear-gradient(90deg,rgba(127,119,221,0.05),${row.color}07)`,
                   display:'flex', alignItems:'center', gap:8,
