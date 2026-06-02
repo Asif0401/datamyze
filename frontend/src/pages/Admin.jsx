@@ -134,6 +134,7 @@ function UsersTab({ data }) {
             <div>
               <div style={{ fontWeight: 600, color: '#e2e8f0' }}>{v}</div>
               <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)' }}>{row.email}</div>
+              {row.phone && <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>📱 {row.phone}</div>}
             </div>
           )},
           { key: 'is_premium', label: 'Plan', render: (v, row) => {

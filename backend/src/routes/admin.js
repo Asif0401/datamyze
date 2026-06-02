@@ -67,7 +67,7 @@ router.get('/overview', authMiddleware, adminOnly, async (req, res) => {
 router.get('/users', authMiddleware, adminOnly, async (req, res) => {
   const db = req.app.locals.db;
   const users = await all(db, `
-    SELECT u.id, u.name, u.email, u.xp, u.streak, u.role, u.last_active, u.created_at,
+    SELECT u.id, u.name, u.email, u.phone, u.xp, u.streak, u.role, u.last_active, u.created_at,
       u.is_premium, u.profile_completed,
       (SELECT COUNT(*) FROM user_problem_submissions WHERE user_id = u.id AND status='accepted') as problems_solved,
       (SELECT COUNT(*) FROM user_course_progress WHERE user_id = u.id) as courses_enrolled,
