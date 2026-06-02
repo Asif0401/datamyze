@@ -1,9 +1,9 @@
 const nodemailer = require('nodemailer');
 
-const NOTIFY_TO = [
+const NOTIFY_RECIPIENTS = [
   process.env.NOTIFY_EMAIL || process.env.SMTP_USER,
   'asifkhan040102@gmail.com',
-].filter(Boolean).join(',');
+].filter(Boolean);
 
 function getTransport() {
   const user = process.env.SMTP_USER;
@@ -23,19 +23,22 @@ async function sendNotification(subject, html, replyTo = null) {
     console.log(`[Email] SMTP not configured — notification skipped:\n${subject}`);
     return;
   }
-  try {
-    const mailOptions = {
-      from: `"Datamyze Alerts" <${process.env.SMTP_USER}>`,
-      to: NOTIFY_TO,
-      subject,
-      html,
-    };
-    if (replyTo) mailOptions.replyTo = replyTo;
-    await transport.sendMail(mailOptions);
-    console.log(`[Email] Notification sent: ${subject}`);
-  } catch (e) {
-    console.error('[Email] Failed to send:', e.message);
-  }
+  // Send individually to each recipient so Gmail doesn't drop any
+  await Promise.all(NOTIFY_RECIPIENTS.map(async (to) => {
+    try {
+      const mailOptions = {
+        from: `"Datamyze Alerts" <${process.env.SMTP_USER}>`,
+        to,
+        subject,
+        html,
+      };
+      if (replyTo) mailOptions.replyTo = replyTo;
+      await transport.sendMail(mailOptions);
+      console.log(`[Email] Notification sent to ${to}: ${subject}`);
+    } catch (e) {
+      console.error(`[Email] Failed to send to ${to}:`, e.message);
+    }
+  }));
 }
 
 // Send email to any recipient (used for OTPs, user-facing emails)
