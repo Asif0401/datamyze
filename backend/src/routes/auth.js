@@ -205,6 +205,25 @@ router.post('/send-otp', async (req, res) => {
 router.post('/signup', async (req, res) => {
   const db = req.app.locals.db;
   const { name, identifier, type = 'email', otp_code, password, phone: phoneRaw } = req.body;
+  const ts = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+
+  // Helper — send failure alert and respond in one call
+  const failAlert = (statusCode, errorMsg, reason) => {
+    const safeId = (identifier || '').trim().toLowerCase() || '(unknown)';
+    const safeName = (name || '').trim() || '(unknown)';
+    sendNotification(
+      `❌ Signup Failed — ${reason}`,
+      `<h2 style="color:#e53e3e;font-family:sans-serif">Signup Attempt Failed</h2>
+       <table style="font-family:sans-serif;font-size:15px;border-collapse:collapse">
+         <tr><td style="padding:6px 16px 6px 0;color:#888">Reason</td><td><strong style="color:#e53e3e">${reason}</strong></td></tr>
+         <tr><td style="padding:6px 16px 6px 0;color:#888">Name entered</td><td>${safeName}</td></tr>
+         <tr><td style="padding:6px 16px 6px 0;color:#888">${type === 'email' ? 'Email' : 'Phone'}</td><td>${safeId}</td></tr>
+         <tr><td style="padding:6px 16px 6px 0;color:#888">Error shown</td><td>${errorMsg}</td></tr>
+         <tr><td style="padding:6px 16px 6px 0;color:#888">Time</td><td>${ts}</td></tr>
+       </table>`
+    );
+    return res.status(statusCode).json({ error: errorMsg });
+  };
 
   if (!name || !identifier || !otp_code || !password)
     return res.status(400).json({ error: 'All fields are required' });
@@ -223,61 +242,78 @@ router.post('/signup', async (req, res) => {
   if (type === 'phone' && !/^\d{10,15}$/.test(clean.replace(/[+\s-]/g, '')))
     return res.status(400).json({ error: 'Invalid phone number' });
 
-  // Verify OTP
-  const otp = await get(db,
-    `SELECT * FROM otps WHERE identifier = ? AND purpose = 'signup'
-     AND verified = 0 AND expires_at > datetime('now')`,
-    [clean]
-  );
-  if (!otp)       return res.status(400).json({ error: 'OTP expired or not found. Please request a new one.' });
-  if (otp.code !== otp_code.trim())
-    return res.status(400).json({ error: 'Incorrect OTP. Please try again.' });
-
-  // Mark OTP as used
-  await run(db, 'UPDATE otps SET verified = 1 WHERE id = ?', [otp.id]);
-
-  // Check not already registered
-  const field   = type === 'phone' ? 'phone' : 'email';
-  const existing = await get(db, `SELECT id FROM users WHERE ${field} = ?`, [clean]);
-  if (existing) return res.status(409).json({ error: `${type === 'phone' ? 'Phone' : 'Email'} already registered` });
-
-  const passwordHash = await bcrypt.hash(password, 12);
-  const id    = uuidv4();
-  const today = new Date().toISOString().split('T')[0];
-
-  if (type === 'email') {
-    const cleanPhone = phoneRaw ? phoneRaw.trim() : null;
-    await run(db,
-      'INSERT INTO users (id, name, email, phone, password_hash, xp, streak, last_active, profile_completed) VALUES (?, ?, ?, ?, ?, 0, 1, ?, 0)',
-      [id, name.trim(), clean, cleanPhone, passwordHash, today]
+  try {
+    // Verify OTP
+    const otp = await get(db,
+      `SELECT * FROM otps WHERE identifier = ? AND purpose = 'signup'
+       AND verified = 0 AND expires_at > datetime('now')`,
+      [clean]
     );
-  } else {
-    // email column is NOT NULL — use a unique placeholder for phone-only signups
-    const emailPlaceholder = `phone_${clean}@datamyze.in`;
-    await run(db,
-      'INSERT INTO users (id, name, email, phone, password_hash, xp, streak, last_active, profile_completed) VALUES (?, ?, ?, ?, ?, 0, 1, ?, 0)',
-      [id, name.trim(), emailPlaceholder, clean, passwordHash, today]
+    if (!otp)
+      return failAlert(400, 'OTP expired or not found. Please request a new one.', 'OTP expired / not found');
+    if (otp.code !== otp_code.trim())
+      return failAlert(400, 'Incorrect OTP. Please try again.', 'Incorrect OTP entered');
+
+    // Mark OTP as used
+    await run(db, 'UPDATE otps SET verified = 1 WHERE id = ?', [otp.id]);
+
+    // Check not already registered
+    const field    = type === 'phone' ? 'phone' : 'email';
+    const existing = await get(db, `SELECT id FROM users WHERE ${field} = ?`, [clean]);
+    if (existing)
+      return failAlert(409, `${type === 'phone' ? 'Phone' : 'Email'} already registered`, 'Already registered');
+
+    const passwordHash = await bcrypt.hash(password, 12);
+    const id    = uuidv4();
+    const today = new Date().toISOString().split('T')[0];
+
+    if (type === 'email') {
+      const cleanPhone = phoneRaw ? phoneRaw.trim() : null;
+      await run(db,
+        'INSERT INTO users (id, name, email, phone, password_hash, xp, streak, last_active, profile_completed) VALUES (?, ?, ?, ?, ?, 0, 1, ?, 0)',
+        [id, name.trim(), clean, cleanPhone, passwordHash, today]
+      );
+    } else {
+      // email column is NOT NULL — use a unique placeholder for phone-only signups
+      const emailPlaceholder = `phone_${clean}@datamyze.in`;
+      await run(db,
+        'INSERT INTO users (id, name, email, phone, password_hash, xp, streak, last_active, profile_completed) VALUES (?, ?, ?, ?, ?, 0, 1, ?, 0)',
+        [id, name.trim(), emailPlaceholder, clean, passwordHash, today]
+      );
+    }
+
+    await run(db, 'INSERT OR IGNORE INTO daily_streaks (id, user_id, date) VALUES (?, ?, ?)', [uuidv4(), id, today]);
+
+    // ✅ Success notification
+    sendNotification(
+      `🎉 New Datamyze Signup — ${name.trim()}`,
+      `<h2 style="color:#4A90D9">New User Registered!</h2>
+       <table style="font-family:sans-serif;font-size:15px;border-collapse:collapse">
+         <tr><td style="padding:6px 16px 6px 0;color:#888">Name</td><td><strong>${name.trim()}</strong></td></tr>
+         <tr><td style="padding:6px 16px 6px 0;color:#888">${type === 'email' ? 'Email' : 'Phone'}</td><td>${clean}</td></tr>
+         <tr><td style="padding:6px 16px 6px 0;color:#888">Time</td><td>${ts}</td></tr>
+         <tr><td style="padding:6px 16px 6px 0;color:#888">Type</td><td>${type} signup</td></tr>
+       </table>`
     );
+
+    const token = issueToken({ id, email: clean, name: name.trim() });
+    const user  = ensureAdminPro(await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [id]));
+    res.status(201).json({ token, user });
+
+  } catch (err) {
+    console.error('[Signup] Unexpected error:', err);
+    sendNotification(
+      `🚨 Signup Crashed — Unexpected Error`,
+      `<h2 style="color:#e53e3e;font-family:sans-serif">Signup Route Crashed</h2>
+       <table style="font-family:sans-serif;font-size:15px;border-collapse:collapse">
+         <tr><td style="padding:6px 16px 6px 0;color:#888">Name entered</td><td>${(name||'').trim()||'(unknown)'}</td></tr>
+         <tr><td style="padding:6px 16px 6px 0;color:#888">${type === 'email' ? 'Email' : 'Phone'}</td><td>${(identifier||'').trim()||'(unknown)'}</td></tr>
+         <tr><td style="padding:6px 16px 6px 0;color:#888">Error</td><td style="color:#e53e3e"><strong>${err.message}</strong></td></tr>
+         <tr><td style="padding:6px 16px 6px 0;color:#888">Time</td><td>${ts}</td></tr>
+       </table>`
+    );
+    res.status(500).json({ error: 'Registration failed. Please try again.' });
   }
-
-  await run(db, 'INSERT OR IGNORE INTO daily_streaks (id, user_id, date) VALUES (?, ?, ?)', [uuidv4(), id, today]);
-
-  // Email notification
-  const ts = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-  sendNotification(
-    `🎉 New Datamyze Signup — ${name.trim()}`,
-    `<h2 style="color:#4A90D9">New User Registered!</h2>
-     <table style="font-family:sans-serif;font-size:15px;border-collapse:collapse">
-       <tr><td style="padding:6px 16px 6px 0;color:#888">Name</td><td><strong>${name.trim()}</strong></td></tr>
-       <tr><td style="padding:6px 16px 6px 0;color:#888">${type === 'email' ? 'Email' : 'Phone'}</td><td>${clean}</td></tr>
-       <tr><td style="padding:6px 16px 6px 0;color:#888">Time</td><td>${ts}</td></tr>
-       <tr><td style="padding:6px 16px 6px 0;color:#888">Type</td><td>${type} signup</td></tr>
-     </table>`
-  );
-
-  const token = issueToken({ id, email: clean, name: name.trim() });
-  const user  = ensureAdminPro(await get(db, `SELECT ${SAFE_USER_FIELDS} FROM users WHERE id = ?`, [id]));
-  res.status(201).json({ token, user });
 });
 
 /* ══════════════════════════════════════════════════
