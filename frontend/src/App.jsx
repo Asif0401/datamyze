@@ -2,15 +2,29 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import { useState, useEffect } from 'react';
 
+const DISMISS_KEY = 'dm_mobile_ok';
+
 function MobileWarning() {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(() => {
+    // Already dismissed before? Never show again.
+    if (localStorage.getItem(DISMISS_KEY) === '1') return false;
+    return window.innerWidth < 768;
+  });
 
   useEffect(() => {
-    const check = () => setVisible(window.innerWidth < 768);
-    check();
+    // Re-check on resize only (not on every render)
+    const check = () => {
+      if (localStorage.getItem(DISMISS_KEY) === '1') return;
+      setVisible(window.innerWidth < 768);
+    };
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
+
+  const dismiss = () => {
+    localStorage.setItem(DISMISS_KEY, '1');
+    setVisible(false);
+  };
 
   if (!visible) return null;
 
@@ -111,7 +125,7 @@ function MobileWarning() {
 
       {/* Continue anyway */}
       <button
-        onClick={() => setVisible(false)}
+        onClick={dismiss}
         style={{
           background: 'transparent',
           border: '1px solid rgba(255,255,255,0.15)',
