@@ -117,21 +117,57 @@ function UsersTab({ data }) {
   );
   return (
     <div>
-      <input
-        placeholder="🔍  Search by name or email..."
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        style={{ maxWidth: 320, marginBottom: '1rem' }}
-      />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+        <input
+          placeholder="🔍  Search by name or email..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          style={{ maxWidth: 320 }}
+        />
+        <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>
+          {filtered.length} user{filtered.length !== 1 ? 's' : ''}
+        </span>
+      </div>
       <Table
         cols={[
-          { key: 'name',             label: 'Name' },
-          { key: 'email',            label: 'Email',    render: v => <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12 }}>{v}</span> },
-          { key: 'xp',               label: 'XP',       render: v => <strong style={{ color: '#4A90D9' }}>{(v||0).toLocaleString()}</strong> },
-          { key: 'streak',           label: 'Streak',   render: v => v ? `🔥 ${v}d` : '—' },
-          { key: 'problems_solved',  label: 'Solved',   render: v => <Badge text={`${v} problems`} type="accepted" /> },
-          { key: 'courses_enrolled', label: 'Courses',  render: v => v || 0 },
-          { key: 'certs_earned',     label: 'Certs',    render: v => v ? `🎓 ${v}` : '—' },
+          { key: 'name',  label: 'Name', render: (v, row) => (
+            <div>
+              <div style={{ fontWeight: 600, color: '#e2e8f0' }}>{v}</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)' }}>{row.email}</div>
+            </div>
+          )},
+          { key: 'is_premium', label: 'Plan', render: (v, row) => {
+            const isPro = v === 1 || row.role === 'admin';
+            return (
+              <span style={{
+                fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 20,
+                background: isPro ? 'rgba(232,168,56,0.18)' : 'rgba(255,255,255,0.07)',
+                color: isPro ? '#E8A838' : 'rgba(255,255,255,0.45)',
+                border: `1px solid ${isPro ? 'rgba(232,168,56,0.35)' : 'rgba(255,255,255,0.10)'}`,
+              }}>
+                {row.role === 'admin' ? '🛡 Admin' : isPro ? '⭐ Pro' : 'Free'}
+              </span>
+            );
+          }},
+          { key: 'profile_completed', label: 'Profile', render: v => (
+            <span style={{
+              fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 20,
+              background: v ? 'rgba(92,200,160,0.15)' : 'rgba(240,123,106,0.12)',
+              color: v ? '#5CC8A0' : '#F07B6A',
+              border: `1px solid ${v ? 'rgba(92,200,160,0.25)' : 'rgba(240,123,106,0.20)'}`,
+            }}>
+              {v ? '✓ Complete' : '✗ Incomplete'}
+            </span>
+          )},
+          { key: 'created_at', label: 'Joined', render: v => v ? (
+            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>
+              {new Date(v).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+            </span>
+          ) : '—' },
+          { key: 'xp',               label: 'XP',      render: v => <strong style={{ color: '#4A90D9' }}>{(v||0).toLocaleString()}</strong> },
+          { key: 'streak',           label: 'Streak',  render: v => v ? `🔥 ${v}d` : '—' },
+          { key: 'problems_solved',  label: 'Solved',  render: v => <Badge text={`${v}`} type="accepted" /> },
+          { key: 'courses_enrolled', label: 'Courses', render: v => v || 0 },
           { key: 'last_active',      label: 'Last Active', render: v => v ? new Date(v).toLocaleDateString('en-IN') : 'Never' },
         ]}
         rows={filtered}

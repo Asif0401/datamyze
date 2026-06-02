@@ -68,10 +68,11 @@ router.get('/users', authMiddleware, adminOnly, async (req, res) => {
   const db = req.app.locals.db;
   const users = await all(db, `
     SELECT u.id, u.name, u.email, u.xp, u.streak, u.role, u.last_active, u.created_at,
+      u.is_premium, u.profile_completed,
       (SELECT COUNT(*) FROM user_problem_submissions WHERE user_id = u.id AND status='accepted') as problems_solved,
       (SELECT COUNT(*) FROM user_course_progress WHERE user_id = u.id) as courses_enrolled,
       (SELECT COUNT(*) FROM certificates WHERE user_id = u.id) as certs_earned
-    FROM users u ORDER BY u.xp DESC
+    FROM users u ORDER BY u.created_at DESC
   `);
   res.json({ users });
 });
