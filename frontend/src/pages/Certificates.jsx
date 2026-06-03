@@ -154,7 +154,7 @@ export default function Certificates() {
               👑 Upgrade to Pro · ₹199
             </button>
             <button onClick={() => navigate('/courses')}
-              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.65)', borderRadius: 12, fontSize: 13, padding: '11px 18px', cursor: 'pointer' }}>
+              style={{ background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.65)', borderRadius: 12, fontSize: 13, padding: '11px 18px', cursor: 'pointer' }}>
               Browse Courses
             </button>
           </div>
@@ -332,7 +332,7 @@ export default function Certificates() {
           </div>
 
           {/* Bottom trust bar */}
-          <div style={{ marginTop:'1.5rem', padding:'1rem 1.4rem', borderRadius:14, background:'rgba(255,255,255,0.025)', border:'1px solid rgba(255,255,255,0.07)', display:'flex', alignItems:'center', justifyContent:'center', gap:'2.5rem', flexWrap:'wrap' }}>
+          <div style={{ marginTop:'1.5rem', padding:'1rem 1.4rem', borderRadius:14, background:'rgba(255,255,255,0.025)', border:'1px solid rgba(255,255,255,0.12)', display:'flex', alignItems:'center', justifyContent:'center', gap:'2.5rem', flexWrap:'wrap' }}>
             {[
               { icon:'🏆', text:'Verified by Datamyze' },
               { icon:'💼', text:'Shareable on LinkedIn' },

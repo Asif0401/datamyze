@@ -71,7 +71,7 @@ function StrengthBar({ password }) {
 
 /* ── Shared styles ─────────────────────────────────────── */
 const INPUT = {
-  width: '100%', background: 'rgba(255,255,255,0.06)',
+  width: '100%', background: 'rgba(255,255,255,0.09)',
   border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8,
   padding: '10px 14px', color: 'var(--text)', fontSize: 14,
   outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit',
@@ -84,7 +84,7 @@ const LABEL = {
 const FIELD = { marginBottom: '1.25rem' };
 const GRID2  = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' };
 const CARD   = {
-  background: 'rgba(255,255,255,0.055)',
+  background: 'rgba(255,255,255,0.09)',
   border: '1px solid rgba(255,255,255,0.10)',
   borderRadius: 16, padding: '2rem',
   backdropFilter: 'blur(18px)',
@@ -406,7 +406,7 @@ export default function Settings() {
               {github && (
                 <a href={github} target="_blank" rel="noopener noreferrer" style={{
                   display: 'flex', alignItems: 'center', gap: 5, fontSize: 12,
-                  color: '#cdd6f4', background: 'rgba(255,255,255,0.06)',
+                  color: '#cdd6f4', background: 'rgba(255,255,255,0.09)',
                   border: '1px solid rgba(255,255,255,0.12)', padding: '4px 10px',
                   borderRadius: 20, textDecoration: 'none', fontWeight: 600,
                 }}>
@@ -634,7 +634,7 @@ export default function Settings() {
             </div>
 
             {/* Read-only account info */}
-            <div style={{ padding: '1rem 1.2rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, marginBottom: '1.5rem' }}>
+            <div style={{ padding: '1rem 1.2rem', background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, marginBottom: '1.5rem' }}>
               <strong style={{ fontSize: 11, display: 'block', marginBottom: 8, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.05em' }}>Account Details</strong>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: 13 }}>
                 <div><span style={{ color: 'var(--muted)', marginRight: 6 }}>Email:</span>{user?.email}</div>

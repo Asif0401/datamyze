@@ -153,7 +153,7 @@ export default function Jobs() {
         </div>
 
         {/* Company badges */}
-        <div style={{ background:'rgba(255,255,255,0.025)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:16, padding:'1.2rem 1.4rem', textAlign:'center' }}>
+        <div style={{ background:'rgba(255,255,255,0.025)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:16, padding:'1.2rem 1.4rem', textAlign:'center' }}>
           <div style={{ fontSize:11, fontWeight:800, color:'rgba(255,255,255,0.22)', textTransform:'uppercase', letterSpacing:'2px', marginBottom:12 }}>Companies hiring data talent</div>
           <div style={{ display:'flex', flexWrap:'wrap', gap:8, justifyContent:'center' }}>
             {COMPANIES.map(c => (

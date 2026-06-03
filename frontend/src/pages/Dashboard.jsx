@@ -348,7 +348,7 @@ export default function Dashboard() {
       <div className="dash-fadein card" style={{ animationDelay: '.15s', marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.2rem', flexWrap: 'wrap', gap: 8 }}>
           <div className="card-title" style={{ margin: 0 }}>🗺️ Your Journey to a Data Job</div>
-          <span style={{ fontSize: 11, color: 'var(--muted)', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, padding: '3px 12px' }}>
+          <span style={{ fontSize: 11, color: 'var(--muted)', background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 20, padding: '3px 12px' }}>
             {score}% ready
           </span>
         </div>
@@ -403,7 +403,7 @@ export default function Dashboard() {
           <div className="card dash-fadein" style={{ animationDelay: '.2s' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: 8 }}>
               <div className="card-title" style={{ margin: 0 }}>📅 Practice Activity</div>
-              <span style={{ fontSize: 11, color: 'var(--muted)', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, padding: '2px 10px' }}>Last 13 weeks</span>
+              <span style={{ fontSize: 11, color: 'var(--muted)', background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 20, padding: '2px 10px' }}>Last 13 weeks</span>
             </div>
             <ActivityHeatmap activeDates={activeDates} streak={user?.streak || 0} />
           </div>
@@ -416,7 +416,7 @@ export default function Dashboard() {
                 { label: 'SQL', solved: stats?.sqlSolved || 0, total: 20, color: '#4A90D9', icon: '🗄️', delay: '0s' },
                 { label: 'Python', solved: stats?.pythonSolved || 0, total: 15, color: '#5CC8A0', icon: <PyLogo />, delay: '0.09s' },
               ].map(s => (
-                <div key={s.label} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 12, padding: '0.9rem', animationDelay: s.delay }}>
+                <div key={s.label} style={{ background: 'rgba(255,255,255,0.09)', border: '1px solid var(--border)', borderRadius: 12, padding: '0.9rem', animationDelay: s.delay }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
                     <span style={{ fontSize: 16 }}>{s.icon}</span>
                     <span style={{ fontWeight: 700, fontSize: 13 }}>{s.label}</span>
@@ -517,14 +517,14 @@ export default function Dashboard() {
                 { label: 'Courses', val: courseProgress?.filter(c => c.progress_percent > 0).length || 0, icon: '📖', color: '#7F77DD' },
                 { label: 'Active Days', val: (stats?.activeDays || []).filter(d => { const diff = (Date.now() - new Date(d + 'T12:00:00').getTime()) / 86400000; return diff <= 7; }).length, icon: '🔥', color: '#F07B6A' },
               ].map(s => (
-                <div key={s.label} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 11, padding: '0.8rem', textAlign: 'center' }}>
+                <div key={s.label} style={{ background: 'rgba(255,255,255,0.09)', border: '1px solid var(--border)', borderRadius: 11, padding: '0.8rem', textAlign: 'center' }}>
                   <div style={{ fontSize: 18, marginBottom: 4 }}>{s.icon}</div>
                   <div style={{ fontSize: 22, fontWeight: 900, color: s.color, lineHeight: 1 }}>{s.val}</div>
                   <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 3 }}>{s.label}</div>
                 </div>
               ))}
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: 'rgba(255,255,255,0.09)', borderRadius: 10, border: '1px solid var(--border)' }}>
               <span style={{ fontSize: 13 }}>{weekDiff > 0 ? '📈' : weekDiff < 0 ? '📉' : '➡️'}</span>
               <span style={{ fontSize: 12, color: weekTrendColor, fontWeight: 700 }}>{weekTrend}</span>
               <span style={{ fontSize: 11, color: 'var(--muted)', marginLeft: 2 }}>on problems solved</span>

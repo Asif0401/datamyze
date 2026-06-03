@@ -190,8 +190,8 @@ export default function Leaderboard() {
 
       {/* ── Full table ──────────────────────────────── */}
       <div style={{
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(255,255,255,0.08)',
+        background: 'rgba(255,255,255,0.09)',
+        border: '1px solid rgba(255,255,255,0.12)',
         borderRadius: top3.length === 3 ? '0 0 20px 20px' : 20,
         overflow: 'hidden',
       }}>
@@ -200,8 +200,8 @@ export default function Leaderboard() {
         <div style={{
           display: 'grid', gridTemplateColumns: '56px 52px 1fr 160px 80px 100px',
           padding: '10px 20px', gap: 12, alignItems: 'center',
-          background: 'rgba(255,255,255,0.04)',
-          borderBottom: '1px solid rgba(255,255,255,0.07)',
+          background: 'rgba(255,255,255,0.09)',
+          borderBottom: '1px solid rgba(255,255,255,0.12)',
         }}>
           {[
             { label: 'Rank',     cls: '' },
