@@ -236,216 +236,282 @@ function OtpInput({ value, onChange }) {
   );
 }
 
+/* ── Hero data ─────────────────────────────────── */
+const FEATURES = [
+  { icon: <SqlLogo />,    color: '#38bdf8', title: '400+ Real Problems',      desc: 'SQL & Python from actual Flipkart, Amazon & Zomato interview rounds' },
+  { icon: '🎙️',          color: '#a78bfa', title: 'Live Mock Interviews',    desc: '1:1 sessions with our mentor — full feedback & recording' },
+  { icon: '💼',           color: '#5CC8A0', title: '300+ Curated Jobs',       desc: 'Data Analyst, BI & Product Analyst roles updated daily' },
+  { icon: '📄',           color: '#f9a825', title: 'Resume Review',           desc: 'ATS-optimised expert feedback delivered within 24 hours' },
+  { icon: <PythonLogo />, color: '#FFD343', title: 'Python & Pandas Track',   desc: 'Data wrangling, EDA, GroupBy and real case-study problems' },
+  { icon: '🎯',           color: '#f87171', title: '100% Placement Support',  desc: 'We work alongside you until you land your first data role' },
+];
+const STATS = [
+  { val: '2,000+', lbl: 'Students',       color: '#38bdf8' },
+  { val: '400+',   lbl: 'Problems',       color: '#a78bfa' },
+  { val: '94%',    lbl: 'Interview Win',  color: '#5CC8A0' },
+  { val: '₹199',   lbl: 'Lifetime',       color: '#E8A838' },
+];
+const HERO_TESTIMONIALS = [
+  { i:'PS', g:'linear-gradient(135deg,#4A90D9,#a78bfa)', name:'Priya Sharma',  role:'BI Analyst — Meesho',                  text:'"Got placed at Meesho within 2 months. The mock interviews and SQL problem sets are exactly what the hiring panel tested."' },
+  { i:'RK', g:'linear-gradient(135deg,#5CC8A0,#38bdf8)', name:'Rahul Kumar',   role:'Analytics Engineer — Flipkart',         text:'"The SQL problems are the exact patterns Flipkart asks. Cleared the Analytics Engineer role in my very first attempt."' },
+  { i:'AM', g:'linear-gradient(135deg,#E8A838,#f87171)', name:'Arjun Menon',   role:'Business Intelligence Eng — Amazon',   text:'"Went from fresher to Amazon BIE in 3 months. The structured roadmap made all the difference."' },
+];
+const COMPANIES = ['Flipkart','Amazon','Swiggy','Zomato','PhonePe','Meesho','Razorpay','CRED','Dream11','Walmart'];
+const CMP_COLOR = { Flipkart:'#2874F0',Amazon:'#FF9900',Swiggy:'#FC8019',Zomato:'#E23744',PhonePe:'#5F259F',Meesho:'#8B5CF6',Razorpay:'#2962FF',CRED:'#00C853',Dream11:'#1A73E8',Walmart:'#0071CE' };
+
 /* ══════════════════════════════════════════════════
    MAIN AUTH PAGE
 ══════════════════════════════════════════════════ */
 export default function AuthPage({ mode: initialMode }) {
-  const [panel, setPanel]   = useState(initialMode || 'login'); // 'login' | 'signup'
-  const [loginType, setLoginType] = useState('email');           // 'email' | 'phone'
+  const [panel, setPanel]   = useState(initialMode || 'login');
+  const [loginType, setLoginType] = useState('email');
   const { login } = useAuth();
   const navigate  = useNavigate();
+  const heroRef   = useRef(null);
+
+  /* Scroll-reveal: add .in class when elements enter the scroll container */
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+    const obs = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }),
+      { threshold: 0.08, root: hero }
+    );
+    hero.querySelectorAll('.auth-reveal').forEach(el => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
 
   return (
     <div className="auth-wrap">
       <Blobs />
       <Particles />
 
-      {/* ═══ LEFT HERO ═══ */}
-      <div className="auth-hero">
+      {/* ═══ LEFT HERO — scrollable ═══ */}
+      <div className="auth-hero" ref={heroRef}>
 
-        {/* ── TOP: Logo ── */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, animation: 'fadeInUp 0.4s ease both' }}>
-          <div className="auth-logo-icon" style={{ width: 46, height: 46, borderRadius: 13, boxShadow: '0 0 20px rgba(34,211,238,0.4), 0 4px 16px rgba(0,0,0,0.4)' }}>
-            <svg viewBox="0 0 22 22" fill="none" width="24" height="24">
-              <defs>
-                <linearGradient id="ab1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="white" stopOpacity="0.7"/><stop offset="100%" stopColor="white" stopOpacity="0.1"/></linearGradient>
-                <linearGradient id="ab4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#22d3ee" stopOpacity="1"/><stop offset="100%" stopColor="#22d3ee" stopOpacity="0.18"/></linearGradient>
-                <filter id="aglow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-              </defs>
-              <rect x="1.5" y="17" width="3.5" height="4.5" rx="1.3" fill="url(#ab1)"/>
-              <rect x="6.5" y="13" width="3.5" height="8.5" rx="1.3" fill="url(#ab1)"/>
-              <rect x="11.5" y="9" width="3.5" height="12.5" rx="1.3" fill="url(#ab1)"/>
-              <rect x="16.5" y="5" width="3.5" height="16.5" rx="1.3" fill="url(#ab4)"/>
-              <line x1="3.25" y1="16.5" x2="18.25" y2="4.5" stroke="#22d3ee" strokeWidth="1.8" strokeLinecap="round" filter="url(#aglow)" opacity="0.9"/>
-              <path d="M18.25,2 L19.6,4.5 L18.25,7 L16.9,4.5 Z" fill="#22d3ee" filter="url(#aglow)"/>
-            </svg>
+        {/* ══════════════ SECTION 1 — HERO ══════════════ */}
+        <section style={{ minHeight:'100vh', display:'flex', flexDirection:'column', justifyContent:'center', padding:'3rem 4rem 3rem', position:'relative' }}>
+
+          {/* Ambient glows */}
+          <div style={{ position:'absolute', top:'-10%', left:'-5%', width:500, height:500, borderRadius:'50%', background:'radial-gradient(circle, rgba(74,144,217,0.12) 0%, transparent 70%)', pointerEvents:'none' }} />
+          <div style={{ position:'absolute', bottom:'10%', right:'-10%', width:400, height:400, borderRadius:'50%', background:'radial-gradient(circle, rgba(167,139,250,0.10) 0%, transparent 70%)', pointerEvents:'none' }} />
+
+          {/* Logo */}
+          <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:'2rem', animation:'fadeInUp 0.4s ease both' }}>
+            <div className="auth-logo-icon" style={{ width:44, height:44, borderRadius:12, boxShadow:'0 0 20px rgba(34,211,238,0.4)' }}>
+              <svg viewBox="0 0 22 22" fill="none" width="22" height="22">
+                <defs>
+                  <linearGradient id="ab1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="white" stopOpacity="0.7"/><stop offset="100%" stopColor="white" stopOpacity="0.1"/></linearGradient>
+                  <linearGradient id="ab4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#22d3ee"/><stop offset="100%" stopColor="#22d3ee" stopOpacity="0.18"/></linearGradient>
+                </defs>
+                <rect x="1.5" y="17" width="3.5" height="4.5" rx="1.3" fill="url(#ab1)"/>
+                <rect x="6.5" y="13" width="3.5" height="8.5" rx="1.3" fill="url(#ab1)"/>
+                <rect x="11.5" y="9" width="3.5" height="12.5" rx="1.3" fill="url(#ab1)"/>
+                <rect x="16.5" y="5" width="3.5" height="16.5" rx="1.3" fill="url(#ab4)"/>
+                <line x1="3.25" y1="16.5" x2="18.25" y2="4.5" stroke="#22d3ee" strokeWidth="1.8" strokeLinecap="round" opacity="0.9"/>
+              </svg>
+            </div>
+            <span style={{ fontSize:22, fontWeight:800, letterSpacing:'-0.4px' }}>
+              <span style={{ color:'rgba(255,255,255,0.65)', fontWeight:500 }}>Data</span>
+              <span style={{ background:'linear-gradient(135deg,#fff 0%,#22d3ee 60%,#a78bfa 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', fontWeight:900 }}>myze</span>
+            </span>
           </div>
-          <span style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.5px', filter: 'drop-shadow(0 0 12px rgba(34,211,238,0.35))' }}>
-            <span style={{ color: 'rgba(255,255,255,0.72)', fontWeight: 600 }}>Data</span>
-            <span style={{
-              background: 'linear-gradient(135deg, #fff 0%, #22d3ee 60%, #a78bfa 100%)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-              fontWeight: 900,
-            }}>myze</span>
-          </span>
-        </div>
 
-        {/* ── MIDDLE: Headline + cards + ticker ── */}
-        <div style={{ animation: 'fadeInUp 0.45s 0.06s ease both' }}>
-          {/* Headline */}
-          <div style={{ marginBottom:'0.5rem' }}>
-            <div style={{
-              fontSize:'clamp(28px, 3.0vw, 44px)',
-              fontWeight:900,
-              color:'rgba(255,255,255,0.72)',
-              letterSpacing:'-1.2px',
-              lineHeight:1.1,
-              animation:'fadeInUp 0.45s 0.0s ease both',
-              marginBottom:'0.15rem',
-            }}>Practice. Get mentored.</div>
-            <div style={{
-              fontSize:'clamp(30px, 3.3vw, 48px)',
-              fontWeight:900,
-              letterSpacing:'-1.5px',
-              lineHeight:1.05,
-              animation:'fadeInUp 0.45s 0.18s ease both',
-              position:'relative',
-              display:'inline-block',
-            }}>
-              <span style={{
-                background:'linear-gradient(135deg, #4A90D9 0%, #a78bfa 55%, #5CC8A0 100%)',
-                backgroundSize:'200% auto',
-                WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
-                animation:'gradientShift 4s ease infinite',
-              }}>Get hired.</span>
-              {/* Animated underline */}
-              <span style={{
-                position:'absolute', bottom:-4, left:0, right:0, height:3,
-                borderRadius:4,
-                background:'linear-gradient(90deg, #4A90D9, #a78bfa, #5CC8A0)',
-                animation:'barIn 0.6s 0.55s ease both',
-                transformOrigin:'left',
-              }} />
+          {/* Live badge */}
+          <div style={{ display:'inline-flex', alignItems:'center', gap:8, marginBottom:'1.4rem', animation:'fadeInUp 0.4s 0.05s ease both', width:'fit-content' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:6, padding:'5px 12px', borderRadius:20, background:'rgba(92,200,160,0.10)', border:'1px solid rgba(92,200,160,0.25)', fontSize:12, fontWeight:700, color:'#5CC8A0', letterSpacing:0.5 }}>
+              <span className="auth-live-dot" />
+              LIVE · 2,000+ students actively learning
             </div>
           </div>
-          <div className="auth-hero-sub">
-            This is where data careers begin. Go beyond tutorials with 1:1 mentorship, industry-grade projects, placement assistance and 300+ curated jobs. Purpose-built to get you hired.
+
+          {/* Headline */}
+          <div style={{ marginBottom:'1.2rem' }}>
+            <div style={{ fontSize:'clamp(36px,3.8vw,58px)', fontWeight:900, letterSpacing:'-2px', lineHeight:1.05, color:'rgba(255,255,255,0.88)', animation:'fadeInUp 0.5s 0.08s ease both', marginBottom:6 }}>
+              The platform that
+            </div>
+            <div style={{ fontSize:'clamp(36px,3.8vw,58px)', fontWeight:900, letterSpacing:'-2px', lineHeight:1.05, animation:'fadeInUp 0.5s 0.14s ease both', marginBottom:6 }}>
+              <span style={{ color:'rgba(255,255,255,0.88)' }}>actually gets you</span>
+            </div>
+            <div style={{ position:'relative', display:'inline-block', animation:'fadeInUp 0.5s 0.20s ease both' }}>
+              <span style={{ fontSize:'clamp(40px,4.2vw,64px)', fontWeight:900, letterSpacing:'-2.5px', lineHeight:1.0, background:'linear-gradient(135deg, #4A90D9 0%, #818cf8 45%, #c084fc 75%, #5CC8A0 100%)', backgroundSize:'200% auto', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', animation:'gradientShift 5s ease infinite' }}>
+                hired in data.
+              </span>
+              <span style={{ position:'absolute', bottom:-6, left:0, right:0, height:4, borderRadius:4, background:'linear-gradient(90deg,#4A90D9,#818cf8,#5CC8A0)', animation:'barIn 0.7s 0.6s ease both', transformOrigin:'left' }} />
+            </div>
           </div>
 
-          {/* Comparison card */}
-          <div style={{ marginTop:'1rem', borderRadius:18, overflow:'hidden', position:'relative',
-            boxShadow:'0 0 0 1px rgba(127,119,221,0.22), 0 8px 32px rgba(127,119,221,0.1)' }}>
+          {/* Subtext */}
+          <div style={{ fontSize:'clamp(14px,1.3vw,16px)', color:'rgba(255,255,255,0.48)', lineHeight:1.7, maxWidth:520, marginBottom:'2rem', animation:'fadeInUp 0.5s 0.28s ease both' }}>
+            Real SQL &amp; Python problems from India's top companies · 1:1 mentorship · resume review · mock interviews · 100% placement support until you get hired.
+          </div>
 
-            {/* Single unified grid — all cells are direct children so rows are guaranteed equal height */}
+          {/* Stat chips */}
+          <div style={{ display:'flex', gap:10, flexWrap:'wrap', marginBottom:'2.5rem', animation:'fadeInUp 0.5s 0.34s ease both' }}>
+            {STATS.map(s => (
+              <div key={s.lbl} style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'10px 18px', borderRadius:14, background:`${s.color}0e`, border:`1px solid ${s.color}28`, minWidth:80 }}>
+                <div style={{ fontSize:20, fontWeight:900, color:s.color, letterSpacing:'-0.5px', lineHeight:1 }}>{s.val}</div>
+                <div style={{ fontSize:10, fontWeight:600, color:'rgba(255,255,255,0.38)', textTransform:'uppercase', letterSpacing:'0.5px', marginTop:3 }}>{s.lbl}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* "Students placed at" marquee */}
+          <div style={{ animation:'fadeInUp 0.5s 0.40s ease both' }}>
+            <div style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.28)', letterSpacing:1.5, textTransform:'uppercase', marginBottom:10 }}>Students placed at</div>
+            <div style={{ overflow:'hidden', maskImage:'linear-gradient(to right,transparent,black 8%,black 92%,transparent)', WebkitMaskImage:'linear-gradient(to right,transparent,black 8%,black 92%,transparent)' }}>
+              <div className="auth-marquee-track">
+                {[...COMPANIES, ...COMPANIES].map((co, i) => (
+                  <span key={i} style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'6px 14px', marginRight:8, borderRadius:20, background:`${CMP_COLOR[co]}12`, border:`1px solid ${CMP_COLOR[co]}30`, color:CMP_COLOR[co], fontSize:13, fontWeight:700, whiteSpace:'nowrap' }}>
+                    {co}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Scroll indicator */}
+          <div style={{ position:'absolute', bottom:'2.5rem', left:'4rem', display:'flex', alignItems:'center', gap:8, animation:'fadeInUp 0.5s 0.8s ease both' }}>
+            <div style={{ fontSize:11, color:'rgba(255,255,255,0.22)', letterSpacing:1, textTransform:'uppercase' }}>Scroll to explore</div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          </div>
+        </section>
+
+        {/* ══════════════ SECTION 2 — FEATURES ══════════════ */}
+        <section style={{ padding:'5rem 4rem 4rem', borderTop:'1px solid rgba(255,255,255,0.05)' }}>
+          <div className="auth-reveal" style={{ transitionDelay:'0ms' }}>
+            <div style={{ fontSize:11, fontWeight:800, color:'rgba(56,189,248,0.7)', letterSpacing:2.5, textTransform:'uppercase', marginBottom:12 }}>What you get</div>
+            <div style={{ fontSize:'clamp(26px,2.6vw,38px)', fontWeight:900, letterSpacing:'-1.2px', lineHeight:1.1, marginBottom:8 }}>
+              <span style={{ color:'rgba(255,255,255,0.88)' }}>Everything you need.</span><br/>
+              <span style={{ color:'rgba(255,255,255,0.40)' }}>Nothing you don't.</span>
+            </div>
+          </div>
+
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0.9rem', marginTop:'2rem' }}>
+            {FEATURES.map((f, i) => (
+              <div key={i} className="auth-reveal auth-feat-card" style={{
+                transitionDelay:`${i * 70}ms`,
+                padding:'1.3rem',
+                borderRadius:16,
+                background:`linear-gradient(145deg, ${f.color}0d 0%, rgba(255,255,255,0.025) 100%)`,
+                border:`1px solid ${f.color}22`,
+                borderTop:`2px solid ${f.color}55`,
+              }}>
+                <div style={{ fontSize:28, marginBottom:'0.6rem', display:'flex', alignItems:'center' }}>
+                  {typeof f.icon === 'string' ? f.icon : <span style={{ display:'flex' }}>{f.icon}</span>}
+                </div>
+                <div style={{ fontSize:14, fontWeight:800, color:'#fff', marginBottom:5 }}>{f.title}</div>
+                <div style={{ fontSize:12.5, color:'rgba(255,255,255,0.42)', lineHeight:1.55 }}>{f.desc}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════════════ SECTION 3 — SOCIAL PROOF ══════════════ */}
+        <section style={{ padding:'4rem', borderTop:'1px solid rgba(255,255,255,0.05)', background:'rgba(255,255,255,0.015)' }}>
+          <div className="auth-reveal">
+            <div style={{ fontSize:11, fontWeight:800, color:'rgba(167,139,250,0.7)', letterSpacing:2.5, textTransform:'uppercase', marginBottom:12 }}>Real results</div>
+            <div style={{ fontSize:'clamp(24px,2.4vw,36px)', fontWeight:900, letterSpacing:'-1px', color:'rgba(255,255,255,0.88)', marginBottom:'2rem' }}>
+              Students don't lie.
+            </div>
+          </div>
+
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'0.8rem', marginBottom:'3rem' }}>
+            {HERO_TESTIMONIALS.map((t, i) => (
+              <div key={i} className="auth-reveal" style={{
+                transitionDelay:`${i * 100}ms`,
+                padding:'1.3rem',
+                borderRadius:16,
+                background:'rgba(255,255,255,0.035)',
+                border:'1px solid rgba(255,255,255,0.08)',
+                display:'flex', flexDirection:'column', gap:12,
+              }}>
+                <div style={{ display:'flex', gap:6 }}>{'★★★★★'.split('').map((s,j) => <span key={j} style={{ color:'#E8A838', fontSize:13 }}>{s}</span>)}</div>
+                <div style={{ fontSize:12.5, color:'rgba(255,255,255,0.65)', lineHeight:1.6, flex:1 }}>{t.text}</div>
+                <div style={{ display:'flex', alignItems:'center', gap:10, paddingTop:8, borderTop:'1px solid rgba(255,255,255,0.06)' }}>
+                  <div style={{ width:32, height:32, borderRadius:'50%', background:t.g, display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:800, color:'#fff', flexShrink:0 }}>{t.i}</div>
+                  <div>
+                    <div style={{ fontSize:12, fontWeight:700, color:'#fff' }}>{t.name}</div>
+                    <div style={{ fontSize:10.5, color:'rgba(255,255,255,0.38)' }}>{t.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════════════ SECTION 4 — COMPARISON ══════════════ */}
+        <section style={{ padding:'4rem', borderTop:'1px solid rgba(255,255,255,0.05)' }}>
+          <div className="auth-reveal">
+            <div style={{ fontSize:11, fontWeight:800, color:'rgba(92,200,160,0.7)', letterSpacing:2.5, textTransform:'uppercase', marginBottom:12 }}>Why Datamyze?</div>
+            <div style={{ fontSize:'clamp(24px,2.4vw,34px)', fontWeight:900, letterSpacing:'-1px', color:'rgba(255,255,255,0.88)', marginBottom:'1.8rem' }}>
+              We built what others didn't.
+            </div>
+          </div>
+          <div className="auth-reveal" style={{ transitionDelay:'80ms', borderRadius:18, overflow:'hidden', boxShadow:'0 0 0 1px rgba(127,119,221,0.22)' }}>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr' }}>
-
-              {/* ── Header: Others ── */}
-              <div style={{ background:'rgba(255,255,255,0.025)', padding:'10px 16px',
-                borderBottom:'1px solid rgba(255,255,255,0.06)', borderRight:'1px solid rgba(255,255,255,0.06)',
-                display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <div style={{ background:'rgba(255,255,255,0.025)', padding:'10px 16px', borderBottom:'1px solid rgba(255,255,255,0.06)', borderRight:'1px solid rgba(255,255,255,0.06)', display:'flex', alignItems:'center', justifyContent:'center' }}>
                 <span style={{ fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.28)', letterSpacing:1, textTransform:'uppercase' }}>Others</span>
               </div>
-
-              {/* ── Header: Datamyze ── */}
-              <div style={{ background:'linear-gradient(135deg,rgba(127,119,221,0.18),rgba(56,189,248,0.1))',
-                padding:'10px 16px', borderBottom:'1px solid rgba(127,119,221,0.25)',
-                position:'relative', overflow:'hidden',
-                display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <div style={{ background:'linear-gradient(135deg,rgba(127,119,221,0.18),rgba(56,189,248,0.1))', padding:'10px 16px', borderBottom:'1px solid rgba(127,119,221,0.25)', position:'relative', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center' }}>
                 <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'linear-gradient(90deg,#7F77DD,#38bdf8)' }} />
-                <div style={{ position:'absolute', bottom:-18, right:-18, width:60, height:60, borderRadius:'50%', background:'radial-gradient(circle,rgba(127,119,221,0.3),transparent)', pointerEvents:'none' }} />
-                <span style={{ fontSize:13, fontWeight:800, background:'linear-gradient(135deg,#c4b5fd,#67e8f9)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', letterSpacing:0.8, textTransform:'uppercase', position:'relative' }}>✦ Datamyze</span>
+                <span style={{ fontSize:13, fontWeight:800, background:'linear-gradient(135deg,#c4b5fd,#67e8f9)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', letterSpacing:0.8, textTransform:'uppercase' }}>✦ Datamyze</span>
               </div>
-
-              {/* ── Data rows as flat cell pairs ── */}
               {[
-                { bad:'Only video tutorials',       good:'Real interview Qs from top companies', color:'#38bdf8' },
-                { bad:'No live sessions',           good:'Live classes every week',              color:'#F07B6A' },
-                { bad:'No mentorship support',      good:'Dedicated 1:1 industry mentor',        color:'#a78bfa' },
-                { bad:'No placement support',       good:'100% placement assistance',            color:'#5CC8A0' },
-                { bad:'No mock interviews',         good:'Live mock interviews + feedback',      color:'#f9a825' },
-                { bad:'No curated job board',       good:'300+ data roles, updated weekly',      color:'#34d399' },
+                { bad:'Only video tutorials',    good:'Real interview Qs from Flipkart, Amazon',  color:'#38bdf8' },
+                { bad:'No live sessions',         good:'Live classes every week',                 color:'#F07B6A' },
+                { bad:'No mentorship support',    good:'Dedicated 1:1 industry mentor',           color:'#a78bfa' },
+                { bad:'No placement support',     good:'100% placement assistance',               color:'#5CC8A0' },
+                { bad:'No mock interviews',       good:'Live mock interviews + feedback',          color:'#f9a825' },
+                { bad:'No curated job board',     good:'300+ data roles, updated weekly',          color:'#34d399' },
               ].flatMap((row, i) => [
-                /* Left cell */
-                <div key={`bad-${i}`} style={{
-                  padding:'9px 16px',
-                  borderRight:'1px solid rgba(255,255,255,0.05)',
-                  borderBottom: i < 5 ? '1px solid rgba(255,255,255,0.045)' : 'none',
-                  background: i % 2 === 0 ? 'rgba(0,0,0,0.18)' : 'rgba(0,0,0,0.1)',
-                  display:'flex', alignItems:'center', gap:8,
-                }}>
+                <div key={`b${i}`} style={{ padding:'9px 16px', borderRight:'1px solid rgba(255,255,255,0.05)', borderBottom:i<5?'1px solid rgba(255,255,255,0.045)':'none', background:i%2===0?'rgba(0,0,0,0.18)':'rgba(0,0,0,0.10)', display:'flex', alignItems:'center', gap:8 }}>
                   <div style={{ width:17, height:17, borderRadius:'50%', background:'rgba(248,113,113,0.12)', border:'1px solid rgba(248,113,113,0.3)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
                     <span style={{ fontSize:10, color:'#f87171', fontWeight:900, lineHeight:1 }}>✕</span>
                   </div>
                   <span style={{ fontSize:13, fontWeight:500, color:'rgba(255,255,255,0.32)', lineHeight:1.4 }}>{row.bad}</span>
                 </div>,
-                /* Right cell */
-                <div key={`good-${i}`} style={{
-                  padding:'9px 16px',
-                  borderBottom: i < 5 ? '1px solid rgba(255,255,255,0.045)' : 'none',
-                  borderLeft:`2px solid ${row.color}45`,
-                  background: i % 2 === 0 ? `linear-gradient(90deg,${row.color}09,rgba(127,119,221,0.06))` : `linear-gradient(90deg,rgba(127,119,221,0.05),${row.color}07)`,
-                  display:'flex', alignItems:'center', gap:8,
-                }}>
+                <div key={`g${i}`} style={{ padding:'9px 16px', borderBottom:i<5?'1px solid rgba(255,255,255,0.045)':'none', borderLeft:`2px solid ${row.color}45`, background:i%2===0?`linear-gradient(90deg,${row.color}09,rgba(127,119,221,0.06))`:`linear-gradient(90deg,rgba(127,119,221,0.05),${row.color}07)`, display:'flex', alignItems:'center', gap:8 }}>
                   <div style={{ width:17, height:17, borderRadius:'50%', background:`${row.color}22`, border:`1px solid ${row.color}55`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
                     <span style={{ fontSize:10, color:row.color, fontWeight:900, lineHeight:1 }}>✓</span>
                   </div>
                   <span style={{ fontSize:13, fontWeight:700, color:'rgba(255,255,255,0.9)', lineHeight:1.4 }}>{row.good}</span>
                 </div>,
               ])}
-
-            </div>
-
-            {/* Price footer */}
-            <div style={{ background:'linear-gradient(90deg,rgba(10,14,32,0.92),rgba(127,119,221,0.18),rgba(10,14,32,0.92))',
-              borderTop:'1px solid rgba(127,119,221,0.22)',
-              padding:'10px 18px', display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
-              <span style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.45)' }}>✦ Full access for</span>
-              <span style={{ fontSize:18, fontWeight:900, letterSpacing:'-0.4px',
-                background:'linear-gradient(135deg,#E8A838 0%,#fbbf24 50%,#a78bfa 100%)',
-                WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>₹199 lifetime</span>
-              <span style={{ fontSize:13, color:'rgba(255,255,255,0.22)', textDecoration:'line-through', fontWeight:500 }}>₹999</span>
             </div>
           </div>
+        </section>
 
-          {/* Scrolling feature ticker */}
-          <div style={{ marginTop:'1.1rem' }}>
-            {/* Heading */}
-            <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:10 }}>
-              <div style={{ flex:1, height:1, background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.1))' }} />
-              <span style={{ fontSize:11, fontWeight:800, color:'rgba(255,255,255,0.55)', letterSpacing:2, textTransform:'uppercase', whiteSpace:'nowrap' }}>What we offer</span>
-              <div style={{ flex:1, height:1, background:'linear-gradient(90deg,rgba(255,255,255,0.1),transparent)' }} />
+        {/* ══════════════ SECTION 5 — PRICING CTA ══════════════ */}
+        <section style={{ padding:'4rem 4rem 6rem', borderTop:'1px solid rgba(255,255,255,0.05)' }}>
+          <div className="auth-reveal" style={{ textAlign:'center', maxWidth:500, margin:'0 auto' }}>
+            <div style={{ fontSize:11, fontWeight:800, color:'rgba(232,168,56,0.8)', letterSpacing:2.5, textTransform:'uppercase', marginBottom:12 }}>Pricing</div>
+            <div style={{ fontSize:'clamp(24px,2.6vw,38px)', fontWeight:900, letterSpacing:'-1px', color:'rgba(255,255,255,0.88)', marginBottom:6 }}>
+              One price.<br/>Everything included.
             </div>
-            <div style={{
-              display:'flex', flexDirection:'column', gap:8,
-              overflow:'hidden',
-              maskImage:'linear-gradient(to right,transparent 0%,black 10%,black 90%,transparent 100%)',
-              WebkitMaskImage:'linear-gradient(to right,transparent 0%,black 10%,black 90%,transparent 100%)',
-            }}>
-              <div className="auth-ticker-track">
-                {[...TICKER_ROW1, ...TICKER_ROW1, ...TICKER_ROW1].map((f, i) => (
-                  <span key={i} className="auth-ticker-chip" style={{ '--tc': f.color }}>
-                    <span style={{ fontSize: 14 }}>{f.icon}</span>{f.label}
-                  </span>
+            <div style={{ fontSize:14, color:'rgba(255,255,255,0.40)', marginBottom:'2rem' }}>Start for free. No credit card needed. Upgrade when ready.</div>
+
+            <div style={{ background:'linear-gradient(145deg,rgba(232,168,56,0.07),rgba(167,139,250,0.05))', border:'1px solid rgba(232,168,56,0.22)', borderRadius:20, padding:'2rem', marginBottom:'1.5rem' }}>
+              <div style={{ display:'flex', alignItems:'baseline', justifyContent:'center', gap:10, marginBottom:8 }}>
+                <span style={{ fontSize:52, fontWeight:900, letterSpacing:'-2px', background:'linear-gradient(135deg,#E8A838,#fbbf24)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>₹199</span>
+                <span style={{ fontSize:16, color:'rgba(255,255,255,0.25)', textDecoration:'line-through' }}>₹999</span>
+                <span style={{ fontSize:13, fontWeight:700, padding:'3px 10px', borderRadius:20, background:'rgba(92,200,160,0.14)', color:'#5CC8A0', border:'1px solid rgba(92,200,160,0.3)' }}>80% OFF</span>
+              </div>
+              <div style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.45)', marginBottom:'1.5rem' }}>One-time payment · Lifetime access · No renewals</div>
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, textAlign:'left', marginBottom:'1.5rem' }}>
+                {['400+ Problems','1:1 Mock Interviews','Curated Job Board','Resume Review','Verified Certificates','100% Placement Help'].map(item => (
+                  <div key={item} style={{ display:'flex', alignItems:'center', gap:8, fontSize:13, color:'rgba(255,255,255,0.72)' }}>
+                    <span style={{ color:'#5CC8A0', fontWeight:900, fontSize:14 }}>✓</span>{item}
+                  </div>
                 ))}
               </div>
-              <div className="auth-ticker-track auth-ticker-reverse">
-                {[...TICKER_ROW2, ...TICKER_ROW2, ...TICKER_ROW2].map((f, i) => (
-                  <span key={i} className="auth-ticker-chip" style={{ '--tc': f.color }}>
-                    <span style={{ fontSize: 14 }}>{f.icon}</span>{f.label}
-                  </span>
-                ))}
-              </div>
+              <button onClick={() => setPanel('signup')} style={{ width:'100%', padding:'0.9rem', borderRadius:12, background:'linear-gradient(135deg,#E8A838,#f59e0b)', border:'none', color:'#000', fontWeight:800, fontSize:15, cursor:'pointer' }}>
+                👑 Get Full Access — ₹199
+              </button>
             </div>
+            <div style={{ fontSize:12, color:'rgba(255,255,255,0.22)' }}>🔒 Secure payment · Instant access · Trusted by 2,000+ students</div>
           </div>
-
-        </div>
-
-        {/* ── BOTTOM: Stats ── */}
-        <div style={{ animation: 'fadeInUp 0.5s 0.18s ease both' }}>
-          <div style={{ display: 'flex', gap: 0, borderTop: '1px solid rgba(255,255,255,0.07)', borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '1rem 0' }}>
-            {[
-              { val: 'Live',  lbl: '1-on-1 Mentor'   },
-              { val: '400+', lbl: 'Problems'         },
-              { val: '24h',  lbl: 'Resume Feedback'  },
-              { val: '100%', lbl: 'Placement Assist' },
-            ].map((s, i) => (
-              <div key={s.lbl} style={{ flex: 1, textAlign: 'center', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.07)' : 'none' }}>
-                <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.5px', marginBottom: 2 }}>{s.val}</div>
-                <div style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{s.lbl}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+        </section>
 
       </div>
 

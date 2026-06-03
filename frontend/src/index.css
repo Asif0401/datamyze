@@ -659,18 +659,60 @@ select option { background: #1a2035; color: var(--text); }
 }
 .auth-wrap .bg-blobs { z-index: 0; }
 
-/* Left hero panel */
+/* Left hero panel — scrollable */
 .auth-hero {
   flex: 1;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 2.8rem 4rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
   position: relative;
   z-index: 1;
-  overflow: hidden;
 }
+.auth-hero::-webkit-scrollbar { display: none; }
+
+/* Company logo marquee */
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.auth-marquee-track {
+  display: flex;
+  gap: 0;
+  animation: marqueeScroll 22s linear infinite;
+  width: max-content;
+}
+.auth-marquee-track:hover { animation-play-state: paused; }
+
+/* Feature card hover */
+.auth-feat-card {
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease !important;
+  cursor: default;
+}
+.auth-feat-card:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.35) !important;
+}
+
+/* Pulsing live dot */
+@keyframes livePulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(92,200,160,0.7); }
+  50%      { box-shadow: 0 0 0 6px rgba(92,200,160,0); }
+}
+.auth-live-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #5CC8A0;
+  animation: livePulse 1.8s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+/* Scroll reveal base */
+.auth-reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.auth-reveal.in { opacity: 1 !important; transform: translateY(0) !important; }
 
 /* Right card panel */
 .auth-right {
