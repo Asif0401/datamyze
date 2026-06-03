@@ -74,7 +74,7 @@ function ProblemIDE({ problem, onClose, onSolved }) {
       const { data } = await api.post(`/problems/${problem.id}/run`, { code });
       setRunResult(data);
     } catch {
-      setRunResult({ success: false, error: 'Server error — try again.' });
+      setRunResult({ success: false, error: 'Server error. Please try again.' });
     } finally {
       setRunning(false);
     }
@@ -159,7 +159,7 @@ function ProblemIDE({ problem, onClose, onSolved }) {
         {/* Hint, Run & Submit */}
         <div style={{ display: 'flex', gap: 8, marginLeft: 8, alignItems: 'center' }}>
           {/* Hint button */}
-          <button onClick={handleHint} disabled={loadingHint} title={hintUsed ? 'Hint used — XP reduced by 50%' : 'Use hint (costs 50% XP)'} style={{
+          <button onClick={handleHint} disabled={loadingHint} title={hintUsed ? 'Hint used: XP reduced by 50%' : 'Use hint (costs 50% XP)'} style={{
             background: hintUsed ? 'rgba(232,168,56,0.20)' : 'rgba(232,168,56,0.10)',
             border: `1px solid ${hintUsed ? 'rgba(232,168,56,0.50)' : 'rgba(232,168,56,0.25)'}`,
             color: '#E8A838', padding: '6px 14px', borderRadius: 8,
@@ -252,7 +252,7 @@ function ProblemIDE({ problem, onClose, onSolved }) {
               <span style={{ fontSize: 18, lineHeight: 1.4 }}>💡</span>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 12, fontWeight: 700, color: '#E8A838', marginBottom: 3 }}>
-                  Hint used — XP reduced to {hintData.xp_after_hint} XP (was {problem.xp_reward} XP)
+                  Hint used: XP reduced to {hintData.xp_after_hint} XP (was {problem.xp_reward} XP)
                 </div>
                 <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.70)', lineHeight: 1.6 }}>{hintData.hint}</div>
               </div>

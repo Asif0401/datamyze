@@ -265,9 +265,9 @@ export default function Dashboard() {
         <div className="page-title">👋 Welcome back, {firstName}!</div>
         <div className="page-sub">
           {stats?.daysSinceActive === 0
-            ? `Active today — you're on a ${user?.streak || 0}-day streak! 🔥`
+            ? `Active today. You're on a ${user?.streak || 0}-day streak! 🔥`
             : stats?.daysSinceActive <= 2
-            ? `You practiced ${stats.daysSinceActive} day${stats.daysSinceActive > 1 ? 's' : ''} ago — keep the momentum going!`
+            ? `You practiced ${stats.daysSinceActive} day${stats.daysSinceActive > 1 ? 's' : ''} ago. Keep the momentum going!`
             : `You last practiced ${stats?.daysSinceActive || '?'} days ago. Time to get back on track!`}
         </div>
       </div>

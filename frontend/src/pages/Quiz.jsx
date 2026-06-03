@@ -278,7 +278,7 @@ export default function Quiz() {
               { icon: '🔁', tip: 'Retake quizzes to reinforce weak areas and maximise retention' },
               { icon: '📅', tip: 'Quiz daily to maintain your streak and keep XP climbing' },
               { icon: '🎯', tip: 'Pick a specific topic for targeted prep before interviews' },
-              { icon: '💡', tip: 'Read every explanation — even for questions you get right' },
+              { icon: '💡', tip: 'Read every explanation, even for questions you get right' },
             ].map(t => (
               <div key={t.tip} style={{
                 display: 'flex', alignItems: 'flex-start', gap: 10,
@@ -537,7 +537,7 @@ export default function Quiz() {
             <div style={{ fontSize: 38, fontWeight: 800, color: pct >= 60 ? '#5CC8A0' : '#ef4444', marginBottom: '0.3rem' }}>
               {results.score} / {results.total}
             </div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text)', marginBottom: '0.25rem' }}>{pct}% — {message}</div>
+            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text)', marginBottom: '0.25rem' }}>{pct}% · {message}</div>
             <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: '1.5rem' }}>
               {results.total - results.score} wrong · {results.score} correct
             </div>

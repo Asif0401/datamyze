@@ -146,12 +146,12 @@ export default function Certificates() {
             <span style={{ background: 'linear-gradient(135deg,#E8A838,#f59e0b 60%,#a78bfa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>get you hired</span>
           </div>
           <div style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.48)', lineHeight: 1.8, marginBottom: '1.6rem', maxWidth: 380 }}>
-            Complete any course and instantly receive a verified, LinkedIn-ready certificate with a unique credential ID — proof of your skills that recruiters can verify.
+            Complete any course and instantly receive a verified, LinkedIn-ready certificate with a unique credential ID. Proof of your skills that recruiters can verify.
           </div>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: '1.4rem' }}>
             <button className="btn-primary" onClick={() => navigate('/premium')}
               style={{ background: 'linear-gradient(135deg,#E8A838,#f59e0b)', border: 'none', fontSize: 14, padding: '11px 22px' }}>
-              👑 Upgrade to Pro — ₹199
+              👑 Upgrade to Pro · ₹199
             </button>
             <button onClick={() => navigate('/courses')}
               style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.65)', borderRadius: 12, fontSize: 13, padding: '11px 18px', cursor: 'pointer' }}>
@@ -275,7 +275,7 @@ export default function Certificates() {
             </div>
             <div style={{ fontSize:22, fontWeight:900, letterSpacing:'-0.5px', marginBottom:8 }}>Your first certificate is waiting</div>
             <div style={{ fontSize:14, color:'rgba(255,255,255,0.40)', maxWidth:420, margin:'0 auto 1.6rem', lineHeight:1.7 }}>
-              Complete any course to earn a verified Datamyze certificate — shareable on LinkedIn, downloadable as PDF.
+              Complete any course to earn a verified Datamyze certificate, shareable on LinkedIn and downloadable as PDF.
             </div>
             <button className="btn-primary" style={{ fontSize:14, padding:'11px 28px' }} onClick={() => navigate('/courses')}>
               Start a Course →
@@ -533,7 +533,7 @@ function CertCard({ cert, user, showToast }) {
           onClick={() => {
             const text = `I just completed "${cert.course_title}" on Datamyze! 🎓\nCredential: ${cert.credential_id}`;
             navigator.clipboard?.writeText(text);
-            showToast('✅ Share text copied — paste it on LinkedIn!');
+            showToast('✅ Share text copied. Paste it on LinkedIn!');
           }}
         >
           🔗 Share on LinkedIn

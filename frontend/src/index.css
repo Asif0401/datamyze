@@ -1842,309 +1842,169 @@ select option { background: #1a2035; color: var(--text); }
 
 
 /* ═══════════════════════════════════════════════════════════════════
-   DATAMYZE BOLD UI — Rich Visual Redesign
+   DATAMYZE PREMIUM UI — Proper Glass + Vivid Color Identity
    ═══════════════════════════════════════════════════════════════════ */
 
-/* ── 1. True-dark background so cards actually POP ── */
-body {
-  background: #050810 !important;
-}
+/* 1. True-dark background */
+body { background: #04060e !important; }
 
-/* ── 2. Vivid, large blobs — actually visible ── */
-.blob { opacity: 0.55 !important; filter: blur(70px) !important; }
-.blob-1 {
-  width: 900px !important; height: 900px !important;
-  background: radial-gradient(circle, rgba(37,99,235,0.90) 0%, rgba(79,70,229,0.50) 35%, transparent 65%) !important;
-  top: -320px !important; left: -250px !important;
-}
-.blob-2 {
-  width: 700px !important; height: 700px !important;
-  background: radial-gradient(circle, rgba(6,182,212,0.75) 0%, rgba(34,211,238,0.35) 40%, transparent 65%) !important;
-  top: 20% !important; right: -260px !important;
-}
-.blob-3 {
-  width: 640px !important; height: 640px !important;
-  background: radial-gradient(circle, rgba(139,92,246,0.65) 0%, rgba(167,139,250,0.30) 40%, transparent 65%) !important;
-  bottom: -200px !important; left: 20% !important;
-}
+/* 2. Vivid blobs */
+.blob { opacity: 0.50 !important; filter: blur(75px) !important; }
+.blob-1 { width: 900px !important; height: 900px !important; background: radial-gradient(circle, rgba(29,78,216,0.85) 0%, rgba(79,70,229,0.40) 35%, transparent 65%) !important; top: -300px !important; left: -230px !important; }
+.blob-2 { width: 680px !important; height: 680px !important; background: radial-gradient(circle, rgba(6,182,212,0.70) 0%, rgba(34,211,238,0.30) 40%, transparent 65%) !important; }
+.blob-3 { width: 620px !important; height: 620px !important; background: radial-gradient(circle, rgba(124,58,237,0.60) 0%, rgba(167,139,250,0.25) 40%, transparent 65%) !important; }
 
-/* ── 3. ALL cards — real contrast from background ── */
-.card, .stat-card, .course-card, .feature-card, .job-card,
-.lb-row, .session-card {
-  background: rgba(11, 18, 40, 0.88) !important;
+/* 3. PROPER GLASS cards — transparent enough to breathe, not solid boxes */
+.card, .stat-card, .course-card, .feature-card, .job-card, .lb-row, .session-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.075) 0%, rgba(255,255,255,0.030) 100%) !important;
   border: 1px solid rgba(255,255,255,0.10) !important;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.50), inset 0 1px 0 rgba(255,255,255,0.07) !important;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
+  backdrop-filter: blur(22px) !important;
+  -webkit-backdrop-filter: blur(22px) !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08) !important;
 }
 
-/* ── 4. Colored top-accent line on every card ── */
-.card::before, .stat-card::before, .course-card::before,
-.feature-card::before, .job-card::before {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important; left: 0 !important; right: 0 !important;
-  height: 2px !important;
-  background: linear-gradient(90deg, transparent 0%, rgba(56,189,248,0.70) 40%, rgba(139,92,246,0.60) 70%, transparent 100%) !important;
-  border-radius: inherit !important;
+/* 4. Vivid cyan-purple top shimmer line on all cards */
+.card::before, .stat-card::before, .feature-card::before, .job-card::before {
+  content: '' !important; position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important; height: 1.5px !important;
+  background: linear-gradient(90deg, transparent 0%, rgba(56,189,248,0.80) 40%, rgba(167,139,250,0.65) 70%, transparent 100%) !important;
 }
 
-/* ── 5. DRAMATIC hover on ALL cards ── */
+/* 5. DRAMATIC hover — vivid neon glow, you WILL see this */
 .card:hover {
+  background: linear-gradient(145deg, rgba(56,189,248,0.10) 0%, rgba(255,255,255,0.04) 100%) !important;
+  border-color: rgba(56,189,248,0.45) !important;
+  box-shadow: 0 22px 60px rgba(0,0,0,0.60), 0 0 0 1px rgba(56,189,248,0.32), 0 0 50px rgba(56,189,248,0.14) !important;
   transform: translateY(-6px) !important;
-  background: rgba(14, 23, 52, 0.95) !important;
-  border-color: rgba(56,189,248,0.40) !important;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.65), 0 0 0 1px rgba(56,189,248,0.30), 0 0 50px rgba(56,189,248,0.12) !important;
 }
 .course-card:hover {
-  transform: translateY(-10px) scale(1.015) !important;
-  border-color: rgba(56,189,248,0.45) !important;
-  box-shadow: 0 32px 72px rgba(0,0,0,0.70), 0 0 0 1px rgba(56,189,248,0.35), 0 0 60px rgba(56,189,248,0.15) !important;
+  background: linear-gradient(145deg, rgba(56,189,248,0.12) 0%, rgba(255,255,255,0.04) 100%) !important;
+  border-color: rgba(56,189,248,0.50) !important;
+  box-shadow: 0 28px 72px rgba(0,0,0,0.65), 0 0 0 1px rgba(56,189,248,0.38), 0 0 60px rgba(56,189,248,0.16) !important;
+  transform: translateY(-10px) scale(1.012) !important;
 }
 .feature-card:hover, .job-card:hover {
+  background: linear-gradient(145deg, rgba(56,189,248,0.10) 0%, rgba(255,255,255,0.04) 100%) !important;
+  border-color: rgba(56,189,248,0.45) !important;
+  box-shadow: 0 22px 60px rgba(0,0,0,0.60), 0 0 0 1px rgba(56,189,248,0.32), 0 0 48px rgba(56,189,248,0.14) !important;
   transform: translateY(-8px) !important;
-  border-color: rgba(56,189,248,0.40) !important;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.65), 0 0 0 1px rgba(56,189,248,0.32), 0 0 50px rgba(56,189,248,0.12) !important;
 }
 .stat-card:hover {
-  transform: translateY(-7px) scale(1.02) !important;
-  border-color: rgba(56,189,248,0.42) !important;
-  box-shadow: 0 20px 56px rgba(0,0,0,0.65), 0 0 0 1px rgba(56,189,248,0.30), 0 0 48px rgba(56,189,248,0.12) !important;
+  box-shadow: 0 18px 52px rgba(0,0,0,0.58), 0 0 0 1px rgba(56,189,248,0.32), 0 0 44px rgba(56,189,248,0.14) !important;
+  transform: translateY(-6px) scale(1.015) !important;
 }
 
-/* ── 6. Stat numbers — vivid and large ── */
-.stat-val {
-  font-size: 32px !important;
-  font-weight: 900 !important;
-  letter-spacing: -1.5px !important;
-  background: linear-gradient(135deg, #38bdf8, #818cf8) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  background-clip: text !important;
-}
-.stat-label {
-  font-size: 10.5px !important;
-  letter-spacing: 1.2px !important;
-  color: rgba(255,255,255,0.38) !important;
-}
+/* 6. STAT CARDS — each gets its own vivid color identity */
+.stats-grid .stat-card:nth-child(1) { border-top: 2px solid rgba(74,144,217,0.90) !important; }
+.stats-grid .stat-card:nth-child(2) { border-top: 2px solid rgba(92,200,160,0.90) !important; }
+.stats-grid .stat-card:nth-child(3) { border-top: 2px solid rgba(167,139,250,0.90) !important; }
+.stats-grid .stat-card:nth-child(4) { border-top: 2px solid rgba(232,168,56,0.90) !important;  }
 
-/* ── 7. Page title — vivid gradient, bigger ── */
+.stats-grid .stat-card:nth-child(1):hover { border-color: rgba(74,144,217,0.70) !important; box-shadow: 0 18px 52px rgba(0,0,0,0.55), 0 0 0 1px rgba(74,144,217,0.30), 0 0 44px rgba(74,144,217,0.14) !important; }
+.stats-grid .stat-card:nth-child(2):hover { border-color: rgba(92,200,160,0.70) !important; box-shadow: 0 18px 52px rgba(0,0,0,0.55), 0 0 0 1px rgba(92,200,160,0.30), 0 0 44px rgba(92,200,160,0.14) !important; }
+.stats-grid .stat-card:nth-child(3):hover { border-color: rgba(167,139,250,0.70) !important; box-shadow: 0 18px 52px rgba(0,0,0,0.55), 0 0 0 1px rgba(167,139,250,0.30), 0 0 44px rgba(167,139,250,0.14) !important; }
+.stats-grid .stat-card:nth-child(4):hover { border-color: rgba(232,168,56,0.70) !important;  box-shadow: 0 18px 52px rgba(0,0,0,0.55), 0 0 0 1px rgba(232,168,56,0.30),  0 0 44px rgba(232,168,56,0.14) !important;  }
+
+/* Vivid colored stat numbers per card */
+.stats-grid .stat-card:nth-child(1) .stat-val { color: #60a5fa !important; -webkit-text-fill-color: #60a5fa !important; font-size: 30px !important; font-weight: 900 !important; }
+.stats-grid .stat-card:nth-child(2) .stat-val { color: #34d399 !important; -webkit-text-fill-color: #34d399 !important; font-size: 30px !important; font-weight: 900 !important; }
+.stats-grid .stat-card:nth-child(3) .stat-val { color: #c084fc !important; -webkit-text-fill-color: #c084fc !important; font-size: 30px !important; font-weight: 900 !important; }
+.stats-grid .stat-card:nth-child(4) .stat-val { color: #fbbf24 !important; -webkit-text-fill-color: #fbbf24 !important; font-size: 30px !important; font-weight: 900 !important; }
+
+/* 7. Course card — taller thumb */
+.course-thumb { height: 148px !important; }
+.course-card { border-top: 2px solid rgba(56,189,248,0.35) !important; }
+
+/* 8. Page title — vivid visible gradient */
 .page-title {
-  font-size: 26px !important;
-  font-weight: 900 !important;
-  background: linear-gradient(125deg, #ffffff 0%, #93c5fd 55%, #c4b5fd 100%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  background-clip: text !important;
-  letter-spacing: -0.6px !important;
+  font-size: 26px !important; font-weight: 900 !important;
+  background: linear-gradient(120deg, #ffffff 0%, #93c5fd 60%, #c4b5fd 100%) !important;
+  -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important;
+  background-clip: text !important; letter-spacing: -0.6px !important;
 }
 
-/* ── 8. Course thumb — taller + darker overlay for contrast ── */
-.course-thumb {
-  height: 150px !important;
-  position: relative !important;
-}
-.course-thumb::after {
-  content: '' !important;
-  position: absolute !important;
-  inset: 0 !important;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.30) 100%) !important;
-  pointer-events: none !important;
-  z-index: 1 !important;
-}
-
-/* ── 9. Course card body — richer ── */
-.course-body { padding: 1.1rem 1.2rem 1.3rem !important; }
-.course-name { font-size: 15px !important; font-weight: 800 !important; letter-spacing: -0.2px !important; }
-
-/* ── 10. Sidebar — deeper, more contrast ── */
-.sidebar {
-  background: rgba(4, 6, 15, 0.98) !important;
-  border-right: 1px solid rgba(255,255,255,0.07) !important;
-}
-
-/* ── 11. Active nav — strong vivid glow ── */
+/* 9. Sidebar */
+.sidebar { background: rgba(3, 5, 13, 0.98) !important; border-right: 1px solid rgba(255,255,255,0.07) !important; }
 .nav-item.active {
-  background: linear-gradient(135deg, rgba(37,99,235,0.35), rgba(56,189,248,0.18)) !important;
-  border: 1px solid rgba(56,189,248,0.38) !important;
-  color: #fff !important;
-  box-shadow: 0 2px 24px rgba(37,99,235,0.30), inset 0 1px 0 rgba(255,255,255,0.12) !important;
+  background: linear-gradient(135deg, rgba(29,78,216,0.38), rgba(56,189,248,0.16)) !important;
+  border: 1px solid rgba(56,189,248,0.40) !important;
+  box-shadow: 0 2px 24px rgba(29,78,216,0.32), inset 0 1px 0 rgba(255,255,255,0.10) !important;
 }
 .nav-item.active::before {
-  width: 3px !important;
-  top: 12% !important; bottom: 12% !important;
+  width: 3px !important; top: 12% !important; bottom: 12% !important;
   background: linear-gradient(to bottom, #22d3ee, #38bdf8, #818cf8) !important;
-  box-shadow: 0 0 12px rgba(34,211,238,1), 0 0 24px rgba(34,211,238,0.50) !important;
+  box-shadow: 0 0 12px rgba(34,211,238,1), 0 0 28px rgba(34,211,238,0.50) !important;
   border-radius: 0 4px 4px 0 !important;
 }
 
-/* ── 12. Input focus — vivid ring ── */
+/* 10. Sidebar user card */
+.sidebar-user { background: rgba(255,255,255,0.04) !important; border-color: rgba(255,255,255,0.08) !important; }
+
+/* 11. Avatar glow */
+.avatar { background: linear-gradient(135deg, #1d4ed8, #22d3ee) !important; box-shadow: 0 2px 16px rgba(34,211,238,0.55), 0 0 0 2px rgba(34,211,238,0.22) !important; }
+
+/* 12. Inputs */
 input:focus, textarea:focus, select:focus {
   border-color: rgba(34,211,238,0.75) !important;
-  box-shadow: 0 0 0 3px rgba(34,211,238,0.18), 0 0 24px rgba(34,211,238,0.10) !important;
+  box-shadow: 0 0 0 3px rgba(34,211,238,0.18), 0 0 24px rgba(34,211,238,0.08) !important;
 }
 
-/* ── 13. Primary button — vivid ── */
-.btn-primary {
-  background: linear-gradient(135deg, #1d4ed8, #7c3aed) !important;
-  box-shadow: 0 4px 22px rgba(29,78,216,0.50) !important;
-}
-.btn-primary:hover {
-  box-shadow: 0 8px 36px rgba(29,78,216,0.70) !important;
-  transform: translateY(-2px) !important;
-  filter: brightness(1.12) !important;
-}
+/* 13. Buttons */
+.btn-primary { background: linear-gradient(135deg, #1d4ed8, #7c3aed) !important; box-shadow: 0 4px 22px rgba(29,78,216,0.50) !important; }
+.btn-primary:hover { box-shadow: 0 8px 36px rgba(29,78,216,0.70) !important; transform: translateY(-2px) !important; filter: brightness(1.10) !important; }
+.filter-chip.active { background: linear-gradient(135deg, #1d4ed8, #7c3aed) !important; box-shadow: 0 4px 20px rgba(29,78,216,0.50) !important; border-color: transparent !important; }
 
-/* ── 14. Leaderboard rows — contrast + medal tints ── */
-.lb-row {
-  background: rgba(11, 18, 40, 0.82) !important;
-  border-color: rgba(255,255,255,0.09) !important;
-}
-.lb-row:hover {
-  background: rgba(14, 24, 54, 0.95) !important;
-  border-color: rgba(56,189,248,0.30) !important;
-  transform: translateX(4px) !important;
-  box-shadow: -3px 0 0 rgba(56,189,248,0.50), 0 4px 24px rgba(0,0,0,0.40) !important;
-}
-.lb-row:nth-child(1) { border-left: 3px solid rgba(255,215,0,0.80) !important; background: linear-gradient(90deg, rgba(255,215,0,0.10), rgba(11,18,40,0.82)) !important; }
-.lb-row:nth-child(2) { border-left: 3px solid rgba(192,192,192,0.75) !important; background: linear-gradient(90deg, rgba(192,192,192,0.08), rgba(11,18,40,0.82)) !important; }
-.lb-row:nth-child(3) { border-left: 3px solid rgba(205,127,50,0.75) !important; background: linear-gradient(90deg, rgba(205,127,50,0.08), rgba(11,18,40,0.82)) !important; }
-.lb-row.me {
-  background: linear-gradient(90deg, rgba(37,99,235,0.15), rgba(11,18,40,0.88)) !important;
-  border-left: 3px solid rgba(56,189,248,0.80) !important;
-  border-color: rgba(56,189,248,0.40) !important;
-  box-shadow: 0 0 30px rgba(56,189,248,0.15) !important;
-}
+/* 14. Progress + XP bars */
+.progress-fill { background: linear-gradient(90deg, #1d4ed8, #38bdf8, #22d3ee) !important; box-shadow: 0 0 12px rgba(34,211,238,0.65) !important; }
+.xp-fill { background: linear-gradient(90deg, #1d4ed8, #22d3ee) !important; box-shadow: 0 0 14px rgba(34,211,238,0.85) !important; }
 
-/* ── 15. Progress bars — vivid glow ── */
-.progress-fill {
-  background: linear-gradient(90deg, #1d4ed8, #38bdf8, #22d3ee) !important;
-  box-shadow: 0 0 12px rgba(34,211,238,0.65) !important;
-}
-.xp-fill {
-  background: linear-gradient(90deg, #1d4ed8, #22d3ee) !important;
-  box-shadow: 0 0 14px rgba(34,211,238,0.85) !important;
-}
+/* 15. Leaderboard */
+.lb-row { background: linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%) !important; border-color: rgba(255,255,255,0.09) !important; }
+.lb-row:hover { background: linear-gradient(145deg, rgba(56,189,248,0.10) 0%, rgba(255,255,255,0.03) 100%) !important; border-color: rgba(56,189,248,0.38) !important; transform: translateX(4px) !important; box-shadow: -3px 0 0 rgba(56,189,248,0.60), 0 4px 24px rgba(0,0,0,0.40) !important; }
+.lb-row:nth-child(1) { border-left: 3px solid rgba(255,215,0,0.85) !important; background: linear-gradient(90deg, rgba(255,215,0,0.08), rgba(255,255,255,0.04)) !important; }
+.lb-row:nth-child(2) { border-left: 3px solid rgba(192,192,192,0.80) !important; background: linear-gradient(90deg, rgba(192,192,192,0.07), rgba(255,255,255,0.03)) !important; }
+.lb-row:nth-child(3) { border-left: 3px solid rgba(205,127,50,0.80) !important; background: linear-gradient(90deg, rgba(205,127,50,0.07), rgba(255,255,255,0.03)) !important; }
+.lb-row.me { background: linear-gradient(90deg, rgba(29,78,216,0.14), rgba(255,255,255,0.04)) !important; border-left: 3px solid rgba(56,189,248,0.85) !important; border-color: rgba(56,189,248,0.40) !important; box-shadow: 0 0 28px rgba(56,189,248,0.15) !important; }
 
-/* ── 16. Filter chip — vivid active ── */
-.filter-chip {
-  background: rgba(11,18,40,0.80) !important;
-  border-color: rgba(255,255,255,0.10) !important;
-}
-.filter-chip:hover { border-color: rgba(56,189,248,0.45) !important; color: #38bdf8 !important; }
-.filter-chip.active {
-  background: linear-gradient(135deg, #1d4ed8, #7c3aed) !important;
-  border-color: transparent !important;
-  box-shadow: 0 4px 20px rgba(29,78,216,0.50) !important;
-}
+/* 16. Modal */
+.modal { background: rgba(5, 8, 20, 0.97) !important; border: 1px solid rgba(255,255,255,0.12) !important; box-shadow: 0 40px 100px rgba(0,0,0,0.75), 0 0 0 1px rgba(56,189,248,0.07) !important; }
+.modal::before { content: '' !important; position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; height: 2px !important; background: linear-gradient(90deg, transparent, rgba(56,189,248,0.75), rgba(167,139,250,0.60), transparent) !important; border-radius: inherit !important; }
 
-/* ── 17. Modals — deep, rich ── */
-.modal {
-  background: rgba(7, 11, 26, 0.97) !important;
-  border: 1px solid rgba(255,255,255,0.13) !important;
-  box-shadow: 0 40px 100px rgba(0,0,0,0.75), 0 0 0 1px rgba(56,189,248,0.08) !important;
-}
-.modal::before {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important; left: 0 !important; right: 0 !important;
-  height: 2px !important;
-  background: linear-gradient(90deg, transparent, rgba(56,189,248,0.70), rgba(139,92,246,0.60), transparent) !important;
-  border-radius: inherit !important;
-}
+/* 17. Toast */
+.toast { background: rgba(5,8,20,0.98) !important; border: 1px solid rgba(56,189,248,0.25) !important; box-shadow: 0 16px 48px rgba(0,0,0,0.65), 0 0 20px rgba(56,189,248,0.10) !important; border-radius: 14px !important; }
 
-/* ── 18. Toast ── */
-.toast {
-  background: rgba(7,11,26,0.98) !important;
-  border: 1px solid rgba(56,189,248,0.25) !important;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.65), 0 0 20px rgba(56,189,248,0.10) !important;
-  border-radius: 14px !important;
-}
+/* 18. Quiz */
+.quiz-option { background: linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%) !important; border-color: rgba(255,255,255,0.09) !important; }
+.quiz-option:hover { transform: translateX(6px) !important; border-color: rgba(56,189,248,0.50) !important; background: linear-gradient(145deg, rgba(56,189,248,0.10) 0%, rgba(255,255,255,0.03) 100%) !important; box-shadow: -3px 0 0 rgba(56,189,248,0.65), 0 4px 20px rgba(0,0,0,0.40) !important; }
+.quiz-option.selected { border-color: rgba(56,189,248,0.55) !important; background: linear-gradient(145deg, rgba(29,78,216,0.14) 0%, rgba(255,255,255,0.04) 100%) !important; }
 
-/* ── 19. Quiz options ── */
-.quiz-option {
-  background: rgba(11,18,40,0.80) !important;
-  border-color: rgba(255,255,255,0.09) !important;
-}
-.quiz-option:hover {
-  transform: translateX(6px) !important;
-  border-color: rgba(56,189,248,0.45) !important;
-  background: rgba(14,24,54,0.90) !important;
-  box-shadow: -3px 0 0 rgba(56,189,248,0.60), 0 4px 20px rgba(0,0,0,0.40) !important;
-}
-.quiz-option.selected {
-  border-color: rgba(56,189,248,0.55) !important;
-  background: rgba(37,99,235,0.12) !important;
-  box-shadow: 0 0 0 1px rgba(56,189,248,0.30) !important;
-}
+/* 19. Streak + premium */
+.streak-day.done  { box-shadow: 0 0 8px rgba(56,189,248,0.50) !important; }
+.streak-day.today { box-shadow: 0 0 20px rgba(34,211,238,0.90), 0 0 40px rgba(34,211,238,0.30) !important; }
+.premium-badge    { box-shadow: 0 2px 18px rgba(232,168,56,0.55) !important; }
 
-/* ── 20. Streak cells ── */
-.streak-day.done { box-shadow: 0 0 8px rgba(56,189,248,0.50) !important; }
-.streak-day.today { box-shadow: 0 0 20px rgba(34,211,238,0.85), 0 0 40px rgba(34,211,238,0.30) !important; }
+/* 20. Pills — more vivid */
+.pill-purple { background: rgba(124,58,237,0.22) !important; border-color: rgba(124,58,237,0.38) !important; color: #c4b5fd !important; }
+.pill-teal   { background: rgba(6,182,212,0.18) !important;  border-color: rgba(6,182,212,0.32) !important;  color: #22d3ee !important; }
+.pill-amber  { background: rgba(217,119,6,0.20) !important;  border-color: rgba(217,119,6,0.35) !important;  color: #fbbf24 !important; }
+.skill-chip  { background: rgba(79,70,229,0.20) !important;  border-color: rgba(79,70,229,0.35) !important;  color: #a5b4fc !important; }
 
-/* ── 21. Premium badge ── */
-.premium-badge { box-shadow: 0 2px 18px rgba(232,168,56,0.55) !important; }
-
-/* ── 22. Avatar glow ── */
-.avatar {
-  background: linear-gradient(135deg, #1d4ed8, #22d3ee) !important;
-  box-shadow: 0 2px 18px rgba(34,211,238,0.55), 0 0 0 2.5px rgba(34,211,238,0.25) !important;
-}
-
-/* ── 23. Scrollbar ── */
+/* 21. Scrollbar */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
 ::-webkit-scrollbar-thumb { background: rgba(56,189,248,0.45); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(56,189,248,0.70); }
 
-/* ── 24. Mobile bottom nav ── */
-.mobile-bottom-nav {
-  background: rgba(4, 6, 15, 0.98) !important;
-  border-top: 1px solid rgba(255,255,255,0.07) !important;
-}
-.mbn-item.mbn-active {
-  color: #38bdf8 !important;
-  background: rgba(56,189,248,0.14) !important;
-}
-.mbn-item.mbn-active::before {
-  background: linear-gradient(90deg, transparent, #22d3ee, transparent) !important;
-  box-shadow: 0 0 10px rgba(34,211,238,0.70) !important;
-}
+/* 22. Mobile bottom nav */
+.mobile-bottom-nav { background: rgba(3,5,13,0.98) !important; border-top: 1px solid rgba(255,255,255,0.07) !important; }
+.mbn-item.mbn-active { color: #38bdf8 !important; background: rgba(56,189,248,0.13) !important; }
+.mbn-item.mbn-active::before { background: linear-gradient(90deg, transparent, #22d3ee, transparent) !important; box-shadow: 0 0 10px rgba(34,211,238,0.70) !important; }
 
-/* ── 25. Code editor ── */
-.code-editor {
-  background: rgba(3, 5, 14, 0.90) !important;
-  border-color: rgba(56,189,248,0.15) !important;
-  box-shadow: inset 0 2px 16px rgba(0,0,0,0.50) !important;
-}
+/* 23. Code editor + search */
+.code-editor { background: rgba(3,5,14,0.90) !important; border-color: rgba(56,189,248,0.15) !important; box-shadow: inset 0 2px 16px rgba(0,0,0,0.50) !important; }
+.search-wrap input { background: rgba(255,255,255,0.06) !important; border-color: rgba(255,255,255,0.09) !important; }
 
-/* ── 26. Pricing card top border ── */
-.pricing-card::before {
-  background: linear-gradient(90deg, transparent, rgba(56,189,248,0.90), rgba(139,92,246,0.70), transparent) !important;
-  height: 2px !important;
-}
-
-/* ── 27. Search input ── */
-.search-wrap input {
-  background: rgba(11,18,40,0.80) !important;
-  border-color: rgba(255,255,255,0.10) !important;
-}
-.search-wrap input:focus {
-  background: rgba(14,24,54,0.90) !important;
-}
-
-/* ── 28. Sidebar user card ── */
-.sidebar-user {
-  background: rgba(8,13,30,0.90) !important;
-  border-color: rgba(255,255,255,0.09) !important;
-}
-
-/* ── 29. Pill badges on job/course cards ── */
-.pill-purple { background: rgba(124,58,237,0.22) !important; border-color: rgba(124,58,237,0.35) !important; color: #c4b5fd !important; }
-.pill-teal   { background: rgba(6,182,212,0.18) !important;  border-color: rgba(6,182,212,0.30) !important;  color: #22d3ee !important; }
-.pill-amber  { background: rgba(217,119,6,0.20) !important;  border-color: rgba(217,119,6,0.32) !important;  color: #fbbf24 !important; }
-.skill-chip  { background: rgba(79,70,229,0.20) !important; border-color: rgba(79,70,229,0.32) !important; color: #a5b4fc !important; }
-
-/* ── 30. Section card (Dashboard journey etc) ── */
-.card-title { font-size: 16px !important; font-weight: 800 !important; letter-spacing: -0.2px !important; }
+/* 24. Course card body */
+.course-body { padding: 1.1rem 1.2rem 1.3rem !important; }
+.course-name { font-size: 15px !important; font-weight: 800 !important; }
 

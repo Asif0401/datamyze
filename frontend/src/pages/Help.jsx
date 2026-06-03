@@ -18,7 +18,7 @@ const CATEGORIES = [
 ];
 
 const FAQS = [
-  { q: 'How do I upgrade to Pro?',                 a: 'Go to Pro Hub in the sidebar and click "Get Pro Now". Pay via UPI or card — activation is instant after payment.' },
+  { q: 'How do I upgrade to Pro?',                 a: 'Go to Pro Hub in the sidebar and click "Get Pro Now". Pay via UPI or card. Activation is instant after payment.' },
   { q: 'I paid but my account isn\'t activated.',  a: 'Usually resolves within minutes. If not, use the support form with "Payment Issue" as the category and share your transaction ID.' },
   { q: 'How do I get my certificate?',             a: 'Complete all lessons in a course. Certificates are issued automatically to Pro members and available in the Certificates page.' },
   { q: 'Can I book a 1:1 mentoring session?',      a: 'Yes! Go to Pro Hub → Sessions. Live sessions are available exclusively for Pro members.' },
@@ -76,7 +76,7 @@ export default function Help() {
             Help & Support
           </h1>
           <p style={{ margin: 0, fontSize: 14, color: 'rgba(255,255,255,0.55)', maxWidth: 520, lineHeight: 1.7 }}>
-            Have a question or facing an issue? We're here to help — usually within <strong style={{ color: '#4A90D9' }}>24 hours</strong>. You're talking directly to the instructor, not a bot.
+            Have a question or facing an issue? We're here to help, usually within <strong style={{ color: '#4A90D9' }}>24 hours</strong>. You're talking directly to the instructor, not a bot.
           </p>
 
           {/* Stats row */}

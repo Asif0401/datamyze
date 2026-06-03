@@ -476,7 +476,7 @@ export default function Settings() {
             {/* Colour picker (only shown when no photo) */}
             {!avatarSrc && (
               <div style={FIELD}>
-                <label style={LABEL}>Avatar Colour <span style={{ textTransform: 'none', letterSpacing: 0, fontWeight: 400, color: 'rgba(255,255,255,0.3)' }}>— used when no photo is set</span></label>
+                <label style={LABEL}>Avatar Colour <span style={{ textTransform: 'none', letterSpacing: 0, fontWeight: 400, color: 'rgba(255,255,255,0.3)' }}>(used when no photo is set)</span></label>
                 <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
                   {AVATAR_COLORS.map(c => (
                     <button key={c.value} title={c.label} onClick={() => setAvatarColor(c.value)} style={{
@@ -536,7 +536,7 @@ export default function Settings() {
 
             <div style={FIELD}>
               <label style={LABEL}>Education</label>
-              <input style={INPUT} value={education} onChange={e => setEducation(e.target.value)} placeholder="e.g. B.Tech Computer Science, IIT Delhi — 2022" />
+              <input style={INPUT} value={education} onChange={e => setEducation(e.target.value)} placeholder="e.g. B.Tech Computer Science, IIT Delhi, 2022" />
             </div>
 
             <div style={GRID2}>
@@ -555,7 +555,7 @@ export default function Settings() {
               <label style={LABEL}>
                 Skills
                 <span style={{ textTransform: 'none', letterSpacing: 0, fontWeight: 400, marginLeft: 6, color: 'rgba(255,255,255,0.3)' }}>
-                  — Enter or comma to add ({skills.length}/25)
+                  · Enter or comma to add ({skills.length}/25)
                 </span>
               </label>
               <div
@@ -599,7 +599,7 @@ export default function Settings() {
           <div style={{ maxWidth: 500 }}>
             <h3 style={{ margin: '0 0 .5rem', fontSize: 16, fontWeight: 700 }}>Change Password</h3>
             <p style={{ margin: '0 0 1.75rem', fontSize: 13, color: 'var(--muted)', lineHeight: 1.6 }}>
-              Use a strong password with at least 8 characters — mix uppercase, numbers and symbols.
+              Use a strong password with at least 8 characters. Mix uppercase, numbers and symbols.
             </p>
 
             <div style={FIELD}>

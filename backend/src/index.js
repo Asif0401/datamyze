@@ -14,6 +14,8 @@ const PORT = process.env.PORT || 5000;
 const ALLOWED_ORIGINS = [
   'http://localhost:5173',
   'http://localhost:3000',
+  'http://localhost',                 // Capacitor Android WebView
+  'capacitor://localhost',            // Capacitor iOS WebView
   process.env.FRONTEND_URL,          // e.g. https://datamyze.vercel.app
   process.env.FRONTEND_URL_CUSTOM,   // e.g. https://datamyze.in
 ].filter(Boolean);
