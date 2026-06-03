@@ -1176,39 +1176,48 @@ select option { background: #1a2035; color: var(--text); }
 }
 
 /* Mobile auth */
-.auth-mobile-hero { display: none; }
+.auth-mobile-hero   { display: none; }
+.auth-mobile-topnav { display: none; }
 
 @media (max-width: 900px) {
-  .auth-hero { display: none !important; }
+  .auth-hero  { display: none !important; }
+  .auth-right { display: none !important; } /* form is in the bottom sheet on mobile */
+
   .auth-wrap {
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     height: auto; min-height: 100dvh;
     overflow-y: auto; overflow-x: hidden;
-    padding: 1.6rem 1rem 2.5rem;
+    padding: calc(56px + 1rem) 1rem 2.5rem; /* top pad accounts for fixed nav */
   }
-  .auth-right {
-    width: 100%; max-width: 440px;
-    border-left: none;
-    background: none;
-    padding: 0;
-    align-items: stretch;
-    justify-content: flex-start;
+
+  /* Fixed top nav */
+  .auth-mobile-topnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 0.7rem 1rem;
+    background: rgba(4,6,14,0.92);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
   }
-  .auth-card { max-width: 100%; }
+
   .auth-mobile-hero {
     display: block;
     width: 100%; max-width: 440px;
-    margin-bottom: 1.6rem;
+    margin-bottom: 1rem;
     animation: fadeInUp 0.5s ease both;
   }
+
   /* Mobile marquee slightly slower */
   .auth-marquee-track { animation-duration: 26s; }
 }
 @media (max-width: 480px) {
-  .auth-wrap { padding: 1.1rem 0.85rem 2rem; }
-  .auth-card { border-radius: 16px; padding: 1.4rem 1.1rem; }
+  .auth-wrap { padding-left: 0.85rem; padding-right: 0.85rem; }
   .auth-mobile-hero { max-width: 100%; }
 }
 

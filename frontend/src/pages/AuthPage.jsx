@@ -260,9 +260,13 @@ const CMP_COLOR = { Flipkart:'#2874F0',Amazon:'#FF9900',Swiggy:'#FC8019',Zomato:
 export default function AuthPage({ mode: initialMode }) {
   const [panel, setPanel]   = useState(initialMode || 'login');
   const [loginType, setLoginType] = useState('email');
+  const [mobileAuthOpen, setMobileAuthOpen] = useState(false);
   const { login } = useAuth();
   const navigate  = useNavigate();
   const heroRef   = useRef(null);
+
+  function openSheet(p) { setPanel(p); setMobileAuthOpen(true); }
+  function closeSheet() { setMobileAuthOpen(false); }
 
   /* Scroll-reveal: add .in class when elements enter the scroll container */
   useEffect(() => {
@@ -322,6 +326,40 @@ export default function AuthPage({ mode: initialMode }) {
     <div className="auth-wrap">
       <Blobs />
       <Particles />
+
+      {/* ═══ MOBILE TOP NAV (mobile only) ═══ */}
+      <div className="auth-mobile-topnav">
+        {/* Logo */}
+        <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+          <div style={{ width:32, height:32, borderRadius:9, background:'linear-gradient(145deg,#1e40af,#0891b2)', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 0 12px rgba(34,211,238,0.30)', flexShrink:0 }}>
+            <svg viewBox="0 0 22 22" fill="none" width="16" height="16">
+              <defs>
+                <linearGradient id="tn1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="white" stopOpacity="0.7"/><stop offset="100%" stopColor="white" stopOpacity="0.1"/></linearGradient>
+                <linearGradient id="tn4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#22d3ee"/><stop offset="100%" stopColor="#22d3ee" stopOpacity="0.18"/></linearGradient>
+              </defs>
+              <rect x="1.5" y="17" width="3.5" height="4.5" rx="1.3" fill="url(#tn1)"/>
+              <rect x="6.5" y="13" width="3.5" height="8.5"  rx="1.3" fill="url(#tn1)"/>
+              <rect x="11.5" y="9"  width="3.5" height="12.5" rx="1.3" fill="url(#tn1)"/>
+              <rect x="16.5" y="5"  width="3.5" height="16.5" rx="1.3" fill="url(#tn4)"/>
+              <line x1="3.25" y1="16.5" x2="18.25" y2="4.5" stroke="#22d3ee" strokeWidth="1.8" strokeLinecap="round" opacity="0.9"/>
+            </svg>
+          </div>
+          <span style={{ fontSize:17, fontWeight:800, letterSpacing:'-0.3px' }}>
+            <span style={{ color:'rgba(255,255,255,0.60)', fontWeight:500 }}>Data</span>
+            <span style={{ background:'linear-gradient(135deg,#fff,#22d3ee 60%,#a78bfa)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', fontWeight:900 }}>myze</span>
+          </span>
+        </div>
+
+        {/* Buttons */}
+        <div style={{ display:'flex', gap:8 }}>
+          <button onClick={() => openSheet('login')} style={{ padding:'7px 16px', borderRadius:10, background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.12)', color:'rgba(255,255,255,0.80)', fontWeight:700, fontSize:13, cursor:'pointer' }}>
+            Sign In
+          </button>
+          <button onClick={() => openSheet('signup')} style={{ padding:'7px 16px', borderRadius:10, background:'linear-gradient(135deg,#4A90D9,#7c3aed)', border:'none', color:'#fff', fontWeight:700, fontSize:13, cursor:'pointer', boxShadow:'0 4px 14px rgba(74,144,217,0.35)' }}>
+            Get Started →
+          </button>
+        </div>
+      </div>
 
       {/* ═══ LEFT HERO — scrollable ═══ */}
       <div className="auth-hero" ref={heroRef}>
@@ -669,7 +707,7 @@ export default function AuthPage({ mode: initialMode }) {
         </div>
 
         {/* Social links */}
-        <div style={{ display:'flex', alignItems:'center', gap:10, paddingTop:'0.8rem', borderTop:'1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:10, paddingTop:'0.8rem', borderTop:'1px solid rgba(255,255,255,0.06)', marginBottom:'1.4rem' }}>
           <span style={{ fontSize:11, color:'rgba(255,255,255,0.25)', fontWeight:500, flex:1 }}>Follow us</span>
           <a href="https://www.instagram.com/datamyze.in/" target="_blank" rel="noreferrer" style={{ display:'flex', alignItems:'center', justifyContent:'center', width:32, height:32, borderRadius:9, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.09)', color:'rgba(255,255,255,0.40)', textDecoration:'none' }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
@@ -679,19 +717,23 @@ export default function AuthPage({ mode: initialMode }) {
           </a>
         </div>
 
+        {/* Bottom CTA */}
+        <button onClick={() => openSheet('signup')} style={{ width:'100%', padding:'0.9rem', borderRadius:14, background:'linear-gradient(135deg,#4A90D9,#7c3aed)', border:'none', color:'#fff', fontWeight:800, fontSize:15, cursor:'pointer', boxShadow:'0 4px 20px rgba(74,144,217,0.35)', marginBottom:'0.5rem' }}>
+          🚀 Get Started Free
+        </button>
+        <button onClick={() => openSheet('login')} style={{ width:'100%', padding:'0.75rem', borderRadius:14, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.10)', color:'rgba(255,255,255,0.65)', fontWeight:600, fontSize:14, cursor:'pointer' }}>
+          Already have an account? Sign in
+        </button>
+
       </div>
 
-      {/* ═══ RIGHT CARD ═══ */}
+      {/* ═══ RIGHT CARD (desktop only) ═══ */}
       <div className="auth-right">
         <div className="auth-card">
-
-          {/* Underline tabs */}
           <div className="auth-underline-tabs">
             <button className={`auth-underline-tab${panel === 'login'  ? ' active' : ''}`} onClick={() => setPanel('login')}>Sign in</button>
             <button className={`auth-underline-tab${panel === 'signup' ? ' active' : ''}`} onClick={() => setPanel('signup')}>Create account</button>
           </div>
-
-          {/* Heading */}
           <div style={{ marginBottom: '1.4rem' }}>
             <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.4px', marginBottom: 4 }}>
               {panel === 'login' ? 'Welcome back 👋' : 'Start your journey 🚀'}
@@ -700,15 +742,57 @@ export default function AuthPage({ mode: initialMode }) {
               {panel === 'login' ? 'Sign in to continue your journey' : 'Free to join. No credit card needed.'}
             </div>
           </div>
-
           {panel === 'login'  && <LoginForm loginType={loginType} setLoginType={setLoginType} onSuccess={(tok, usr) => { login(tok, usr); navigate('/'); }} switchToSignup={() => setPanel('signup')} />}
           {panel === 'signup' && <SignupForm onSuccess={(tok, usr) => { login(tok, usr); navigate('/'); }} switchToLogin={() => setPanel('login')} />}
-
           <div style={{ marginTop: '1rem', fontSize: 11, color: 'rgba(255,255,255,0.20)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
             <span>🔒</span><span>Your data is secure &amp; never shared</span>
           </div>
         </div>
       </div>
+
+      {/* ═══ MOBILE AUTH BOTTOM SHEET ═══ */}
+      {mobileAuthOpen && (
+        <>
+          {/* Backdrop */}
+          <div onClick={closeSheet} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.60)', backdropFilter:'blur(6px)', zIndex:400 }} />
+
+          {/* Sheet */}
+          <div style={{ position:'fixed', bottom:0, left:0, right:0, maxHeight:'92dvh', overflowY:'auto', background:'linear-gradient(180deg,#0d1428 0%,#080e1c 100%)', borderRadius:'22px 22px 0 0', border:'1px solid rgba(255,255,255,0.10)', borderBottom:'none', zIndex:401, animation:'moreSheetUp 0.3s cubic-bezier(.32,1.2,.64,1)', paddingBottom:'env(safe-area-inset-bottom)' }}>
+
+            {/* Drag handle */}
+            <div style={{ width:36, height:4, background:'rgba(255,255,255,0.18)', borderRadius:99, margin:'0.75rem auto 0' }} />
+
+            {/* Close button */}
+            <button onClick={closeSheet} style={{ position:'absolute', top:14, right:16, width:30, height:30, borderRadius:'50%', background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.10)', color:'rgba(255,255,255,0.50)', fontSize:15, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>✕</button>
+
+            {/* Form */}
+            <div style={{ padding:'0.8rem 1.2rem 1.5rem' }}>
+              {/* Tabs */}
+              <div className="auth-underline-tabs">
+                <button className={`auth-underline-tab${panel === 'login'  ? ' active' : ''}`} onClick={() => setPanel('login')}>Sign in</button>
+                <button className={`auth-underline-tab${panel === 'signup' ? ' active' : ''}`} onClick={() => setPanel('signup')}>Create account</button>
+              </div>
+
+              {/* Heading */}
+              <div style={{ marginBottom:'1.2rem' }}>
+                <div style={{ fontSize:20, fontWeight:800, color:'#fff', letterSpacing:'-0.4px', marginBottom:4 }}>
+                  {panel === 'login' ? 'Welcome back 👋' : 'Start your journey 🚀'}
+                </div>
+                <div style={{ fontSize:13, color:'rgba(255,255,255,0.38)' }}>
+                  {panel === 'login' ? 'Sign in to continue your journey' : 'Free to join. No credit card needed.'}
+                </div>
+              </div>
+
+              {panel === 'login'  && <LoginForm loginType={loginType} setLoginType={setLoginType} onSuccess={(tok, usr) => { login(tok, usr); navigate('/'); }} switchToSignup={() => { setPanel('signup'); }} />}
+              {panel === 'signup' && <SignupForm onSuccess={(tok, usr) => { login(tok, usr); navigate('/'); }} switchToLogin={() => { setPanel('login'); }} />}
+
+              <div style={{ marginTop:'1rem', fontSize:11, color:'rgba(255,255,255,0.20)', display:'flex', alignItems:'center', justifyContent:'center', gap:5 }}>
+                <span>🔒</span><span>Your data is secure &amp; never shared</span>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
