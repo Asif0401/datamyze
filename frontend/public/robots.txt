@@ -1,0 +1,13 @@
+# Datamyze — robots.txt
+# https://datamyze.in
+
+User-agent: *
+Allow: /
+
+# Block private/admin routes from indexing
+Disallow: /admin
+Disallow: /settings
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://datamyze.in/sitemap.xml

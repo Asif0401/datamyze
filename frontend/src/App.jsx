@@ -1,62 +1,74 @@
+import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
-import AuthPage from './pages/AuthPage';
-import Instagram from './pages/Instagram';
+
+/* Always load synchronously — needed before any auth check */
 import Layout from './components/Layout';
-import Dashboard from './pages/Dashboard';
-import Courses from './pages/Courses';
-import Problems from './pages/Problems';
-import Quiz from './pages/Quiz';
-import Leaderboard from './pages/Leaderboard';
-import Certificates from './pages/Certificates';
-import Admin from './pages/Admin';
-import Premium from './pages/Premium';
-import Jobs from './pages/Jobs';
-import Settings from './pages/Settings';
-import Instructor from './pages/Instructor';
-import ProfileCompletion from './pages/ProfileCompletion';
-import CaseStudies from './pages/CaseStudies';
-import Help from './pages/Help';
-import InterviewExperiences from './pages/InterviewExperiences';
+
+/* Lazy-load all pages — each becomes its own JS chunk */
+const AuthPage            = lazy(() => import('./pages/AuthPage'));
+const Instagram           = lazy(() => import('./pages/Instagram'));
+const Dashboard           = lazy(() => import('./pages/Dashboard'));
+const Courses             = lazy(() => import('./pages/Courses'));
+const Problems            = lazy(() => import('./pages/Problems'));
+const Quiz                = lazy(() => import('./pages/Quiz'));
+const Leaderboard         = lazy(() => import('./pages/Leaderboard'));
+const Certificates        = lazy(() => import('./pages/Certificates'));
+const Admin               = lazy(() => import('./pages/Admin'));
+const Premium             = lazy(() => import('./pages/Premium'));
+const Jobs                = lazy(() => import('./pages/Jobs'));
+const Settings            = lazy(() => import('./pages/Settings'));
+const Instructor          = lazy(() => import('./pages/Instructor'));
+const ProfileCompletion   = lazy(() => import('./pages/ProfileCompletion'));
+const CaseStudies         = lazy(() => import('./pages/CaseStudies'));
+const Help                = lazy(() => import('./pages/Help'));
+const InterviewExperiences = lazy(() => import('./pages/InterviewExperiences'));
+
+/* Fallback shown while a chunk loads */
+const PageLoader = () => (
+  <div className="loading"><div className="spinner" />Loading...</div>
+);
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <div className="loading"><div className="spinner" />Loading...</div>;
+  if (loading) return <PageLoader />;
   return user ? children : <Navigate to="/login" replace />;
 }
 
 export default function App() {
   const { user, loading } = useAuth();
-  if (loading) return <div className="loading"><div className="spinner" />Loading...</div>;
+  if (loading) return <PageLoader />;
 
   return (
-    <>
+    <Suspense fallback={<PageLoader />}>
       {/* Profile completion overlay — shown once after first signup */}
       {user && user.profile_completed === 0 && <ProfileCompletion />}
 
       <Routes>
-        {/* Public pages — no auth required */}
+        {/* Public pages */}
         <Route path="/instagram" element={<Instagram />} />
         <Route path="/login"  element={user ? <Navigate to="/" /> : <AuthPage mode="login" />} />
         <Route path="/signup" element={user ? <Navigate to="/" /> : <AuthPage mode="signup" />} />
+
         <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
-          <Route index          element={<Dashboard />} />
-          <Route path="courses"     element={<Courses />} />
-          <Route path="problems"    element={<Problems />} />
-          <Route path="quiz"        element={<Quiz />} />
-          <Route path="leaderboard" element={<Leaderboard />} />
-          <Route path="certificates"element={<Certificates />} />
-          <Route path="admin"       element={<Admin />} />
-          <Route path="premium"     element={<Premium />} />
-          <Route path="jobs"        element={<Jobs />} />
-          <Route path="settings"    element={<Settings />} />
-          <Route path="instructor"  element={<Instructor />} />
-          <Route path="case-studies"            element={<CaseStudies />} />
-          <Route path="help"                    element={<Help />} />
-          <Route path="interview-experiences"   element={<InterviewExperiences />} />
+          <Route index                              element={<Dashboard />} />
+          <Route path="courses"                    element={<Courses />} />
+          <Route path="problems"                   element={<Problems />} />
+          <Route path="quiz"                       element={<Quiz />} />
+          <Route path="leaderboard"                element={<Leaderboard />} />
+          <Route path="certificates"               element={<Certificates />} />
+          <Route path="admin"                      element={<Admin />} />
+          <Route path="premium"                    element={<Premium />} />
+          <Route path="jobs"                       element={<Jobs />} />
+          <Route path="settings"                   element={<Settings />} />
+          <Route path="instructor"                 element={<Instructor />} />
+          <Route path="case-studies"               element={<CaseStudies />} />
+          <Route path="help"                       element={<Help />} />
+          <Route path="interview-experiences"      element={<InterviewExperiences />} />
         </Route>
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-    </>
+    </Suspense>
   );
 }
