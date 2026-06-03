@@ -246,22 +246,28 @@ const Icons = {
   ),
 };
 
-const NAV = [
-  { to: '/',            Icon: Icons.Dashboard,    label: 'Dashboard',   end: true },
-  { to: '/courses',     Icon: Icons.Courses,      label: 'Courses' },
-  { to: '/problems',    Icon: Icons.Problems,     label: 'Problems' },
-  { to: '/quiz',        Icon: Icons.Quiz,         label: 'Quiz' },
-  { to: '/leaderboard', Icon: Icons.Leaderboard,  label: 'Leaderboard' },
-  { to: '/certificates',  Icon: Icons.Certificates,  label: 'Certificates' },
-  { to: '/case-studies',  Icon: Icons.CaseStudies,   label: 'Case Studies' },
-  { to: '/help',          Icon: Icons.Help,           label: 'Help & Support' },
+const LEARN_NAV = [
+  { to: '/',             Icon: Icons.Dashboard,  label: 'Dashboard',   end: true },
+  { to: '/courses',      Icon: Icons.Courses,    label: 'Courses' },
+  { to: '/problems',     Icon: Icons.Problems,   label: 'Problems' },
+  { to: '/quiz',         Icon: Icons.Quiz,       label: 'Quiz' },
+  { to: '/case-studies', Icon: Icons.CaseStudies,label: 'Case Studies' },
 ];
 
-const PREMIUM_NAV = [
-  { to: '/premium',             Icon: Icons.Premium,   label: 'Pro Hub',              className: 'nav-premium-item' },
-  { to: '/jobs',                Icon: Icons.Jobs,      label: 'Job Board',            className: 'nav-premium-item' },
-  { to: '/company-questions',   Icon: Icons.CompanyQ,  label: 'Company Q Banks',      className: 'nav-premium-item' },
-  { to: '/instructor', Icon: Icons.Instructor, label: 'About Us',           className: 'nav-instructor-item' },
+const PROGRESS_NAV = [
+  { to: '/leaderboard',  Icon: Icons.Leaderboard,  label: 'Leaderboard' },
+  { to: '/certificates', Icon: Icons.Certificates, label: 'Certificates' },
+];
+
+const PRO_NAV = [
+  { to: '/premium',           Icon: Icons.Premium,  label: 'Pro Hub',         className: 'nav-premium-item' },
+  { to: '/jobs',              Icon: Icons.Jobs,     label: 'Job Board',       className: 'nav-premium-item' },
+  { to: '/company-questions', Icon: Icons.CompanyQ, label: 'Company Q Banks', className: 'nav-premium-item' },
+];
+
+const MORE_NAV = [
+  { to: '/instructor', Icon: Icons.Instructor, label: 'About Us' },
+  { to: '/help',       Icon: Icons.Help,       label: 'Help & Support' },
 ];
 
 export default function Layout() {
@@ -420,8 +426,9 @@ export default function Layout() {
         }} />
 
         <nav className="sidebar-nav">
+          {/* ── Learn ── */}
           <div className="nav-section">Learn</div>
-          {NAV.map(({ to, Icon, label, end }) => (
+          {LEARN_NAV.map(({ to, Icon, label, end }) => (
             <NavLink key={to} to={to} end={end}
               className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
               <span className="nav-icon"><Icon /></span>
@@ -429,8 +436,21 @@ export default function Layout() {
             </NavLink>
           ))}
 
-          <div className="nav-section" style={{ marginTop: '1.2rem' }}>Career</div>
-          {PREMIUM_NAV.map(({ to, Icon, label, className }) => (
+          {/* ── Progress ── */}
+          <div className="nav-section" style={{ marginTop: '1.2rem' }}>Progress</div>
+          {PROGRESS_NAV.map(({ to, Icon, label }) => (
+            <NavLink key={to} to={to}
+              className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
+              <span className="nav-icon"><Icon /></span>
+              {label}
+            </NavLink>
+          ))}
+
+          {/* ── Pro ── */}
+          <div className="nav-section" style={{ marginTop: '1.2rem' }}>
+            <span style={{ background: 'linear-gradient(135deg,#E8A838,#f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>👑 Pro</span>
+          </div>
+          {PRO_NAV.map(({ to, Icon, label, className }) => (
             <NavLink key={to} to={to}
               className={({ isActive }) => `nav-item ${className || ''}${isActive ? ' active' : ''}`}>
               <span className="nav-icon"><Icon /></span>
@@ -438,6 +458,17 @@ export default function Layout() {
             </NavLink>
           ))}
 
+          {/* ── More ── */}
+          <div className="nav-section" style={{ marginTop: '1.2rem' }}>More</div>
+          {MORE_NAV.map(({ to, Icon, label }) => (
+            <NavLink key={to} to={to}
+              className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
+              <span className="nav-icon"><Icon /></span>
+              {label}
+            </NavLink>
+          ))}
+
+          {/* ── Admin ── */}
           {isAdmin && (
             <>
               <div className="nav-section" style={{ marginTop: '1.2rem' }}>Admin</div>
