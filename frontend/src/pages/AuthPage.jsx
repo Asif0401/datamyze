@@ -354,6 +354,15 @@ export default function AuthPage({ mode: initialMode }) {
             </span>
           </div>
 
+          {/* Active users badge */}
+          <div style={{ display:'inline-flex', alignItems:'center', gap:8, marginBottom:'1.4rem', animation:'fadeInUp 0.4s 0.05s ease both', width:'fit-content' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:8, padding:'6px 14px', borderRadius:20, background:'rgba(56,189,248,0.08)', border:'1px solid rgba(56,189,248,0.22)', fontSize:12.5, fontWeight:700, color:'rgba(255,255,255,0.75)' }}>
+              <span className="auth-live-dot" style={{ background:'#38bdf8', boxShadow:'0 0 0 0 rgba(56,189,248,0.7)', animation:'livePulse 1.8s ease-in-out infinite' }} />
+              <span style={{ color:'#38bdf8', fontWeight:900 }}>2,000+</span>
+              <span>data aspirants actively learning on Datamyze</span>
+            </div>
+          </div>
+
           {/* Headline */}
           <div style={{ marginBottom:'1.2rem' }}>
             <div style={{ fontSize:'clamp(36px,3.8vw,58px)', fontWeight:900, letterSpacing:'-2px', lineHeight:1.05, color:'rgba(255,255,255,0.88)', animation:'fadeInUp 0.5s 0.08s ease both', marginBottom:6 }}>
