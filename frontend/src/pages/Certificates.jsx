@@ -154,7 +154,7 @@ export default function Certificates() {
               👑 Upgrade to Pro · ₹199
             </button>
             <button onClick={() => navigate('/courses')}
-              style={{ background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.65)', borderRadius: 12, fontSize: 13, padding: '11px 18px', cursor: 'pointer' }}>
+              style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.65)', borderRadius: 12, fontSize: 13, padding: '11px 18px', cursor: 'pointer' }}>
               Browse Courses
             </button>
           </div>

@@ -1788,7 +1788,7 @@ function InterviewTab() {
               const lvlColor = q.level === 'Easy' ? '#5CC8A0' : q.level === 'Medium' ? '#E8A838' : '#F07B6A';
               const lvlBg    = q.level === 'Easy' ? 'rgba(92,200,160,0.12)' : q.level === 'Medium' ? 'rgba(232,168,56,0.12)' : 'rgba(240,123,106,0.12)';
               return (
-                <div key={i} style={{ background: 'rgba(255,255,255,0.09)', backdropFilter: 'blur(14px)', border: `1px solid ${isOpen ? 'rgba(74,144,217,0.30)' : 'rgba(255,255,255,0.09)'}`, borderRadius: 14, overflow: 'hidden', transition: 'border-color 0.2s' }}>
+                <div key={i} style={{ background: 'rgba(20,27,56,0.88)', backdropFilter: 'blur(14px)', border: `1px solid ${isOpen ? 'rgba(74,144,217,0.30)' : 'rgba(255,255,255,0.09)'}`, borderRadius: 14, overflow: 'hidden', transition: 'border-color 0.2s' }}>
                   <div onClick={() => setOpen(isOpen ? null : i)} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px', cursor: 'pointer', userSelect: 'none' }}>
                     <div style={{ width: 28, height: 28, borderRadius: 8, background: lvlBg, border: `1px solid ${lvlColor}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: lvlColor, flexShrink: 0 }}>
                       {i + 1}
@@ -1998,7 +1998,7 @@ function InterviewTab() {
                 const typeData = INTERVIEW_TYPES.find(t => t.id === iv.interview_type) || INTERVIEW_TYPES[0];
                 const diffColor = iv.difficulty === 'Easy' ? '#5CC8A0' : iv.difficulty === 'Medium' ? '#E8A838' : '#F07B6A';
                 return (
-                  <div key={iv.id} style={{ background: 'rgba(255,255,255,0.09)', backdropFilter: 'blur(18px)', border: `1px solid ${statusColor(iv.status)}22`, borderRadius: 16, padding: '1.1rem 1.3rem', position: 'relative', overflow: 'hidden' }}>
+                  <div key={iv.id} style={{ background: 'rgba(20,27,56,0.88)', backdropFilter: 'blur(18px)', border: `1px solid ${statusColor(iv.status)}22`, borderRadius: 16, padding: '1.1rem 1.3rem', position: 'relative', overflow: 'hidden' }}>
                     <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 3, background: typeData.color, borderRadius: '0 3px 3px 0' }} />
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, flexWrap: 'wrap' }}>
                       <div style={{ width: 44, height: 44, borderRadius: 12, background: typeData.color + '18', border: `1px solid ${typeData.color}35`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>{typeData.icon}</div>
@@ -2211,7 +2211,7 @@ function ProjectsTab() {
         {filtered.map((proj, i) => (
           <div key={proj.id}
             onClick={() => setSelected(selected?.id === proj.id ? null : proj)}
-            style={{ borderRadius: 18, overflow: 'hidden', background: 'rgba(255,255,255,0.09)', border: `1px solid ${selected?.id === proj.id ? proj.color + '55' : 'rgba(255,255,255,0.08)'}`, cursor: 'pointer', transition: 'all 0.25s cubic-bezier(.22,1,.36,1)', animation: `proCardEnter 0.5s ${i * 0.07}s cubic-bezier(.22,1,.36,1) both`, boxShadow: selected?.id === proj.id ? `0 16px 44px ${proj.color}1e` : 'none' }}
+            style={{ borderRadius: 18, overflow: 'hidden', background: 'rgba(20,27,56,0.88)', border: `1px solid ${selected?.id === proj.id ? proj.color + '55' : 'rgba(255,255,255,0.08)'}`, cursor: 'pointer', transition: 'all 0.25s cubic-bezier(.22,1,.36,1)', animation: `proCardEnter 0.5s ${i * 0.07}s cubic-bezier(.22,1,.36,1) both`, boxShadow: selected?.id === proj.id ? `0 16px 44px ${proj.color}1e` : 'none' }}
             onMouseEnter={e => { if (selected?.id !== proj.id) { e.currentTarget.style.borderColor = proj.color + '44'; e.currentTarget.style.transform = 'translateY(-3px)'; } }}
             onMouseLeave={e => { if (selected?.id !== proj.id) { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'none'; } }}>
             {/* Banner */}
@@ -2226,7 +2226,7 @@ function ProjectsTab() {
               {/* Difficulty + duration pills */}
               <div style={{ marginLeft: 'auto', display: 'flex', flexDirection: 'column', gap: 5, alignItems: 'flex-end', position: 'relative' }}>
                 <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 9px', borderRadius: 20, background: diffColor(proj.difficulty) + '20', border: `1px solid ${diffColor(proj.difficulty)}44`, color: diffColor(proj.difficulty) }}>{proj.difficulty}</span>
-                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.38)', padding: '2px 8px', borderRadius: 20, background: 'rgba(255,255,255,0.09)' }}>⏱ {proj.duration}</span>
+                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.38)', padding: '2px 8px', borderRadius: 20, background: 'rgba(20,27,56,0.88)' }}>⏱ {proj.duration}</span>
               </div>
             </div>
 
@@ -2248,7 +2248,7 @@ function ProjectsTab() {
 
       {/* Expanded project detail panel */}
       {selected && (
-        <div style={{ background: 'rgba(255,255,255,0.09)', border: `1px solid ${selected.color}40`, borderRadius: 20, padding: '1.8rem 2rem', marginTop: '0.5rem', animation: 'hubFadeUp 0.3s ease both' }}>
+        <div style={{ background: 'rgba(20,27,56,0.88)', border: `1px solid ${selected.color}40`, borderRadius: 20, padding: '1.8rem 2rem', marginTop: '0.5rem', animation: 'hubFadeUp 0.3s ease both' }}>
           <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${selected.color}, transparent)`, borderRadius: 2 }} />
           </div>
@@ -2270,12 +2270,12 @@ function ProjectsTab() {
             {/* Right: Dataset + Skills + Deliverables */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
               {/* Dataset */}
-              <div style={{ background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '0.9rem 1rem' }}>
+              <div style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '0.9rem 1rem' }}>
                 <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.30)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 8 }}>📦 Dataset</div>
                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.60)', lineHeight: 1.5 }}>{selected.dataset}</div>
               </div>
               {/* Skills */}
-              <div style={{ background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '0.9rem 1rem' }}>
+              <div style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '0.9rem 1rem' }}>
                 <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.30)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 8 }}>🧠 Skills You'll Gain</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
                   {selected.skills.map(s => (
@@ -2284,7 +2284,7 @@ function ProjectsTab() {
                 </div>
               </div>
               {/* Deliverables */}
-              <div style={{ background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '0.9rem 1rem' }}>
+              <div style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '0.9rem 1rem' }}>
                 <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.30)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 8 }}>✅ Deliverables</div>
                 {selected.deliverables.map((d, i) => (
                   <div key={i} style={{ display: 'flex', gap: 7, fontSize: 12, color: 'rgba(255,255,255,0.60)', marginBottom: 5, lineHeight: 1.4 }}>
@@ -2304,7 +2304,7 @@ function ProjectsTab() {
               📦 Get Dataset
             </a>
             <button onClick={() => setSelected(null)}
-              style={{ fontSize: 13, fontWeight: 600, padding: '9px 20px', borderRadius: 12, background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.55)', cursor: 'pointer' }}>
+              style={{ fontSize: 13, fontWeight: 600, padding: '9px 20px', borderRadius: 12, background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.55)', cursor: 'pointer' }}>
               Close
             </button>
           </div>
@@ -2410,7 +2410,7 @@ function RoadmapTab() {
                     <div style={{ fontWeight: 700, fontSize: 14, color: '#fff', marginBottom: 5 }}>{stage.title}</div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
                       {stage.skills.slice(0, 3).map(s => (
-                        <span key={s} style={{ fontSize: 11, color: 'rgba(255,255,255,0.40)', background: 'rgba(255,255,255,0.09)', padding: '2px 9px', borderRadius: 8, whiteSpace: 'nowrap' }}>{s}</span>
+                        <span key={s} style={{ fontSize: 11, color: 'rgba(255,255,255,0.40)', background: 'rgba(20,27,56,0.88)', padding: '2px 9px', borderRadius: 8, whiteSpace: 'nowrap' }}>{s}</span>
                       ))}
                       {stage.skills.length > 3 && (
                         <span style={{ fontSize: 11, color: course.color, background: `${course.color}18`, border: `1px solid ${course.color}30`, padding: '2px 9px', borderRadius: 8 }}>+{stage.skills.length - 3} more</span>
@@ -2423,7 +2423,7 @@ function RoadmapTab() {
 
                 {/* Expanded detail panel */}
                 {isExp && (
-                  <div style={{ marginTop: 4, marginLeft: 58, background: 'rgba(255,255,255,0.09)', border: `1px solid ${course.color}22`, borderRadius: 14, padding: '1rem 1.1rem' }}>
+                  <div style={{ marginTop: 4, marginLeft: 58, background: 'rgba(20,27,56,0.88)', border: `1px solid ${course.color}22`, borderRadius: 14, padding: '1rem 1.1rem' }}>
                     {/* Outcome */}
                     <div style={{ display: 'flex', gap: 10, marginBottom: '1rem', padding: '9px 12px', background: `${course.color}14`, border: `1px solid ${course.color}28`, borderRadius: 10 }}>
                       <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>🎯</span>
@@ -2444,7 +2444,7 @@ function RoadmapTab() {
                     </div>
 
                     {/* Practice */}
-                    <div style={{ display: 'flex', gap: 10, padding: '9px 12px', background: 'rgba(255,255,255,0.09)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.07)' }}>
+                    <div style={{ display: 'flex', gap: 10, padding: '9px 12px', background: 'rgba(20,27,56,0.88)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.07)' }}>
                       <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>📌</span>
                       <div>
                         <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 3 }}>Practice task</div>
@@ -2670,7 +2670,7 @@ function SupportTab({ setToast, user }) {
             { icon: '✉️', label: 'Email', val: 'asif@dataquest.in' },
             { icon: '⏱', label: 'Response time', val: 'Within 6 hours' },
           ].map(c => (
-            <div key={c.label} style={{ background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '10px 14px', fontSize: 13 }}>
+            <div key={c.label} style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '10px 14px', fontSize: 13 }}>
               <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, marginBottom: 3 }}>{c.icon} {c.label}</div>
               <div style={{ color: '#e2e8f0', fontWeight: 600 }}>{c.val}</div>
             </div>
@@ -3021,7 +3021,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
                   { icon: '🏆', text: 'Certificates' },
                   { icon: '🧑‍💼', text: '1:1 Mentorship' },
                 ].map(f => (
-                  <span key={f.text} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, padding: '4px 11px', borderRadius: 20, background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.65)' }}>
+                  <span key={f.text} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, padding: '4px 11px', borderRadius: 20, background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.65)' }}>
                     {f.icon} {f.text}
                   </span>
                 ))}
@@ -3041,7 +3041,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
               </div>
 
               {/* Payment method toggle */}
-              <div style={{ display: 'flex', gap: 0, marginBottom: '1.2rem', background: 'rgba(255,255,255,0.09)', borderRadius: 12, padding: 4, border: '1px solid rgba(255,255,255,0.08)' }}>
+              <div style={{ display: 'flex', gap: 0, marginBottom: '1.2rem', background: 'rgba(20,27,56,0.88)', borderRadius: 12, padding: 4, border: '1px solid rgba(255,255,255,0.08)' }}>
                 {[{ id: 'cashfree', label: '⚡ Pay Online' }, { id: 'upi', label: '📱 UPI Manual' }].map(m => (
                   <button key={m.id} onClick={() => setPayMethod(m.id)}
                     style={{
@@ -3117,7 +3117,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
                       <li>Note the Transaction / UTR ID shown after payment</li>
                     </ol>
                     {/* NetBanking/Wallet extra option */}
-                    <div style={{ marginTop: '0.6rem', padding: '8px 12px', background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, fontSize: 12, color: 'rgba(255,255,255,0.40)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ marginTop: '0.6rem', padding: '8px 12px', background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, fontSize: 12, color: 'rgba(255,255,255,0.40)', display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span>🏦</span>
                       <span>NetBanking / Wallet: use your bank's UPI handle or scan QR above</span>
                     </div>

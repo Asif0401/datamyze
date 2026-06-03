@@ -143,10 +143,10 @@ function ProblemIDE({ problem, onClose, onSolved }) {
       <div style={{
         display: 'flex', alignItems: 'center', gap: 12,
         padding: '0 16px', height: 48, flexShrink: 0,
-        background: 'rgba(255,255,255,0.09)',
+        background: 'rgba(20,27,56,0.88)',
         borderBottom: '1px solid rgba(255,255,255,0.12)',
       }}>
-        <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.65)', borderRadius: 8, padding: '4px 12px', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <button onClick={onClose} style={{ background: 'rgba(20,27,56,0.75)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.65)', borderRadius: 8, padding: '4px 12px', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
           ← Back
         </button>
         <div style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.10)' }} />
@@ -199,7 +199,7 @@ function ProblemIDE({ problem, onClose, onSolved }) {
           borderRight: '1px solid rgba(255,255,255,0.12)',
           overflowY: 'auto',
           padding: '1.4rem',
-          background: 'rgba(255,255,255,0.09)',
+          background: 'rgba(20,27,56,0.88)',
         }}>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: '1rem' }}>
             <DiffBadge d={problem.difficulty} />
@@ -228,7 +228,7 @@ function ProblemIDE({ problem, onClose, onSolved }) {
           <div style={{
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '6px 14px',
-            background: 'rgba(255,255,255,0.09)',
+            background: 'rgba(20,27,56,0.88)',
             borderBottom: '1px solid rgba(255,255,255,0.06)',
             flexShrink: 0,
           }}>
@@ -293,7 +293,7 @@ function ProblemIDE({ problem, onClose, onSolved }) {
             onMouseDown={startDrag}
             style={{
               height: 6, flexShrink: 0, cursor: 'row-resize',
-              background: 'rgba(255,255,255,0.09)',
+              background: 'rgba(20,27,56,0.88)',
               borderTop: '1px solid rgba(255,255,255,0.12)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}
@@ -430,7 +430,7 @@ function TestCasePanel({ title, topic }) {
   return (
     <div style={{ padding: '1rem 1.2rem' }}>
       {cases.map((tc, i) => (
-        <div key={i} style={{ marginBottom: '1rem', padding: '0.8rem 1rem', background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10 }}>
+        <div key={i} style={{ marginBottom: '1rem', padding: '0.8rem 1rem', background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10 }}>
           <div style={{ fontSize: 12, fontWeight: 700, color: '#4A90D9', marginBottom: '0.4rem' }}>Test Case {i + 1}</div>
           <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', marginBottom: '0.3rem' }}>{tc.description}</div>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'rgba(255,255,255,0.40)', background: 'rgba(0,0,0,0.3)', borderRadius: 6, padding: '6px 10px', marginTop: '0.4rem' }}>
@@ -580,7 +580,7 @@ function MobileCodingPrompt() {
         The code editor works best on a larger screen. Open Datamyze on your laptop or desktop to practise SQL & Python problems.
       </p>
       <div style={{
-        background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.09)',
+        background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.09)',
         borderRadius: 14, padding: '1rem 1.2rem', maxWidth: 290,
         display: 'flex', alignItems: 'flex-start', gap: 10, textAlign: 'left',
       }}>
@@ -664,7 +664,7 @@ export default function Problems() {
               style={{
                 display: 'flex', alignItems: 'center', gap: 14,
                 padding: '14px 18px',
-                background: 'rgba(255,255,255,0.09)',
+                background: 'rgba(20,27,56,0.88)',
                 backdropFilter: 'blur(14px)',
                 border: '1px solid rgba(255,255,255,0.09)',
                 borderRadius: 12, cursor: 'pointer',

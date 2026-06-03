@@ -161,7 +161,7 @@ function SubmitModal({ onClose, onSuccess }) {
 
   const inputStyle = {
     width: '100%', padding: '10px 12px', borderRadius: 10,
-    background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.12)',
+    background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)',
     color: '#fff', fontSize: 14, outline: 'none', boxSizing: 'border-box',
     transition: 'border-color .2s',
   };
@@ -196,7 +196,7 @@ function SubmitModal({ onClose, onSuccess }) {
             <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>Help others prepare for their interviews</div>
           </div>
           <button onClick={onClose} style={{
-            background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)',
+            background: 'rgba(20,27,56,0.75)', border: '1px solid rgba(255,255,255,0.1)',
             borderRadius: '50%', width: 32, height: 32, color: 'rgba(255,255,255,0.5)',
             fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>✕</button>
@@ -261,7 +261,7 @@ function SubmitModal({ onClose, onSuccess }) {
             <label style={{ ...labelStyle, marginBottom: 8 }}>Round Details</label>
             {roundsDetail.map((round, i) => (
               <div key={i} style={{
-                background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.12)',
+                background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)',
                 borderRadius: 12, padding: '0.9rem', marginBottom: '0.7rem', position: 'relative',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
@@ -346,7 +346,7 @@ function SubmitModal({ onClose, onSuccess }) {
           <div style={{ display: 'flex', gap: 10 }}>
             <button type="button" onClick={onClose} style={{
               flex: 1, padding: '12px', borderRadius: 12,
-              background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.1)',
+              background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.1)',
               color: 'rgba(255,255,255,0.6)', fontSize: 14, fontWeight: 600, cursor: 'pointer',
             }}>Cancel</button>
             <button type="submit" disabled={submitting} style={{
@@ -389,7 +389,7 @@ function DetailView({ exp, onBack, onUpvote }) {
       {/* Back button */}
       <button onClick={onBack} style={{
         display: 'inline-flex', alignItems: 'center', gap: 6,
-        background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.1)',
+        background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.1)',
         borderRadius: 10, padding: '8px 14px', color: 'rgba(255,255,255,0.7)',
         fontSize: 13, fontWeight: 600, cursor: 'pointer', marginBottom: '1.5rem',
         transition: 'all .2s',
@@ -447,7 +447,7 @@ function DetailView({ exp, onBack, onUpvote }) {
 
       {/* Overall Experience */}
       <div style={{
-        background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.12)',
+        background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)',
         borderRadius: 16, padding: '1.4rem', marginBottom: '1.2rem',
       }}>
         <h2 style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: '0.9rem', display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -461,7 +461,7 @@ function DetailView({ exp, onBack, onUpvote }) {
       {/* Interview Rounds */}
       {rounds.length > 0 && (
         <div style={{
-          background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.12)',
+          background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)',
           borderRadius: 16, padding: '1.4rem', marginBottom: '1.2rem',
         }}>
           <h2 style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -511,7 +511,7 @@ function DetailView({ exp, onBack, onUpvote }) {
       {/* Author */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: 12,
-        background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.12)',
+        background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)',
         borderRadius: 14, padding: '1rem 1.2rem',
       }}>
         <div style={{
@@ -541,7 +541,7 @@ function ExpCard({ exp, onClick }) {
     <div
       onClick={onClick}
       style={{
-        background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.12)',
+        background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)',
         borderRadius: 16, padding: '1.2rem', cursor: 'pointer',
         transition: 'all 0.2s ease', animation: 'fadeInUp 0.35s ease both',
       }}
@@ -586,7 +586,7 @@ function ExpCard({ exp, onClick }) {
         <DifficultyBadge difficulty={exp.difficulty} />
         <span style={{
           fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 99,
-          color: 'rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.1)',
+          color: 'rgba(255,255,255,0.5)', background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.1)',
         }}>🔄 {exp.rounds} rounds</span>
         {exp.interview_date && (
           <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>📅 {fmtDate(exp.interview_date)}</span>
@@ -752,7 +752,7 @@ export default function InterviewExperiences() {
           { icon: '✅', val: `${selectRate}%`,    lbl: 'Selection Rate',    color: '#5CC8A0' },
         ].map((s, i) => (
           <div key={s.lbl} style={{
-            background: 'rgba(255,255,255,0.09)', border: `1px solid ${s.color}28`,
+            background: 'rgba(20,27,56,0.88)', border: `1px solid ${s.color}28`,
             borderRadius: 14, padding: '1rem', textAlign: 'center',
             animation: `popIn 0.35s ${i * 0.07}s ease both`,
           }}>
@@ -765,7 +765,7 @@ export default function InterviewExperiences() {
 
       {/* ── Filters ── */}
       <div style={{
-        background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.12)',
+        background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)',
         borderRadius: 16, padding: '1rem 1.2rem', marginBottom: '1.4rem',
       }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem', alignItems: 'center' }}>
@@ -776,7 +776,7 @@ export default function InterviewExperiences() {
             onChange={e => setCompanyFilter(e.target.value)}
             style={{
               padding: '8px 12px', borderRadius: 10, fontSize: 13,
-              background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.1)',
+              background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.1)',
               color: '#fff', outline: 'none', minWidth: 150, flex: '1 1 140px',
             }}
           />
@@ -787,7 +787,7 @@ export default function InterviewExperiences() {
             onChange={e => setRoleFilter(e.target.value)}
             style={{
               padding: '8px 12px', borderRadius: 10, fontSize: 13,
-              background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.1)',
+              background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.1)',
               color: '#fff', outline: 'none', minWidth: 140, flex: '1 1 130px',
             }}
           />

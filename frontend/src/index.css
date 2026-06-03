@@ -23,11 +23,11 @@
 
   /* Dark glassmorphism surfaces */
   --bg:         transparent;
-  --surface:    rgba(255,255,255,0.09);
-  --surface-2:  rgba(255,255,255,0.12);
-  --surface-3:  rgba(255,255,255,0.16);
-  --border:     rgba(255,255,255,0.12);
-  --border-2:   rgba(255,255,255,0.07);
+  --surface:    rgba(20, 27, 56, 0.88);
+  --surface-2:  rgba(28, 36, 68, 0.92);
+  --surface-3:  rgba(36, 46, 82, 0.95);
+  --border:     rgba(255,255,255,0.14);
+  --border-2:   rgba(255,255,255,0.08);
   --text:       #e2e8f0;
   --text-2:     #cbd5e1;
   --muted:      rgba(255,255,255,0.45);
@@ -1931,13 +1931,13 @@ body { background: #04060e !important; }
 .blob-2 { width: 680px !important; height: 680px !important; background: radial-gradient(circle, rgba(6,182,212,0.70) 0%, rgba(34,211,238,0.30) 40%, transparent 65%) !important; }
 .blob-3 { width: 620px !important; height: 620px !important; background: radial-gradient(circle, rgba(124,58,237,0.60) 0%, rgba(167,139,250,0.25) 40%, transparent 65%) !important; }
 
-/* 3. Cards — same style as Case Studies (proven to look great) */
+/* 3. Cards — solid dark navy panels */
 .card, .stat-card, .course-card, .feature-card, .job-card, .lb-row, .session-card {
   background: var(--surface) !important;
-  border: 1px solid var(--border) !important;
-  backdrop-filter: blur(18px) !important;
-  -webkit-backdrop-filter: blur(18px) !important;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.20), inset 0 1px 0 rgba(255,255,255,0.07) !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.50), 0 2px 8px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.08) !important;
 }
 
 /* 4. Vivid cyan-purple top shimmer line on all cards */
@@ -1947,29 +1947,23 @@ body { background: #04060e !important; }
   background: linear-gradient(90deg, transparent 0%, rgba(56,189,248,0.80) 40%, rgba(167,139,250,0.65) 70%, transparent 100%) !important;
 }
 
-/* 5. Hover — brighter surface + accent border */
-.card:hover {
+/* 5. Hover — lighter navy + accent border glow */
+.card:hover, .feature-card:hover, .job-card:hover {
   background: var(--surface-2) !important;
-  border-color: rgba(255,255,255,0.20) !important;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.50), 0 0 0 1px rgba(56,189,248,0.25) !important;
+  border-color: rgba(56,189,248,0.35) !important;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.55), 0 0 0 1px rgba(56,189,248,0.22), 0 0 30px rgba(56,189,248,0.08) !important;
   transform: translateY(-4px) !important;
 }
 .course-card:hover {
   background: var(--surface-2) !important;
-  border-color: rgba(56,189,248,0.40) !important;
-  box-shadow: 0 20px 56px rgba(0,0,0,0.55), 0 0 0 1px rgba(56,189,248,0.30) !important;
+  border-color: rgba(56,189,248,0.45) !important;
+  box-shadow: 0 20px 56px rgba(0,0,0,0.60), 0 0 0 1px rgba(56,189,248,0.28) !important;
   transform: translateY(-6px) scale(1.008) !important;
-}
-.feature-card:hover, .job-card:hover {
-  background: var(--surface-2) !important;
-  border-color: rgba(255,255,255,0.20) !important;
-  box-shadow: 0 16px 44px rgba(0,0,0,0.50), 0 0 0 1px rgba(56,189,248,0.25) !important;
-  transform: translateY(-4px) !important;
 }
 .stat-card:hover {
   background: var(--surface-2) !important;
-  border-color: rgba(255,255,255,0.20) !important;
-  box-shadow: 0 14px 40px rgba(0,0,0,0.48), 0 0 0 1px rgba(56,189,248,0.22) !important;
+  border-color: rgba(255,255,255,0.22) !important;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.52), 0 0 0 1px rgba(56,189,248,0.20) !important;
   transform: translateY(-4px) scale(1.010) !important;
 }
 

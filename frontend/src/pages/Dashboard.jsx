@@ -179,7 +179,7 @@ function ProWelcomeBanner({ user, onDismiss, navigate }) {
       <div className="pro-border-anim" style={{ borderRadius: 22, padding: '1.5px', boxShadow: '0 16px 60px rgba(246,211,101,0.18),0 4px 20px rgba(0,0,0,0.5)' }}>
         <div style={{ background: 'linear-gradient(145deg,#0c1e38 0%,#111827 55%,#0d1a2e 100%)', borderRadius: 21, padding: '2rem 2.2rem 1.6rem', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: '-40%', right: '-5%', width: 360, height: 260, background: 'radial-gradient(ellipse,rgba(246,211,101,0.07) 0%,transparent 70%)', pointerEvents: 'none' }} />
-          <button onClick={onDismiss} style={{ position: 'absolute', top: 14, right: 14, zIndex: 2, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.45)', borderRadius: 8, width: 28, height: 28, cursor: 'pointer', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+          <button onClick={onDismiss} style={{ position: 'absolute', top: 14, right: 14, zIndex: 2, background: 'rgba(20,27,56,0.75)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.45)', borderRadius: 8, width: 28, height: 28, cursor: 'pointer', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 18, marginBottom: '1.6rem', position: 'relative', zIndex: 1 }}>
             <div style={{ fontSize: 52, lineHeight: 1, filter: 'drop-shadow(0 0 24px rgba(246,211,101,0.7))' }}>👑</div>
             <div>
@@ -336,7 +336,7 @@ export default function Dashboard() {
               <div style={{ fontSize: 22, fontWeight: 900, color: s.color, lineHeight: 1, animation: 'numberPop 0.4s ease both', animationDelay: `${i * 0.08}s` }}>{s.val}</div>
               <div style={{ fontSize: 10.5, color: s.subColor || 'var(--muted)' }}>{s.sub} {s.subLabel && <span style={{ color: s.subColor, fontSize: 10 }}>({s.subLabel})</span>}</div>
               {/* Mini progress bar */}
-              <div style={{ height: 3, borderRadius: 99, background: 'rgba(255,255,255,0.08)', marginTop: 6 }}>
+              <div style={{ height: 3, borderRadius: 99, background: 'rgba(20,27,56,0.80)', marginTop: 6 }}>
                 <div style={{ height: '100%', borderRadius: 99, width: `${s.bar * 100}%`, background: s.barColor, transition: 'width 1s ease', boxShadow: `0 0 6px ${s.barColor}88` }} />
               </div>
             </div>
@@ -348,7 +348,7 @@ export default function Dashboard() {
       <div className="dash-fadein card" style={{ animationDelay: '.15s', marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.2rem', flexWrap: 'wrap', gap: 8 }}>
           <div className="card-title" style={{ margin: 0 }}>🗺️ Your Journey to a Data Job</div>
-          <span style={{ fontSize: 11, color: 'var(--muted)', background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 20, padding: '3px 12px' }}>
+          <span style={{ fontSize: 11, color: 'var(--muted)', background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 20, padding: '3px 12px' }}>
             {score}% ready
           </span>
         </div>
@@ -403,7 +403,7 @@ export default function Dashboard() {
           <div className="card dash-fadein" style={{ animationDelay: '.2s' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: 8 }}>
               <div className="card-title" style={{ margin: 0 }}>📅 Practice Activity</div>
-              <span style={{ fontSize: 11, color: 'var(--muted)', background: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 20, padding: '2px 10px' }}>Last 13 weeks</span>
+              <span style={{ fontSize: 11, color: 'var(--muted)', background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 20, padding: '2px 10px' }}>Last 13 weeks</span>
             </div>
             <ActivityHeatmap activeDates={activeDates} streak={user?.streak || 0} />
           </div>
@@ -416,13 +416,13 @@ export default function Dashboard() {
                 { label: 'SQL', solved: stats?.sqlSolved || 0, total: 20, color: '#4A90D9', icon: '🗄️', delay: '0s' },
                 { label: 'Python', solved: stats?.pythonSolved || 0, total: 15, color: '#5CC8A0', icon: <PyLogo />, delay: '0.09s' },
               ].map(s => (
-                <div key={s.label} style={{ background: 'rgba(255,255,255,0.09)', border: '1px solid var(--border)', borderRadius: 12, padding: '0.9rem', animationDelay: s.delay }}>
+                <div key={s.label} style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid var(--border)', borderRadius: 12, padding: '0.9rem', animationDelay: s.delay }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
                     <span style={{ fontSize: 16 }}>{s.icon}</span>
                     <span style={{ fontWeight: 700, fontSize: 13 }}>{s.label}</span>
                     <span style={{ marginLeft: 'auto', fontSize: 11, color: s.color, fontWeight: 800 }}>{s.solved}/{s.total}</span>
                   </div>
-                  <div style={{ height: 5, borderRadius: 99, background: 'rgba(255,255,255,0.07)' }}>
+                  <div style={{ height: 5, borderRadius: 99, background: 'rgba(20,27,56,0.75)' }}>
                     <div style={{ height: '100%', borderRadius: 99, width: `${Math.min(s.solved / s.total, 1) * 100}%`, background: s.color, transition: 'width 1s ease', boxShadow: `0 0 8px ${s.color}66` }} />
                   </div>
                   <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 5 }}>
@@ -467,7 +467,7 @@ export default function Dashboard() {
                     <div style={{ width: 28, height: 28, borderRadius: '50%', background: s.done ? s.color + '25' : 'rgba(255,255,255,0.05)', border: `1.5px solid ${s.done ? s.color : 'rgba(255,255,255,0.12)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: s.done ? 13 : 12 }}>
                       {s.done ? <span style={{ color: s.color, fontWeight: 900 }}>✓</span> : <span style={{ opacity: 0.4, fontWeight: 700, fontSize: 10 }}>{s.step}</span>}
                     </div>
-                    {i < 3 && <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.07)', marginTop: 3 }} />}
+                    {i < 3 && <div style={{ width: 1, height: 16, background: 'rgba(20,27,56,0.75)', marginTop: 3 }} />}
                   </div>
                   {/* Content */}
                   <div style={{ flex: 1, paddingBottom: 2 }}>
@@ -517,14 +517,14 @@ export default function Dashboard() {
                 { label: 'Courses', val: courseProgress?.filter(c => c.progress_percent > 0).length || 0, icon: '📖', color: '#7F77DD' },
                 { label: 'Active Days', val: (stats?.activeDays || []).filter(d => { const diff = (Date.now() - new Date(d + 'T12:00:00').getTime()) / 86400000; return diff <= 7; }).length, icon: '🔥', color: '#F07B6A' },
               ].map(s => (
-                <div key={s.label} style={{ background: 'rgba(255,255,255,0.09)', border: '1px solid var(--border)', borderRadius: 11, padding: '0.8rem', textAlign: 'center' }}>
+                <div key={s.label} style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid var(--border)', borderRadius: 11, padding: '0.8rem', textAlign: 'center' }}>
                   <div style={{ fontSize: 18, marginBottom: 4 }}>{s.icon}</div>
                   <div style={{ fontSize: 22, fontWeight: 900, color: s.color, lineHeight: 1 }}>{s.val}</div>
                   <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 3 }}>{s.label}</div>
                 </div>
               ))}
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: 'rgba(255,255,255,0.09)', borderRadius: 10, border: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: 'rgba(20,27,56,0.88)', borderRadius: 10, border: '1px solid var(--border)' }}>
               <span style={{ fontSize: 13 }}>{weekDiff > 0 ? '📈' : weekDiff < 0 ? '📉' : '➡️'}</span>
               <span style={{ fontSize: 12, color: weekTrendColor, fontWeight: 700 }}>{weekTrend}</span>
               <span style={{ fontSize: 11, color: 'var(--muted)', marginLeft: 2 }}>on problems solved</span>
