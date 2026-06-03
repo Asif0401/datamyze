@@ -471,7 +471,6 @@ async function initDb() {
       await q('Dream11','Captain/VC Selection Bias','Which cricket players are most over-selected as Captain (C) or Vice-Captain (VC) compared to their actual performance (fantasy points scored)?','SQL','Medium','Aggregations','selection_rate = COUNT(teams where player is C or VC) / total_teams. avg_fantasy_pts from player_performance. Rank by selection_rate / avg_pts (over-selection ratio).',30,3);
       await q('Dream11','Revenue per Match Type','Compare average revenue per user (ARPU) for T20, ODI, and Test matches. Which format drives the most monetization?','SQL','Easy','Aggregations','SUM(entry_fees) / COUNT(DISTINCT user_id) per match_format. Simple GROUP BY match_type.',20,4);
       await q('Dream11','Python: Optimal Team Builder','Given a CSV of players with their salary, predicted_points, and position — write a Python function to select an optimal 11-player team within a ₹100 credit budget.','Python','Hard','Optimization','Linear programming with PuLP or greedy approach. Constraints: budget ≤ 100, position requirements (1 WK, 3-5 BAT, etc.). Maximize SUM(predicted_points).',40,5);
-    }
   } catch(e) { console.log('Company bank seed error:', e.message); }
 
   // ── Interview Experiences ──────────────────────────────────────
