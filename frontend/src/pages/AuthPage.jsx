@@ -317,14 +317,6 @@ export default function AuthPage({ mode: initialMode }) {
             </span>
           </div>
 
-          {/* Live badge */}
-          <div style={{ display:'inline-flex', alignItems:'center', gap:8, marginBottom:'1.4rem', animation:'fadeInUp 0.4s 0.05s ease both', width:'fit-content' }}>
-            <div style={{ display:'flex', alignItems:'center', gap:6, padding:'5px 12px', borderRadius:20, background:'rgba(92,200,160,0.10)', border:'1px solid rgba(92,200,160,0.25)', fontSize:12, fontWeight:700, color:'#5CC8A0', letterSpacing:0.5 }}>
-              <span className="auth-live-dot" />
-              LIVE · 2,000+ students actively learning
-            </div>
-          </div>
-
           {/* Headline */}
           <div style={{ marginBottom:'1.2rem' }}>
             <div style={{ fontSize:'clamp(36px,3.8vw,58px)', fontWeight:900, letterSpacing:'-2px', lineHeight:1.05, color:'rgba(255,255,255,0.88)', animation:'fadeInUp 0.5s 0.08s ease both', marginBottom:6 }}>
@@ -407,33 +399,43 @@ export default function AuthPage({ mode: initialMode }) {
           </div>
         </section>
 
-        {/* ══════════════ SECTION 3 — SOCIAL PROOF ══════════════ */}
+        {/* ══════════════ SECTION 3 — PLACEMENTS ══════════════ */}
         <section style={{ padding:'4rem', borderTop:'1px solid rgba(255,255,255,0.05)', background:'rgba(255,255,255,0.015)' }}>
           <div className="auth-reveal">
-            <div style={{ fontSize:11, fontWeight:800, color:'rgba(167,139,250,0.7)', letterSpacing:2.5, textTransform:'uppercase', marginBottom:12 }}>Real results</div>
-            <div style={{ fontSize:'clamp(24px,2.4vw,36px)', fontWeight:900, letterSpacing:'-1px', color:'rgba(255,255,255,0.88)', marginBottom:'2rem' }}>
-              Students don't lie.
+            <div style={{ fontSize:11, fontWeight:800, color:'rgba(167,139,250,0.7)', letterSpacing:2.5, textTransform:'uppercase', marginBottom:12 }}>Where they landed</div>
+            <div style={{ fontSize:'clamp(24px,2.4vw,36px)', fontWeight:900, letterSpacing:'-1px', color:'rgba(255,255,255,0.88)', marginBottom:'0.5rem' }}>
+              Our students work at
             </div>
+            <div style={{ fontSize:14, color:'rgba(255,255,255,0.38)', marginBottom:'2rem' }}>Real placements. Real companies. Real data roles.</div>
           </div>
 
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'0.8rem', marginBottom:'3rem' }}>
-            {HERO_TESTIMONIALS.map((t, i) => (
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'0.75rem' }}>
+            {[
+              { co:'Flipkart',    logo:'🛒', color:'#2874F0', role:'Data Analyst',             name:'Priya S.',  tag:'SQL Specialist'    },
+              { co:'Amazon',      logo:'📦', color:'#FF9900', role:'BI Engineer',               name:'Rahul K.',  tag:'Python Track'      },
+              { co:'Swiggy',      logo:'🍔', color:'#FC8019', role:'Product Analyst',           name:'Anjali M.', tag:'Case Studies'      },
+              { co:'Zomato',      logo:'🍕', color:'#E23744', role:'Analytics Engineer',        name:'Dev R.',    tag:'Mock Interviews'   },
+              { co:'PhonePe',     logo:'💸', color:'#5F259F', role:'Data Analyst — Payments',   name:'Sneha P.',  tag:'Resume Review'     },
+              { co:'Meesho',      logo:'🛍️', color:'#8B5CF6', role:'Business Analyst',          name:'Arjun N.',  tag:'Job Board'         },
+            ].map((p, i) => (
               <div key={i} className="auth-reveal" style={{
-                transitionDelay:`${i * 100}ms`,
-                padding:'1.3rem',
-                borderRadius:16,
-                background:'rgba(255,255,255,0.035)',
-                border:'1px solid rgba(255,255,255,0.08)',
-                display:'flex', flexDirection:'column', gap:12,
+                transitionDelay:`${i * 70}ms`,
+                padding:'1rem',
+                borderRadius:14,
+                background:`linear-gradient(145deg, ${p.color}0c 0%, rgba(255,255,255,0.02) 100%)`,
+                border:`1px solid ${p.color}28`,
+                borderTop:`2px solid ${p.color}55`,
               }}>
-                <div style={{ display:'flex', gap:6 }}>{'★★★★★'.split('').map((s,j) => <span key={j} style={{ color:'#E8A838', fontSize:13 }}>{s}</span>)}</div>
-                <div style={{ fontSize:12.5, color:'rgba(255,255,255,0.65)', lineHeight:1.6, flex:1 }}>{t.text}</div>
-                <div style={{ display:'flex', alignItems:'center', gap:10, paddingTop:8, borderTop:'1px solid rgba(255,255,255,0.06)' }}>
-                  <div style={{ width:32, height:32, borderRadius:'50%', background:t.g, display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:800, color:'#fff', flexShrink:0 }}>{t.i}</div>
+                <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
+                  <div style={{ width:32, height:32, borderRadius:9, background:`${p.color}20`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, flexShrink:0 }}>{p.logo}</div>
                   <div>
-                    <div style={{ fontSize:12, fontWeight:700, color:'#fff' }}>{t.name}</div>
-                    <div style={{ fontSize:10.5, color:'rgba(255,255,255,0.38)' }}>{t.role}</div>
+                    <div style={{ fontSize:12, fontWeight:800, color:'#fff' }}>{p.co}</div>
+                    <div style={{ fontSize:10.5, color:'rgba(255,255,255,0.38)' }}>{p.role}</div>
                   </div>
+                </div>
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                  <div style={{ fontSize:11, color:'rgba(255,255,255,0.45)', fontWeight:600 }}>{p.name}</div>
+                  <span style={{ fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:20, background:`${p.color}18`, color:p.color }}>{p.tag}</span>
                 </div>
               </div>
             ))}
