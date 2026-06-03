@@ -27,7 +27,7 @@ function StatCard({ value, suffix = '', label, color, icon, started }) {
   const num = useCountUp(value, 1600, started);
   return (
     <div style={{
-      background: 'rgba(255,255,255,0.045)',
+      background: 'rgba(20,27,56,0.88)',
       border: `1px solid ${color}33`,
       borderRadius: 16,
       padding: '1.4rem 1.6rem',
@@ -72,8 +72,8 @@ function FAQItem({ q, a, color, delay }) {
       ref={ref}
       onClick={() => setOpen(v => !v)}
       style={{
-        background: open ? `${color}0a` : 'rgba(255,255,255,0.04)',
-        border: `1px solid ${open ? color + '44' : 'rgba(255,255,255,0.08)'}`,
+        background: open ? `rgba(20,27,56,0.92)` : 'rgba(20,27,56,0.88)',
+        border: `1px solid ${open ? color + '55' : 'rgba(255,255,255,0.14)'}`,
         borderRadius: 14,
         padding: '1.1rem 1.3rem',
         cursor: 'pointer',
@@ -92,7 +92,7 @@ function FAQItem({ q, a, color, delay }) {
         </div>
         <div style={{
           width: 24, height: 24, borderRadius: '50%',
-          background: open ? `${color}22` : 'rgba(255,255,255,0.06)',
+          background: open ? `${color}30` : 'rgba(255,255,255,0.10)',
           border: `1px solid ${open ? color + '44' : 'rgba(255,255,255,0.12)'}`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 13, color: open ? color : 'rgba(255,255,255,0.45)',
@@ -192,7 +192,7 @@ export default function Instructor() {
           ].map((p, i) => (
             <div key={i} style={{
               flex: '1 1 200px',
-              background: 'rgba(255,255,255,0.04)',
+              background: 'rgba(20,27,56,0.88)',
               border: `1px solid ${p.color}22`,
               borderRadius: 16, padding: '1.2rem',
               position: 'relative', overflow: 'hidden',
@@ -206,7 +206,7 @@ export default function Instructor() {
         </div>
 
         {/* Roles we target */}
-        <div style={{ marginTop: 24, padding: '1.2rem 1.4rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14 }}>
+        <div style={{ marginTop: 24, padding: '1.2rem 1.4rem', background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 14 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 10 }}>Roles our learners land</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {['Data Analyst', 'BI Analyst', 'BI Engineer', 'Product Analyst', 'Analytics Engineer', 'SQL Developer', 'Reporting Analyst', 'Growth Analyst', 'Business Analyst'].map(r => (
@@ -231,7 +231,7 @@ export default function Instructor() {
 
         {/* Founder card */}
         <div style={{
-          background: 'rgba(255,255,255,0.04)',
+          background: 'rgba(20,27,56,0.88)',
           border: '1px solid rgba(127,119,221,0.25)',
           borderRadius: 20, padding: '1.8rem',
           display: 'flex', gap: '1.8rem', alignItems: 'flex-start', flexWrap: 'wrap',
@@ -321,13 +321,13 @@ export default function Instructor() {
                 target="_blank" rel="noreferrer"
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
-                  background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
+                  background: 'rgba(20,27,56,0.80)', border: '1px solid rgba(255,255,255,0.12)',
                   borderRadius: 30, padding: '7px 16px',
                   color: 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: 700, textDecoration: 'none',
                   transition: 'all .2s',
                 }}
                 onMouseEnter={e => { e.currentTarget.style.background='rgba(255,255,255,0.1)'; e.currentTarget.style.color='#fff'; }}
-                onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.06)'; e.currentTarget.style.color='rgba(255,255,255,0.7)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background='rgba(20,27,56,0.80)'; e.currentTarget.style.color='rgba(255,255,255,0.7)'; }}
               >
                 📸 Follow @datamyze.in
               </a>
@@ -385,7 +385,7 @@ export default function Instructor() {
           ].map((item, i) => (
             <div key={i} style={{
               flex: '1 1 240px',
-              background: 'rgba(255,255,255,0.04)',
+              background: 'rgba(20,27,56,0.88)',
               border: `1px solid ${item.color}22`,
               borderRadius: 18, padding: '1.6rem',
               position: 'relative', overflow: 'hidden',
@@ -432,7 +432,7 @@ export default function Instructor() {
             { icon: '📄', title: 'Resume & Mock Prep', desc: 'Personalised resume reviews and live mock interviews with structured feedback.', color: '#F07B6A' },
           ].map((f, i) => (
             <div key={i} style={{
-              background: 'rgba(255,255,255,0.04)',
+              background: 'rgba(20,27,56,0.88)',
               border: `1px solid ${f.color}22`,
               borderRadius: 16, padding: '1.2rem 1.3rem',
               display: 'flex', gap: 12, alignItems: 'flex-start',
@@ -467,7 +467,7 @@ export default function Instructor() {
           ].map((t, i) => (
             <div key={i} style={{
               flex: '1 1 240px',
-              background: 'rgba(255,255,255,0.04)',
+              background: 'rgba(20,27,56,0.88)',
               border: `1px solid ${t.color}22`,
               borderRadius: 16, padding: '1.3rem',
               position: 'relative', overflow: 'hidden',
@@ -571,14 +571,14 @@ export default function Instructor() {
             onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='0 4px 20px rgba(127,119,221,0.35)'; }}
           >🚀 Start Learning</a>
           <a href="/premium" style={{
-            background: 'rgba(255,255,255,0.07)',
+            background: 'rgba(20,27,56,0.75)',
             border: '1px solid rgba(255,255,255,0.15)',
             borderRadius: 30, padding: '10px 24px',
             color: 'rgba(255,255,255,0.8)', fontSize: 13, fontWeight: 700, textDecoration: 'none',
             cursor: 'pointer', transition: 'all .2s',
           }}
             onMouseEnter={e => { e.currentTarget.style.background='rgba(255,255,255,0.12)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.07)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background='rgba(20,27,56,0.75)'; }}
           >👑 Go Pro · ₹199</a>
         </div>
       </div>

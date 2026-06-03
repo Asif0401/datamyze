@@ -259,7 +259,7 @@ export default function Help() {
             borderRadius: 16, overflow: 'hidden',
           }}>
             <div style={{
-              padding: '1rem 1.2rem', borderBottom: '1px solid rgba(255,255,255,0.06)',
+              padding: '1rem 1.2rem', borderBottom: '1px solid rgba(255,255,255,0.12)',
               fontSize: 13, fontWeight: 800, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.5px',
             }}>
               ❓ COMMON QUESTIONS
@@ -316,7 +316,7 @@ function FaqItem({ q, a, last }) {
         <span style={{ lineHeight: 1.4 }}>{q}</span>
         <span style={{
           flexShrink: 0, width: 20, height: 20, borderRadius: '50%',
-          background: open ? 'rgba(74,144,217,0.2)' : 'rgba(255,255,255,0.07)',
+          background: open ? 'rgba(74,144,217,0.25)' : 'rgba(20,27,56,0.80)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 12, color: open ? '#4A90D9' : 'rgba(255,255,255,0.4)',
           transition: 'all 0.2s', transform: open ? 'rotate(180deg)' : 'none',
