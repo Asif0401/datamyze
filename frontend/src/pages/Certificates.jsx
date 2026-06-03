@@ -213,15 +213,25 @@ export default function Certificates() {
         <div style={{ fontSize: 10, fontWeight: 800, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1rem' }}>How it works</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
           {[
-            { step: '01', icon: '📚', title: 'Complete a Course', desc: 'Finish any full course on Datamyze with all lessons done and the final assessment passed' },
-            { step: '02', icon: '🎓', title: 'Get Your Certificate', desc: 'A verified certificate with a unique credential ID is instantly generated for your profile' },
-            { step: '03', icon: '💼', title: 'Add to LinkedIn', desc: 'Share it on LinkedIn, copy your credential ID for applications, or download it as a PDF' },
+            { step: '01', icon: '📚', title: 'Complete a Course', desc: 'Finish any full course on Datamyze with all lessons done and the final assessment passed', color: '#5CC8A0' },
+            { step: '02', icon: '🎓', title: 'Get Your Certificate', desc: 'A verified certificate with a unique credential ID is instantly generated for your profile', color: '#38bdf8' },
+            { step: '03', icon: '💼', title: 'Add to LinkedIn', desc: 'Share it on LinkedIn, copy your credential ID for applications, or download it as a PDF', color: '#E8A838' },
           ].map((s, idx) => (
-            <div key={s.step} className="card" style={{ padding: '1.2rem', position: 'relative', overflow: 'hidden', animation: 'popIn 0.35s ease both', animationDelay: `${idx * 0.09}s` }}>
-              <div style={{ position: 'absolute', top: 8, right: 12, fontSize: 32, fontWeight: 900, color: 'rgba(255,255,255,0.035)', fontFamily: 'monospace' }}>{s.step}</div>
-              <div style={{ fontSize: 26, marginBottom: 8 }}>{s.icon}</div>
-              <div style={{ fontWeight: 800, fontSize: 13, color: '#fff', marginBottom: 5 }}>{s.title}</div>
-              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)', lineHeight: 1.6 }}>{s.desc}</div>
+            <div key={s.step} style={{
+              padding: '1.4rem 1.3rem', borderRadius: 16, position: 'relative', overflow: 'hidden',
+              background: `linear-gradient(145deg, ${s.color}12 0%, rgba(255,255,255,0.03) 100%)`,
+              border: `1px solid ${s.color}35`,
+              boxShadow: `0 4px 24px rgba(0,0,0,0.35), inset 0 1px 0 ${s.color}20`,
+              animation: 'popIn 0.35s ease both', animationDelay: `${idx * 0.09}s`,
+            }}>
+              {/* Big watermark step number */}
+              <div style={{ position: 'absolute', top: -4, right: 10, fontSize: 64, fontWeight: 900, color: `${s.color}18`, fontFamily: 'monospace', lineHeight: 1, userSelect: 'none' }}>{s.step}</div>
+              {/* Top color accent line */}
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent, ${s.color}90, transparent)` }} />
+              <div style={{ width: 42, height: 42, borderRadius: 12, background: `${s.color}18`, border: `1px solid ${s.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, marginBottom: 12 }}>{s.icon}</div>
+              <div style={{ fontWeight: 800, fontSize: 14, color: '#fff', marginBottom: 6 }}>{s.title}</div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.50)', lineHeight: 1.65 }}>{s.desc}</div>
+              <div style={{ marginTop: 12, fontSize: 11, fontWeight: 700, color: s.color }}>Step {s.step}</div>
             </div>
           ))}
         </div>
@@ -232,25 +242,28 @@ export default function Certificates() {
         <div style={{ fontSize: 10, fontWeight: 800, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1rem' }}>Certificate tracks</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: '0.7rem' }}>
           {[
-            { icon: '🗄️',                                              title: 'SQL for Data Analytics',  color: '#4A90D9' },
-            { icon: <PyLogo />,                                         title: 'Python for Analytics',    color: '#3776AB' },
-            { icon: '📊',                                               title: 'Power BI Fundamentals',   color: '#F2C811' },
-            { icon: '📗',                                               title: 'Excel for Data Analysis', color: '#1D6F42' },
-            { icon: '📈',                                               title: 'Statistics & Probability', color: '#BA7517' },
-            { icon: '🤖',                                               title: 'Machine Learning Basics', color: '#a78bfa' },
+            { icon: '🗄️',      title: 'SQL for Data Analytics',   color: '#4A90D9' },
+            { icon: <PyLogo />, title: 'Python for Analytics',     color: '#FFD343' },
+            { icon: '📊',       title: 'Power BI Fundamentals',    color: '#F2C811' },
+            { icon: '📗',       title: 'Excel for Data Analysis',  color: '#34D399' },
+            { icon: '📈',       title: 'Statistics & Probability', color: '#F07B6A' },
+            { icon: '🤖',       title: 'Machine Learning Basics',  color: '#a78bfa' },
           ].map((t, idx) => (
             <div key={t.title} style={{
-              display: 'flex', alignItems: 'center', gap: 10,
-              padding: '10px 14px', borderRadius: 12,
-              background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)',
+              display: 'flex', alignItems: 'center', gap: 12,
+              padding: '11px 14px', borderRadius: 12,
+              background: `linear-gradient(135deg, ${t.color}14 0%, rgba(255,255,255,0.03) 100%)`,
+              border: `1px solid ${t.color}35`,
+              borderLeft: `3px solid ${t.color}90`,
+              boxShadow: `0 2px 12px rgba(0,0,0,0.30)`,
               animation: 'fadeInUp 0.3s ease both', animationDelay: `${idx * 0.05}s`,
             }}>
-              <div style={{ width: 34, height: 34, borderRadius: 9, background: `${t.color}18`, border: `1px solid ${t.color}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, flexShrink: 0 }}>{t.icon}</div>
+              <div style={{ width: 36, height: 36, borderRadius: 10, background: `${t.color}20`, border: `1px solid ${t.color}45`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>{t.icon}</div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#fff', lineHeight: 1.3 }}>{t.title}</div>
-                <div style={{ fontSize: 10, color: t.color, fontWeight: 600, marginTop: 2 }}>Certificate available</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.88)', lineHeight: 1.3 }}>{t.title}</div>
+                <div style={{ fontSize: 10, color: t.color, fontWeight: 600, marginTop: 3 }}>Certificate available</div>
               </div>
-              <div style={{ fontSize: 12, opacity: 0.4 }}>🔒</div>
+              <div style={{ fontSize: 13, opacity: 0.45 }}>🔒</div>
             </div>
           ))}
         </div>
@@ -290,20 +303,28 @@ export default function Certificates() {
             <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'0.85rem' }}>
               {[
                 { icon:'🗄️',         title:'SQL for Data Analysis',    color:'#4A90D9', desc:'Master querying, joins, window functions & business analytics' },
-                { icon:<PyLogo />,   title:'Python for Analytics',     color:'#3776AB', desc:'Pandas, NumPy, data cleaning, EDA and visualisation' },
+                { icon:<PyLogo />,   title:'Python for Analytics',     color:'#FFD343', desc:'Pandas, NumPy, data cleaning, EDA and visualisation' },
                 { icon:'📊',         title:'Power BI & Tableau',       color:'#E8A838', desc:'Build interactive dashboards and BI reports' },
-                { icon:'📋',         title:'Excel & Sheets',           color:'#1D9E75', desc:'Pivot tables, lookups, data cleaning and dashboards' },
+                { icon:'📋',         title:'Excel & Sheets',           color:'#34D399', desc:'Pivot tables, lookups, data cleaning and dashboards' },
                 { icon:'📈',         title:'Statistics & Probability', color:'#a78bfa', desc:'Hypothesis testing, A/B testing and business metrics' },
                 { icon:'⚡',         title:'Advanced SQL',             color:'#5CC8A0', desc:'Window functions, CTEs, performance & BI-level queries' },
               ].map((t, i) => (
                 <div key={t.title} onClick={() => navigate('/courses')}
-                  style={{ background:'rgba(255,255,255,0.03)', border:`1px solid ${t.color}22`, borderRadius:14, padding:'1.1rem 1rem', cursor:'pointer', transition:'all 0.2s', animation:`fadeInUp 0.4s ${0.05+i*0.06}s ease both` }}
-                  onMouseEnter={e => { e.currentTarget.style.background=`${t.color}10`; e.currentTarget.style.borderColor=`${t.color}44`; e.currentTarget.style.transform='translateY(-2px)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor=`${t.color}22`; e.currentTarget.style.transform='translateY(0)'; }}
+                  style={{
+                    background:`linear-gradient(145deg, ${t.color}13 0%, rgba(255,255,255,0.03) 100%)`,
+                    border:`1px solid ${t.color}35`,
+                    borderTop:`2px solid ${t.color}70`,
+                    borderRadius:14, padding:'1.2rem 1rem',
+                    cursor:'pointer', transition:'all 0.22s',
+                    boxShadow:`0 3px 16px rgba(0,0,0,0.30)`,
+                    animation:`fadeInUp 0.4s ${0.05+i*0.06}s ease both`,
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background=`linear-gradient(145deg, ${t.color}22 0%, rgba(255,255,255,0.05) 100%)`; e.currentTarget.style.borderColor=`${t.color}55`; e.currentTarget.style.transform='translateY(-3px)'; e.currentTarget.style.boxShadow=`0 8px 30px rgba(0,0,0,0.40), 0 0 20px ${t.color}18`; }}
+                  onMouseLeave={e => { e.currentTarget.style.background=`linear-gradient(145deg, ${t.color}13 0%, rgba(255,255,255,0.03) 100%)`; e.currentTarget.style.borderColor=`${t.color}35`; e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='0 3px 16px rgba(0,0,0,0.30)'; }}
                 >
-                  <div style={{ fontSize:24, marginBottom:8, display:'flex', alignItems:'center' }}>{t.icon}</div>
-                  <div style={{ fontSize:13, fontWeight:700, color:'rgba(255,255,255,0.85)', marginBottom:5 }}>{t.title}</div>
-                  <div style={{ fontSize:11.5, color:'rgba(255,255,255,0.35)', lineHeight:1.5 }}>{t.desc}</div>
+                  <div style={{ width:40, height:40, borderRadius:11, background:`${t.color}20`, border:`1px solid ${t.color}45`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:22, marginBottom:10 }}>{t.icon}</div>
+                  <div style={{ fontSize:13, fontWeight:700, color:'rgba(255,255,255,0.90)', marginBottom:5 }}>{t.title}</div>
+                  <div style={{ fontSize:11.5, color:'rgba(255,255,255,0.42)', lineHeight:1.5 }}>{t.desc}</div>
                   <div style={{ marginTop:10, fontSize:11, fontWeight:700, color:t.color }}>Start earning →</div>
                 </div>
               ))}
