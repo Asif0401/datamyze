@@ -1918,9 +1918,9 @@ body { background: #04060e !important; }
 /* 8. Page title — vivid visible gradient */
 .page-title {
   font-size: 26px !important; font-weight: 900 !important;
-  background: linear-gradient(120deg, #ffffff 0%, #93c5fd 60%, #c4b5fd 100%) !important;
+  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 55%, #c084fc 100%) !important;
   -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important;
-  background-clip: text !important; letter-spacing: -0.6px !important;
+  background-clip: text !important; letter-spacing: -0.5px !important;
 }
 
 /* 9. Sidebar */
