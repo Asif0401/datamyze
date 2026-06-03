@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../hooks/useApi';
+import { useAuth } from '../context/AuthContext';
+
+const ADMIN_EMAIL = 'ak384837@gmail.com';
 
 const TYPE_COLOR = {
   SQL:        { bg: 'rgba(56,189,248,0.12)',  border: 'rgba(56,189,248,0.30)',  text: '#38bdf8'  },
@@ -24,14 +27,17 @@ const SAMPLE_COMPANIES = [
 ];
 
 export default function CompanyQuestions() {
+  const { user } = useAuth();
   const [companies, setCompanies]     = useState([]);
   const [loading, setLoading]         = useState(true);
-  const [isPremium, setIsPremium]     = useState(false);
   const [selected, setSelected]       = useState(null);   // { company, questions }
   const [qLoading, setQLoading]       = useState(false);
   const [openQ, setOpenQ]             = useState(null);   // expanded question id
   const [filter, setFilter]           = useState('All');  // All | SQL | Python | Analytical | Behavioral
   const navigate = useNavigate();
+
+  // Determine access from auth context — no API round-trip needed
+  const isPremium = user?.is_premium === 1 || user?.role === 'admin' || user?.email === ADMIN_EMAIL;
 
   useEffect(() => { loadCompanies(); }, []);
 
@@ -39,10 +45,9 @@ export default function CompanyQuestions() {
     try {
       const r = await api.get('/company-banks');
       setCompanies(r.data.companies);
-      setIsPremium(true);
     } catch (e) {
       if (e.response?.status === 401) navigate('/login');
-      setIsPremium(false);
+      // Non-fatal — page still renders, paywall shown to non-premium
     } finally { setLoading(false); }
   }
 
