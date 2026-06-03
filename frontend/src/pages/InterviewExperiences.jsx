@@ -703,13 +703,12 @@ export default function InterviewExperiences() {
       {/* ── Page Header ── */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.6rem', flexWrap: 'wrap' }}>
         <div>
-          <h1 style={{
-            fontSize: 'clamp(22px,4vw,32px)', fontWeight: 900, color: '#fff',
-            margin: '0 0 6px',
-            background: 'linear-gradient(135deg, #60a5fa 0%, #6366f1 50%, #a78bfa 100%)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-          }}>
-            🎙️ Interview Experiences
+          <h1 style={{ fontSize: 'clamp(22px,4vw,32px)', fontWeight: 900, margin: '0 0 6px', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span>🎙️</span>
+            <span style={{
+              background: 'linear-gradient(135deg, #60a5fa 0%, #6366f1 50%, #a78bfa 100%)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+            }}>Interview Experiences</span>
           </h1>
           <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', margin: 0 }}>
             Real interview experiences shared by the Datamyze community
