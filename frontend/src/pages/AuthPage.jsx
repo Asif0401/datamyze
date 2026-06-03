@@ -577,9 +577,10 @@ export default function AuthPage({ mode: initialMode }) {
 
       {/* ═══ MOBILE HERO (hidden on desktop) ═══ */}
       <div className="auth-mobile-hero">
+
         {/* Brand */}
-        <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:'1rem' }}>
-          <div style={{ width:38, height:38, borderRadius:11, background:'linear-gradient(145deg,#1e40af,#0891b2)', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 0 16px rgba(34,211,238,0.35)' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:'1.1rem' }}>
+          <div style={{ width:38, height:38, borderRadius:11, background:'linear-gradient(145deg,#1e40af,#0891b2)', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 0 16px rgba(34,211,238,0.35)', flexShrink:0 }}>
             <svg viewBox="0 0 22 22" fill="none" width="20" height="20">
               <defs>
                 <linearGradient id="mb1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="white" stopOpacity="0.7"/><stop offset="100%" stopColor="white" stopOpacity="0.1"/></linearGradient>
@@ -592,49 +593,92 @@ export default function AuthPage({ mode: initialMode }) {
               <line x1="3.25" y1="16.5" x2="18.25" y2="4.5" stroke="#22d3ee" strokeWidth="1.8" strokeLinecap="round" opacity="0.9"/>
             </svg>
           </div>
-          <span style={{ fontSize:22, fontWeight:800, letterSpacing:'-0.4px' }}>
-            <span style={{ color:'rgba(255,255,255,0.70)', fontWeight:600 }}>Data</span>
+          <span style={{ fontSize:21, fontWeight:800, letterSpacing:'-0.4px' }}>
+            <span style={{ color:'rgba(255,255,255,0.65)', fontWeight:500 }}>Data</span>
             <span style={{ background:'linear-gradient(135deg,#fff 0%,#22d3ee 60%,#a78bfa 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', fontWeight:900 }}>myze</span>
           </span>
         </div>
 
-        {/* Headline */}
-        <div style={{ fontSize:26, fontWeight:900, letterSpacing:'-0.8px', lineHeight:1.15, marginBottom:'0.4rem' }}>
-          <span style={{ color:'rgba(255,255,255,0.80)' }}>Practice. Get mentored.</span><br/>
-          <span style={{ background:'linear-gradient(135deg,#4A90D9 0%,#a78bfa 55%,#5CC8A0 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>Get hired.</span>
-        </div>
-        <div style={{ fontSize:13, color:'rgba(255,255,255,0.40)', marginBottom:'1.1rem', lineHeight:1.5 }}>
-          SQL · Python · 1:1 Mentorship · Resume Review · Mock Interviews
+        {/* Active users badge */}
+        <div style={{ display:'inline-flex', alignItems:'center', gap:7, padding:'5px 12px', borderRadius:20, background:'rgba(56,189,248,0.07)', border:'1px solid rgba(56,189,248,0.20)', fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.65)', marginBottom:'1rem' }}>
+          <span className="auth-live-dot" />
+          <span style={{ color:'#38bdf8', fontWeight:800 }}>2,000+</span> data aspirants actively learning
         </div>
 
-        {/* Stats strip */}
-        <div style={{ display:'flex', borderTop:'1px solid rgba(255,255,255,0.07)', borderBottom:'1px solid rgba(255,255,255,0.07)', padding:'0.75rem 0', marginBottom:'1.2rem' }}>
+        {/* Headline */}
+        <div style={{ marginBottom:'0.7rem' }}>
+          <div style={{ fontSize:26, fontWeight:900, letterSpacing:'-1px', lineHeight:1.1, color:'rgba(255,255,255,0.88)', marginBottom:4 }}>
+            The platform that actually gets you
+          </div>
+          <div style={{ position:'relative', display:'inline-block' }}>
+            <span style={{ fontSize:28, fontWeight:900, letterSpacing:'-1.2px', lineHeight:1.05, background:'linear-gradient(135deg,#4A90D9 0%,#818cf8 45%,#c084fc 75%,#5CC8A0 100%)', backgroundSize:'200% auto', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', animation:'gradientShift 5s ease infinite' }}>
+              hired in data.
+            </span>
+            <span style={{ position:'absolute', bottom:-4, left:0, right:0, height:3, borderRadius:4, background:'linear-gradient(90deg,#4A90D9,#818cf8,#5CC8A0)', animation:'barIn 0.7s 0.5s ease both', transformOrigin:'left' }} />
+          </div>
+        </div>
+
+        {/* Subtext */}
+        <div style={{ fontSize:13, color:'rgba(255,255,255,0.42)', lineHeight:1.6, marginBottom:'1.2rem' }}>
+          Real SQL &amp; Python problems · 1:1 mentorship · resume review · mock interviews · 100% placement support
+        </div>
+
+        {/* Stats — 2x2 grid */}
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0.5rem', marginBottom:'1.2rem' }}>
           {[
-            { val:'400+', lbl:'Problems'  },
-            { val:'1:1',  lbl:'Mentorship'},
-            { val:'₹199', lbl:'Lifetime'  },
-            { val:'100%', lbl:'Placement' },
+            { val:'400+',  lbl:'Problems',      color:'#38bdf8' },
+            { val:'1:1',   lbl:'Mentorship',    color:'#a78bfa' },
+            { val:'24h',   lbl:'Resume Review', color:'#5CC8A0' },
+            { val:'₹199',  lbl:'Lifetime',      color:'#E8A838' },
           ].map((s, i) => (
-            <div key={i} style={{ flex:1, textAlign:'center', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.07)' : 'none' }}>
-              <div style={{ fontSize:17, fontWeight:800, color:'#fff', letterSpacing:'-0.3px' }}>{s.val}</div>
-              <div style={{ fontSize:10, fontWeight:600, color:'rgba(255,255,255,0.35)', textTransform:'uppercase', letterSpacing:'0.3px' }}>{s.lbl}</div>
+            <div key={i} style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'10px 8px', borderRadius:12, background:`${s.color}0e`, border:`1px solid ${s.color}25` }}>
+              <div style={{ fontSize:18, fontWeight:900, color:s.color, letterSpacing:'-0.4px', lineHeight:1 }}>{s.val}</div>
+              <div style={{ fontSize:10, fontWeight:600, color:'rgba(255,255,255,0.38)', textTransform:'uppercase', letterSpacing:'0.4px', marginTop:3 }}>{s.lbl}</div>
             </div>
           ))}
         </div>
 
-        {/* Feature pills */}
-        <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
+        {/* Company marquee */}
+        <div style={{ marginBottom:'1.2rem' }}>
+          <div style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.25)', letterSpacing:1.5, textTransform:'uppercase', marginBottom:8 }}>Top companies hiring data analysts</div>
+          <div style={{ overflow:'hidden', maskImage:'linear-gradient(to right,transparent,black 8%,black 92%,transparent)', WebkitMaskImage:'linear-gradient(to right,transparent,black 8%,black 92%,transparent)' }}>
+            <div className="auth-marquee-track">
+              {[...COMPANIES, ...COMPANIES].map((co, i) => (
+                <span key={i} style={{ display:'inline-flex', alignItems:'center', padding:'4px 11px', marginRight:6, borderRadius:20, background:`${CMP_COLOR[co]}12`, border:`1px solid ${CMP_COLOR[co]}28`, color:CMP_COLOR[co], fontSize:11.5, fontWeight:700, whiteSpace:'nowrap' }}>
+                  {co}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Feature highlights — 2-col */}
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0.5rem', marginBottom:'1.2rem' }}>
           {[
-            { icon:'🎙️', label:'Live Mock Interviews', color:'#a78bfa' },
-            { icon:'💼',  label:'300+ Job Listings',   color:'#38bdf8' },
-            { icon:'📄',  label:'Resume Review',       color:'#5CC8A0' },
-            { icon:'🏆',  label:'Verified Certs',      color:'#E8A838' },
-          ].map(p => (
-            <span key={p.label} style={{ display:'flex', alignItems:'center', gap:5, fontSize:12, fontWeight:600, padding:'5px 10px', borderRadius:20, background:`${p.color}14`, border:`1px solid ${p.color}30`, color:p.color }}>
-              <span>{p.icon}</span>{p.label}
-            </span>
+            { icon:'🗄️', color:'#38bdf8', title:'SQL & Python',     desc:'400+ real problems' },
+            { icon:'🎙️', color:'#a78bfa', title:'Mock Interviews',  desc:'1:1 with our mentor' },
+            { icon:'📄', color:'#5CC8A0', title:'Resume Review',    desc:'Expert feedback 24h' },
+            { icon:'💼', color:'#E8A838', title:'Job Board',        desc:'300+ data roles' },
+          ].map((f, i) => (
+            <div key={i} style={{ padding:'0.75rem', borderRadius:12, background:`${f.color}0c`, border:`1px solid ${f.color}22`, borderTop:`2px solid ${f.color}45` }}>
+              <div style={{ fontSize:18, marginBottom:4 }}>{f.icon}</div>
+              <div style={{ fontSize:12, fontWeight:800, color:'#fff', marginBottom:2 }}>{f.title}</div>
+              <div style={{ fontSize:11, color:'rgba(255,255,255,0.38)' }}>{f.desc}</div>
+            </div>
           ))}
         </div>
+
+        {/* Social links */}
+        <div style={{ display:'flex', alignItems:'center', gap:10, paddingTop:'0.8rem', borderTop:'1px solid rgba(255,255,255,0.06)' }}>
+          <span style={{ fontSize:11, color:'rgba(255,255,255,0.25)', fontWeight:500, flex:1 }}>Follow us</span>
+          <a href="https://www.instagram.com/datamyze.in/" target="_blank" rel="noreferrer" style={{ display:'flex', alignItems:'center', justifyContent:'center', width:32, height:32, borderRadius:9, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.09)', color:'rgba(255,255,255,0.40)', textDecoration:'none' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/company/123464067/" target="_blank" rel="noreferrer" style={{ display:'flex', alignItems:'center', justifyContent:'center', width:32, height:32, borderRadius:9, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.09)', color:'rgba(255,255,255,0.40)', textDecoration:'none' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.271C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+        </div>
+
       </div>
 
       {/* ═══ RIGHT CARD ═══ */}

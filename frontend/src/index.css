@@ -1200,12 +1200,16 @@ select option { background: #1a2035; color: var(--text); }
   .auth-mobile-hero {
     display: block;
     width: 100%; max-width: 440px;
-    margin-bottom: 1.4rem;
+    margin-bottom: 1.6rem;
+    animation: fadeInUp 0.5s ease both;
   }
+  /* Mobile marquee slightly slower */
+  .auth-marquee-track { animation-duration: 26s; }
 }
 @media (max-width: 480px) {
-  .auth-wrap { padding: 1.2rem 0.9rem 2rem; }
-  .auth-card { border-radius: 16px; padding: 1.5rem 1.2rem; }
+  .auth-wrap { padding: 1.1rem 0.85rem 2rem; }
+  .auth-card { border-radius: 16px; padding: 1.4rem 1.1rem; }
+  .auth-mobile-hero { max-width: 100%; }
 }
 
 /* ── Tables ─────────────────────────────────────────── */
