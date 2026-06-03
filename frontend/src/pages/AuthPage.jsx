@@ -706,6 +706,93 @@ export default function AuthPage({ mode: initialMode }) {
           ))}
         </div>
 
+        {/* ── SECTION: How it works ── */}
+        <div style={{ paddingTop:'1.8rem', marginBottom:'1.6rem', borderTop:'1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ fontSize:10, fontWeight:800, color:'rgba(167,139,250,0.7)', letterSpacing:2.5, textTransform:'uppercase', marginBottom:8 }}>The process</div>
+          <div style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.7px', color:'rgba(255,255,255,0.88)', marginBottom:'1.4rem', lineHeight:1.15 }}>
+            Your roadmap to<br/>a data job
+          </div>
+          <div style={{ display:'flex', flexDirection:'column', gap:0 }}>
+            {[
+              { step:'01', icon:'📚', color:'#38bdf8', title:'Learn the fundamentals',           desc:'SQL, Python & data analysis courses — beginner friendly, industry relevant.' },
+              { step:'02', icon:'🎯', color:'#a78bfa', title:'Practise real interview problems', desc:'400+ problems from Flipkart, Amazon & Zomato interview rounds.' },
+              { step:'03', icon:'🎙️', color:'#5CC8A0', title:'Mock interviews & resume review', desc:'1:1 live mock sessions + ATS-optimised feedback in 24 hours.' },
+              { step:'04', icon:'💼', color:'#E8A838', title:'Apply & get placed',               desc:'300+ curated roles + placement support until you sign the offer.' },
+            ].map((s, i) => (
+              <div key={i} style={{ display:'flex', gap:14, alignItems:'flex-start', paddingBottom: i < 3 ? '1.3rem' : 0 }}>
+                <div style={{ display:'flex', flexDirection:'column', alignItems:'center', flexShrink:0 }}>
+                  <div style={{ width:42, height:42, borderRadius:13, background:`${s.color}10`, border:`1.5px solid ${s.color}35`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20 }}>{s.icon}</div>
+                  {i < 3 && <div style={{ width:1.5, flexGrow:1, minHeight:20, background:`linear-gradient(180deg,${s.color}40,transparent)`, marginTop:5 }} />}
+                </div>
+                <div style={{ paddingTop:9 }}>
+                  <div style={{ fontSize:10, fontWeight:800, color:s.color, letterSpacing:1.5, textTransform:'uppercase', marginBottom:3 }}>Step {s.step}</div>
+                  <div style={{ fontSize:14, fontWeight:800, color:'#fff', marginBottom:4, letterSpacing:'-0.2px' }}>{s.title}</div>
+                  <div style={{ fontSize:12, color:'rgba(255,255,255,0.40)', lineHeight:1.6 }}>{s.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── SECTION: Why Datamyze ── */}
+        <div style={{ marginBottom:'1.6rem', borderTop:'1px solid rgba(255,255,255,0.06)', paddingTop:'1.8rem' }}>
+          <div style={{ fontSize:10, fontWeight:800, color:'rgba(92,200,160,0.7)', letterSpacing:2.5, textTransform:'uppercase', marginBottom:8 }}>Why Datamyze?</div>
+          <div style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.7px', color:'rgba(255,255,255,0.88)', marginBottom:'1.2rem' }}>We built what<br/>others didn't.</div>
+          <div style={{ borderRadius:14, overflow:'hidden', border:'1px solid rgba(127,119,221,0.20)' }}>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr' }}>
+              <div style={{ background:'rgba(255,255,255,0.025)', padding:'8px 12px', borderBottom:'1px solid rgba(255,255,255,0.06)', borderRight:'1px solid rgba(255,255,255,0.06)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                <span style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.28)', letterSpacing:1, textTransform:'uppercase' }}>Others</span>
+              </div>
+              <div style={{ background:'linear-gradient(135deg,rgba(127,119,221,0.18),rgba(56,189,248,0.1))', padding:'8px 12px', borderBottom:'1px solid rgba(127,119,221,0.25)', position:'relative', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'linear-gradient(90deg,#7F77DD,#38bdf8)' }} />
+                <span style={{ fontSize:11, fontWeight:800, background:'linear-gradient(135deg,#c4b5fd,#67e8f9)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', letterSpacing:0.5, textTransform:'uppercase' }}>✦ Datamyze</span>
+              </div>
+              {[
+                { bad:'Only video tutorials',    good:'Real interview questions',     color:'#38bdf8' },
+                { bad:'No live sessions',         good:'Live classes every week',     color:'#F07B6A' },
+                { bad:'No mentorship',            good:'Dedicated 1:1 mentor',        color:'#a78bfa' },
+                { bad:'No placement support',     good:'100% placement assistance',   color:'#5CC8A0' },
+                { bad:'No mock interviews',       good:'Live mock + feedback',         color:'#f9a825' },
+                { bad:'No job board',             good:'300+ data roles weekly',       color:'#34d399' },
+              ].flatMap((row, i) => [
+                <div key={`b${i}`} style={{ padding:'8px 10px', borderRight:'1px solid rgba(255,255,255,0.05)', borderBottom:i<5?'1px solid rgba(255,255,255,0.04)':'none', background:i%2===0?'rgba(0,0,0,0.18)':'rgba(0,0,0,0.10)', display:'flex', alignItems:'center', gap:6 }}>
+                  <div style={{ width:15, height:15, borderRadius:'50%', background:'rgba(248,113,113,0.12)', border:'1px solid rgba(248,113,113,0.3)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                    <span style={{ fontSize:9, color:'#f87171', fontWeight:900, lineHeight:1 }}>✕</span>
+                  </div>
+                  <span style={{ fontSize:11.5, color:'rgba(255,255,255,0.30)', lineHeight:1.4 }}>{row.bad}</span>
+                </div>,
+                <div key={`g${i}`} style={{ padding:'8px 10px', borderBottom:i<5?'1px solid rgba(255,255,255,0.04)':'none', borderLeft:`2px solid ${row.color}40`, background:i%2===0?`linear-gradient(90deg,${row.color}09,transparent)`:`linear-gradient(90deg,transparent,${row.color}06)`, display:'flex', alignItems:'center', gap:6 }}>
+                  <div style={{ width:15, height:15, borderRadius:'50%', background:`${row.color}20`, border:`1px solid ${row.color}50`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                    <span style={{ fontSize:9, color:row.color, fontWeight:900, lineHeight:1 }}>✓</span>
+                  </div>
+                  <span style={{ fontSize:11.5, fontWeight:700, color:'rgba(255,255,255,0.88)', lineHeight:1.4 }}>{row.good}</span>
+                </div>,
+              ])}
+            </div>
+          </div>
+        </div>
+
+        {/* ── SECTION: Pricing ── */}
+        <div style={{ marginBottom:'1.6rem', borderTop:'1px solid rgba(255,255,255,0.06)', paddingTop:'1.8rem' }}>
+          <div style={{ fontSize:10, fontWeight:800, color:'rgba(232,168,56,0.8)', letterSpacing:2.5, textTransform:'uppercase', marginBottom:8 }}>Pricing</div>
+          <div style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.7px', color:'rgba(255,255,255,0.88)', marginBottom:'1.2rem' }}>One price.<br/>Everything included.</div>
+          <div style={{ background:'linear-gradient(145deg,rgba(232,168,56,0.07),rgba(167,139,250,0.05))', border:'1px solid rgba(232,168,56,0.22)', borderRadius:16, padding:'1.3rem' }}>
+            <div style={{ display:'flex', alignItems:'baseline', gap:10, marginBottom:6 }}>
+              <span style={{ fontSize:42, fontWeight:900, letterSpacing:'-2px', background:'linear-gradient(135deg,#E8A838,#fbbf24)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>₹199</span>
+              <span style={{ fontSize:14, color:'rgba(255,255,255,0.25)', textDecoration:'line-through' }}>₹999</span>
+              <span style={{ fontSize:11, fontWeight:700, padding:'2px 8px', borderRadius:20, background:'rgba(92,200,160,0.14)', color:'#5CC8A0', border:'1px solid rgba(92,200,160,0.3)' }}>80% OFF</span>
+            </div>
+            <div style={{ fontSize:12, color:'rgba(255,255,255,0.40)', marginBottom:'1rem' }}>One-time · Lifetime access · No renewals</div>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0.4rem' }}>
+              {['400+ Problems','1:1 Mock Interviews','Curated Job Board','Resume Review','Verified Certs','100% Placement'].map(item => (
+                <div key={item} style={{ display:'flex', alignItems:'center', gap:6, fontSize:12, color:'rgba(255,255,255,0.68)' }}>
+                  <span style={{ color:'#5CC8A0', fontWeight:900 }}>✓</span>{item}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Social links */}
         <div style={{ display:'flex', alignItems:'center', gap:10, paddingTop:'0.8rem', borderTop:'1px solid rgba(255,255,255,0.06)', marginBottom:'1.4rem' }}>
           <span style={{ fontSize:11, color:'rgba(255,255,255,0.25)', fontWeight:500, flex:1 }}>Follow us</span>
