@@ -246,15 +246,10 @@ const FEATURES = [
   { icon: '🎯',           color: '#f87171', title: '100% Placement Support',  desc: 'We work alongside you until you land your first data role' },
 ];
 const STATS = [
-  { val: '2,000+', lbl: 'Students',       color: '#38bdf8' },
-  { val: '400+',   lbl: 'Problems',       color: '#a78bfa' },
-  { val: '94%',    lbl: 'Interview Win',  color: '#5CC8A0' },
-  { val: '₹199',   lbl: 'Lifetime',       color: '#E8A838' },
-];
-const HERO_TESTIMONIALS = [
-  { i:'PS', g:'linear-gradient(135deg,#4A90D9,#a78bfa)', name:'Priya Sharma',  role:'BI Analyst — Meesho',                  text:'"Got placed at Meesho within 2 months. The mock interviews and SQL problem sets are exactly what the hiring panel tested."' },
-  { i:'RK', g:'linear-gradient(135deg,#5CC8A0,#38bdf8)', name:'Rahul Kumar',   role:'Analytics Engineer — Flipkart',         text:'"The SQL problems are the exact patterns Flipkart asks. Cleared the Analytics Engineer role in my very first attempt."' },
-  { i:'AM', g:'linear-gradient(135deg,#E8A838,#f87171)', name:'Arjun Menon',   role:'Business Intelligence Eng — Amazon',   text:'"Went from fresher to Amazon BIE in 3 months. The structured roadmap made all the difference."' },
+  { val: '400+',  lbl: 'Problems',       color: '#38bdf8' },
+  { val: '1:1',   lbl: 'Mentorship',     color: '#a78bfa' },
+  { val: '24h',   lbl: 'Resume Review',  color: '#5CC8A0' },
+  { val: '₹199',  lbl: 'Lifetime',       color: '#E8A838' },
 ];
 const COMPANIES = ['Flipkart','Amazon','Swiggy','Zomato','PhonePe','Meesho','Razorpay','CRED','Dream11','Walmart'];
 const CMP_COLOR = { Flipkart:'#2874F0',Amazon:'#FF9900',Swiggy:'#FC8019',Zomato:'#E23744',PhonePe:'#5F259F',Meesho:'#8B5CF6',Razorpay:'#2962FF',CRED:'#00C853',Dream11:'#1A73E8',Walmart:'#0071CE' };
@@ -279,6 +274,48 @@ export default function AuthPage({ mode: initialMode }) {
     );
     hero.querySelectorAll('.auth-reveal').forEach(el => obs.observe(el));
     return () => obs.disconnect();
+  }, []);
+
+  /* Auto-scroll: slow cinematic scroll, pauses on hover/touch */
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+    let raf;
+    let pos = 0;
+    let paused = false;
+    const SPEED = 0.45; // px per frame
+
+    // Delay start by 3s so user can read the hero first
+    const startTimer = setTimeout(() => {
+      const tick = () => {
+        if (!paused) {
+          pos += SPEED;
+          if (pos >= hero.scrollHeight - hero.clientHeight) pos = 0;
+          hero.scrollTop = pos;
+        }
+        raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    }, 3000);
+
+    const pause  = () => { paused = true; };
+    const resume = () => { paused = false; pos = hero.scrollTop; };
+
+    hero.addEventListener('mouseenter',  pause);
+    hero.addEventListener('mouseleave',  resume);
+    hero.addEventListener('touchstart',  pause,  { passive: true });
+    hero.addEventListener('touchend',    resume, { passive: true });
+    hero.addEventListener('wheel',       pause,  { passive: true });
+
+    return () => {
+      clearTimeout(startTimer);
+      cancelAnimationFrame(raf);
+      hero.removeEventListener('mouseenter',  pause);
+      hero.removeEventListener('mouseleave',  resume);
+      hero.removeEventListener('touchstart',  pause);
+      hero.removeEventListener('touchend',    resume);
+      hero.removeEventListener('wheel',       pause);
+    };
   }, []);
 
   return (
@@ -399,43 +436,37 @@ export default function AuthPage({ mode: initialMode }) {
           </div>
         </section>
 
-        {/* ══════════════ SECTION 3 — PLACEMENTS ══════════════ */}
+        {/* ══════════════ SECTION 3 — HOW IT WORKS ══════════════ */}
         <section style={{ padding:'4rem', borderTop:'1px solid rgba(255,255,255,0.05)', background:'rgba(255,255,255,0.015)' }}>
           <div className="auth-reveal">
-            <div style={{ fontSize:11, fontWeight:800, color:'rgba(167,139,250,0.7)', letterSpacing:2.5, textTransform:'uppercase', marginBottom:12 }}>Where they landed</div>
-            <div style={{ fontSize:'clamp(24px,2.4vw,36px)', fontWeight:900, letterSpacing:'-1px', color:'rgba(255,255,255,0.88)', marginBottom:'0.5rem' }}>
-              Our students work at
+            <div style={{ fontSize:11, fontWeight:800, color:'rgba(167,139,250,0.7)', letterSpacing:2.5, textTransform:'uppercase', marginBottom:12 }}>The process</div>
+            <div style={{ fontSize:'clamp(24px,2.4vw,36px)', fontWeight:900, letterSpacing:'-1px', color:'rgba(255,255,255,0.88)', marginBottom:'0.4rem' }}>
+              Your roadmap to a data job
             </div>
-            <div style={{ fontSize:14, color:'rgba(255,255,255,0.38)', marginBottom:'2rem' }}>Real placements. Real companies. Real data roles.</div>
+            <div style={{ fontSize:14, color:'rgba(255,255,255,0.38)', marginBottom:'2.2rem' }}>Four steps. One destination.</div>
           </div>
 
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'0.75rem' }}>
+          <div style={{ display:'flex', flexDirection:'column', gap:'0' }}>
             {[
-              { co:'Flipkart',    logo:'🛒', color:'#2874F0', role:'Data Analyst',             name:'Priya S.',  tag:'SQL Specialist'    },
-              { co:'Amazon',      logo:'📦', color:'#FF9900', role:'BI Engineer',               name:'Rahul K.',  tag:'Python Track'      },
-              { co:'Swiggy',      logo:'🍔', color:'#FC8019', role:'Product Analyst',           name:'Anjali M.', tag:'Case Studies'      },
-              { co:'Zomato',      logo:'🍕', color:'#E23744', role:'Analytics Engineer',        name:'Dev R.',    tag:'Mock Interviews'   },
-              { co:'PhonePe',     logo:'💸', color:'#5F259F', role:'Data Analyst — Payments',   name:'Sneha P.',  tag:'Resume Review'     },
-              { co:'Meesho',      logo:'🛍️', color:'#8B5CF6', role:'Business Analyst',          name:'Arjun N.',  tag:'Job Board'         },
-            ].map((p, i) => (
-              <div key={i} className="auth-reveal" style={{
-                transitionDelay:`${i * 70}ms`,
-                padding:'1rem',
-                borderRadius:14,
-                background:`linear-gradient(145deg, ${p.color}0c 0%, rgba(255,255,255,0.02) 100%)`,
-                border:`1px solid ${p.color}28`,
-                borderTop:`2px solid ${p.color}55`,
-              }}>
-                <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
-                  <div style={{ width:32, height:32, borderRadius:9, background:`${p.color}20`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, flexShrink:0 }}>{p.logo}</div>
-                  <div>
-                    <div style={{ fontSize:12, fontWeight:800, color:'#fff' }}>{p.co}</div>
-                    <div style={{ fontSize:10.5, color:'rgba(255,255,255,0.38)' }}>{p.role}</div>
-                  </div>
+              { step:'01', icon:'📚', color:'#38bdf8', title:'Learn the fundamentals', desc:'Start with SQL, Python, and data analysis courses built from scratch — beginner friendly, industry relevant.' },
+              { step:'02', icon:'🎯', color:'#a78bfa', title:'Practise real interview problems', desc:'Solve 400+ SQL and Python problems directly sourced from top Indian tech company interview rounds.' },
+              { step:'03', icon:'🎙️', color:'#5CC8A0', title:'Mock interviews & resume review', desc:'Book 1:1 live mock interviews. Get your resume ATS-optimised with expert feedback in 24 hours.' },
+              { step:'04', icon:'💼', color:'#E8A838', title:'Apply & get placed', desc:'Access 300+ curated data roles and lean on our placement support team until you sign your offer letter.' },
+            ].map((s, i) => (
+              <div key={i} className="auth-reveal" style={{ transitionDelay:`${i * 90}ms`, display:'flex', gap:18, alignItems:'flex-start', paddingBottom: i < 3 ? '1.8rem' : 0 }}>
+                {/* Icon + connector */}
+                <div style={{ display:'flex', flexDirection:'column', alignItems:'center', flexShrink:0 }}>
+                  <div style={{ width:48, height:48, borderRadius:14, background:`${s.color}12`, border:`1.5px solid ${s.color}38`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:22 }}>{s.icon}</div>
+                  {i < 3 && <div style={{ width:2, flexGrow:1, minHeight:24, background:`linear-gradient(180deg, ${s.color}40, transparent)`, marginTop:6, marginBottom:-6 }} />}
                 </div>
-                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                  <div style={{ fontSize:11, color:'rgba(255,255,255,0.45)', fontWeight:600 }}>{p.name}</div>
-                  <span style={{ fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:20, background:`${p.color}18`, color:p.color }}>{p.tag}</span>
+                {/* Text */}
+                <div style={{ paddingTop:10 }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:5 }}>
+                    <span style={{ fontSize:10, fontWeight:900, color:s.color, letterSpacing:1.5, textTransform:'uppercase' }}>Step {s.step}</span>
+                    <div style={{ height:1, flex:1, maxWidth:40, background:`${s.color}30` }} />
+                  </div>
+                  <div style={{ fontSize:15, fontWeight:800, color:'#fff', marginBottom:5, letterSpacing:'-0.3px' }}>{s.title}</div>
+                  <div style={{ fontSize:12.5, color:'rgba(255,255,255,0.42)', lineHeight:1.65 }}>{s.desc}</div>
                 </div>
               </div>
             ))}
