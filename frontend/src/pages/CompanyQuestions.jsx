@@ -30,14 +30,15 @@ export default function CompanyQuestions() {
   const { user } = useAuth();
   const [companies, setCompanies]     = useState([]);
   const [loading, setLoading]         = useState(true);
-  const [selected, setSelected]       = useState(null);   // { company, questions }
+  const [seeding, setSeeding]         = useState(false);
+  const [selected, setSelected]       = useState(null);
   const [qLoading, setQLoading]       = useState(false);
-  const [openQ, setOpenQ]             = useState(null);   // expanded question id
-  const [filter, setFilter]           = useState('All');  // All | SQL | Python | Analytical | Behavioral
+  const [openQ, setOpenQ]             = useState(null);
+  const [filter, setFilter]           = useState('All');
   const navigate = useNavigate();
 
-  // Determine access from auth context — no API round-trip needed
   const isPremium = user?.is_premium === 1 || user?.role === 'admin' || user?.email === ADMIN_EMAIL;
+  const isAdmin   = user?.role === 'admin' || user?.email === ADMIN_EMAIL;
 
   useEffect(() => { loadCompanies(); }, []);
 
@@ -47,8 +48,17 @@ export default function CompanyQuestions() {
       setCompanies(r.data.companies);
     } catch (e) {
       if (e.response?.status === 401) navigate('/login');
-      // Non-fatal — page still renders, paywall shown to non-premium
     } finally { setLoading(false); }
+  }
+
+  async function forceSeed() {
+    setSeeding(true);
+    try {
+      await api.post('/company-banks/force-seed');
+      await loadCompanies();
+    } catch(e) {
+      alert('Seed error: ' + (e.response?.data?.error || e.message));
+    } finally { setSeeding(false); }
   }
 
   async function openCompany(company) {
@@ -255,6 +265,19 @@ export default function CompanyQuestions() {
           <span key={t} style={{ fontSize:12, fontWeight:700, padding:'4px 12px', borderRadius:20, background:c.bg, border:`1px solid ${c.border}`, color:c.text }}>{t}</span>
         ))}
       </div>
+
+      {/* Admin seed button — shown only when 0 companies */}
+      {isAdmin && !loading && companies.length === 0 && (
+        <div style={{ background:'rgba(232,168,56,0.08)', border:'1px solid rgba(232,168,56,0.25)', borderRadius:14, padding:'1.2rem 1.4rem', marginBottom:'1.4rem', display:'flex', alignItems:'center', justifyContent:'space-between', gap:12 }}>
+          <div>
+            <div style={{ fontWeight:700, color:'#E8A838', fontSize:14, marginBottom:3 }}>⚠️ No companies seeded yet</div>
+            <div style={{ fontSize:12, color:'rgba(255,255,255,0.45)' }}>Click to insert all 10 companies and 60+ questions into the database.</div>
+          </div>
+          <button onClick={forceSeed} disabled={seeding} style={{ padding:'0.6rem 1.2rem', borderRadius:10, background:'linear-gradient(135deg,#E8A838,#f59e0b)', border:'none', color:'#000', fontWeight:800, fontSize:13, cursor:'pointer', whiteSpace:'nowrap', opacity: seeding ? 0.6 : 1 }}>
+            {seeding ? 'Seeding…' : '🌱 Seed Data'}
+          </button>
+        </div>
+      )}
 
       {/* Company cards grid */}
       {loading ? (
