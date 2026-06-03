@@ -154,9 +154,9 @@ export default function Quiz() {
             ].map((s, idx) => (
               <div key={s.label} style={{
                 textAlign: 'center', padding: '1rem 0.8rem',
-                background: `linear-gradient(145deg, ${s.color}10 0%, rgba(255,255,255,0.03) 100%)`,
-                border: `1px solid ${s.color}28`,
-                borderTop: `2px solid ${s.color}70`,
+                background: 'rgba(20,27,56,0.88)',
+                border: `1px solid ${s.color}40`,
+                borderTop: `2px solid ${s.color}80`,
                 borderRadius: 14,
                 boxShadow: `0 3px 16px rgba(0,0,0,0.30)`,
                 animation: 'popIn 0.32s ease both', animationDelay: `${idx * 0.07}s`,
@@ -179,9 +179,9 @@ export default function Quiz() {
             <div key={s.title} style={{
               display: 'flex', alignItems: 'flex-start', gap: 12,
               padding: '14px 16px', borderRadius: 12,
-              background: `linear-gradient(135deg, ${s.color}10 0%, rgba(255,255,255,0.03) 100%)`,
-              border: `1px solid ${s.color}28`,
-              borderLeft: `3px solid ${s.color}70`,
+              background: 'rgba(20,27,56,0.88)',
+              border: `1px solid ${s.color}40`,
+              borderLeft: `3px solid ${s.color}90`,
               boxShadow: `0 2px 12px rgba(0,0,0,0.25)`,
               animation: 'fadeInUp 0.35s ease both', animationDelay: `${idx * 0.09}s`,
             }}>
@@ -210,9 +210,9 @@ export default function Quiz() {
                 key={course.id}
                 onClick={() => selectCourse(course)}
                 style={{
-                  background: `linear-gradient(145deg, ${course.color || '#7F77DD'}12 0%, rgba(255,255,255,0.03) 100%)`,
-                  border: `1px solid ${course.color || '#7F77DD'}30`,
-                  borderTop: `2px solid ${course.color || '#7F77DD'}65`,
+                  background: 'rgba(20,27,56,0.88)',
+                  border: `1px solid ${course.color || '#7F77DD'}40`,
+                  borderTop: `2px solid ${course.color || '#7F77DD'}80`,
                   borderRadius: 14,
                   padding: '1.3rem',
                   cursor: 'pointer',
@@ -226,13 +226,13 @@ export default function Quiz() {
                   animationDelay: `${idx * 0.08}s`,
                 }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.background = `linear-gradient(145deg, ${course.color || '#7F77DD'}22 0%, rgba(255,255,255,0.05) 100%)`;
+                  e.currentTarget.style.background = 'rgba(28,36,68,0.92)';
                   e.currentTarget.style.borderColor = `${course.color || '#7F77DD'}55`;
                   e.currentTarget.style.transform = 'translateY(-3px)';
                   e.currentTarget.style.boxShadow = `0 10px 34px rgba(0,0,0,0.40), 0 0 24px ${course.color || '#7F77DD'}18`;
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.background = `linear-gradient(145deg, ${course.color || '#7F77DD'}12 0%, rgba(255,255,255,0.03) 100%)`;
+                  e.currentTarget.style.background = 'rgba(20,27,56,0.88)';
                   e.currentTarget.style.borderColor = `${course.color || '#7F77DD'}30`;
                   e.currentTarget.style.transform = 'none';
                   e.currentTarget.style.boxShadow = '0 3px 16px rgba(0,0,0,0.30)';
