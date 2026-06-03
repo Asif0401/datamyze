@@ -449,6 +449,68 @@ export default function AuthPage({ mode: initialMode }) {
 
       </div>
 
+      {/* ═══ MOBILE HERO (hidden on desktop) ═══ */}
+      <div className="auth-mobile-hero">
+        {/* Brand */}
+        <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:'1rem' }}>
+          <div style={{ width:38, height:38, borderRadius:11, background:'linear-gradient(145deg,#1e40af,#0891b2)', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 0 16px rgba(34,211,238,0.35)' }}>
+            <svg viewBox="0 0 22 22" fill="none" width="20" height="20">
+              <defs>
+                <linearGradient id="mb1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="white" stopOpacity="0.7"/><stop offset="100%" stopColor="white" stopOpacity="0.1"/></linearGradient>
+                <linearGradient id="mb4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#22d3ee"/><stop offset="100%" stopColor="#22d3ee" stopOpacity="0.18"/></linearGradient>
+              </defs>
+              <rect x="1.5" y="17" width="3.5" height="4.5" rx="1.3" fill="url(#mb1)"/>
+              <rect x="6.5" y="13" width="3.5" height="8.5" rx="1.3" fill="url(#mb1)"/>
+              <rect x="11.5" y="9"  width="3.5" height="12.5" rx="1.3" fill="url(#mb1)"/>
+              <rect x="16.5" y="5"  width="3.5" height="16.5" rx="1.3" fill="url(#mb4)"/>
+              <line x1="3.25" y1="16.5" x2="18.25" y2="4.5" stroke="#22d3ee" strokeWidth="1.8" strokeLinecap="round" opacity="0.9"/>
+            </svg>
+          </div>
+          <span style={{ fontSize:22, fontWeight:800, letterSpacing:'-0.4px' }}>
+            <span style={{ color:'rgba(255,255,255,0.70)', fontWeight:600 }}>Data</span>
+            <span style={{ background:'linear-gradient(135deg,#fff 0%,#22d3ee 60%,#a78bfa 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', fontWeight:900 }}>myze</span>
+          </span>
+        </div>
+
+        {/* Headline */}
+        <div style={{ fontSize:26, fontWeight:900, letterSpacing:'-0.8px', lineHeight:1.15, marginBottom:'0.4rem' }}>
+          <span style={{ color:'rgba(255,255,255,0.80)' }}>Practice. Get mentored.</span><br/>
+          <span style={{ background:'linear-gradient(135deg,#4A90D9 0%,#a78bfa 55%,#5CC8A0 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>Get hired.</span>
+        </div>
+        <div style={{ fontSize:13, color:'rgba(255,255,255,0.40)', marginBottom:'1.1rem', lineHeight:1.5 }}>
+          SQL · Python · 1:1 Mentorship · Resume Review · Mock Interviews
+        </div>
+
+        {/* Stats strip */}
+        <div style={{ display:'flex', borderTop:'1px solid rgba(255,255,255,0.07)', borderBottom:'1px solid rgba(255,255,255,0.07)', padding:'0.75rem 0', marginBottom:'1.2rem' }}>
+          {[
+            { val:'400+', lbl:'Problems'  },
+            { val:'1:1',  lbl:'Mentorship'},
+            { val:'₹199', lbl:'Lifetime'  },
+            { val:'100%', lbl:'Placement' },
+          ].map((s, i) => (
+            <div key={i} style={{ flex:1, textAlign:'center', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.07)' : 'none' }}>
+              <div style={{ fontSize:17, fontWeight:800, color:'#fff', letterSpacing:'-0.3px' }}>{s.val}</div>
+              <div style={{ fontSize:10, fontWeight:600, color:'rgba(255,255,255,0.35)', textTransform:'uppercase', letterSpacing:'0.3px' }}>{s.lbl}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Feature pills */}
+        <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
+          {[
+            { icon:'🎙️', label:'Live Mock Interviews', color:'#a78bfa' },
+            { icon:'💼',  label:'300+ Job Listings',   color:'#38bdf8' },
+            { icon:'📄',  label:'Resume Review',       color:'#5CC8A0' },
+            { icon:'🏆',  label:'Verified Certs',      color:'#E8A838' },
+          ].map(p => (
+            <span key={p.label} style={{ display:'flex', alignItems:'center', gap:5, fontSize:12, fontWeight:600, padding:'5px 10px', borderRadius:20, background:`${p.color}14`, border:`1px solid ${p.color}30`, color:p.color }}>
+              <span>{p.icon}</span>{p.label}
+            </span>
+          ))}
+        </div>
+      </div>
+
       {/* ═══ RIGHT CARD ═══ */}
       <div className="auth-right">
         <div className="auth-card">
