@@ -268,6 +268,11 @@ export default function Layout() {
   const avatarColor = user?.avatar_color || '#4A90D9';
   const avatarSrc   = user?.avatar_url ? `/uploads/avatars/${user.avatar_url}` : null;
 
+  /* Mobile "More" sheet */
+  const [moreOpen, setMoreOpen] = useState(false);
+  // Close sheet on route change
+  useEffect(() => { setMoreOpen(false); }, [location.pathname]);
+
   /* Show popup once per session for non-premium users */
   const [showPopup, setShowPopup] = useState(false);
   useEffect(() => {
@@ -484,19 +489,97 @@ export default function Layout() {
           <span className="mbn-icon"><Icons.Courses /></span>
           <span className="mbn-label">Courses</span>
         </NavLink>
+        <NavLink to="/quiz" className={({ isActive }) => `mbn-item${isActive ? ' mbn-active' : ''}`}>
+          <span className="mbn-icon"><Icons.Quiz /></span>
+          <span className="mbn-label">Quiz</span>
+        </NavLink>
         <NavLink to="/problems" className={({ isActive }) => `mbn-item${isActive ? ' mbn-active' : ''}`}>
           <span className="mbn-icon"><Icons.Problems /></span>
           <span className="mbn-label">Problems</span>
         </NavLink>
-        <NavLink to="/jobs" className={({ isActive }) => `mbn-item${isActive ? ' mbn-active' : ''}`}>
-          <span className="mbn-icon"><Icons.Jobs /></span>
-          <span className="mbn-label">Jobs</span>
-        </NavLink>
-        <NavLink to="/settings" className={({ isActive }) => `mbn-item${isActive ? ' mbn-active' : ''}`}>
-          <span className="mbn-icon"><Icons.Settings /></span>
-          <span className="mbn-label">Profile</span>
-        </NavLink>
+        <button className={`mbn-item${moreOpen ? ' mbn-active' : ''}`} onClick={() => setMoreOpen(o => !o)}>
+          <span className="mbn-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>
+            </svg>
+          </span>
+          <span className="mbn-label">More</span>
+        </button>
       </nav>
+
+      {/* ── Mobile "More" slide-up sheet ── */}
+      {moreOpen && (
+        <>
+          <div
+            style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.55)', backdropFilter:'blur(4px)', zIndex:298 }}
+            onClick={() => setMoreOpen(false)}
+          />
+          <div style={{
+            position:'fixed', bottom:62, left:0, right:0,
+            background:'linear-gradient(180deg, #0c1122 0%, #080e1c 100%)',
+            borderRadius:'22px 22px 0 0',
+            border:'1px solid rgba(255,255,255,0.10)',
+            borderBottom:'none',
+            zIndex:299,
+            padding:'0 1rem 1rem',
+            paddingBottom:`calc(0.8rem + env(safe-area-inset-bottom))`,
+            boxShadow:'0 -12px 48px rgba(0,0,0,0.70)',
+            animation:'moreSheetUp 0.28s cubic-bezier(.32,1.2,.64,1)',
+          }}>
+            {/* Drag handle */}
+            <div style={{ width:36, height:4, background:'rgba(255,255,255,0.18)', borderRadius:99, margin:'0.7rem auto 1rem' }} />
+
+            {/* User card */}
+            <div style={{ display:'flex', alignItems:'center', gap:12, padding:'0.75rem 1rem', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', borderRadius:14, marginBottom:'1rem' }}>
+              <div style={{ width:42, height:42, borderRadius:'50%', background:`linear-gradient(135deg,${avatarColor},#22d3ee)`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, fontWeight:700, flexShrink:0, color:'#fff', overflow:'hidden' }}>
+                {avatarSrc ? <img src={avatarSrc} alt="" style={{ width:'100%', height:'100%', objectFit:'cover' }} /> : initials}
+              </div>
+              <div style={{ flex:1, minWidth:0 }}>
+                <div style={{ fontWeight:700, fontSize:14, color:'#fff', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{user?.name}</div>
+                <div style={{ fontSize:11.5, color:'rgba(255,255,255,0.40)', marginTop:1 }}>
+                  {isPremium ? '👑 Pro Member' : '⚡ Free Plan'} · {(user?.xp||0).toLocaleString()} XP
+                </div>
+              </div>
+            </div>
+
+            {/* Nav grid */}
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'0.6rem', marginBottom:'0.9rem' }}>
+              {[
+                { to:'/leaderboard',  icon:<Icons.Leaderboard />,  label:'Leaderboard', color:'#E8A838' },
+                { to:'/certificates', icon:<Icons.Certificates />, label:'Certificates', color:'#5CC8A0' },
+                { to:'/case-studies', icon:<Icons.CaseStudies />,  label:'Case Studies', color:'#a78bfa' },
+                { to:'/jobs',         icon:<Icons.Jobs />,         label:'Job Board',    color:'#38bdf8' },
+                { to:'/premium',      icon:<Icons.Premium />,      label:'Pro Hub',      color:'#F6C443' },
+                { to:'/settings',     icon:<Icons.Settings />,     label:'Settings',     color:'#94a3b8' },
+              ].map(item => (
+                <NavLink key={item.to} to={item.to}
+                  style={({ isActive }) => ({
+                    display:'flex', flexDirection:'column', alignItems:'center', gap:6,
+                    padding:'0.85rem 0.5rem',
+                    background: isActive ? `${item.color}18` : 'rgba(255,255,255,0.04)',
+                    border: `1px solid ${isActive ? item.color+'40' : 'rgba(255,255,255,0.08)'}`,
+                    borderRadius:14, textDecoration:'none',
+                    color: isActive ? item.color : 'rgba(255,255,255,0.70)',
+                    transition:'all 0.15s',
+                  })}
+                >
+                  <span style={{ width:24, height:24, display:'flex', alignItems:'center', justifyContent:'center' }}>{item.icon}</span>
+                  <span style={{ fontSize:10.5, fontWeight:700, letterSpacing:'0.2px', textAlign:'center' }}>{item.label}</span>
+                </NavLink>
+              ))}
+            </div>
+
+            {/* Sign out */}
+            <button
+              onClick={() => { logout(); navigate('/login'); setMoreOpen(false); }}
+              style={{ width:'100%', padding:'0.85rem', background:'rgba(239,68,68,0.08)', border:'1px solid rgba(239,68,68,0.22)', borderRadius:12, color:'#f87171', fontWeight:700, fontSize:14, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}
+            >
+              <span style={{ width:18, height:18, display:'flex', alignItems:'center', justifyContent:'center' }}><Icons.SignOut /></span>
+              Sign Out
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

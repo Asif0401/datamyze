@@ -2011,3 +2011,9 @@ input:focus, textarea:focus, select:focus {
 .course-body { padding: 1.1rem 1.2rem 1.3rem !important; }
 .course-name { font-size: 15px !important; font-weight: 800 !important; }
 
+/* 25. Mobile More sheet animation */
+@keyframes moreSheetUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
