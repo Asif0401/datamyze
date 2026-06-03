@@ -218,6 +218,13 @@ const Icons = {
       <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
     </svg>
   ),
+  CompanyQ: () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="3" width="20" height="14" rx="2"/>
+      <path d="M8 21h8M12 17v4"/>
+      <path d="M9 9l2 2 4-4"/>
+    </svg>
+  ),
   Help: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="10"/>
@@ -251,8 +258,9 @@ const NAV = [
 ];
 
 const PREMIUM_NAV = [
-  { to: '/premium',    Icon: Icons.Premium,    label: 'Pro Hub',            className: 'nav-premium-item' },
-  { to: '/jobs',       Icon: Icons.Jobs,       label: 'Job Board',          className: 'nav-premium-item' },
+  { to: '/premium',             Icon: Icons.Premium,   label: 'Pro Hub',              className: 'nav-premium-item' },
+  { to: '/jobs',                Icon: Icons.Jobs,      label: 'Job Board',            className: 'nav-premium-item' },
+  { to: '/company-questions',   Icon: Icons.CompanyQ,  label: 'Company Q Banks',      className: 'nav-premium-item' },
   { to: '/instructor', Icon: Icons.Instructor, label: 'About Us',           className: 'nav-instructor-item' },
 ];
 
@@ -545,12 +553,12 @@ export default function Layout() {
             {/* Nav grid */}
             <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'0.6rem', marginBottom:'0.9rem' }}>
               {[
-                { to:'/leaderboard',  icon:<Icons.Leaderboard />,  label:'Leaderboard', color:'#E8A838' },
-                { to:'/certificates', icon:<Icons.Certificates />, label:'Certificates', color:'#5CC8A0' },
-                { to:'/case-studies', icon:<Icons.CaseStudies />,  label:'Case Studies', color:'#a78bfa' },
-                { to:'/jobs',         icon:<Icons.Jobs />,         label:'Job Board',    color:'#38bdf8' },
-                { to:'/premium',      icon:<Icons.Premium />,      label:'Pro Hub',      color:'#F6C443' },
-                { to:'/settings',     icon:<Icons.Settings />,     label:'Settings',     color:'#94a3b8' },
+                { to:'/leaderboard',        icon:<Icons.Leaderboard />,  label:'Leaderboard',  color:'#E8A838' },
+                { to:'/certificates',       icon:<Icons.Certificates />, label:'Certificates', color:'#5CC8A0' },
+                { to:'/company-questions',  icon:<Icons.CompanyQ />,     label:'Co. Q Banks',  color:'#38bdf8' },
+                { to:'/jobs',               icon:<Icons.Jobs />,         label:'Job Board',    color:'#FC8019' },
+                { to:'/premium',            icon:<Icons.Premium />,      label:'Pro Hub',      color:'#F6C443' },
+                { to:'/settings',           icon:<Icons.Settings />,     label:'Settings',     color:'#94a3b8' },
               ].map(item => (
                 <NavLink key={item.to} to={item.to}
                   style={({ isActive }) => ({

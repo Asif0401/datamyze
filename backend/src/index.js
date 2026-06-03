@@ -112,8 +112,9 @@ app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
   app.use('/api/admin',    require('./routes/admin'));
   app.use('/api/premium', require('./routes/premium'));
   app.use('/api/jobs',    require('./routes/jobs'));
-  app.use('/api/case-studies', require('./routes/casestudies'));
-  app.use('/api/support',     require('./routes/support'));
+  app.use('/api/case-studies',  require('./routes/casestudies'));
+  app.use('/api/company-banks', require('./routes/companybanks'));
+  app.use('/api/support',       require('./routes/support'));
 
   app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
   app.use((req, res) => res.status(404).json({ error: 'Route not found' }));
