@@ -1840,265 +1840,311 @@ select option { background: #1a2035; color: var(--text); }
 
 /* Mobile warning overlay removed — app is now fully mobile responsive */
 
+
 /* ═══════════════════════════════════════════════════════════════════
-   DATAMYZE RICH UI — Visual Enhancements
+   DATAMYZE BOLD UI — Rich Visual Redesign
    ═══════════════════════════════════════════════════════════════════ */
 
-/* 1. Deeper, richer body background */
+/* ── 1. True-dark background so cards actually POP ── */
 body {
-  background: linear-gradient(125deg, #04080f 0%, #07112a 38%, #0b1a34 65%, #04080f 100%);
-  background-attachment: fixed;
+  background: #050810 !important;
 }
 
-/* 2. Noise grain overlay — adds depth, prevents "flat screen" look */
-body::after {
-  content: '';
-  position: fixed; inset: 0;
-  pointer-events: none; z-index: 0;
-  opacity: 0.030;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px;
-}
-
-/* 3. Blobs — more vivid, larger */
-.blob { opacity: 0.45; filter: blur(80px); }
+/* ── 2. Vivid, large blobs — actually visible ── */
+.blob { opacity: 0.55 !important; filter: blur(70px) !important; }
 .blob-1 {
-  width: 820px; height: 820px;
-  background: radial-gradient(circle, rgba(59,130,246,0.85) 0%, rgba(99,102,241,0.40) 40%, transparent 70%);
-  top: -280px; left: -220px;
+  width: 900px !important; height: 900px !important;
+  background: radial-gradient(circle, rgba(37,99,235,0.90) 0%, rgba(79,70,229,0.50) 35%, transparent 65%) !important;
+  top: -320px !important; left: -250px !important;
 }
 .blob-2 {
-  width: 640px; height: 640px;
-  background: radial-gradient(circle, rgba(34,211,238,0.65) 0%, rgba(6,182,212,0.28) 40%, transparent 70%);
-  top: 25%; right: -220px;
+  width: 700px !important; height: 700px !important;
+  background: radial-gradient(circle, rgba(6,182,212,0.75) 0%, rgba(34,211,238,0.35) 40%, transparent 65%) !important;
+  top: 20% !important; right: -260px !important;
 }
 .blob-3 {
-  width: 580px; height: 580px;
-  background: radial-gradient(circle, rgba(92,200,160,0.55) 0%, rgba(52,211,153,0.22) 40%, transparent 70%);
-  bottom: -180px; left: 25%;
+  width: 640px !important; height: 640px !important;
+  background: radial-gradient(circle, rgba(139,92,246,0.65) 0%, rgba(167,139,250,0.30) 40%, transparent 65%) !important;
+  bottom: -200px !important; left: 20% !important;
 }
 
-/* 4. Custom scrollbar */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
-::-webkit-scrollbar-thumb { background: rgba(74,144,217,0.40); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(74,144,217,0.65); }
-
-/* 5. Page titles — rich gradient text */
-.page-title {
-  font-size: 25px;
-  background: linear-gradient(130deg, #ffffff 0%, rgba(200,220,255,0.88) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.5px;
+/* ── 3. ALL cards — real contrast from background ── */
+.card, .stat-card, .course-card, .feature-card, .job-card,
+.lb-row, .session-card {
+  background: rgba(11, 18, 40, 0.88) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.50), inset 0 1px 0 rgba(255,255,255,0.07) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
 }
 
-/* 6. Cards — gradient tinted glass + richer hover */
-.card {
-  background: linear-gradient(160deg, rgba(255,255,255,0.068) 0%, rgba(255,255,255,0.030) 100%);
-  border-color: rgba(255,255,255,0.09);
+/* ── 4. Colored top-accent line on every card ── */
+.card::before, .stat-card::before, .course-card::before,
+.feature-card::before, .job-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent 0%, rgba(56,189,248,0.70) 40%, rgba(139,92,246,0.60) 70%, transparent 100%) !important;
+  border-radius: inherit !important;
 }
+
+/* ── 5. DRAMATIC hover on ALL cards ── */
 .card:hover {
-  box-shadow: 0 24px 64px rgba(0,0,0,0.55), 0 0 0 1px rgba(74,144,217,0.20), 0 0 48px rgba(74,144,217,0.08);
-  border-color: rgba(74,144,217,0.22);
-  transform: translateY(-3px);
-}
-
-/* 7. Stat cards — gradient glass, bigger numbers, colored hover */
-.stat-card {
-  background: linear-gradient(150deg, rgba(255,255,255,0.072) 0%, rgba(255,255,255,0.030) 100%);
-  border-color: rgba(255,255,255,0.09);
-  transition: transform 0.26s cubic-bezier(.4,0,.2,1), box-shadow 0.26s, border-color 0.26s;
-}
-.stat-card:hover {
-  transform: translateY(-6px) scale(1.015);
-  border-color: rgba(255,255,255,0.22);
-  box-shadow: 0 24px 56px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.10);
-}
-.stat-val { font-size: 30px; font-weight: 900; letter-spacing: -1px; }
-
-/* 8. Course cards — taller thumb, richer hover */
-.course-thumb { height: 142px; }
-.course-card {
-  background: linear-gradient(160deg, rgba(255,255,255,0.070) 0%, rgba(255,255,255,0.028) 100%);
+  transform: translateY(-6px) !important;
+  background: rgba(14, 23, 52, 0.95) !important;
+  border-color: rgba(56,189,248,0.40) !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.65), 0 0 0 1px rgba(56,189,248,0.30), 0 0 50px rgba(56,189,248,0.12) !important;
 }
 .course-card:hover {
-  transform: translateY(-8px) scale(1.008);
-  box-shadow: 0 32px 64px rgba(0,0,0,0.60), 0 0 0 1px rgba(74,144,217,0.28), 0 0 40px rgba(74,144,217,0.10);
-  border-color: rgba(74,144,217,0.38);
+  transform: translateY(-10px) scale(1.015) !important;
+  border-color: rgba(56,189,248,0.45) !important;
+  box-shadow: 0 32px 72px rgba(0,0,0,0.70), 0 0 0 1px rgba(56,189,248,0.35), 0 0 60px rgba(56,189,248,0.15) !important;
+}
+.feature-card:hover, .job-card:hover {
+  transform: translateY(-8px) !important;
+  border-color: rgba(56,189,248,0.40) !important;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.65), 0 0 0 1px rgba(56,189,248,0.32), 0 0 50px rgba(56,189,248,0.12) !important;
+}
+.stat-card:hover {
+  transform: translateY(-7px) scale(1.02) !important;
+  border-color: rgba(56,189,248,0.42) !important;
+  box-shadow: 0 20px 56px rgba(0,0,0,0.65), 0 0 0 1px rgba(56,189,248,0.30), 0 0 48px rgba(56,189,248,0.12) !important;
 }
 
-/* 9. Feature cards — gradient glass + colored hover glow */
-.feature-card {
-  background: linear-gradient(160deg, rgba(255,255,255,0.068) 0%, rgba(255,255,255,0.028) 100%);
+/* ── 6. Stat numbers — vivid and large ── */
+.stat-val {
+  font-size: 32px !important;
+  font-weight: 900 !important;
+  letter-spacing: -1.5px !important;
+  background: linear-gradient(135deg, #38bdf8, #818cf8) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
 }
-.feature-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 24px 56px rgba(0,0,0,0.55), 0 0 32px rgba(74,144,217,0.12);
-  border-color: rgba(74,144,217,0.30);
-}
-
-/* 10. Job cards — richer glass */
-.job-card {
-  background: linear-gradient(160deg, rgba(255,255,255,0.068) 0%, rgba(255,255,255,0.028) 100%);
-}
-.job-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 24px 56px rgba(0,0,0,0.55), 0 0 32px rgba(74,144,217,0.12);
-  border-color: rgba(74,144,217,0.30);
+.stat-label {
+  font-size: 10.5px !important;
+  letter-spacing: 1.2px !important;
+  color: rgba(255,255,255,0.38) !important;
 }
 
-/* 11. Sidebar — darker, richer glass */
+/* ── 7. Page title — vivid gradient, bigger ── */
+.page-title {
+  font-size: 26px !important;
+  font-weight: 900 !important;
+  background: linear-gradient(125deg, #ffffff 0%, #93c5fd 55%, #c4b5fd 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  letter-spacing: -0.6px !important;
+}
+
+/* ── 8. Course thumb — taller + darker overlay for contrast ── */
+.course-thumb {
+  height: 150px !important;
+  position: relative !important;
+}
+.course-thumb::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.30) 100%) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* ── 9. Course card body — richer ── */
+.course-body { padding: 1.1rem 1.2rem 1.3rem !important; }
+.course-name { font-size: 15px !important; font-weight: 800 !important; letter-spacing: -0.2px !important; }
+
+/* ── 10. Sidebar — deeper, more contrast ── */
 .sidebar {
-  background: rgba(4, 7, 16, 0.97);
-  border-right-color: rgba(255,255,255,0.055);
+  background: rgba(4, 6, 15, 0.98) !important;
+  border-right: 1px solid rgba(255,255,255,0.07) !important;
 }
 
-/* 12. Nav active — stronger accent + glow */
+/* ── 11. Active nav — strong vivid glow ── */
 .nav-item.active {
-  background: linear-gradient(135deg, rgba(74,144,217,0.34), rgba(56,189,248,0.14));
-  box-shadow: 0 2px 22px rgba(74,144,217,0.32), inset 0 1px 0 rgba(255,255,255,0.10);
-  border-color: rgba(74,144,217,0.40);
+  background: linear-gradient(135deg, rgba(37,99,235,0.35), rgba(56,189,248,0.18)) !important;
+  border: 1px solid rgba(56,189,248,0.38) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 24px rgba(37,99,235,0.30), inset 0 1px 0 rgba(255,255,255,0.12) !important;
 }
 .nav-item.active::before {
-  width: 3.5px;
-  top: 14%; bottom: 14%;
-  background: linear-gradient(to bottom, #38bdf8, #4A90D9, #818cf8);
-  box-shadow: 0 0 10px rgba(56,189,248,0.90), 0 0 20px rgba(56,189,248,0.40);
-  border-radius: 0 4px 4px 0;
+  width: 3px !important;
+  top: 12% !important; bottom: 12% !important;
+  background: linear-gradient(to bottom, #22d3ee, #38bdf8, #818cf8) !important;
+  box-shadow: 0 0 12px rgba(34,211,238,1), 0 0 24px rgba(34,211,238,0.50) !important;
+  border-radius: 0 4px 4px 0 !important;
 }
 
-/* 13. Input focus — vivid colored ring */
+/* ── 12. Input focus — vivid ring ── */
 input:focus, textarea:focus, select:focus {
-  border-color: rgba(56,189,248,0.72);
-  box-shadow: 0 0 0 3px rgba(56,189,248,0.18), 0 0 22px rgba(56,189,248,0.10);
+  border-color: rgba(34,211,238,0.75) !important;
+  box-shadow: 0 0 0 3px rgba(34,211,238,0.18), 0 0 24px rgba(34,211,238,0.10) !important;
 }
 
-/* 14. Primary button — deeper blue gradient */
+/* ── 13. Primary button — vivid ── */
 .btn-primary {
-  background: linear-gradient(135deg, #2563eb, #6C63FF);
-  box-shadow: 0 4px 22px rgba(37,99,235,0.50);
+  background: linear-gradient(135deg, #1d4ed8, #7c3aed) !important;
+  box-shadow: 0 4px 22px rgba(29,78,216,0.50) !important;
 }
 .btn-primary:hover {
-  box-shadow: 0 8px 32px rgba(37,99,235,0.65);
-  transform: translateY(-2px);
-  filter: brightness(1.08);
+  box-shadow: 0 8px 36px rgba(29,78,216,0.70) !important;
+  transform: translateY(-2px) !important;
+  filter: brightness(1.12) !important;
 }
 
-/* 15. Progress bar fill — vivid with glow */
-.progress-fill {
-  background: linear-gradient(90deg, #2563eb, #38bdf8, #22d3ee) !important;
-  box-shadow: 0 0 10px rgba(34,211,238,0.55);
+/* ── 14. Leaderboard rows — contrast + medal tints ── */
+.lb-row {
+  background: rgba(11, 18, 40, 0.82) !important;
+  border-color: rgba(255,255,255,0.09) !important;
 }
-.xp-fill { box-shadow: 0 0 12px rgba(34,211,238,0.75); }
-
-/* 16. Leaderboard — medal tints for top 3 */
-.lb-row:nth-child(1) {
-  background: linear-gradient(90deg, rgba(255,215,0,0.10), rgba(255,215,0,0.04));
-  border-color: rgba(255,215,0,0.22);
+.lb-row:hover {
+  background: rgba(14, 24, 54, 0.95) !important;
+  border-color: rgba(56,189,248,0.30) !important;
+  transform: translateX(4px) !important;
+  box-shadow: -3px 0 0 rgba(56,189,248,0.50), 0 4px 24px rgba(0,0,0,0.40) !important;
 }
-.lb-row:nth-child(2) {
-  background: linear-gradient(90deg, rgba(192,192,192,0.09), rgba(192,192,192,0.03));
-  border-color: rgba(192,192,192,0.20);
-}
-.lb-row:nth-child(3) {
-  background: linear-gradient(90deg, rgba(205,127,50,0.09), rgba(205,127,50,0.03));
-  border-color: rgba(205,127,50,0.20);
-}
-.lb-row:nth-child(1):hover { background: linear-gradient(90deg, rgba(255,215,0,0.16), rgba(255,215,0,0.06)); }
-.lb-row:nth-child(2):hover { background: linear-gradient(90deg, rgba(192,192,192,0.14), rgba(192,192,192,0.05)); }
-.lb-row:nth-child(3):hover { background: linear-gradient(90deg, rgba(205,127,50,0.14), rgba(205,127,50,0.05)); }
+.lb-row:nth-child(1) { border-left: 3px solid rgba(255,215,0,0.80) !important; background: linear-gradient(90deg, rgba(255,215,0,0.10), rgba(11,18,40,0.82)) !important; }
+.lb-row:nth-child(2) { border-left: 3px solid rgba(192,192,192,0.75) !important; background: linear-gradient(90deg, rgba(192,192,192,0.08), rgba(11,18,40,0.82)) !important; }
+.lb-row:nth-child(3) { border-left: 3px solid rgba(205,127,50,0.75) !important; background: linear-gradient(90deg, rgba(205,127,50,0.08), rgba(11,18,40,0.82)) !important; }
 .lb-row.me {
-  background: rgba(74,144,217,0.14) !important;
-  border-color: rgba(74,144,217,0.42) !important;
-  box-shadow: 0 0 28px rgba(74,144,217,0.18), inset 0 0 20px rgba(74,144,217,0.04);
+  background: linear-gradient(90deg, rgba(37,99,235,0.15), rgba(11,18,40,0.88)) !important;
+  border-left: 3px solid rgba(56,189,248,0.80) !important;
+  border-color: rgba(56,189,248,0.40) !important;
+  box-shadow: 0 0 30px rgba(56,189,248,0.15) !important;
 }
 
-/* 17. Streak calendar cells */
-.streak-day.done { box-shadow: 0 0 8px rgba(56,189,248,0.40); }
-.streak-day.today { box-shadow: 0 0 18px rgba(56,189,248,0.75), 0 0 32px rgba(34,211,238,0.25); }
+/* ── 15. Progress bars — vivid glow ── */
+.progress-fill {
+  background: linear-gradient(90deg, #1d4ed8, #38bdf8, #22d3ee) !important;
+  box-shadow: 0 0 12px rgba(34,211,238,0.65) !important;
+}
+.xp-fill {
+  background: linear-gradient(90deg, #1d4ed8, #22d3ee) !important;
+  box-shadow: 0 0 14px rgba(34,211,238,0.85) !important;
+}
 
-/* 18. Quiz options */
+/* ── 16. Filter chip — vivid active ── */
+.filter-chip {
+  background: rgba(11,18,40,0.80) !important;
+  border-color: rgba(255,255,255,0.10) !important;
+}
+.filter-chip:hover { border-color: rgba(56,189,248,0.45) !important; color: #38bdf8 !important; }
+.filter-chip.active {
+  background: linear-gradient(135deg, #1d4ed8, #7c3aed) !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 20px rgba(29,78,216,0.50) !important;
+}
+
+/* ── 17. Modals — deep, rich ── */
+.modal {
+  background: rgba(7, 11, 26, 0.97) !important;
+  border: 1px solid rgba(255,255,255,0.13) !important;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.75), 0 0 0 1px rgba(56,189,248,0.08) !important;
+}
+.modal::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, rgba(56,189,248,0.70), rgba(139,92,246,0.60), transparent) !important;
+  border-radius: inherit !important;
+}
+
+/* ── 18. Toast ── */
+.toast {
+  background: rgba(7,11,26,0.98) !important;
+  border: 1px solid rgba(56,189,248,0.25) !important;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.65), 0 0 20px rgba(56,189,248,0.10) !important;
+  border-radius: 14px !important;
+}
+
+/* ── 19. Quiz options ── */
+.quiz-option {
+  background: rgba(11,18,40,0.80) !important;
+  border-color: rgba(255,255,255,0.09) !important;
+}
 .quiz-option:hover {
-  transform: translateX(5px);
-  box-shadow: -3px 0 0 rgba(74,144,217,0.60), 0 4px 18px rgba(74,144,217,0.15);
+  transform: translateX(6px) !important;
+  border-color: rgba(56,189,248,0.45) !important;
+  background: rgba(14,24,54,0.90) !important;
+  box-shadow: -3px 0 0 rgba(56,189,248,0.60), 0 4px 20px rgba(0,0,0,0.40) !important;
 }
 .quiz-option.selected {
-  box-shadow: 0 0 0 1px rgba(74,144,217,0.45), 0 4px 18px rgba(74,144,217,0.18);
+  border-color: rgba(56,189,248,0.55) !important;
+  background: rgba(37,99,235,0.12) !important;
+  box-shadow: 0 0 0 1px rgba(56,189,248,0.30) !important;
 }
 
-/* 19. Premium badge — golden glow */
-.premium-badge { box-shadow: 0 2px 16px rgba(232,168,56,0.50); }
+/* ── 20. Streak cells ── */
+.streak-day.done { box-shadow: 0 0 8px rgba(56,189,248,0.50) !important; }
+.streak-day.today { box-shadow: 0 0 20px rgba(34,211,238,0.85), 0 0 40px rgba(34,211,238,0.30) !important; }
 
-/* 20. Modal — richer dark glass */
-.modal {
-  background: rgba(6, 10, 24, 0.96);
-  border-color: rgba(255,255,255,0.14);
-  box-shadow: 0 36px 90px rgba(0,0,0,0.70), 0 0 0 1px rgba(255,255,255,0.05);
+/* ── 21. Premium badge ── */
+.premium-badge { box-shadow: 0 2px 18px rgba(232,168,56,0.55) !important; }
+
+/* ── 22. Avatar glow ── */
+.avatar {
+  background: linear-gradient(135deg, #1d4ed8, #22d3ee) !important;
+  box-shadow: 0 2px 18px rgba(34,211,238,0.55), 0 0 0 2.5px rgba(34,211,238,0.25) !important;
 }
 
-/* 21. Toast — rich dark pill */
-.toast {
-  background: rgba(6, 10, 24, 0.98);
-  border-color: rgba(255,255,255,0.16);
-  box-shadow: 0 14px 44px rgba(0,0,0,0.60), 0 0 0 1px rgba(255,255,255,0.06);
-  border-radius: 14px;
-}
+/* ── 23. Scrollbar ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+::-webkit-scrollbar-thumb { background: rgba(56,189,248,0.45); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(56,189,248,0.70); }
 
-/* 22. Mobile bottom nav — richer active */
+/* ── 24. Mobile bottom nav ── */
+.mobile-bottom-nav {
+  background: rgba(4, 6, 15, 0.98) !important;
+  border-top: 1px solid rgba(255,255,255,0.07) !important;
+}
 .mbn-item.mbn-active {
-  color: #38bdf8;
-  background: rgba(56,189,248,0.13);
+  color: #38bdf8 !important;
+  background: rgba(56,189,248,0.14) !important;
 }
 .mbn-item.mbn-active::before {
-  background: linear-gradient(90deg, transparent, #38bdf8, transparent);
-  box-shadow: 0 0 8px rgba(56,189,248,0.60);
+  background: linear-gradient(90deg, transparent, #22d3ee, transparent) !important;
+  box-shadow: 0 0 10px rgba(34,211,238,0.70) !important;
 }
 
-/* 23. Filter chip active */
-.filter-chip.active {
-  background: linear-gradient(135deg, #2563eb, #6C63FF);
-  box-shadow: 0 4px 20px rgba(37,99,235,0.45);
-}
-
-/* 24. Sidebar user card */
-.sidebar-user {
-  background: linear-gradient(160deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.025) 100%);
-  border-color: rgba(255,255,255,0.08);
-}
-
-/* 25. Avatar — richer glow */
-.avatar {
-  background: linear-gradient(135deg, #2563eb, #22d3ee);
-  box-shadow: 0 2px 16px rgba(34,211,238,0.50), 0 0 0 2px rgba(34,211,238,0.22);
-}
-
-/* 26. Search input */
-.search-wrap input {
-  background: rgba(255,255,255,0.07);
-  border-color: rgba(255,255,255,0.09);
-}
-
-/* 27. Code editor — slightly richer dark */
+/* ── 25. Code editor ── */
 .code-editor {
-  background: rgba(0,0,0,0.55);
-  border-color: rgba(255,255,255,0.09);
-  box-shadow: inset 0 2px 12px rgba(0,0,0,0.30);
+  background: rgba(3, 5, 14, 0.90) !important;
+  border-color: rgba(56,189,248,0.15) !important;
+  box-shadow: inset 0 2px 16px rgba(0,0,0,0.50) !important;
 }
 
-/* 28. Pill hover — subtle lift */
-.pill { transition: transform 0.15s, box-shadow 0.15s; }
-.pill:hover { transform: translateY(-1px); }
-
-/* 29. Pricing card top border — more vivid */
+/* ── 26. Pricing card top border ── */
 .pricing-card::before {
-  background: linear-gradient(90deg, transparent, rgba(56,189,248,0.80), rgba(108,99,255,0.60), transparent);
-  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(56,189,248,0.90), rgba(139,92,246,0.70), transparent) !important;
+  height: 2px !important;
 }
 
-/* 30. Section card hover line — colored per card type enhancement */
-.stat-card::before, .feature-card::before, .job-card::before {
-  background: linear-gradient(90deg, transparent, rgba(56,189,248,0.25), rgba(108,99,255,0.18), transparent);
-  height: 1.5px;
+/* ── 27. Search input ── */
+.search-wrap input {
+  background: rgba(11,18,40,0.80) !important;
+  border-color: rgba(255,255,255,0.10) !important;
 }
+.search-wrap input:focus {
+  background: rgba(14,24,54,0.90) !important;
+}
+
+/* ── 28. Sidebar user card ── */
+.sidebar-user {
+  background: rgba(8,13,30,0.90) !important;
+  border-color: rgba(255,255,255,0.09) !important;
+}
+
+/* ── 29. Pill badges on job/course cards ── */
+.pill-purple { background: rgba(124,58,237,0.22) !important; border-color: rgba(124,58,237,0.35) !important; color: #c4b5fd !important; }
+.pill-teal   { background: rgba(6,182,212,0.18) !important;  border-color: rgba(6,182,212,0.30) !important;  color: #22d3ee !important; }
+.pill-amber  { background: rgba(217,119,6,0.20) !important;  border-color: rgba(217,119,6,0.32) !important;  color: #fbbf24 !important; }
+.skill-chip  { background: rgba(79,70,229,0.20) !important; border-color: rgba(79,70,229,0.32) !important; color: #a5b4fc !important; }
+
+/* ── 30. Section card (Dashboard journey etc) ── */
+.card-title { font-size: 16px !important; font-weight: 800 !important; letter-spacing: -0.2px !important; }
+
