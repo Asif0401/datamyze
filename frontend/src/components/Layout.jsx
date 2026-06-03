@@ -232,6 +232,11 @@ const Icons = {
       <line x1="12" y1="17" x2="12.01" y2="17"/>
     </svg>
   ),
+  Interview: () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+  ),
   SignOut: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -247,11 +252,12 @@ const Icons = {
 };
 
 const LEARN_NAV = [
-  { to: '/',             Icon: Icons.Dashboard,  label: 'Dashboard',   end: true },
-  { to: '/courses',      Icon: Icons.Courses,    label: 'Courses' },
-  { to: '/problems',     Icon: Icons.Problems,   label: 'Problems' },
-  { to: '/quiz',         Icon: Icons.Quiz,       label: 'Quiz' },
-  { to: '/case-studies', Icon: Icons.CaseStudies,label: 'Case Studies' },
+  { to: '/',                       Icon: Icons.Dashboard,  label: 'Dashboard',    end: true },
+  { to: '/courses',                Icon: Icons.Courses,    label: 'Courses' },
+  { to: '/problems',               Icon: Icons.Problems,   label: 'Problems' },
+  { to: '/quiz',                   Icon: Icons.Quiz,       label: 'Quiz' },
+  { to: '/case-studies',           Icon: Icons.CaseStudies,label: 'Case Studies' },
+  { to: '/interview-experiences',  Icon: Icons.Interview,  label: 'Interview Exp.' },
 ];
 
 const PROGRESS_NAV = [

@@ -474,6 +474,205 @@ async function initDb() {
     }
   } catch(e) { console.log('Company bank seed error:', e.message); }
 
+  // ── Interview Experiences ──────────────────────────────────────
+  await c.execute(`
+    CREATE TABLE IF NOT EXISTS interview_experiences (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      author_name TEXT NOT NULL,
+      company TEXT NOT NULL,
+      role TEXT NOT NULL,
+      experience_type TEXT DEFAULT 'Off-campus',
+      difficulty TEXT DEFAULT 'Medium',
+      outcome TEXT DEFAULT 'Selected',
+      rounds INTEGER DEFAULT 1,
+      rounds_detail TEXT DEFAULT '[]',
+      overall_experience TEXT NOT NULL,
+      tips TEXT,
+      interview_date TEXT,
+      is_approved INTEGER DEFAULT 1,
+      upvotes INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+  try { await c.execute('ALTER TABLE interview_experiences ADD COLUMN upvotes INTEGER DEFAULT 0'); } catch(e) {}
+
+  // Seed realistic interview experiences
+  try {
+    const interviewSeeds = [
+      {
+        id: 'ie-001',
+        user_id: 'seed-user',
+        author_name: 'Priya Sharma',
+        company: 'Flipkart',
+        role: 'Data Analyst',
+        experience_type: 'Off-campus',
+        difficulty: 'Hard',
+        outcome: 'Selected',
+        rounds: 4,
+        rounds_detail: JSON.stringify([
+          { round_name: 'Online Assessment', description: 'SQL test on HackerRank — 3 questions in 90 minutes. Questions involved window functions (RANK, DENSE_RANK), CTEs, and a tricky self-join for finding order sequences. Also had 10 aptitude MCQs.' },
+          { round_name: 'Technical Round 1 — SQL Deep Dive', description: 'Asked to write a query to find the top 3 products by revenue each month using window functions. Follow-up was to optimize it. Also discussed indexing and query plans. They asked me to explain the difference between RANK and DENSE_RANK with examples.' },
+          { round_name: 'Technical Round 2 — Product & Analytics', description: 'Case study: "Flipkart is seeing a drop in GMV on mobile app — how would you diagnose this?" I walked through the funnel: impressions → clicks → add-to-cart → purchase. They asked about SQL queries to validate each hypothesis. Also asked about A/B testing basics and how to measure statistical significance.' },
+          { round_name: 'HR + Hiring Manager', description: 'Standard behavioral questions — tell me about yourself, why Flipkart, a time you handled a conflict. Hiring manager asked about my Python skills and whether I was comfortable with Tableau. Discussed team structure and expectations.' },
+        ]),
+        overall_experience: 'The process was very structured and the interviewers were friendly. The SQL rounds were challenging — especially the window functions part. The product case study was the most interesting because it tested real analytical thinking, not just coding. The whole process took about 3 weeks from application to offer. Preparation with LeetCode SQL and practicing case studies helped a lot. The compensation offered was slightly below expectations but the role was great for learning.',
+        tips: 'Practice window functions extensively — RANK, DENSE_RANK, ROW_NUMBER, LAG, LEAD. Be comfortable with CTEs. For the product round, always structure your answer using funnels and metric trees. Know the difference between correlation and causation.',
+        interview_date: '2024-03',
+      },
+      {
+        id: 'ie-002',
+        user_id: 'seed-user',
+        author_name: 'Rahul Verma',
+        company: 'Amazon India',
+        role: 'Business Intelligence Engineer',
+        experience_type: 'LinkedIn',
+        difficulty: 'Hard',
+        outcome: 'Rejected',
+        rounds: 5,
+        rounds_detail: JSON.stringify([
+          { round_name: 'Phone Screen — Recruiter', description: 'Basic background check. Discussed past experience, role expectations, and location preference. The recruiter explained the BIE role involves SQL, Python, and ETL pipeline work.' },
+          { round_name: 'Online Assessment', description: 'Two coding questions on LeetCode-style platform — one SQL (finding second highest salary variant with partitioning) and one Python (data manipulation with Pandas). Time limit was 75 minutes.' },
+          { round_name: 'Technical Round 1 — SQL + Data Modeling', description: 'Deep SQL questions — correlated subqueries, handling NULLs, writing a query to calculate the 7-day rolling average. Also discussed star schema vs snowflake schema and when to use each.' },
+          { round_name: 'Technical Round 2 — Python + ETL', description: 'Wrote Python code to clean a messy dataset — handling missing values, outliers, and date parsing. Discussed how to design an ETL pipeline for a reporting dashboard. AWS Redshift and S3 knowledge was tested.' },
+          { round_name: 'Bar Raiser Round', description: 'Amazon leadership principles deep-dive. They kept asking "why" five times for every answer. Got tripped up on "Customer Obsession" and "Dive Deep" examples. This is where I think I lost the opportunity.' },
+        ]),
+        overall_experience: 'The Amazon interview process is very rigorous and structured. The technical rounds were fair but the Bar Raiser round is really make-or-break. I wish I had prepared more STAR-format answers aligned to Amazon\'s 16 leadership principles. The technical parts went well — SQL and Python questions were of LeetCode medium difficulty. The rejection came specifically from the behavioral round, not technical. The interviewers were professional and gave good hints when I was stuck.',
+        tips: 'Prepare 2-3 solid examples for each Amazon leadership principle. STAR format is mandatory — Situation, Task, Action, Result with quantified results. On the technical side, practice SQL window functions and basic ETL design patterns. Know your Pandas well.',
+        interview_date: '2024-01',
+      },
+      {
+        id: 'ie-003',
+        user_id: 'seed-user',
+        author_name: 'Ananya Krishnan',
+        company: 'Swiggy',
+        role: 'Product Analyst',
+        experience_type: 'Referral',
+        difficulty: 'Medium',
+        outcome: 'Selected',
+        rounds: 3,
+        rounds_detail: JSON.stringify([
+          { round_name: 'Technical Screening', description: 'Sent a take-home assignment — given a CSV of order data, write Python/SQL analysis to find peak hours, top restaurants, and calculate delivery partner efficiency. Had to present findings in a simple slide deck. Took about 4 hours.' },
+          { round_name: 'Technical Interview', description: 'Deep dive on the assignment. They challenged my metric choices and asked what I would do differently. Then new SQL questions — finding restaurants with consistently declining orders over 3 months. Also asked about how I would design a dashboard for delivery partner performance.' },
+          { round_name: 'Culture + HM Round', description: 'Discussed Swiggy\'s product, what I thought could be improved in the app. Asked about working in a fast-paced environment and handling ambiguous problems. Very conversational — felt more like a discussion than an interview.' },
+        ]),
+        overall_experience: 'The referral really helped me get into the process faster. The take-home assignment was the most important part — they valued presentation and storytelling over just technical correctness. The panel was genuinely interested in my thought process. Swiggy has a great culture and the interviewers were excited about their products. The whole process was completed in 2 weeks which is fast for a startup of that size. The role involves a lot of cross-functional work with PMs and Engineering.',
+        tips: 'For the take-home assignment, focus on clear visualizations and actionable insights — not just raw numbers. They care about "so what?" more than technical perfection. Research Swiggy\'s product deeply before the culture round.',
+        interview_date: '2024-04',
+      },
+      {
+        id: 'ie-004',
+        user_id: 'seed-user',
+        author_name: 'Karthik Menon',
+        company: 'Zomato',
+        role: 'Data Analyst',
+        experience_type: 'Off-campus',
+        difficulty: 'Medium',
+        outcome: 'Selected',
+        rounds: 3,
+        rounds_detail: JSON.stringify([
+          { round_name: 'Online Test', description: 'Mix of SQL, logical reasoning, and a short data interpretation section. SQL questions tested JOINs, subqueries, and aggregate functions. Logical reasoning was standard aptitude. About 60 questions in 60 minutes — time management was key.' },
+          { round_name: 'Technical Interview', description: 'Started with "walk me through your resume," then SQL deep dive. I was asked to calculate the "Gold membership impact on order frequency" — had to write a before/after analysis query. Also discussed how to detect anomalies in order data using statistical methods. They appreciated when I mentioned Z-score and IQR approaches.' },
+          { round_name: 'Final Round — Analytics Manager', description: 'Mostly product sense and metric design. "How would you measure the success of Zomato\'s Hyperpure (B2B supply chain) business?" I defined metrics around GMV, delivery SLA, restaurant adoption rate, and reorder rate. Manager seemed pleased with the structured approach.' },
+        ]),
+        overall_experience: 'Zomato\'s interview process is quite focused on real business problems — every question felt directly relevant to what analysts actually do there. The process was smooth and communication from the HR team was timely. I had to negotiate the salary offer slightly but they were accommodating. The work culture seems data-driven — they use a lot of A/B testing and make decisions based on metrics rather than gut feel.',
+        tips: 'Know Zomato\'s products inside out — Zomato app, Hyperpure, Blinkit integration. Practice metric design frameworks: define the metric, leading vs lagging indicators, guardrail metrics. SQL queries for before/after analysis and cohort retention are very common.',
+        interview_date: '2024-02',
+      },
+      {
+        id: 'ie-005',
+        user_id: 'seed-user',
+        author_name: 'Sneha Patel',
+        company: 'PhonePe',
+        role: 'Data Analyst — Payments',
+        experience_type: 'Walk-in',
+        difficulty: 'Medium',
+        outcome: 'On-hold',
+        rounds: 3,
+        rounds_detail: JSON.stringify([
+          { round_name: 'Written Test', description: 'A 45-minute written test at their Bengaluru office. Included SQL (5 questions), Python (3 questions on Pandas), and 2 case study questions on payment analytics. Questions were fairly straightforward — aggregations, group by, basic Pandas operations.' },
+          { round_name: 'Technical Interview', description: 'Discussed my SQL answers from the test first. Then asked about fraud detection — what signals would I look for in transaction data to identify fraudulent accounts. I discussed velocity checks, device fingerprinting patterns in SQL. Also asked about the difference between precision and recall and when you\'d prefer one over the other in a fraud context.' },
+          { round_name: 'Senior Manager Round', description: 'Business problem: "UPI transaction success rate has dropped 3% this week — how do you investigate?" I walked through the diagnostic — check by bank, by transaction type, by time of day, by geography. They liked the structured approach but said the position was being reassessed due to a team restructuring.' },
+        ]),
+        overall_experience: 'The walk-in process at PhonePe was surprisingly well-organized. The technical questions were solid but not super hard. The rejection (or rather "on-hold") came from a non-technical reason — internal restructuring. The interviewers were knowledgeable and the problems were genuinely interesting. PhonePe works with massive scale data which is exciting. If you\'re interested in fintech analytics, this is a great company to target.',
+        tips: 'Understand basic fraud detection concepts — velocity checks, device fingerprinting, behavioral anomalies. For the final round, practice root-cause analysis frameworks — start broad, then narrow down with data. Know UPI transaction flow end-to-end.',
+        interview_date: '2024-05',
+      },
+      {
+        id: 'ie-006',
+        user_id: 'seed-user',
+        author_name: 'Arjun Nair',
+        company: 'CRED',
+        role: 'Analytics Engineer',
+        experience_type: 'LinkedIn',
+        difficulty: 'Hard',
+        outcome: 'Selected',
+        rounds: 4,
+        rounds_detail: JSON.stringify([
+          { round_name: 'Recruiter Screen', description: 'Quick 20-minute call about background and role fitment. CRED was hiring specifically for someone with dbt + SQL + Python experience. The recruiter was straightforward about what they needed.' },
+          { round_name: 'Technical Round 1 — Advanced SQL', description: 'The hardest SQL round I\'ve faced. Questions involved recursive CTEs, writing custom aggregation functions conceptually, and a question about finding the top N items across multiple partitions efficiently. Also asked about query optimization strategies — when to use CTEs vs subqueries, index design.' },
+          { round_name: 'Technical Round 2 — dbt + Data Modeling', description: 'This was specific to the Analytics Engineer role. Asked to design a dbt model structure for CRED\'s reward system — staging, intermediate, and mart layers. Discussed slowly changing dimensions, snapshot models, and how to handle late-arriving data. Also asked about testing strategies in dbt.' },
+          { round_name: 'Leadership + Culture Round', description: 'CRED has a high-bar culture. Asked about times I drove data initiatives without being asked, how I handle pushback from stakeholders, and examples of me simplifying complex problems. They value ownership and first-principles thinking.' },
+        ]),
+        overall_experience: 'CRED\'s interview process is intense but very well-structured. The Analytics Engineer role is more technical than a typical DA role — you need solid data engineering fundamentals. The dbt round was unique and I had to be really well-prepared. The offer was competitive with good ESOPs. The culture values people who think deeply and communicate clearly. The onboarding process was excellent and the tools are top-notch.',
+        tips: 'For Analytics Engineer roles, know dbt deeply — models, tests, sources, snapshots, macros. Understand data modeling for analytics: star schema, Kimball methodology basics. Advanced SQL is non-negotiable. Practice recursive CTEs and query optimization.',
+        interview_date: '2024-06',
+      },
+      {
+        id: 'ie-007',
+        user_id: 'seed-user',
+        author_name: 'Meera Joshi',
+        company: 'Meesho',
+        role: 'Business Analyst',
+        experience_type: 'Off-campus',
+        difficulty: 'Easy',
+        outcome: 'Rejected',
+        rounds: 2,
+        rounds_detail: JSON.stringify([
+          { round_name: 'Online Assessment', description: 'Standard aptitude + SQL test. SQL questions were basic — simple JOINs, GROUP BY, HAVING. The aptitude section had data interpretation questions with tables and bar charts. Overall not very hard.' },
+          { round_name: 'Technical + HR Interview', description: 'Interviewer asked about SQL basics, then pivoted to a product question: "Meesho is trying to improve reseller activation rate — what would you track and how?" I gave a reasonable answer but wasn\'t familiar with Meesho\'s specific product metrics. They also asked about Excel/Sheets skills which I downplayed — mistake.' },
+        ]),
+        overall_experience: 'The process was quick — only 2 rounds but they moved fast. I was rejected mainly because I didn\'t research Meesho\'s specific business model enough. The BA role at Meesho is very product-focused and they expect you to understand their unique social commerce model deeply. My SQL was fine but the product knowledge gap cost me. Would recommend this as a good first analytics job — the questions weren\'t very hard and the team seemed young and energetic.',
+        tips: 'Research Meesho\'s business model thoroughly — social commerce, reseller network, tier-2/3 city focus. Know the key metrics: reseller activation rate, viral coefficient, GMV per reseller. Don\'t underestimate Excel/Sheets — they use it heavily.',
+        interview_date: '2024-03',
+      },
+      {
+        id: 'ie-008',
+        user_id: 'seed-user',
+        author_name: 'Vikram Reddy',
+        company: 'Razorpay',
+        role: 'Data Analyst — Growth',
+        experience_type: 'On-campus',
+        difficulty: 'Hard',
+        outcome: 'Selected',
+        rounds: 4,
+        rounds_detail: JSON.stringify([
+          { round_name: 'Campus Aptitude Test', description: 'Online test through campus placement portal. 30 aptitude questions + 5 SQL questions + 3 case study questions in 90 minutes. SQL was medium difficulty. Case studies were about payment metrics — calculating transaction success rates and merchant health scores.' },
+          { round_name: 'Group Discussion', description: 'Topic: "Should India move to a fully cashless economy?" 8 students participated for 20 minutes. They were evaluating communication, data-driven arguments, and the ability to build on others\' points. I quoted UPI stats which went down well.' },
+          { round_name: 'Technical Interview', description: 'Heavy SQL and statistical questions. Asked to write a query for payment gateway latency percentiles (P50, P90, P99). Discussed A/B testing methodology — how to design an experiment to test a new payment routing algorithm. They asked about funnel analysis concepts and merchant activation cohorts.' },
+          { round_name: 'HR Interview', description: 'Standard questions about career goals, why Razorpay, strengths and weaknesses. Also asked about my understanding of the fintech regulatory environment — PCI DSS, RBI guidelines. Showed genuine interest in the domain which helped.' },
+        ]),
+        overall_experience: 'Getting placed from campus at Razorpay felt like a huge win. The process was competitive — over 200 students sat for the test and only 3 offers went out. The technical questions were harder than most campus placements. The group discussion was unexpected but helped them assess communication skills. Razorpay is an incredible company for data analysts — the scale of payment data you work with is massive and the team is top-quality.',
+        tips: 'For campus placements, SQL and statistics are the core differentiators. Know basic statistical concepts — hypothesis testing, confidence intervals, p-values. Practice payment-specific case studies. In the group discussion, use specific data points to make your arguments stronger.',
+        interview_date: '2023-12',
+      },
+    ];
+
+    for (const exp of interviewSeeds) {
+      await c.execute({
+        sql: `INSERT OR IGNORE INTO interview_experiences
+          (id, user_id, author_name, company, role, experience_type, difficulty, outcome,
+           rounds, rounds_detail, overall_experience, tips, interview_date, is_approved, upvotes)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 0)`,
+        args: [
+          exp.id, exp.user_id, exp.author_name, exp.company, exp.role,
+          exp.experience_type, exp.difficulty, exp.outcome, exp.rounds,
+          exp.rounds_detail, exp.overall_experience, exp.tips, exp.interview_date,
+        ],
+      });
+    }
+  } catch(e) { console.log('Interview experiences seed error:', e.message); }
+
   // Always ensure admin account has premium access and correct role
   try { await c.execute("UPDATE users SET is_premium=1, role='admin' WHERE email='ak384837@gmail.com'"); } catch(e) {}
 

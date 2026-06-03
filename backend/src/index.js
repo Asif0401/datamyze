@@ -115,6 +115,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
   app.use('/api/case-studies',  require('./routes/casestudies'));
   app.use('/api/company-banks', require('./routes/companybanks'));
   app.use('/api/support',       require('./routes/support'));
+  app.use('/api/interviews',    require('./routes/interviews'));
 
   app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
   app.use((req, res) => res.status(404).json({ error: 'Route not found' }));

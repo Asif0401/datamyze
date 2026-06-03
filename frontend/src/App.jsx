@@ -18,6 +18,7 @@ import ProfileCompletion from './pages/ProfileCompletion';
 import CaseStudies from './pages/CaseStudies';
 import CompanyQuestions from './pages/CompanyQuestions';
 import Help from './pages/Help';
+import InterviewExperiences from './pages/InterviewExperiences';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -52,8 +53,9 @@ export default function App() {
           <Route path="settings"    element={<Settings />} />
           <Route path="instructor"  element={<Instructor />} />
           <Route path="case-studies"       element={<CaseStudies />} />
-          <Route path="company-questions" element={<CompanyQuestions />} />
-          <Route path="help"              element={<Help />} />
+          <Route path="company-questions"      element={<CompanyQuestions />} />
+          <Route path="help"                    element={<Help />} />
+          <Route path="interview-experiences"   element={<InterviewExperiences />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
