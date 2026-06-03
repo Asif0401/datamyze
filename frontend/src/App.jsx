@@ -16,7 +16,6 @@ import Settings from './pages/Settings';
 import Instructor from './pages/Instructor';
 import ProfileCompletion from './pages/ProfileCompletion';
 import CaseStudies from './pages/CaseStudies';
-import CompanyQuestions from './pages/CompanyQuestions';
 import Help from './pages/Help';
 import InterviewExperiences from './pages/InterviewExperiences';
 
@@ -52,8 +51,7 @@ export default function App() {
           <Route path="jobs"        element={<Jobs />} />
           <Route path="settings"    element={<Settings />} />
           <Route path="instructor"  element={<Instructor />} />
-          <Route path="case-studies"       element={<CaseStudies />} />
-          <Route path="company-questions"      element={<CompanyQuestions />} />
+          <Route path="case-studies"            element={<CaseStudies />} />
           <Route path="help"                    element={<Help />} />
           <Route path="interview-experiences"   element={<InterviewExperiences />} />
         </Route>

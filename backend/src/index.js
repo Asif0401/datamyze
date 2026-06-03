@@ -113,7 +113,6 @@ app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
   app.use('/api/premium', require('./routes/premium'));
   app.use('/api/jobs',    require('./routes/jobs'));
   app.use('/api/case-studies',  require('./routes/casestudies'));
-  app.use('/api/company-banks', require('./routes/companybanks'));
   app.use('/api/support',       require('./routes/support'));
   app.use('/api/interviews',    require('./routes/interviews'));
 
