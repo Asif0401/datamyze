@@ -327,14 +327,14 @@ export default function AuthPage({ mode: initialMode }) {
       <div className="auth-hero" ref={heroRef}>
 
         {/* ══════════════ SECTION 1 — HERO ══════════════ */}
-        <section style={{ minHeight:'100vh', display:'flex', flexDirection:'column', justifyContent:'center', padding:'3rem 4rem 3rem', position:'relative' }}>
+        <section style={{ minHeight:'100vh', display:'flex', flexDirection:'column', justifyContent:'center', padding:'1.5rem 4rem 2.5rem', position:'relative' }}>
 
           {/* Ambient glows */}
           <div style={{ position:'absolute', top:'-10%', left:'-5%', width:500, height:500, borderRadius:'50%', background:'radial-gradient(circle, rgba(74,144,217,0.12) 0%, transparent 70%)', pointerEvents:'none' }} />
           <div style={{ position:'absolute', bottom:'10%', right:'-10%', width:400, height:400, borderRadius:'50%', background:'radial-gradient(circle, rgba(167,139,250,0.10) 0%, transparent 70%)', pointerEvents:'none' }} />
 
           {/* Logo */}
-          <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:'2rem', animation:'fadeInUp 0.4s ease both' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:'1.6rem', animation:'fadeInUp 0.4s ease both' }}>
             <div className="auth-logo-icon" style={{ width:44, height:44, borderRadius:12, boxShadow:'0 0 20px rgba(34,211,238,0.4)' }}>
               <svg viewBox="0 0 22 22" fill="none" width="22" height="22">
                 <defs>
