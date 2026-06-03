@@ -337,7 +337,7 @@ async function initDb() {
   await c.execute(`
     CREATE TABLE IF NOT EXISTS company_banks (
       id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
+      name TEXT NOT NULL UNIQUE,
       logo TEXT DEFAULT '🏢',
       color TEXT DEFAULT '#4A90D9',
       industry TEXT DEFAULT 'Technology',
@@ -360,36 +360,36 @@ async function initDb() {
       approach TEXT,
       xp_reward INTEGER DEFAULT 30,
       order_index INTEGER DEFAULT 0,
-      created_at TEXT DEFAULT (datetime('now'))
+      created_at TEXT DEFAULT (datetime('now')),
+      UNIQUE(company_id, title)
     )
   `);
 
-  // Seed company banks only if empty
+  // Seed company banks — INSERT OR IGNORE so safe to re-run on every restart
   try {
-    const existing = await c.execute('SELECT COUNT(*) as cnt FROM company_banks');
-    if (existing.rows[0].cnt === 0) {
-      const companies = [
-        { id: uuidv4(), name: 'Flipkart',           logo: '🛒', color: '#2874F0', industry: 'E-commerce',   difficulty: 'Medium', question_count: 7 },
-        { id: uuidv4(), name: 'Amazon India',        logo: '📦', color: '#FF9900', industry: 'E-commerce',   difficulty: 'Hard',   question_count: 7 },
-        { id: uuidv4(), name: 'Swiggy',              logo: '🍔', color: '#FC8019', industry: 'Food Delivery', difficulty: 'Medium', question_count: 6 },
-        { id: uuidv4(), name: 'Zomato',              logo: '🍕', color: '#E23744', industry: 'Food Delivery', difficulty: 'Medium', question_count: 6 },
-        { id: uuidv4(), name: 'PhonePe',             logo: '💸', color: '#5F259F', industry: 'Fintech',       difficulty: 'Medium', question_count: 6 },
-        { id: uuidv4(), name: 'Razorpay',            logo: '💳', color: '#2962FF', industry: 'Fintech',       difficulty: 'Hard',   question_count: 6 },
-        { id: uuidv4(), name: 'Meesho',              logo: '🛍️', color: '#8B5CF6', industry: 'Social Commerce',difficulty:'Easy',   question_count: 5 },
-        { id: uuidv4(), name: 'Walmart Global Tech', logo: '🏪', color: '#0071CE', industry: 'Retail',        difficulty: 'Hard',   question_count: 6 },
-        { id: uuidv4(), name: 'CRED',                logo: '💎', color: '#00C853', industry: 'Fintech',       difficulty: 'Hard',   question_count: 5 },
-        { id: uuidv4(), name: 'Dream11',             logo: '🏏', color: '#1A73E8', industry: 'Gaming',        difficulty: 'Medium', question_count: 5 },
-      ];
-      for (const co of companies) {
-        await c.execute({ sql: `INSERT INTO company_banks (id,name,logo,color,industry,question_count,difficulty) VALUES (?,?,?,?,?,?,?)`,
+    const companies = [
+      { id: uuidv4(), name: 'Flipkart',           logo: '🛒', color: '#2874F0', industry: 'E-commerce',    difficulty: 'Medium', question_count: 7 },
+      { id: uuidv4(), name: 'Amazon India',        logo: '📦', color: '#FF9900', industry: 'E-commerce',    difficulty: 'Hard',   question_count: 7 },
+      { id: uuidv4(), name: 'Swiggy',              logo: '🍔', color: '#FC8019', industry: 'Food Delivery', difficulty: 'Medium', question_count: 6 },
+      { id: uuidv4(), name: 'Zomato',              logo: '🍕', color: '#E23744', industry: 'Food Delivery', difficulty: 'Medium', question_count: 6 },
+      { id: uuidv4(), name: 'PhonePe',             logo: '💸', color: '#5F259F', industry: 'Fintech',       difficulty: 'Medium', question_count: 6 },
+      { id: uuidv4(), name: 'Razorpay',            logo: '💳', color: '#2962FF', industry: 'Fintech',       difficulty: 'Hard',   question_count: 6 },
+      { id: uuidv4(), name: 'Meesho',              logo: '🛍️', color: '#8B5CF6', industry: 'Social Commerce',difficulty: 'Easy',  question_count: 5 },
+      { id: uuidv4(), name: 'Walmart Global Tech', logo: '🏪', color: '#0071CE', industry: 'Retail',        difficulty: 'Hard',   question_count: 6 },
+      { id: uuidv4(), name: 'CRED',                logo: '💎', color: '#00C853', industry: 'Fintech',       difficulty: 'Hard',   question_count: 5 },
+      { id: uuidv4(), name: 'Dream11',             logo: '🏏', color: '#1A73E8', industry: 'Gaming',        difficulty: 'Medium', question_count: 5 },
+    ];
+    for (const co of companies) {
+      await c.execute({ sql: `INSERT OR IGNORE INTO company_banks (id,name,logo,color,industry,question_count,difficulty) VALUES (?,?,?,?,?,?,?)`,
           args: [co.id, co.name, co.logo, co.color, co.industry, co.question_count, co.difficulty] });
-      }
+    }
 
-      // Helper to insert a question
+      // Helper to insert a question — INSERT OR IGNORE so safe to re-run
+      const db_c = c; // alias to avoid shadowing in find() callbacks
       const q = async (companyName, title, question, type, difficulty, topic, approach, xp, order) => {
-        const co = companies.find(c => c.name === companyName);
+        const co = companies.find(x => x.name === companyName);
         if (!co) return;
-        await c.execute({ sql: `INSERT INTO company_bank_questions (id,company_id,title,question,type,difficulty,topic,approach,xp_reward,order_index) VALUES (?,?,?,?,?,?,?,?,?,?)`,
+        await db_c.execute({ sql: `INSERT OR IGNORE INTO company_bank_questions (id,company_id,title,question,type,difficulty,topic,approach,xp_reward,order_index) VALUES (?,?,?,?,?,?,?,?,?,?)`,
           args: [uuidv4(), co.id, title, question, type, difficulty, topic, approach, xp, order] });
       };
 
