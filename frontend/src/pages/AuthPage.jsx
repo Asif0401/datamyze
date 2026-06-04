@@ -594,14 +594,14 @@ export default function AuthPage({ mode: initialMode }) {
             <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:12 }}>
               <span style={{ fontSize:12, color:'rgba(255,255,255,0.22)', fontWeight:500 }}>Follow us</span>
               <a href="https://www.instagram.com/datamyze.in/" target="_blank" rel="noreferrer"
-                style={{ display:'flex', alignItems:'center', justifyContent:'center', width:36, height:36, borderRadius:10, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.09)', color:'rgba(255,255,255,0.40)', transition:'all .2s', textDecoration:'none' }}
+                style={{ display:'flex', alignItems:'center', justifyContent:'center', width:36, height:36, borderRadius:10, background:'rgba(20,27,56,0.88)', border:'1px solid rgba(255,255,255,0.14)', color:'rgba(255,255,255,0.40)', transition:'all .2s', textDecoration:'none' }}
                 onMouseEnter={e => { e.currentTarget.style.background='rgba(225,48,108,0.16)'; e.currentTarget.style.color='#e1306c'; e.currentTarget.style.borderColor='rgba(225,48,108,0.4)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.05)'; e.currentTarget.style.color='rgba(255,255,255,0.40)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.09)'; }}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
               </a>
               <a href="https://www.linkedin.com/company/123464067/" target="_blank" rel="noreferrer"
-                style={{ display:'flex', alignItems:'center', justifyContent:'center', width:36, height:36, borderRadius:10, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.09)', color:'rgba(255,255,255,0.40)', transition:'all .2s', textDecoration:'none' }}
+                style={{ display:'flex', alignItems:'center', justifyContent:'center', width:36, height:36, borderRadius:10, background:'rgba(20,27,56,0.88)', border:'1px solid rgba(255,255,255,0.14)', color:'rgba(255,255,255,0.40)', transition:'all .2s', textDecoration:'none' }}
                 onMouseEnter={e => { e.currentTarget.style.background='rgba(0,119,181,0.16)'; e.currentTarget.style.color='#0077B5'; e.currentTarget.style.borderColor='rgba(0,119,181,0.4)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.05)'; e.currentTarget.style.color='rgba(255,255,255,0.40)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.09)'; }}
               >
@@ -669,7 +669,7 @@ export default function AuthPage({ mode: initialMode }) {
             { val:'24h',   lbl:'Resume Review', color:'#5CC8A0' },
             { val:'₹199',  lbl:'Lifetime',      color:'#E8A838' },
           ].map((s, i) => (
-            <div key={i} style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'10px 8px', borderRadius:12, background:`${s.color}0e`, border:`1px solid ${s.color}25` }}>
+            <div key={i} style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'10px 8px', borderRadius:12, background:'rgba(20,27,56,0.88)', border:`1px solid ${s.color}45`, borderTop:`2px solid ${s.color}80` }}>
               <div style={{ fontSize:18, fontWeight:900, color:s.color, letterSpacing:'-0.4px', lineHeight:1 }}>{s.val}</div>
               <div style={{ fontSize:10, fontWeight:600, color:'rgba(255,255,255,0.38)', textTransform:'uppercase', letterSpacing:'0.4px', marginTop:3 }}>{s.lbl}</div>
             </div>
@@ -698,7 +698,7 @@ export default function AuthPage({ mode: initialMode }) {
             { icon:'📄', color:'#5CC8A0', title:'Resume Review',    desc:'Expert feedback 24h' },
             { icon:'💼', color:'#E8A838', title:'Job Board',        desc:'300+ data roles' },
           ].map((f, i) => (
-            <div key={i} style={{ padding:'0.75rem', borderRadius:12, background:`${f.color}0c`, border:`1px solid ${f.color}22`, borderTop:`2px solid ${f.color}45` }}>
+            <div key={i} style={{ padding:'0.75rem', borderRadius:12, background:'rgba(20,27,56,0.88)', border:`1px solid ${f.color}40`, borderTop:`2px solid ${f.color}80` }}>
               <div style={{ fontSize:18, marginBottom:4 }}>{f.icon}</div>
               <div style={{ fontSize:12, fontWeight:800, color:'#fff', marginBottom:2 }}>{f.title}</div>
               <div style={{ fontSize:11, color:'rgba(255,255,255,0.38)' }}>{f.desc}</div>
@@ -721,7 +721,7 @@ export default function AuthPage({ mode: initialMode }) {
             ].map((s, i) => (
               <div key={i} style={{ display:'flex', gap:14, alignItems:'flex-start', paddingBottom: i < 3 ? '1.3rem' : 0 }}>
                 <div style={{ display:'flex', flexDirection:'column', alignItems:'center', flexShrink:0 }}>
-                  <div style={{ width:42, height:42, borderRadius:13, background:`${s.color}10`, border:`1.5px solid ${s.color}35`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20 }}>{s.icon}</div>
+                  <div style={{ width:42, height:42, borderRadius:13, background:'rgba(20,27,56,0.92)', border:`1.5px solid ${s.color}55`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20 }}>{s.icon}</div>
                   {i < 3 && <div style={{ width:1.5, flexGrow:1, minHeight:20, background:`linear-gradient(180deg,${s.color}40,transparent)`, marginTop:5 }} />}
                 </div>
                 <div style={{ paddingTop:9 }}>
@@ -740,8 +740,8 @@ export default function AuthPage({ mode: initialMode }) {
           <div style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.7px', color:'rgba(255,255,255,0.88)', marginBottom:'1.2rem' }}>We built what<br/>others didn't.</div>
           <div style={{ borderRadius:14, overflow:'hidden', border:'1px solid rgba(127,119,221,0.20)' }}>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr' }}>
-              <div style={{ background:'rgba(255,255,255,0.025)', padding:'8px 12px', borderBottom:'1px solid rgba(255,255,255,0.06)', borderRight:'1px solid rgba(255,255,255,0.06)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                <span style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.28)', letterSpacing:1, textTransform:'uppercase' }}>Others</span>
+              <div style={{ background:'rgba(20,27,56,0.88)', padding:'8px 12px', borderBottom:'1px solid rgba(255,255,255,0.10)', borderRight:'1px solid rgba(255,255,255,0.08)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                <span style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.40)', letterSpacing:1, textTransform:'uppercase' }}>Others</span>
               </div>
               <div style={{ background:'linear-gradient(135deg,rgba(127,119,221,0.18),rgba(56,189,248,0.1))', padding:'8px 12px', borderBottom:'1px solid rgba(127,119,221,0.25)', position:'relative', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center' }}>
                 <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:'linear-gradient(90deg,#7F77DD,#38bdf8)' }} />
@@ -755,13 +755,13 @@ export default function AuthPage({ mode: initialMode }) {
                 { bad:'No mock interviews',       good:'Live mock + feedback',         color:'#f9a825' },
                 { bad:'No job board',             good:'300+ data roles weekly',       color:'#34d399' },
               ].flatMap((row, i) => [
-                <div key={`b${i}`} style={{ padding:'8px 10px', borderRight:'1px solid rgba(255,255,255,0.05)', borderBottom:i<5?'1px solid rgba(255,255,255,0.04)':'none', background:i%2===0?'rgba(0,0,0,0.18)':'rgba(0,0,0,0.10)', display:'flex', alignItems:'center', gap:6 }}>
-                  <div style={{ width:15, height:15, borderRadius:'50%', background:'rgba(248,113,113,0.12)', border:'1px solid rgba(248,113,113,0.3)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                <div key={`b${i}`} style={{ padding:'8px 10px', borderRight:'1px solid rgba(255,255,255,0.08)', borderBottom:i<5?'1px solid rgba(255,255,255,0.08)':'none', background:'rgba(14,20,42,0.85)', display:'flex', alignItems:'center', gap:6 }}>
+                  <div style={{ width:15, height:15, borderRadius:'50%', background:'rgba(248,113,113,0.18)', border:'1px solid rgba(248,113,113,0.4)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
                     <span style={{ fontSize:9, color:'#f87171', fontWeight:900, lineHeight:1 }}>✕</span>
                   </div>
-                  <span style={{ fontSize:11.5, color:'rgba(255,255,255,0.30)', lineHeight:1.4 }}>{row.bad}</span>
+                  <span style={{ fontSize:11.5, color:'rgba(255,255,255,0.40)', lineHeight:1.4 }}>{row.bad}</span>
                 </div>,
-                <div key={`g${i}`} style={{ padding:'8px 10px', borderBottom:i<5?'1px solid rgba(255,255,255,0.04)':'none', borderLeft:`2px solid ${row.color}40`, background:i%2===0?`linear-gradient(90deg,${row.color}09,transparent)`:`linear-gradient(90deg,transparent,${row.color}06)`, display:'flex', alignItems:'center', gap:6 }}>
+                <div key={`g${i}`} style={{ padding:'8px 10px', borderBottom:i<5?'1px solid rgba(255,255,255,0.08)':'none', borderLeft:`2px solid ${row.color}60`, background:`rgba(20,27,56,0.88)`, display:'flex', alignItems:'center', gap:6 }}>
                   <div style={{ width:15, height:15, borderRadius:'50%', background:`${row.color}20`, border:`1px solid ${row.color}50`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
                     <span style={{ fontSize:9, color:row.color, fontWeight:900, lineHeight:1 }}>✓</span>
                   </div>
@@ -776,7 +776,7 @@ export default function AuthPage({ mode: initialMode }) {
         <div style={{ marginBottom:'1.6rem', borderTop:'1px solid rgba(255,255,255,0.06)', paddingTop:'1.8rem' }}>
           <div style={{ fontSize:10, fontWeight:800, color:'rgba(232,168,56,0.8)', letterSpacing:2.5, textTransform:'uppercase', marginBottom:8 }}>Pricing</div>
           <div style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.7px', color:'rgba(255,255,255,0.88)', marginBottom:'1.2rem' }}>One price.<br/>Everything included.</div>
-          <div style={{ background:'linear-gradient(145deg,rgba(232,168,56,0.07),rgba(167,139,250,0.05))', border:'1px solid rgba(232,168,56,0.22)', borderRadius:16, padding:'1.3rem' }}>
+          <div style={{ background:'rgba(20,27,56,0.92)', border:'1px solid rgba(232,168,56,0.35)', borderTop:'2px solid rgba(232,168,56,0.70)', borderRadius:16, padding:'1.3rem' }}>
             <div style={{ display:'flex', alignItems:'baseline', gap:10, marginBottom:6 }}>
               <span style={{ fontSize:42, fontWeight:900, letterSpacing:'-2px', background:'linear-gradient(135deg,#E8A838,#fbbf24)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>₹199</span>
               <span style={{ fontSize:14, color:'rgba(255,255,255,0.25)', textDecoration:'line-through' }}>₹999</span>
@@ -796,10 +796,10 @@ export default function AuthPage({ mode: initialMode }) {
         {/* Social links */}
         <div style={{ display:'flex', alignItems:'center', gap:10, paddingTop:'0.8rem', borderTop:'1px solid rgba(255,255,255,0.06)', marginBottom:'1.4rem' }}>
           <span style={{ fontSize:11, color:'rgba(255,255,255,0.25)', fontWeight:500, flex:1 }}>Follow us</span>
-          <a href="https://www.instagram.com/datamyze.in/" target="_blank" rel="noreferrer" style={{ display:'flex', alignItems:'center', justifyContent:'center', width:32, height:32, borderRadius:9, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.09)', color:'rgba(255,255,255,0.40)', textDecoration:'none' }}>
+          <a href="https://www.instagram.com/datamyze.in/" target="_blank" rel="noreferrer" style={{ display:'flex', alignItems:'center', justifyContent:'center', width:32, height:32, borderRadius:9, background:'rgba(20,27,56,0.88)', border:'1px solid rgba(255,255,255,0.14)', color:'rgba(255,255,255,0.40)', textDecoration:'none' }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
           </a>
-          <a href="https://www.linkedin.com/company/123464067/" target="_blank" rel="noreferrer" style={{ display:'flex', alignItems:'center', justifyContent:'center', width:32, height:32, borderRadius:9, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.09)', color:'rgba(255,255,255,0.40)', textDecoration:'none' }}>
+          <a href="https://www.linkedin.com/company/123464067/" target="_blank" rel="noreferrer" style={{ display:'flex', alignItems:'center', justifyContent:'center', width:32, height:32, borderRadius:9, background:'rgba(20,27,56,0.88)', border:'1px solid rgba(255,255,255,0.14)', color:'rgba(255,255,255,0.40)', textDecoration:'none' }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.271C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           </a>
         </div>
@@ -808,7 +808,7 @@ export default function AuthPage({ mode: initialMode }) {
         <button onClick={() => openSheet('signup')} style={{ width:'100%', padding:'0.9rem', borderRadius:14, background:'linear-gradient(135deg,#4A90D9,#7c3aed)', border:'none', color:'#fff', fontWeight:800, fontSize:15, cursor:'pointer', boxShadow:'0 4px 20px rgba(74,144,217,0.35)', marginBottom:'0.5rem' }}>
           🚀 Get Started Free
         </button>
-        <button onClick={() => openSheet('login')} style={{ width:'100%', padding:'0.75rem', borderRadius:14, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.10)', color:'rgba(255,255,255,0.65)', fontWeight:600, fontSize:14, cursor:'pointer' }}>
+        <button onClick={() => openSheet('login')} style={{ width:'100%', padding:'0.75rem', borderRadius:14, background:'rgba(20,27,56,0.80)', border:'1px solid rgba(255,255,255,0.16)', color:'rgba(255,255,255,0.65)', fontWeight:600, fontSize:14, cursor:'pointer' }}>
           Already have an account? Sign in
         </button>
 
