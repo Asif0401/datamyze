@@ -834,6 +834,150 @@ async function seedProblems(db) {
     }
   }
 
+  // ── Upsert structured schema + examples for key problems ──────────────
+  const PROBLEM_DETAILS = [
+    {
+      title: 'Select All Active Customers',
+      clean_desc: "Return all columns for customers whose email ends with **'@gmail.com'**.\n\nReturn the results in any order.",
+      table_schema: JSON.stringify([
+        { name:'customers', note:'Each row has a unique customer.', columns:[
+          {name:'id',type:'int',key:'PK'},{name:'name',type:'varchar(100)'},{name:'email',type:'varchar(150)'},{name:'city',type:'varchar(50)'}
+        ]}
+      ]),
+      examples: JSON.stringify([{
+        input:{ customers:{ headers:['id','name','email','city'], rows:[[1,'Ravi Kumar','ravi@gmail.com','Mumbai'],[2,'Priya Sharma','priya@yahoo.com','Delhi'],[3,'Arjun Mehta','arjun@gmail.com','Bangalore']] } },
+        output:{ headers:['id','name','email','city'], rows:[[1,'Ravi Kumar','ravi@gmail.com','Mumbai'],[3,'Arjun Mehta','arjun@gmail.com','Bangalore']] },
+        explanation:"Rows 1 and 3 have emails ending in @gmail.com. Row 2 uses @yahoo.com so it is excluded."
+      }]),
+      constraints_list: JSON.stringify(["1 ≤ id ≤ 10⁶","email is always a valid address","The result table can be returned in any order"]),
+    },
+    {
+      title: 'Count Orders Per Status',
+      clean_desc: "Count how many orders exist for each `status`.\n\nReturn `status` and `order_count`, ordered by `order_count` descending.",
+      table_schema: JSON.stringify([
+        { name:'orders', note:'Each row represents one order.', columns:[
+          {name:'id',type:'int',key:'PK'},{name:'customer_id',type:'int'},{name:'amount',type:'decimal(10,2)'},{name:'status',type:'varchar(20)'},{name:'order_date',type:'date'}
+        ]}
+      ]),
+      examples: JSON.stringify([{
+        input:{ orders:{ headers:['id','customer_id','amount','status','order_date'], rows:[[1,1,1200,'completed','2024-01-10'],[2,2,800,'pending','2024-01-12'],[3,1,3400,'completed','2024-01-15'],[4,3,500,'cancelled','2024-01-16'],[5,2,1100,'pending','2024-01-17']] } },
+        output:{ headers:['status','order_count'], rows:[['completed',2],['pending',2],['cancelled',1]] },
+        explanation:"completed and pending both appear 2 times, cancelled appears 1 time. Sorted by count descending."
+      }]),
+      constraints_list: JSON.stringify(["status is one of: 'completed', 'pending', 'cancelled'","1 ≤ orders.id ≤ 10⁶"]),
+    },
+    {
+      title: 'Second Highest Salary',
+      clean_desc: "Find the **second highest** salary from the `employees` table.\n\nReturn a single value aliased as `second_highest`.\n\nIf there is no second highest salary, return `null`.",
+      table_schema: JSON.stringify([
+        { name:'employees', note:'Each row has a unique employee.', columns:[
+          {name:'id',type:'int',key:'PK'},{name:'name',type:'varchar(100)'},{name:'department',type:'varchar(50)'},{name:'salary',type:'decimal(10,2)'},{name:'hire_date',type:'date'},{name:'city',type:'varchar(50)'}
+        ]}
+      ]),
+      examples: JSON.stringify([
+        {
+          input:{ employees:{ headers:['id','name','department','salary'], rows:[[1,'Ravi','Engineering',90000],[2,'Priya','Marketing',75000],[3,'Arjun','Engineering',90000],[4,'Sneha','HR',60000]] } },
+          output:{ headers:['second_highest'], rows:[[75000]] },
+          explanation:"The highest salary is 90000 (Ravi & Arjun). The second highest is 75000 (Priya)."
+        },
+        {
+          input:{ employees:{ headers:['id','name','department','salary'], rows:[[1,'Ravi','Engineering',90000]] } },
+          output:{ headers:['second_highest'], rows:[[null]] },
+          explanation:"Only one distinct salary exists, so second highest is null."
+        }
+      ]),
+      constraints_list: JSON.stringify(["All salary values are positive","salary values may not be unique","Return null if second highest doesn't exist"]),
+    },
+    {
+      title: 'Employees Without a Manager',
+      clean_desc: "Return all employees whose `manager_id` is `NULL` — these are the top-level managers.\n\nReturn `id`, `name`, `department`, and `salary`.",
+      table_schema: JSON.stringify([
+        { name:'employees', note:'manager_id references another employee id, or is NULL for top-level managers.', columns:[
+          {name:'id',type:'int',key:'PK'},{name:'name',type:'varchar(100)'},{name:'department',type:'varchar(50)'},{name:'salary',type:'decimal(10,2)'},{name:'manager_id',type:'int',note:'FK → employees.id'},{name:'hire_date',type:'date'}
+        ]}
+      ]),
+      examples: JSON.stringify([{
+        input:{ employees:{ headers:['id','name','department','salary','manager_id'], rows:[[1,'Ravi','Engineering',90000,null],[2,'Priya','Engineering',75000,1],[3,'Arjun','Marketing',70000,null],[4,'Sneha','HR',60000,3]] } },
+        output:{ headers:['id','name','department','salary'], rows:[[1,'Ravi','Engineering',90000],[3,'Arjun','Marketing',70000]] },
+        explanation:"Ravi (id=1) and Arjun (id=3) have NULL manager_id, so they are top-level managers. Priya reports to Ravi and Sneha reports to Arjun."
+      }]),
+      constraints_list: JSON.stringify(["1 ≤ id ≤ 10⁶","manager_id references a valid employee or is NULL","At least one employee has NULL manager_id"]),
+    },
+    {
+      title: 'Customers with No Orders',
+      clean_desc: "Find all customers who have **never placed an order**.\n\nUse a LEFT JOIN to identify customers without matching orders.\n\nReturn `id`, `name`, and `email`.",
+      table_schema: JSON.stringify([
+        { name:'customers', columns:[{name:'id',type:'int',key:'PK'},{name:'name',type:'varchar(100)'},{name:'email',type:'varchar(150)'},{name:'city',type:'varchar(50)'}]},
+        { name:'orders', note:'customer_id references customers.id', columns:[{name:'id',type:'int',key:'PK'},{name:'customer_id',type:'int',note:'FK → customers.id'},{name:'amount',type:'decimal(10,2)'},{name:'status',type:'varchar(20)'},{name:'order_date',type:'date'}]}
+      ]),
+      examples: JSON.stringify([{
+        input:{
+          customers:{ headers:['id','name','email'], rows:[[1,'Ravi Kumar','ravi@gmail.com'],[2,'Priya Sharma','priya@gmail.com'],[3,'Arjun Mehta','arjun@gmail.com']] },
+          orders:{ headers:['id','customer_id','amount'], rows:[[1,1,1200],[2,1,800],[3,2,3400]] }
+        },
+        output:{ headers:['id','name','email'], rows:[[3,'Arjun Mehta','arjun@gmail.com']] },
+        explanation:"Customers 1 and 2 have orders. Customer 3 (Arjun) has no orders, so is returned."
+      }]),
+      constraints_list: JSON.stringify(["1 ≤ customers.id ≤ 10⁶","Hint: Use LEFT JOIN + WHERE o.id IS NULL"]),
+    },
+    {
+      title: 'Average Order Value by City',
+      clean_desc: "Calculate the **average order amount** per city.\n\nReturn `city` and `avg_order_value` rounded to 2 decimal places, ordered by `avg_order_value` descending.",
+      table_schema: JSON.stringify([
+        { name:'customers', columns:[{name:'id',type:'int',key:'PK'},{name:'name',type:'varchar(100)'},{name:'email',type:'varchar(150)'},{name:'city',type:'varchar(50)'}]},
+        { name:'orders', columns:[{name:'id',type:'int',key:'PK'},{name:'customer_id',type:'int',note:'FK → customers.id'},{name:'amount',type:'decimal(10,2)'},{name:'status',type:'varchar(20)'},{name:'order_date',type:'date'}]}
+      ]),
+      examples: JSON.stringify([{
+        input:{
+          customers:{ headers:['id','name','city'], rows:[[1,'Ravi','Mumbai'],[2,'Priya','Delhi'],[3,'Arjun','Mumbai']] },
+          orders:{ headers:['id','customer_id','amount'], rows:[[1,1,1200],[2,1,800],[3,2,3400],[4,3,2000]] }
+        },
+        output:{ headers:['city','avg_order_value'], rows:[['Delhi',3400.00],['Mumbai',1333.33]] },
+        explanation:"Mumbai has 3 orders (1200+800+2000)/3=1333.33. Delhi has 1 order (3400). Sorted by avg descending."
+      }]),
+      constraints_list: JSON.stringify(["Each customer belongs to exactly one city","Use ROUND(AVG(...), 2)","Order by avg_order_value DESC"]),
+    },
+    {
+      title: 'Products Low in Stock',
+      clean_desc: "Return all products where `stock` is **below 20**.\n\nShow `name`, `category`, `price`, and `stock`, ordered by `stock` ascending.",
+      table_schema: JSON.stringify([
+        { name:'products', columns:[{name:'id',type:'int',key:'PK'},{name:'name',type:'varchar(100)'},{name:'category',type:'varchar(50)'},{name:'price',type:'decimal(10,2)'},{name:'stock',type:'int'}]}
+      ]),
+      examples: JSON.stringify([{
+        input:{ products:{ headers:['id','name','category','price','stock'], rows:[[1,'SQL Book','Books',499,5],[2,'Laptop Stand','Electronics',1200,50],[3,'Notebook','Stationery',99,12],[4,'Monitor','Electronics',8000,3]] } },
+        output:{ headers:['name','category','price','stock'], rows:[['Monitor','Electronics',8000,3],['SQL Book','Books',499,5],['Notebook','Stationery',99,12]] },
+        explanation:"Monitor (3), SQL Book (5), Notebook (12) are all below 20. Sorted by stock ascending. Laptop Stand has 50 so is excluded."
+      }]),
+      constraints_list: JSON.stringify(["stock is always a non-negative integer","Return rows WHERE stock < 20","Order by stock ASC"]),
+    },
+    {
+      title: 'Department Headcount & Avg Salary',
+      clean_desc: "For each department, return the **number of employees** and **average salary**.\n\nOnly include departments with **2 or more employees**.\n\nReturn `department`, `headcount`, and `avg_salary` (rounded to 0 decimal places).",
+      table_schema: JSON.stringify([
+        { name:'employees', columns:[{name:'id',type:'int',key:'PK'},{name:'name',type:'varchar(100)'},{name:'department',type:'varchar(50)'},{name:'salary',type:'decimal(10,2)'},{name:'manager_id',type:'int'},{name:'hire_date',type:'date'}]}
+      ]),
+      examples: JSON.stringify([{
+        input:{ employees:{ headers:['id','name','department','salary'], rows:[[1,'Ravi','Engineering',90000],[2,'Priya','Engineering',75000],[3,'Arjun','Marketing',70000],[4,'Sneha','HR',60000],[5,'Karan','Engineering',80000]] } },
+        output:{ headers:['department','headcount','avg_salary'], rows:[['Engineering',3,81667]] },
+        explanation:"Engineering has 3 employees (90000+75000+80000)/3=81667. Marketing and HR each have only 1, so they are excluded by HAVING COUNT(*) >= 2."
+      }]),
+      constraints_list: JSON.stringify(["Use HAVING COUNT(*) >= 2","avg_salary = ROUND(AVG(salary), 0)","Order by headcount DESC"]),
+    },
+  ];
+
+  for (const pd of PROBLEM_DETAILS) {
+    try {
+      if (pd.clean_desc) {
+        await run(db, 'UPDATE problems SET description=? WHERE title=? AND (table_schema IS NULL OR table_schema="")',
+          [pd.clean_desc, pd.title]);
+      }
+      await run(db,
+        'UPDATE problems SET table_schema=?, examples=?, constraints_list=? WHERE title=? AND (table_schema IS NULL OR table_schema="")',
+        [pd.table_schema, pd.examples, pd.constraints_list, pd.title]
+      );
+    } catch(e) {}
+  }
+
   console.log(`✅ Seeded ${inserted} extra problems (total now: ${count + inserted})`);
 }
 

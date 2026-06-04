@@ -195,44 +195,14 @@ function ProblemIDE({ problem, onClose, onSolved }) {
       {/* ── Main split area ── */}
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }}>
 
-        {/* ── Left: Problem description ── */}
+        {/* ── Left: Problem description (LeetCode-style) ── */}
         <div style={{
-          width: 380, flexShrink: 0,
-          borderRight: '1px solid rgba(255,255,255,0.12)',
+          width: 400, flexShrink: 0,
+          borderRight: '1px solid rgba(255,255,255,0.10)',
           overflowY: 'auto',
-          padding: '1.4rem',
-          background: 'rgba(20,27,56,0.88)',
+          background: 'rgba(14,20,40,0.96)',
         }}>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: '1rem' }}>
-            <DiffBadge d={problem.difficulty} />
-            <span style={{ background: 'rgba(232,168,56,0.15)', color: '#E8A838', border: '1px solid rgba(232,168,56,0.25)', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20 }}>+{problem.xp_reward} XP</span>
-          </div>
-
-          <h2 style={{ fontSize: 17, fontWeight: 800, color: '#fff', marginBottom: '1rem', lineHeight: 1.4 }}>{problem.title}</h2>
-
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.70)', lineHeight: 1.8, whiteSpace: 'pre-wrap', marginBottom: '1.5rem' }}>
-            {problem.description}
-          </div>
-
-          {/* Schema + Sample Data toggle */}
-          {problem.topic === 'SQL' && (
-            <div style={{ marginTop: '1rem' }}>
-              <div style={{ display: 'flex', gap: 6, marginBottom: '0.6rem' }}>
-                <button onClick={() => setShowSchema(false)} style={{ flex:1, padding:'5px 0', borderRadius:8, border:`1px solid ${!showSchema?'rgba(74,144,217,0.45)':'rgba(255,255,255,0.10)'}`, background:!showSchema?'rgba(74,144,217,0.15)':'transparent', color:!showSchema?'#4A90D9':'rgba(255,255,255,0.40)', fontSize:11, fontWeight:700, cursor:'pointer' }}>📊 Sample Data</button>
-                <button onClick={() => setShowSchema(true)}  style={{ flex:1, padding:'5px 0', borderRadius:8, border:`1px solid ${showSchema?'rgba(167,139,250,0.45)':'rgba(255,255,255,0.10)'}`, background:showSchema?'rgba(167,139,250,0.15)':'transparent', color:showSchema?'#a78bfa':'rgba(255,255,255,0.40)', fontSize:11, fontWeight:700, cursor:'pointer' }}>🗃️ Schema</button>
-              </div>
-              {!showSchema
-                ? <SampleDataPreview topic={problem.topic} title={problem.title} />
-                : <SchemaPanel />
-              }
-            </div>
-          )}
-          {problem.topic !== 'SQL' && (
-            <div style={{ marginTop: '1rem' }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: '0.6rem' }}>📊 Sample Data</div>
-              <SampleDataPreview topic={problem.topic} title={problem.title} />
-            </div>
-          )}
+          <ProblemPanel problem={problem} showSchema={showSchema} setShowSchema={setShowSchema} />
         </div>
 
         {/* ── Right: Editor + output ── */}
@@ -368,6 +338,171 @@ function ProblemIDE({ problem, onClose, onSolved }) {
 }
 
 /* ── Output panel ───────────────────────────────────── */
+/* ── Inline table renderer ──────────────────────────── */
+function InlineTable({ headers, rows }) {
+  return (
+    <div style={{ overflowX: 'auto', borderRadius: 8, border: '1px solid rgba(255,255,255,0.10)', marginTop: 8 }}>
+      <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 12, fontFamily: "'JetBrains Mono', monospace" }}>
+        <thead>
+          <tr style={{ background: 'rgba(56,189,248,0.10)' }}>
+            {headers.map((h, i) => (
+              <th key={i} style={{ padding: '7px 12px', borderBottom: '1px solid rgba(255,255,255,0.10)', borderRight: i < headers.length - 1 ? '1px solid rgba(255,255,255,0.08)' : 'none', color: '#38bdf8', fontWeight: 700, textAlign: 'left', whiteSpace: 'nowrap' }}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, i) => (
+            <tr key={i} style={{ background: i % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'transparent' }}>
+              {row.map((cell, j) => (
+                <td key={j} style={{ padding: '6px 12px', borderBottom: i < rows.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none', borderRight: j < row.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none', color: cell === null ? 'rgba(255,255,255,0.30)' : 'rgba(255,255,255,0.75)', whiteSpace: 'nowrap' }}>
+                  {cell === null ? 'null' : String(cell)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ── Full LeetCode-style problem panel ──────────────── */
+function ProblemPanel({ problem, showSchema, setShowSchema }) {
+  const tableSchema   = problem.table_schema   ? (() => { try { return JSON.parse(problem.table_schema); }   catch(e) { return null; } })() : null;
+  const examples      = problem.examples       ? (() => { try { return JSON.parse(problem.examples); }       catch(e) { return null; } })() : null;
+  const constraints   = problem.constraints_list ? (() => { try { return JSON.parse(problem.constraints_list); } catch(e) { return null; } })() : null;
+
+  // Render description with basic **bold** and `code` support
+  function renderDesc(text) {
+    return text.split('\n').map((line, i) => {
+      const parts = line.split(/(\*\*[^*]+\*\*|`[^`]+`)/).map((part, j) => {
+        if (part.startsWith('**') && part.endsWith('**')) return <strong key={j} style={{ color: '#fff' }}>{part.slice(2,-2)}</strong>;
+        if (part.startsWith('`') && part.endsWith('`')) return <code key={j} style={{ background: 'rgba(56,189,248,0.12)', color: '#38bdf8', borderRadius: 4, padding: '1px 5px', fontSize: 11 }}>{part.slice(1,-1)}</code>;
+        return part;
+      });
+      return <p key={i} style={{ margin: '0 0 8px', color: 'rgba(255,255,255,0.72)', lineHeight: 1.75, fontSize: 13 }}>{parts}</p>;
+    });
+  }
+
+  return (
+    <div style={{ padding: '1.4rem', fontSize: 13 }}>
+      {/* Badges */}
+      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: '1rem' }}>
+        <DiffBadge d={problem.difficulty} />
+        <span style={{ background: 'rgba(232,168,56,0.15)', color: '#E8A838', border: '1px solid rgba(232,168,56,0.25)', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20 }}>+{problem.xp_reward} XP</span>
+        <span style={{ background: 'rgba(108,99,255,0.18)', color: '#a78bfa', border: '1px solid rgba(108,99,255,0.25)', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20 }}>{problem.topic}</span>
+      </div>
+
+      {/* Title */}
+      <h2 style={{ fontSize: 18, fontWeight: 900, color: '#fff', marginBottom: '1.1rem', lineHeight: 1.35, letterSpacing: '-0.3px' }}>{problem.title}</h2>
+
+      {/* Description */}
+      <div style={{ marginBottom: tableSchema ? '1.4rem' : '1rem' }}>
+        {renderDesc(problem.description || '')}
+      </div>
+
+      {/* Table Schema — LeetCode style */}
+      {tableSchema && (
+        <div style={{ marginBottom: '1.4rem' }}>
+          <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.7rem' }}>Table Schema</div>
+          {tableSchema.map((tbl, ti) => (
+            <div key={ti} style={{ marginBottom: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.40)' }}>Table:</span>
+                <span style={{ fontSize: 12, fontWeight: 800, fontFamily: "'JetBrains Mono', monospace", background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', color: '#e2e8f0', padding: '1px 8px', borderRadius: 5 }}>{tbl.name}</span>
+              </div>
+              {tbl.note && <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginBottom: 6, fontStyle: 'italic' }}>{tbl.note}</div>}
+              <div style={{ border: '1px solid rgba(255,255,255,0.10)', borderRadius: 8, overflow: 'hidden' }}>
+                <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 12, fontFamily: "'JetBrains Mono', monospace" }}>
+                  <thead>
+                    <tr style={{ background: 'rgba(255,255,255,0.04)' }}>
+                      <th style={{ padding: '6px 12px', borderBottom: '1px solid rgba(255,255,255,0.10)', borderRight: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.45)', fontWeight: 700, textAlign: 'left' }}>Column Name</th>
+                      <th style={{ padding: '6px 12px', borderBottom: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.45)', fontWeight: 700, textAlign: 'left' }}>Type</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tbl.columns.map((col, ci) => (
+                      <tr key={ci} style={{ background: ci % 2 === 0 ? 'rgba(255,255,255,0.015)' : 'transparent' }}>
+                        <td style={{ padding: '6px 12px', borderBottom: ci < tbl.columns.length-1 ? '1px solid rgba(255,255,255,0.06)' : 'none', borderRight: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <span style={{ color: '#e2e8f0', fontWeight: 600 }}>{col.name}</span>
+                          {col.key === 'PK' && <span style={{ fontSize: 9, fontWeight: 800, padding: '1px 5px', borderRadius: 4, background: 'rgba(232,168,56,0.15)', color: '#E8A838', border: '1px solid rgba(232,168,56,0.30)' }}>PK</span>}
+                          {col.note && <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.28)', fontStyle:'italic' }}>{col.note}</span>}
+                        </td>
+                        <td style={{ padding: '6px 12px', borderBottom: ci < tbl.columns.length-1 ? '1px solid rgba(255,255,255,0.06)' : 'none', color: '#38bdf8' }}>{col.type}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Examples */}
+      {examples && examples.map((ex, ei) => (
+        <div key={ei} style={{ marginBottom: '1.4rem' }}>
+          <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.8rem' }}>
+            Example {examples.length > 1 ? ei + 1 : ''}
+          </div>
+          {/* Input tables */}
+          {ex.input && Object.entries(ex.input).map(([tblName, tbl]) => (
+            <div key={tblName} style={{ marginBottom: 10 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.50)', marginBottom: 4 }}>
+                Input: <span style={{ fontFamily: "'JetBrains Mono', monospace", color: 'rgba(255,255,255,0.75)' }}>{tblName}</span>
+              </div>
+              <InlineTable headers={tbl.headers} rows={tbl.rows} />
+            </div>
+          ))}
+          {/* Output */}
+          {ex.output && (
+            <div style={{ marginBottom: 10 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.50)', marginBottom: 4 }}>Output:</div>
+              <InlineTable headers={ex.output.headers} rows={ex.output.rows} />
+            </div>
+          )}
+          {/* Explanation */}
+          {ex.explanation && (
+            <div style={{ background: 'rgba(92,200,160,0.06)', border: '1px solid rgba(92,200,160,0.18)', borderRadius: 8, padding: '10px 12px', marginTop: 8 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: '#5CC8A0', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.8px' }}>Explanation</div>
+              <div style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.60)', lineHeight: 1.7 }}>{ex.explanation}</div>
+            </div>
+          )}
+        </div>
+      ))}
+
+      {/* Constraints */}
+      {constraints && constraints.length > 0 && (
+        <div style={{ marginBottom: '1.4rem' }}>
+          <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.6rem' }}>Constraints</div>
+          <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
+            {constraints.map((c, i) => (
+              <li key={i} style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.8, fontFamily: "'JetBrains Mono', monospace" }}>{c}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Fallback: schema toggle for problems without structured data */}
+      {!tableSchema && problem.topic === 'SQL' && (
+        <div style={{ marginTop: '1rem' }}>
+          <div style={{ display: 'flex', gap: 6, marginBottom: '0.6rem' }}>
+            <button onClick={() => setShowSchema(false)} style={{ flex:1, padding:'5px 0', borderRadius:8, border:`1px solid ${!showSchema?'rgba(74,144,217,0.45)':'rgba(255,255,255,0.10)'}`, background:!showSchema?'rgba(74,144,217,0.15)':'transparent', color:!showSchema?'#4A90D9':'rgba(255,255,255,0.40)', fontSize:11, fontWeight:700, cursor:'pointer' }}>📊 Sample Data</button>
+            <button onClick={() => setShowSchema(true)}  style={{ flex:1, padding:'5px 0', borderRadius:8, border:`1px solid ${showSchema?'rgba(167,139,250,0.45)':'rgba(255,255,255,0.10)'}`, background:showSchema?'rgba(167,139,250,0.15)':'transparent', color:showSchema?'#a78bfa':'rgba(255,255,255,0.40)', fontSize:11, fontWeight:700, cursor:'pointer' }}>🗃️ Schema</button>
+          </div>
+          {!showSchema ? <SampleDataPreview topic={problem.topic} title={problem.title} /> : <SchemaPanel />}
+        </div>
+      )}
+      {!tableSchema && problem.topic !== 'SQL' && (
+        <div style={{ marginTop: '1rem' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: '0.6rem' }}>📊 Sample Data</div>
+          <SampleDataPreview topic={problem.topic} title={problem.title} />
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ── Schema Panel ───────────────────────────────────── */
 const SQL_SCHEMA = [
   { table: 'customers',   cols: 'id, name, email, city' },

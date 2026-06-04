@@ -264,6 +264,9 @@ async function initDb() {
   try { await c.execute("UPDATE users SET onboarding_completed = 1 WHERE (onboarding_completed IS NULL OR onboarding_completed = 0) AND profile_completed = 1"); } catch(e) {}
   try { await c.execute('ALTER TABLE courses ADD COLUMN is_coming_soon INTEGER DEFAULT 0'); } catch(e) {}
   try { await c.execute('ALTER TABLE problems ADD COLUMN hint TEXT'); } catch(e) {}
+  try { await c.execute('ALTER TABLE problems ADD COLUMN table_schema TEXT DEFAULT NULL'); } catch(e) {}
+  try { await c.execute('ALTER TABLE problems ADD COLUMN examples TEXT DEFAULT NULL'); } catch(e) {}
+  try { await c.execute('ALTER TABLE problems ADD COLUMN constraints_list TEXT DEFAULT NULL'); } catch(e) {}
   try { await c.execute("UPDATE problems SET starter_code = '' WHERE starter_code IS NOT NULL"); } catch(e) {}
 
   // Replace Dashboard Design with Tableau & Power BI courses
