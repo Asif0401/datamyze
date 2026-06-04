@@ -965,7 +965,114 @@ async function seedProblems(db) {
     },
   ];
 
-  for (const pd of PROBLEM_DETAILS) {
+  // Additional structured data for popular problems
+  const MORE_DETAILS = [
+    {
+      title: 'Monthly Revenue Trend',
+      clean_desc: "Show **total revenue per month** formatted as `YYYY-MM`.\n\nOrder by month ascending.",
+      table_schema: JSON.stringify([
+        { name:'orders', columns:[{name:'id',type:'int',key:'PK'},{name:'customer_id',type:'int'},{name:'amount',type:'decimal(10,2)'},{name:'status',type:'varchar(20)'},{name:'order_date',type:'date'}]}
+      ]),
+      examples: JSON.stringify([{
+        input:{ orders:{ headers:['id','customer_id','amount','order_date'], rows:[[1,1,1200,'2024-01-10'],[2,2,800,'2024-01-22'],[3,1,3400,'2024-02-05'],[4,3,2100,'2024-02-18']] } },
+        output:{ headers:['month','total_revenue'], rows:[['2024-01',2000],['2024-02',5500]] },
+        explanation:"January: 1200+800=2000. February: 3400+2100=5500. Use strftime('%Y-%m', order_date) to extract month."
+      }]),
+      constraints_list: JSON.stringify(["Use strftime('%Y-%m', order_date) AS month","Group by the formatted month string","Order by month ASC"]),
+    },
+    {
+      title: 'Running Total of Sales',
+      clean_desc: "Calculate a **cumulative running total** of revenue ordered by date.\n\nReturn `date`, `revenue`, and `running_total`.",
+      table_schema: JSON.stringify([
+        { name:'daily_sales', note:'One row per day.', columns:[{name:'date',type:'date'},{name:'revenue',type:'decimal(12,2)'}]}
+      ]),
+      examples: JSON.stringify([{
+        input:{ daily_sales:{ headers:['date','revenue'], rows:[['2024-01-01',285000],['2024-01-02',312000],['2024-01-03',298000]] } },
+        output:{ headers:['date','revenue','running_total'], rows:[['2024-01-01',285000,285000],['2024-01-02',312000,597000],['2024-01-03',298000,895000]] },
+        explanation:"Each row adds the current revenue to all previous rows. Use SUM() OVER (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)."
+      }]),
+      constraints_list: JSON.stringify(["Use window function: SUM(revenue) OVER (ORDER BY date)","ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW","This is a classic window function pattern"]),
+    },
+    {
+      title: 'Previous Day Revenue Comparison',
+      clean_desc: "For each day, show `revenue`, the **previous day's revenue** (`prev_revenue`), and the **difference** (`diff`).\n\nUse the `LAG()` window function.",
+      table_schema: JSON.stringify([
+        { name:'daily_sales', note:'One row per day.', columns:[{name:'date',type:'date'},{name:'revenue',type:'decimal(12,2)'}]}
+      ]),
+      examples: JSON.stringify([{
+        input:{ daily_sales:{ headers:['date','revenue'], rows:[['2024-01-01',285000],['2024-01-02',312000],['2024-01-03',298000]] } },
+        output:{ headers:['date','revenue','prev_revenue','diff'], rows:[['2024-01-01',285000,null,null],['2024-01-02',312000,285000,27000],['2024-01-03',298000,312000,-14000]] },
+        explanation:"LAG(revenue, 1) gets the previous row's revenue. First row has null (no prior row). diff = revenue - prev_revenue."
+      }]),
+      constraints_list: JSON.stringify(["Use LAG(revenue, 1) OVER (ORDER BY date)","First row will have NULL for prev_revenue","diff can be negative (revenue decreased)"]),
+    },
+    {
+      title: 'Top 2 Salaries Per Department',
+      clean_desc: "Return the **top 2 highest-paid employees** per department.\n\nUse `ROW_NUMBER()` with a CTE.",
+      table_schema: JSON.stringify([
+        { name:'employees', columns:[{name:'id',type:'int',key:'PK'},{name:'name',type:'varchar(100)'},{name:'department',type:'varchar(50)'},{name:'salary',type:'decimal(10,2)'},{name:'hire_date',type:'date'}]}
+      ]),
+      examples: JSON.stringify([{
+        input:{ employees:{ headers:['id','name','department','salary'], rows:[[1,'Ravi','Engineering',90000],[2,'Priya','Engineering',75000],[3,'Arjun','Engineering',80000],[4,'Sneha','Marketing',70000],[5,'Karan','Marketing',65000]] } },
+        output:{ headers:['name','department','salary'], rows:[['Ravi','Engineering',90000],['Arjun','Engineering',80000],['Sneha','Marketing',70000],['Karan','Marketing',65000]] },
+        explanation:"Engineering top 2: Ravi (90k), Arjun (80k). Marketing top 2: Sneha (70k), Karan (65k). Priya (75k) is 3rd in Engineering so excluded."
+      }]),
+      constraints_list: JSON.stringify(["Use ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC)","Filter WHERE rn <= 2 in the outer query","Use a CTE for clean code"]),
+    },
+    {
+      title: 'Rank Customers by Spending',
+      clean_desc: "Rank all customers by their **total spend** using `DENSE_RANK()`.\n\nReturn `name`, `total_spent`, and `spend_rank`.",
+      table_schema: JSON.stringify([
+        { name:'customers', columns:[{name:'id',type:'int',key:'PK'},{name:'name',type:'varchar(100)'},{name:'email',type:'varchar(150)'},{name:'city',type:'varchar(50)'}]},
+        { name:'orders', columns:[{name:'id',type:'int',key:'PK'},{name:'customer_id',type:'int',note:'FK → customers.id'},{name:'amount',type:'decimal(10,2)'},{name:'status',type:'varchar(20)'}]}
+      ]),
+      examples: JSON.stringify([{
+        input:{
+          customers:{ headers:['id','name'], rows:[[1,'Ravi'],[2,'Priya'],[3,'Arjun']] },
+          orders:{ headers:['id','customer_id','amount'], rows:[[1,1,5000],[2,1,3000],[3,2,8000],[4,3,8000]] }
+        },
+        output:{ headers:['name','total_spent','spend_rank'], rows:[['Priya',8000,1],['Arjun',8000,1],['Ravi',8000,2]] },
+        explanation:"Priya and Arjun both spent 8000 — they share rank 1. DENSE_RANK skips no ranks, so Ravi is rank 2 (not 3)."
+      }]),
+      constraints_list: JSON.stringify(["Use DENSE_RANK() not RANK()","DENSE_RANK skips no numbers even with ties","Order result by spend_rank ASC"]),
+    },
+    {
+      title: 'Top 3 Products by Revenue',
+      clean_desc: "Find the **top 3 products** by total revenue (quantity × unit_price).\n\nReturn `name` and `total_revenue`, ordered by revenue descending.",
+      table_schema: JSON.stringify([
+        { name:'products', columns:[{name:'id',type:'int',key:'PK'},{name:'name',type:'varchar(100)'},{name:'category',type:'varchar(50)'},{name:'price',type:'decimal(10,2)'},{name:'stock',type:'int'}]},
+        { name:'order_items', note:'Each row is one line item in an order.', columns:[{name:'id',type:'int',key:'PK'},{name:'order_id',type:'int'},{name:'product_id',type:'int',note:'FK → products.id'},{name:'quantity',type:'int'},{name:'unit_price',type:'decimal(10,2)'}]}
+      ]),
+      examples: JSON.stringify([{
+        input:{
+          products:{ headers:['id','name','category'], rows:[[1,'SQL Book','Books'],[2,'Laptop Stand','Electronics'],[3,'Notebook','Stationery'],[4,'Webcam','Electronics']] },
+          order_items:{ headers:['id','product_id','quantity','unit_price'], rows:[[1,1,10,499],[2,2,5,1200],[3,3,20,99],[4,4,8,2500],[5,1,5,499]] }
+        },
+        output:{ headers:['name','total_revenue'], rows:[['Webcam',20000],['Laptop Stand',6000],['SQL Book',7480]] },
+        explanation:"Webcam: 8×2500=20000. Laptop Stand: 5×1200=6000. SQL Book: (10+5)×499=7485. Top 3 by SUM(quantity×unit_price) with LIMIT 3."
+      }]),
+      constraints_list: JSON.stringify(["revenue = SUM(quantity * unit_price)","GROUP BY product, then LIMIT 3","ORDER BY total_revenue DESC LIMIT 3"]),
+    },
+    {
+      title: 'Revenue by Product Category',
+      clean_desc: "Calculate **total revenue** and **order count** for each product category.\n\nReturn `category`, `order_count`, and `total_revenue`.",
+      table_schema: JSON.stringify([
+        { name:'products', columns:[{name:'id',type:'int',key:'PK'},{name:'name',type:'varchar(100)'},{name:'category',type:'varchar(50)'},{name:'price',type:'decimal(10,2)'},{name:'stock',type:'int'}]},
+        { name:'order_items', columns:[{name:'id',type:'int',key:'PK'},{name:'order_id',type:'int'},{name:'product_id',type:'int',note:'FK → products.id'},{name:'quantity',type:'int'},{name:'unit_price',type:'decimal(10,2)'}]}
+      ]),
+      examples: JSON.stringify([{
+        input:{
+          products:{ headers:['id','name','category'], rows:[[1,'SQL Book','Books'],[2,'Laptop Stand','Electronics'],[3,'Webcam','Electronics']] },
+          order_items:{ headers:['id','order_id','product_id','quantity','unit_price'], rows:[[1,101,1,3,499],[2,102,2,2,1200],[3,103,3,1,2500],[4,104,1,5,499]] }
+        },
+        output:{ headers:['category','order_count','total_revenue'], rows:[['Electronics',2,5900],['Books',2,3992]] },
+        explanation:"Electronics: 2 distinct orders, 2×1200+1×2500=5900. Books: 2 distinct orders, (3+5)×499=3992."
+      }]),
+      constraints_list: JSON.stringify(["COUNT(DISTINCT oi.order_id) for order_count","revenue = SUM(quantity * unit_price)","GROUP BY p.category","ORDER BY total_revenue DESC"]),
+    },
+  ];
+
+  for (const pd of [...PROBLEM_DETAILS, ...MORE_DETAILS]) {
     try {
       if (pd.clean_desc) {
         await run(db, 'UPDATE problems SET description=? WHERE title=? AND (table_schema IS NULL OR table_schema="")',

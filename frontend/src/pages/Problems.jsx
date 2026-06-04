@@ -372,16 +372,21 @@ function ProblemPanel({ problem, showSchema, setShowSchema }) {
   const examples      = problem.examples       ? (() => { try { return JSON.parse(problem.examples); }       catch(e) { return null; } })() : null;
   const constraints   = problem.constraints_list ? (() => { try { return JSON.parse(problem.constraints_list); } catch(e) { return null; } })() : null;
 
-  // Render description with basic **bold** and `code` support
+  // Render description — strip "Schema:" metadata lines (now shown as structured tables)
   function renderDesc(text) {
-    return text.split('\n').map((line, i) => {
+    const lines = text.split('\n').filter(line => {
+      const t = line.trim();
+      return !t.startsWith('Schema:') && !t.startsWith('schema:') && !/^\s*(customers|orders|employees|products|sales|sessions|transactions|reviews|departments|order_items|inventory|campaigns|user_activity)\(/.test(t);
+    });
+    return lines.map((line, i) => {
+      if (!line.trim()) return null;
       const parts = line.split(/(\*\*[^*]+\*\*|`[^`]+`)/).map((part, j) => {
         if (part.startsWith('**') && part.endsWith('**')) return <strong key={j} style={{ color: '#fff' }}>{part.slice(2,-2)}</strong>;
         if (part.startsWith('`') && part.endsWith('`')) return <code key={j} style={{ background: 'rgba(56,189,248,0.12)', color: '#38bdf8', borderRadius: 4, padding: '1px 5px', fontSize: 11 }}>{part.slice(1,-1)}</code>;
         return part;
       });
       return <p key={i} style={{ margin: '0 0 8px', color: 'rgba(255,255,255,0.72)', lineHeight: 1.75, fontSize: 13 }}>{parts}</p>;
-    });
+    }).filter(Boolean);
   }
 
   return (
@@ -483,20 +488,13 @@ function ProblemPanel({ problem, showSchema, setShowSchema }) {
         </div>
       )}
 
-      {/* Fallback: schema toggle for problems without structured data */}
-      {!tableSchema && problem.topic === 'SQL' && (
+      {/* Fallback for problems without structured data: show available schema */}
+      {!tableSchema && (
         <div style={{ marginTop: '1rem' }}>
-          <div style={{ display: 'flex', gap: 6, marginBottom: '0.6rem' }}>
-            <button onClick={() => setShowSchema(false)} style={{ flex:1, padding:'5px 0', borderRadius:8, border:`1px solid ${!showSchema?'rgba(74,144,217,0.45)':'rgba(255,255,255,0.10)'}`, background:!showSchema?'rgba(74,144,217,0.15)':'transparent', color:!showSchema?'#4A90D9':'rgba(255,255,255,0.40)', fontSize:11, fontWeight:700, cursor:'pointer' }}>📊 Sample Data</button>
-            <button onClick={() => setShowSchema(true)}  style={{ flex:1, padding:'5px 0', borderRadius:8, border:`1px solid ${showSchema?'rgba(167,139,250,0.45)':'rgba(255,255,255,0.10)'}`, background:showSchema?'rgba(167,139,250,0.15)':'transparent', color:showSchema?'#a78bfa':'rgba(255,255,255,0.40)', fontSize:11, fontWeight:700, cursor:'pointer' }}>🗃️ Schema</button>
+          <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.8rem' }}>
+            {problem.topic === 'SQL' ? 'Available Tables' : 'Sample Data'}
           </div>
-          {!showSchema ? <SampleDataPreview topic={problem.topic} title={problem.title} /> : <SchemaPanel />}
-        </div>
-      )}
-      {!tableSchema && problem.topic !== 'SQL' && (
-        <div style={{ marginTop: '1rem' }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: '0.6rem' }}>📊 Sample Data</div>
-          <SampleDataPreview topic={problem.topic} title={problem.title} />
+          {problem.topic === 'SQL' ? <SchemaPanel /> : <SampleDataPreview topic={problem.topic} title={problem.title} />}
         </div>
       )}
     </div>
