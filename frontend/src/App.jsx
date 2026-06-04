@@ -20,6 +20,7 @@ const Jobs                = lazy(() => import('./pages/Jobs'));
 const Settings            = lazy(() => import('./pages/Settings'));
 const Instructor          = lazy(() => import('./pages/Instructor'));
 const ProfileCompletion   = lazy(() => import('./pages/ProfileCompletion'));
+const Onboarding          = lazy(() => import('./pages/Onboarding'));
 const CaseStudies         = lazy(() => import('./pages/CaseStudies'));
 const Help                = lazy(() => import('./pages/Help'));
 const InterviewExperiences = lazy(() => import('./pages/InterviewExperiences'));
@@ -41,8 +42,10 @@ export default function App() {
 
   return (
     <Suspense fallback={<PageLoader />}>
-      {/* Profile completion overlay — shown once after first signup */}
+      {/* Profile completion — shown once right after signup */}
       {user && user.profile_completed === 0 && <ProfileCompletion />}
+      {/* Onboarding — shown once after profile is complete, guides user on where to start */}
+      {user && user.profile_completed === 1 && user.onboarding_completed === 0 && <Onboarding />}
 
       <Routes>
         {/* Public pages */}

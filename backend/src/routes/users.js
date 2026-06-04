@@ -1,7 +1,23 @@
 const express = require('express');
-const { get, all } = require('../db/database');
+const { get, all, run } = require('../db/database');
 const authMiddleware = require('../middleware/auth');
 const router = express.Router();
+
+/* ── Complete onboarding ─────────────────────────────── */
+router.post('/complete-onboarding', authMiddleware, async (req, res) => {
+  try {
+    const { skill_level, learning_goal } = req.body;
+    const db = req.app.locals.db;
+    await run(db,
+      'UPDATE users SET onboarding_completed=1, skill_level=?, learning_goal=? WHERE id=?',
+      [skill_level || null, learning_goal || null, req.user.id]
+    );
+    const user = await get(db, 'SELECT * FROM users WHERE id=?', [req.user.id]);
+    res.json({ success: true, user });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
 
 router.get('/leaderboard', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
