@@ -64,6 +64,8 @@ function ProblemIDE({ problem, onClose, onSolved }) {
   const [hintData, setHintData]   = useState(null);
   const [showHint, setShowHint]   = useState(false);
   const [loadingHint, setLoadingHint] = useState(false);
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [showSchema, setShowSchema] = useState(false);
   const dragRef = useRef(null);
 
   async function handleRun() {
@@ -85,7 +87,7 @@ function ProblemIDE({ problem, onClose, onSolved }) {
     setBottomTab('output');
     try {
       const { data } = await api.post(`/problems/${problem.id}/submit`, { code, hint_used: hintUsed });
-      setSubmitResult(data);
+      setSubmitResult({ ...data, _title: problem.title });
       if (data.status === 'accepted') onSolved();
     } catch {
       setSubmitResult({ status: 'wrong_answer', message: '❌ Server error.', xp_earned: 0 });
@@ -212,13 +214,25 @@ function ProblemIDE({ problem, onClose, onSolved }) {
             {problem.description}
           </div>
 
-          {/* Sample data tables */}
-          <div style={{ marginTop: '1rem' }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: '0.6rem' }}>
-              📊 Sample Data
+          {/* Schema + Sample Data toggle */}
+          {problem.topic === 'SQL' && (
+            <div style={{ marginTop: '1rem' }}>
+              <div style={{ display: 'flex', gap: 6, marginBottom: '0.6rem' }}>
+                <button onClick={() => setShowSchema(false)} style={{ flex:1, padding:'5px 0', borderRadius:8, border:`1px solid ${!showSchema?'rgba(74,144,217,0.45)':'rgba(255,255,255,0.10)'}`, background:!showSchema?'rgba(74,144,217,0.15)':'transparent', color:!showSchema?'#4A90D9':'rgba(255,255,255,0.40)', fontSize:11, fontWeight:700, cursor:'pointer' }}>📊 Sample Data</button>
+                <button onClick={() => setShowSchema(true)}  style={{ flex:1, padding:'5px 0', borderRadius:8, border:`1px solid ${showSchema?'rgba(167,139,250,0.45)':'rgba(255,255,255,0.10)'}`, background:showSchema?'rgba(167,139,250,0.15)':'transparent', color:showSchema?'#a78bfa':'rgba(255,255,255,0.40)', fontSize:11, fontWeight:700, cursor:'pointer' }}>🗃️ Schema</button>
+              </div>
+              {!showSchema
+                ? <SampleDataPreview topic={problem.topic} title={problem.title} />
+                : <SchemaPanel />
+              }
             </div>
-            <SampleDataPreview topic={problem.topic} title={problem.title} />
-          </div>
+          )}
+          {problem.topic !== 'SQL' && (
+            <div style={{ marginTop: '1rem' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: '0.6rem' }}>📊 Sample Data</div>
+              <SampleDataPreview topic={problem.topic} title={problem.title} />
+            </div>
+          )}
         </div>
 
         {/* ── Right: Editor + output ── */}
@@ -354,6 +368,81 @@ function ProblemIDE({ problem, onClose, onSolved }) {
 }
 
 /* ── Output panel ───────────────────────────────────── */
+/* ── Schema Panel ───────────────────────────────────── */
+const SQL_SCHEMA = [
+  { table: 'customers',   cols: 'id, name, email, city' },
+  { table: 'orders',      cols: 'id, customer_id, amount, status, order_date' },
+  { table: 'employees',   cols: 'id, name, department, salary, manager_id, hire_date' },
+  { table: 'departments', cols: 'id, name, manager_id' },
+  { table: 'products',    cols: 'id, name, category, price, stock' },
+  { table: 'order_items', cols: 'id, order_id, product_id, quantity, unit_price' },
+  { table: 'transactions',cols: 'id, user_id, amount, type, status, created_at' },
+  { table: 'sessions',    cols: 'id, user_id, page, duration_sec, created_at' },
+  { table: 'reviews',     cols: 'id, product_id, user_id, rating, comment' },
+  { table: 'campaigns',   cols: 'id, name, channel, spend, conversions, revenue' },
+  { table: 'inventory',   cols: 'id, product_id, warehouse, quantity, last_updated' },
+  { table: 'sales',       cols: 'date, revenue' },
+  { table: 'user_activity',cols:'user_id, activity_date' },
+];
+function SchemaPanel() {
+  return (
+    <div style={{ fontSize: 12, display: 'flex', flexDirection: 'column', gap: 5 }}>
+      {SQL_SCHEMA.map(s => (
+        <div key={s.table} style={{ background: 'rgba(20,27,56,0.90)', border: '1px solid rgba(167,139,250,0.20)', borderRadius: 8, padding: '7px 10px' }}>
+          <div style={{ fontWeight: 800, color: '#a78bfa', fontSize: 12, marginBottom: 3, fontFamily: "'JetBrains Mono', monospace" }}>
+            📋 {s.table}
+          </div>
+          <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 11, fontFamily: "'JetBrains Mono', monospace", lineHeight: 1.6 }}>
+            {s.cols}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ── Explanation Panel (shown after Accepted) ────────── */
+const SQL_EXPLANATIONS = {
+  join:       { title: 'JOIN Strategy', tip: 'Always identify the relationship between tables first (1-to-many, many-to-many), then choose the right JOIN type. INNER JOIN returns only matching rows. LEFT JOIN keeps all rows from the left table.' },
+  window:     { title: 'Window Functions', tip: 'Window functions (RANK, ROW_NUMBER, LAG, LEAD, SUM OVER) operate on a "window" of rows without collapsing them like GROUP BY does. Use PARTITION BY to reset the window per group, and ORDER BY to define the sequence.' },
+  group:      { title: 'GROUP BY + Aggregation', tip: 'GROUP BY collapses rows into groups. Every column in SELECT must either be in GROUP BY or wrapped in an aggregate (SUM, AVG, COUNT, MAX, MIN). Use HAVING to filter groups — not WHERE.' },
+  cte:        { title: 'CTEs (WITH clause)', tip: 'CTEs (Common Table Expressions) make complex queries readable. Write WITH alias AS (subquery), then reference the alias. You can chain multiple CTEs — each can reference the ones above it.' },
+  subquery:   { title: 'Subqueries', tip: 'Subqueries run first and feed their result to the outer query. Use them in WHERE (filter by subquery result), FROM (treat as a virtual table), or SELECT (correlated subquery per row).' },
+  default:    { title: 'Query Approach', tip: 'Great job solving this! Review your query structure: start with SELECT what you need, FROM the right table(s), JOIN as required, filter with WHERE, group with GROUP BY, and filter groups with HAVING. Clean and readable queries get noticed in interviews.' },
+};
+function ExplanationPanel({ lang, problemTitle = '' }) {
+  const [open, setOpen] = useState(false);
+  const title = problemTitle.toLowerCase();
+  if (lang !== 'sql') return (
+    <div style={{ padding: '10px 14px', background: 'rgba(92,200,160,0.04)', borderBottom: '1px solid rgba(255,255,255,0.06)', fontSize: 12, color: 'rgba(255,255,255,0.40)' }}>
+      🎉 Well done! Review your solution for edge cases and efficiency improvements.
+    </div>
+  );
+  return (
+    <div style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+      <button onClick={() => setOpen(v => !v)} style={{ width: '100%', background: 'none', border: 'none', padding: '9px 14px', display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', color: 'rgba(255,255,255,0.65)', fontSize: 12, fontWeight: 700, textAlign: 'left' }}>
+        <span style={{ fontSize: 14 }}>📖</span>
+        See explanation & key concept
+        <span style={{ marginLeft: 'auto', color: 'rgba(255,255,255,0.30)', fontSize: 11 }}>{open ? '▲' : '▼'}</span>
+      </button>
+      {open && (() => {
+        const keys = Object.keys(SQL_EXPLANATIONS).filter(k => k !== 'default');
+        const matched = keys.find(k => title.includes(k)) || 'default';
+        const exp = SQL_EXPLANATIONS[matched];
+        return (
+          <div style={{ padding: '0 14px 12px', background: 'rgba(92,200,160,0.04)' }}>
+            <div style={{ fontWeight: 800, color: '#5CC8A0', fontSize: 12, marginBottom: 6 }}>💡 {exp.title}</div>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.60)', lineHeight: 1.75 }}>{exp.tip}</div>
+            <div style={{ marginTop: 10, padding: '8px 12px', background: 'rgba(92,200,160,0.06)', border: '1px solid rgba(92,200,160,0.18)', borderRadius: 8, fontSize: 11.5, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>
+              <strong style={{ color: '#5CC8A0' }}>Pro tip:</strong> In real interviews, always explain your approach before writing code. Interviewers value clear thinking over a perfect query.
+            </div>
+          </div>
+        );
+      })()}
+    </div>
+  );
+}
+
 function OutputPanel({ runResult, submitResult, running, submitting, lang }) {
   if (running || submitting) {
     return (
@@ -375,19 +464,51 @@ function OutputPanel({ runResult, submitResult, running, submitting, lang }) {
     <div>
       {/* Submit feedback banner */}
       {submitResult && (
-        <div style={{
-          padding: '10px 14px',
-          background: submitResult.status === 'accepted' ? 'rgba(92,200,160,0.10)' : 'rgba(240,123,106,0.10)',
-          borderBottom: `1px solid ${submitResult.status === 'accepted' ? 'rgba(92,200,160,0.20)' : 'rgba(240,123,106,0.20)'}`,
-          color: submitResult.status === 'accepted' ? '#5CC8A0' : '#F07B6A',
-          fontSize: 13, fontWeight: 600,
-        }}>
-          {submitResult.message}
-          {submitResult.status === 'accepted' && submitResult.xp_earned > 0 &&
-            <span style={{ marginLeft: 12, background: 'rgba(232,168,56,0.18)', color: '#E8A838', padding: '2px 8px', borderRadius: 12, fontSize: 12 }}>
-              +{submitResult.xp_earned} XP
-            </span>
-          }
+        <div>
+          {/* Status row */}
+          <div style={{
+            padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap',
+            background: submitResult.status === 'accepted' ? 'rgba(92,200,160,0.10)' : 'rgba(240,123,106,0.10)',
+            borderBottom: `1px solid ${submitResult.status === 'accepted' ? 'rgba(92,200,160,0.20)' : 'rgba(240,123,106,0.20)'}`,
+            color: submitResult.status === 'accepted' ? '#5CC8A0' : '#F07B6A',
+            fontSize: 13, fontWeight: 600,
+          }}>
+            <span style={{ flex: 1 }}>{submitResult.message}</span>
+            {submitResult.status === 'accepted' && submitResult.xp_earned > 0 &&
+              <span style={{ background: 'rgba(232,168,56,0.18)', color: '#E8A838', padding: '2px 10px', borderRadius: 12, fontSize: 12, fontWeight: 700 }}>
+                +{submitResult.xp_earned} XP
+              </span>
+            }
+          </div>
+
+          {/* Explanation section (shown after accepted) */}
+          {submitResult.status === 'accepted' && (
+            <ExplanationPanel lang={lang} problemTitle={submitResult._title || ''} />
+          )}
+
+          {/* Guidance for wrong answer */}
+          {submitResult.status !== 'accepted' && (
+            <div style={{ padding: '10px 14px', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+              <span style={{ fontSize: 18 }}>🔍</span>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.60)', marginBottom: 4 }}>Common fixes to try:</div>
+                {lang === 'sql'
+                  ? <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: 12, color: 'rgba(255,255,255,0.40)', lineHeight: 1.8 }}>
+                      <li>Check your WHERE / JOIN conditions</li>
+                      <li>Verify column names match the schema (use 🗃️ Schema tab)</li>
+                      <li>Are you using GROUP BY when needed?</li>
+                      <li>Click <strong style={{ color: '#E8A838' }}>💡 Hint</strong> for a guided nudge</li>
+                    </ul>
+                  : <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: 12, color: 'rgba(255,255,255,0.40)', lineHeight: 1.8 }}>
+                      <li>Check the expected output format</li>
+                      <li>Verify your variable names</li>
+                      <li>Check for correct aggregation method</li>
+                      <li>Click <strong style={{ color: '#E8A838' }}>💡 Hint</strong> for a guided nudge</li>
+                    </ul>
+                }
+              </div>
+            </div>
+          )}
         </div>
       )}
 
