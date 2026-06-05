@@ -1107,6 +1107,9 @@ export default function Premium() {
         redirectTarget: '_modal',
       });
 
+      // Always reset coupon after Cashfree returns (success, fail, or abort)
+      setCoupon(''); setCouponMsg('');
+
       if (result?.error) {
         setToast('Payment failed: ' + (result.error.message || 'Please try again.'));
         return;
@@ -1126,6 +1129,7 @@ export default function Premium() {
     } catch (e) {
       const msg = e.response?.data?.error || e.message || 'Something went wrong.';
       setToast('❌ ' + msg);
+      setCoupon(''); setCouponMsg(''); // reset coupon on error too
     } finally {
       setCfLoading(false);
       setTimeout(() => setToast(''), 6000);
