@@ -126,7 +126,7 @@ export default function CaseStudies() {
               className={`filter-chip${selectedCompany === co ? ' active' : ''}`}
               onClick={() => setSelectedCompany(co)}
             >
-              {co !== 'All' && <span style={{ marginRight: 4 }}>{caseStudies.find(c => c.company === co)?.company_logo}</span>}
+              {co !== 'All' && <CompanyLogo company={co} size={16} radius={4} color={COMPANY_COLORS[co]?.text || '#4A90D9'} />}
               {co}
             </button>
           ))}
