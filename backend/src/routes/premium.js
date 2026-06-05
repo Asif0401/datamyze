@@ -153,8 +153,6 @@ router.get('/resume/file/:filename', authMiddleware, (req, res) => {
 });
 
 // ── Cashfree: Create Payment Order ──────────────────────────────────
-const VALID_COUPONS = { 'SAARANGI50': 149 }; // coupon → final price
-
 router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
   try {
     const db = req.app.locals.db;
@@ -164,9 +162,10 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
     const existing = await get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
     if (existing?.is_premium === 1) return res.status(409).json({ error: 'Already a premium member!' });
 
-    // Apply coupon if valid
-    const coupon = (req.body?.coupon || '').toUpperCase().trim();
-    const finalAmount = VALID_COUPONS[coupon] || 199;
+    // Coupon validation — simple string check, never trust client-sent amount
+    const coupon = String(req.body?.coupon || '').toUpperCase().trim();
+    const finalAmount = (coupon === 'SAARANGI50') ? 149 : 199;
+    console.log(`[create-order] user=${user.email} coupon="${coupon}" finalAmount=${finalAmount}`);
 
     const { Cashfree, CFEnvironment } = require('cashfree-pg');
     const cfEnv = process.env.CASHFREE_ENV === 'PRODUCTION' ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
