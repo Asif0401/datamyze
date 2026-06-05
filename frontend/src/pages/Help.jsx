@@ -62,8 +62,9 @@ export default function Help() {
       {/* ── Hero banner ── */}
       <div style={{
         borderRadius: 20, padding: '2.5rem 2rem', marginBottom: '2rem',
-        background: 'linear-gradient(135deg, rgba(74,144,217,0.15) 0%, rgba(127,119,221,0.12) 50%, rgba(92,200,160,0.08) 100%)',
-        border: '1px solid rgba(74,144,217,0.2)',
+        background: 'linear-gradient(135deg, rgba(20,30,65,0.96) 0%, rgba(28,22,58,0.96) 100%)',
+        border: '1px solid rgba(74,144,217,0.30)',
+        borderTop: '3px solid #4A90D9',
         position: 'relative', overflow: 'hidden',
       }}>
         {/* Background glow */}
@@ -191,8 +192,8 @@ export default function Help() {
                 {/* User info note */}
                 <div style={{
                   display: 'flex', alignItems: 'flex-start', gap: 10, marginTop: '0.8rem',
-                  padding: '10px 14px', background: 'rgba(74,144,217,0.06)', borderRadius: 10,
-                  border: '1px solid rgba(74,144,217,0.15)', fontSize: 12, color: 'rgba(255,255,255,0.4)',
+                  padding: '10px 14px', background: 'rgba(20,27,56,0.88)', borderRadius: 10,
+                  border: '1px solid rgba(74,144,217,0.25)', fontSize: 12, color: 'rgba(255,255,255,0.50)',
                 }}>
                   <span style={{ marginTop: 1 }}>ℹ️</span>
                   <span>Your name and registered email will be included so we can respond directly. Your email is never shown publicly.</span>
@@ -227,7 +228,8 @@ export default function Help() {
 
           {/* Quick contact card */}
           <div style={{
-            background: 'rgba(127,119,221,0.08)', border: '1px solid rgba(127,119,221,0.2)',
+            background: 'rgba(20,27,56,0.90)', border: '1px solid rgba(127,119,221,0.30)',
+            borderTop: '2px solid rgba(127,119,221,0.60)',
             borderRadius: 16, padding: '1.4rem',
           }}>
             <div style={{ fontSize: 13, fontWeight: 800, color: '#a78bfa', marginBottom: '1rem', letterSpacing: '0.5px' }}>
@@ -273,8 +275,8 @@ export default function Help() {
 
           {/* Pro tip card */}
           <div style={{
-            background: 'linear-gradient(135deg, rgba(232,168,56,0.10), rgba(232,168,56,0.05))',
-            border: '1px solid rgba(232,168,56,0.2)', borderRadius: 16, padding: '1.2rem',
+            background: 'rgba(20,27,56,0.90)',
+            border: '1px solid rgba(232,168,56,0.30)', borderTop: '2px solid rgba(232,168,56,0.60)', borderRadius: 16, padding: '1.2rem',
             display: 'flex', gap: 12, alignItems: 'flex-start',
           }}>
             <span style={{ fontSize: 24 }}>💡</span>
@@ -308,7 +310,7 @@ function FaqItem({ q, a, last }) {
         onClick={() => setOpen(o => !o)}
         style={{
           width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          padding: '12px 16px', background: open ? 'rgba(74,144,217,0.06)' : 'none',
+          padding: '12px 16px', background: open ? 'rgba(74,144,217,0.14)' : 'rgba(20,27,56,0.60)',
           border: 'none', color: '#fff', fontWeight: 600, fontSize: 13,
           cursor: 'pointer', textAlign: 'left', gap: 12, transition: 'background 0.15s',
         }}
