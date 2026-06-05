@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../hooks/useApi';
+import CompanyLogo from '../components/CompanyLogo';
 
 const TYPE_FILTERS = ['All', 'Full-time', 'Remote', 'Hybrid'];
 
@@ -95,9 +96,7 @@ export default function Jobs() {
             {SAMPLE_JOBS.map(j => (
               <div key={j.title+j.company} className="job-card">
                 <div className="job-header">
-                  <div className="job-company-logo" style={{ background: (COMPANY_COLORS[j.company]||'#4A90D9')+'18', color: COMPANY_COLORS[j.company]||'#4A90D9' }}>
-                    {getInitials(j.company)}
-                  </div>
+                  <CompanyLogo company={j.company} size={40} radius={10} color={COMPANY_COLORS[j.company]||'#4A90D9'} />
                   <div>
                     <div className="job-title">{j.title}</div>
                     <div className="job-company">{j.company}</div>
@@ -207,9 +206,7 @@ export default function Jobs() {
           {filtered.map((job, i) => (
             <div key={job.id} className="job-card" style={{ animation: 'fadeInUp 0.38s ease both', animationDelay: `${i * 0.05}s` }}>
               <div className="job-header">
-                <div className="job-company-logo" style={{ background: COMPANY_COLORS[job.company] ? COMPANY_COLORS[job.company] + '18' : undefined, color: COMPANY_COLORS[job.company] || 'var(--primary-dark)' }}>
-                  {getInitials(job.company)}
-                </div>
+                <CompanyLogo company={job.company} size={40} radius={10} color={COMPANY_COLORS[job.company]||'#4A90D9'} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div className="job-title">{job.title}</div>
                   <div className="job-company">{job.company}</div>

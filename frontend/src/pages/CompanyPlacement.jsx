@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import CompanyLogo from '../components/CompanyLogo';
 
 const ADMIN_EMAIL = 'ak384837@gmail.com';
 
@@ -236,7 +237,7 @@ function PaywallView({ navigate }) {
           {COMPANIES.slice(0,6).map(co=>(
             <div key={co.id} style={{background:'rgba(20,27,56,0.88)',border:`1px solid ${co.color}28`,borderTop:`2px solid ${co.color}55`,borderRadius:16,padding:'1.2rem'}}>
               <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
-                <div style={{width:36,height:36,borderRadius:10,background:`${co.color}20`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}}>{co.logo}</div>
+                <CompanyLogo company={co.name} size={36} radius={10} color={co.color} />
                 <div><div style={{fontWeight:800,fontSize:14,color:'#fff'}}>{co.name}</div><div style={{fontSize:11,color:'rgba(255,255,255,0.38)'}}>{co.industry}</div></div>
               </div>
               <div style={{display:'flex',gap:5}}><span style={{fontSize:11,fontWeight:700,padding:'2px 8px',borderRadius:20,background:`${co.color}18`,color:co.color}}>{co.rounds.length} Rounds</span><span style={{fontSize:11,fontWeight:700,padding:'2px 8px',borderRadius:20,background:'rgba(255,255,255,0.06)',color:'rgba(255,255,255,0.45)'}}>{co.difficulty}</span></div>
@@ -278,7 +279,7 @@ function CompanyDetail({ co, onBack }) {
       <div style={{background:`linear-gradient(135deg, ${co.color}22 0%, rgba(20,27,56,0.96) 100%)`,border:`1px solid ${co.color}40`,borderTop:`3px solid ${co.color}`,borderRadius:20,padding:'1.8rem',marginBottom:'1.4rem',boxShadow:`0 8px 32px rgba(0,0,0,0.40), 0 0 0 1px ${co.color}18`}}>
         <div style={{display:'flex',alignItems:'center',gap:16,flexWrap:'wrap',marginBottom:'1.2rem'}}>
           {/* Logo */}
-          <div style={{width:64,height:64,borderRadius:18,background:`${co.color}25`,border:`2px solid ${co.color}55`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:32,flexShrink:0,boxShadow:`0 0 24px ${co.color}30`}}>{co.logo}</div>
+          <CompanyLogo company={co.name} size={64} radius={18} color={co.color} />
           <div style={{flex:1}}>
             <div style={{fontSize:24,fontWeight:900,color:'#fff',marginBottom:6,letterSpacing:'-0.5px'}}>{co.name}</div>
             <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}}>
@@ -397,7 +398,7 @@ export default function CompanyPlacement() {
             onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-4px)';e.currentTarget.style.boxShadow=`0 12px 32px rgba(0,0,0,0.40), 0 0 0 1px ${co.color}35`;}}
             onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='';}}>
             <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:'0.9rem'}}>
-              <div style={{width:42,height:42,borderRadius:12,background:`${co.color}18`,border:`1px solid ${co.color}35`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>{co.logo}</div>
+              <CompanyLogo company={co.name} size={42} radius={12} color={co.color} />
               <div style={{flex:1,minWidth:0}}>
                 <div style={{fontWeight:800,fontSize:15,color:'#fff',marginBottom:2}}>{co.name}</div>
                 <div style={{fontSize:11,color:'rgba(255,255,255,0.40)'}}>{co.industry}</div>

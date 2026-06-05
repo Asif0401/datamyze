@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../hooks/useApi';
+import CompanyLogo from '../components/CompanyLogo';
 
 // ── Company colour map ───────────────────────────────────────────────
 const COMPANY_COLORS = {
@@ -407,11 +408,7 @@ function DetailView({ exp, onBack, onUpvote }) {
         borderRadius: 20, padding: '1.6rem', marginBottom: '1.2rem',
       }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', flexWrap: 'wrap' }}>
-          <div style={{
-            width: 56, height: 56, borderRadius: 14, flexShrink: 0,
-            background: cs.bg, border: `1px solid ${cs.border}`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28,
-          }}>{getCompanyEmoji(exp.company)}</div>
+          <CompanyLogo company={exp.company} size={56} radius={14} color={cs.text} bg={cs.bg} />
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 6 }}>
               <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: 0 }}>{exp.company}</h1>
@@ -564,7 +561,7 @@ function ExpCard({ exp, onClick }) {
       {/* Coloured company header strip */}
       <div style={{ background: `linear-gradient(135deg, ${cs.bg}, rgba(20,27,56,0.60))`, padding: '1rem 1.2rem', borderBottom: `1px solid ${cs.border}` }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 42, height: 42, borderRadius: 12, flexShrink: 0, background: `${cs.text}18`, border: `1.5px solid ${cs.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>{getCompanyEmoji(exp.company)}</div>
+          <CompanyLogo company={exp.company} size={44} radius={12} color={cs.text} bg={cs.bg} />
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 15, fontWeight: 800, color: '#fff', marginBottom: 2 }}>{exp.company}</div>
             <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.60)', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{exp.role}</div>
