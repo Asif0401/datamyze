@@ -394,15 +394,15 @@ function DetailView({ exp, onBack, onUpvote }) {
         fontSize: 13, fontWeight: 600, cursor: 'pointer', marginBottom: '1.5rem',
         transition: 'all .2s',
       }}
-        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = '#fff'; }}
-        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)'; }}
+        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(28,36,68,0.95)'; e.currentTarget.style.color = '#fff'; }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,27,56,0.80)'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)'; }}
       >
         ← Back to Experiences
       </button>
 
       {/* Header card */}
       <div style={{
-        background: `linear-gradient(135deg, ${cs.bg}, rgba(255,255,255,0.02))`,
+        background: `linear-gradient(135deg, , rgba(20,27,56,0.92))`,
         border: `1px solid ${cs.border}`,
         borderRadius: 20, padding: '1.6rem', marginBottom: '1.2rem',
       }}>
@@ -536,78 +536,70 @@ function DetailView({ exp, onBack, onUpvote }) {
 // ──────────────────────────────────────────────────────────────────────
 function ExpCard({ exp, onClick }) {
   const cs = getCompanyStyle(exp.company);
+  const outcomeColor = exp.outcome === 'Selected' ? '#5CC8A0' : exp.outcome === 'Rejected' ? '#f87171' : '#E8A838';
 
   return (
     <div
       onClick={onClick}
       style={{
-        background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)',
-        borderRadius: 16, padding: '1.2rem', cursor: 'pointer',
+        background: 'rgba(20,27,56,0.92)',
+        border: `1px solid ${cs.border}`,
+        borderTop: `2.5px solid ${cs.text}`,
+        borderRadius: 16, overflow: 'hidden', cursor: 'pointer',
         transition: 'all 0.2s ease', animation: 'fadeInUp 0.35s ease both',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.35)',
+        display: 'flex', flexDirection: 'column',
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.background = 'rgba(255,255,255,0.055)';
-        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
-        e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.25)';
+        e.currentTarget.style.transform = 'translateY(-5px)';
+        e.currentTarget.style.boxShadow = `0 16px 40px rgba(0,0,0,0.50), 0 0 0 1px ${cs.border}`;
+        e.currentTarget.style.background = 'rgba(28,36,68,0.95)';
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
-        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'none';
+        e.currentTarget.style.transform = '';
+        e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.35)';
+        e.currentTarget.style.background = 'rgba(20,27,56,0.92)';
       }}
     >
-      {/* Top row: company logo + badges */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
-        <div style={{
-          width: 42, height: 42, borderRadius: 11, flexShrink: 0,
-          background: cs.bg, border: `1px solid ${cs.border}`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
-        }}>{getCompanyEmoji(exp.company)}</div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 3 }}>
-            <span style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>{exp.company}</span>
-            <OutcomeBadge outcome={exp.outcome} small />
+      {/* Coloured company header strip */}
+      <div style={{ background: `linear-gradient(135deg, ${cs.bg}, rgba(20,27,56,0.60))`, padding: '1rem 1.2rem', borderBottom: `1px solid ${cs.border}` }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 42, height: 42, borderRadius: 12, flexShrink: 0, background: `${cs.text}18`, border: `1.5px solid ${cs.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>{getCompanyEmoji(exp.company)}</div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 15, fontWeight: 800, color: '#fff', marginBottom: 2 }}>{exp.company}</div>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.60)', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{exp.role}</div>
           </div>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-            {exp.role}
+          {/* Outcome pill */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, flexShrink: 0 }}>
+            <span style={{ fontSize: 11, fontWeight: 800, padding: '3px 10px', borderRadius: 20, background: `${outcomeColor}18`, border: `1px solid ${outcomeColor}35`, color: outcomeColor }}>{exp.outcome}</span>
           </div>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, flexShrink: 0 }}>
-          <span style={{ fontSize: 14, color: '#5CC8A0' }}>▲</span>
-          <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.5)' }}>{exp.upvotes || 0}</span>
         </div>
       </div>
 
-      {/* Badges row */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 10 }}>
-        <TypeBadge type={exp.experience_type} />
-        <DifficultyBadge difficulty={exp.difficulty} />
-        <span style={{
-          fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 99,
-          color: 'rgba(255,255,255,0.5)', background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.1)',
-        }}>🔄 {exp.rounds} rounds</span>
-        {exp.interview_date && (
-          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>📅 {fmtDate(exp.interview_date)}</span>
-        )}
-      </div>
+      {/* Body */}
+      <div style={{ padding: '1rem 1.2rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+        {/* Badges row */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 10 }}>
+          <TypeBadge type={exp.experience_type} />
+          <DifficultyBadge difficulty={exp.difficulty} />
+          <span style={{ fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 99, color: 'rgba(255,255,255,0.45)', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)' }}>🔄 {exp.rounds} rounds</span>
+          {exp.interview_date && <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.30)' }}>📅 {fmtDate(exp.interview_date)}</span>}
+        </div>
 
-      {/* Excerpt */}
-      <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, margin: '0 0 10px', flexGrow: 1 }}>
-        {truncate(exp.overall_experience)}
-      </p>
+        {/* Excerpt */}
+        <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.58)', lineHeight: 1.65, margin: '0 0 10px', flex: 1 }}>
+          {truncate(exp.overall_experience)}
+        </p>
 
-      {/* Footer: author */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 7, borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 8 }}>
-        <div style={{
-          width: 22, height: 22, borderRadius: '50%', flexShrink: 0,
-          background: 'linear-gradient(135deg, #38bdf8, #6366f1)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 9, fontWeight: 700, color: '#fff',
-        }}>{getInitials(exp.author_name)}</div>
-        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>{exp.author_name}</span>
-        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', marginLeft: 'auto' }}>Read more →</span>
+        {/* Footer */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 7, borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: 8, marginTop: 'auto' }}>
+          <div style={{ width: 24, height: 24, borderRadius: '50%', flexShrink: 0, background: `linear-gradient(135deg, ${cs.text}80, ${cs.text}30)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 800, color: '#fff', border: `1px solid ${cs.border}` }}>{getInitials(exp.author_name)}</div>
+          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', fontWeight: 600 }}>{exp.author_name}</span>
+          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 11, color: '#5CC8A0', fontWeight: 700 }}>▲ {exp.upvotes || 0}</span>
+            <span style={{ fontSize: 11, color: cs.text, fontWeight: 700 }}>Read →</span>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -826,7 +818,7 @@ export default function InterviewExperiences() {
       {filtered.length === 0 ? (
         <div style={{
           textAlign: 'center', padding: '4rem 2rem',
-          background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)',
+          background: 'rgba(20,27,56,0.80)', border: '1px solid rgba(255,255,255,0.10)',
           borderRadius: 20,
         }}>
           <div style={{ fontSize: 48, marginBottom: '1rem' }}>🎙️</div>
