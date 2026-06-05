@@ -1,302 +1,307 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import api from '../hooks/useApi';
 
 const ADMIN_EMAIL = 'ak384837@gmail.com';
 
-const TOPIC_COLORS = {
-  'Window Functions': '#4A90D9',
-  'CTEs': '#4A90D9',
-  'Query Optimization': '#4A90D9',
-  'SQL Aggregations': '#4A90D9',
-  'Data Modeling': '#4A90D9',
-  'Date Functions': '#4A90D9',
-  'Before/After Analysis': '#4A90D9',
-  'Percentile': '#4A90D9',
-  'Payment Latency Percentiles': '#4A90D9',
-  'Python Pandas': '#F59E0B',
-  'Python Optimization': '#F59E0B',
-  'Python Forecasting': '#F59E0B',
-  'Python mlxtend': '#F59E0B',
-  'A/B Testing': '#5CC8A0',
-  'Cohort Analysis': '#5CC8A0',
-  'Funnel Analysis': '#5CC8A0',
-  'Cohort Retention': '#5CC8A0',
-  'Metric Design': '#a78bfa',
-  'Product Sense': '#a78bfa',
-  'Storytelling with Data': '#a78bfa',
-  'Fantasy Sports Metrics': '#a78bfa',
-  'Fraud Detection': '#F07B6A',
-  'UPI Metrics': '#F07B6A',
-  'Fintech Regulations': '#F07B6A',
-  'RFM Analysis': '#F07B6A',
-  'dbt Models': '#34D399',
-  'Recursive CTEs': '#34D399',
-  'Supply Chain Analytics': '#34D399',
-  'Inventory Metrics': '#34D399',
-};
-
-function getTopicColor(topic) {
-  for (const [key, color] of Object.entries(TOPIC_COLORS)) {
-    if (topic.includes(key) || key.includes(topic)) return color;
-  }
-  return '#94a3b8';
-}
-
-const DIFFICULTY_CONFIG = {
-  Hard:   { color: '#F07B6A', bg: 'rgba(240,123,106,0.12)', border: 'rgba(240,123,106,0.3)' },
-  Medium: { color: '#E8A838', bg: 'rgba(232,168,56,0.12)',  border: 'rgba(232,168,56,0.3)' },
-  Easy:   { color: '#5CC8A0', bg: 'rgba(92,200,160,0.12)',  border: 'rgba(92,200,160,0.3)' },
-};
-
-// Blurred preview company data for paywall
-const PREVIEW_COMPANIES = [
-  { name: 'Flipkart',            logo: '🛒', color: '#2874F0', industry: 'E-commerce',     roles: ['Data Analyst', 'BI Engineer'],    difficulty: 'Hard',   salary_range: '₹8L–₹18L' },
-  { name: 'Amazon India',        logo: '📦', color: '#FF9900', industry: 'E-commerce',     roles: ['BI Engineer', 'Data Analyst'],    difficulty: 'Hard',   salary_range: '₹12L–₹25L' },
-  { name: 'Swiggy',              logo: '🍔', color: '#FC8019', industry: 'Food Delivery',  roles: ['Product Analyst', 'Growth Analyst'], difficulty: 'Hard',   salary_range: '₹10L–₹20L' },
-  { name: 'Zomato',              logo: '🍕', color: '#E23744', industry: 'Food Delivery',  roles: ['Data Analyst', 'Product Analyst'], difficulty: 'Hard',   salary_range: '₹8L–₹16L' },
-  { name: 'PhonePe',             logo: '💸', color: '#5F259F', industry: 'Fintech',        roles: ['Data Analyst', 'Business Analyst'], difficulty: 'Hard',   salary_range: '₹9L–₹18L' },
-  { name: 'Razorpay',            logo: '💳', color: '#2962FF', industry: 'Fintech',        roles: ['Analytics Engineer', 'Data Analyst'], difficulty: 'Hard',   salary_range: '₹12L–₹22L' },
+/* ── All placement data hardcoded — no API needed ───── */
+const COMPANIES = [
+  {
+    id:'flipkart', name:'Flipkart', logo:'🛒', color:'#2874F0', industry:'E-commerce',
+    difficulty:'Hard', salary:'8L–18L', successRate:15,
+    roles:['Data Analyst','BI Engineer','Product Analyst'],
+    rounds:[
+      {round:'Online Assessment',duration:'90 min',desc:'SQL on HackerRank — 3 problems covering window functions (RANK, DENSE_RANK, LAG), CTEs, self-joins. Plus 10 aptitude MCQs on data interpretation.'},
+      {round:'Technical SQL Round',duration:'60 min',desc:'Deep dive into window functions, query optimisation, indexing. Write and explain GMV trend queries, cohort analysis, top-N per category.'},
+      {round:'Technical Python & Analytics',duration:'60 min',desc:'Python/Pandas cohort retention table and a case study on Flipkart mobile app GMV drop — funnel diagnosis using data.'},
+      {round:'Hiring Manager Round',duration:'45 min',desc:'Product sense + metric design. "How would you measure the success of Flipkart Big Billion Days?" A/B testing basics, business impact.'},
+      {round:'HR Round',duration:'30 min',desc:'Cultural fit, career goals, why Flipkart, and compensation discussion.'},
+    ],
+    topics:['Window Functions','CTEs','Python Pandas','Cohort Analysis','Funnel Analysis','A/B Testing','GMV Metrics','Query Optimisation'],
+    tips:[
+      'Master RANK(), DENSE_RANK(), ROW_NUMBER(), LAG(), LEAD() — Flipkart tests these in almost every round. Practice top-N per group using RANK in a CTE.',
+      'Study the Big Billion Days funnel: impressions → search → PDP → add-to-cart → checkout → payment. You will be asked to diagnose drops.',
+      'Build a cohort retention matrix in Pandas from scratch — convert order_date to cohort_month and build a pivot table.',
+      'Know Month-over-Month GMV growth using LAG() window function — near-guaranteed in the SQL round.',
+      'Research Flipkart seller ecosystem (marketplace model), Flipkart Wholesale, and logistics arm Ekart — product round grounds in these.',
+    ],
+  },
+  {
+    id:'amazon', name:'Amazon India', logo:'📦', color:'#FF9900', industry:'E-commerce',
+    difficulty:'Hard', salary:'12L–25L', successRate:12,
+    roles:['Business Intelligence Engineer','Data Analyst','Data Engineer'],
+    rounds:[
+      {round:'Recruiter Screen',duration:'20 min',desc:'Background check, role expectations, location. BIE roles require SQL + Python + basic ETL knowledge.'},
+      {round:'Online Assessment',duration:'75 min',desc:'Two problems: one advanced SQL (partitioned ranking, rolling aggregates) and one Python/Pandas (data cleaning, missing values, outlier handling). LeetCode Medium level.'},
+      {round:'Technical SQL & Data Modeling',duration:'60 min',desc:'Correlated subqueries, NULL handling, 7-day rolling average, star schema vs snowflake. Prime vs non-Prime purchase frequency analysis.'},
+      {round:'Technical Python & ETL',duration:'60 min',desc:'Pandas data pipeline, ETL design for reporting dashboard, AWS concepts (S3, Redshift). Detect SLA breach orders and flag them.'},
+      {round:'Bar Raiser Round',duration:'60 min',desc:'Amazon 16 Leadership Principles with STAR-format answers. Every example must be quantified. This is make-or-break — 40% fail here.'},
+    ],
+    topics:['Window Functions','Data Modeling','ETL Design','Python Pandas','AWS Basics','Leadership Principles','Statistical Analysis','Delivery SLA Metrics'],
+    tips:[
+      'Prepare 2-3 STAR-format stories for each of Amazon 16 Leadership Principles. Customer Obsession, Dive Deep, and Ownership are tested most. Quantify every result.',
+      'The Bar Raiser round eliminates more candidates than technical rounds. Spend 40% of prep time on behavioral answers.',
+      'Know SQL window functions plus star schema vs snowflake trade-offs. BIE roles involve heavy data modeling work.',
+      'Practice designing ETL pipelines: S3 landing → Glue transform → Redshift. Even basic AWS knowledge differentiates you.',
+      'Study Amazon flywheel (Prime ecosystem, delivery network, marketplace). Case questions often involve Prime membership impact on purchase behavior.',
+    ],
+  },
+  {
+    id:'swiggy', name:'Swiggy', logo:'🍔', color:'#FC8019', industry:'Food Delivery',
+    difficulty:'Hard', salary:'10L–20L', successRate:18,
+    roles:['Data Analyst','Product Analyst','Business Analyst'],
+    rounds:[
+      {round:'Online Test',duration:'60 min',desc:'SQL questions (JOINs, aggregations, basic window functions) + logical reasoning. 20-25 questions.'},
+      {round:'Technical Round 1',duration:'60 min',desc:'SQL deep dive + data interpretation. Delivery time analysis, restaurant churn, surge pricing logic.'},
+      {round:'Take-Home Assignment',duration:'3-4 days',desc:'Real Swiggy dataset (anonymised). Do EDA, find key insights, build a visualisation, present recommendations.'},
+      {round:'Assignment Presentation',duration:'45 min',desc:'Walk through your take-home analysis. Defend every decision — why this metric, why this chart, what are the caveats.'},
+      {round:'Culture Round',duration:'30 min',desc:'Swiggy moves fast. They want problem-solvers who communicate clearly and handle ambiguity.'},
+    ],
+    topics:['SQL Aggregations','Delivery Metrics','Cohort Analysis','Python EDA','Data Visualisation','Surge Pricing Logic','Funnel Analysis','Business Problem Solving'],
+    tips:[
+      'The take-home is the most important round. Show storytelling — do not just show numbers, explain "so what?"',
+      'Know Swiggy business: hyperlocal delivery, dark stores (Instamart), restaurant onboarding metrics, delivery partner efficiency.',
+      'For delivery analytics: understand SLA breach, delivery time percentiles (P50/P90/P99), surge multiplier logic.',
+      'Use Python (Pandas + Matplotlib/Seaborn) for the take-home — Jupyter Notebook format is expected.',
+      'Prepare cohort retention and repeat order rate analysis — these are Swiggy core metrics.',
+    ],
+  },
+  {
+    id:'zomato', name:'Zomato', logo:'🍕', color:'#E23744', industry:'Food Delivery',
+    difficulty:'Hard', salary:'8L–16L', successRate:20,
+    roles:['Data Analyst','Analytics Manager Trainee','Product Analyst'],
+    rounds:[
+      {round:'Online Assessment',duration:'60 min',desc:'SQL + analytical reasoning. Questions based on restaurant discovery, food delivery funnels, or Gold membership analysis.'},
+      {round:'Technical Interview',duration:'60 min',desc:'SQL with business context: "Write a query to find impact of Zomato Gold on order frequency." Before/after analysis patterns.'},
+      {round:'Analytical Case Study',duration:'45 min',desc:'Business scenario (e.g. "Zomato Hyperpure GMV declined 10% — diagnose"), structure a data-driven investigation.'},
+      {round:'Final Round',duration:'45 min',desc:'Metric design, north star metric discussion. "How would you measure success of Blinkit integration?"'},
+    ],
+    topics:['Before/After SQL Analysis','Metric Design','Funnel Analysis','North Star Metrics','Python Pandas','A/B Testing','Restaurant Analytics','Cohort Analysis'],
+    tips:[
+      'Understand Zomato full product suite: food delivery, Hyperpure (B2B supplies), Blinkit (quick commerce), Zomato Gold.',
+      'Practice before/after SQL patterns using LAG() — Zomato loves measuring impact of feature launches.',
+      'For case studies: always start with "what metric am I trying to move?" before diving into analysis.',
+      'Know the difference between leading and lagging indicators — interviews heavily focus on metric design frameworks.',
+      'Blinkit acquisition is a hot topic — study quick commerce metrics: inventory turns, slot availability, 10-min delivery SLA.',
+    ],
+  },
+  {
+    id:'phonepe', name:'PhonePe', logo:'💸', color:'#5F259F', industry:'Fintech',
+    difficulty:'Hard', salary:'9L–18L', successRate:15,
+    roles:['Data Analyst','Product Analyst','Risk Analyst'],
+    rounds:[
+      {round:'Written Test',duration:'45 min',desc:'SQL + basic stats (probability, distributions). Fintech-specific: transaction success rates, payment failure analysis.'},
+      {round:'Technical Round 1',duration:'60 min',desc:'SQL: complex queries on transaction data — fraud detection signals, bank success rates, UPI transaction funnel.'},
+      {round:'Technical Round 2',duration:'60 min',desc:'Statistics + Python: hypothesis testing, A/B test analysis, time series anomaly detection on payment volumes.'},
+      {round:'Senior Manager Round',duration:'45 min',desc:'Root cause analysis: "UPI success rate dropped 3% this week — walk me through your investigation."'},
+    ],
+    topics:['Payment Analytics','Fraud Detection','SQL Window Functions','Statistical Testing','Time Series Analysis','UPI Transaction Flow','Risk Metrics','Python Pandas'],
+    tips:[
+      'Understand UPI transaction flow end-to-end: initiation, bank routing, settlement. Know what causes failures at each step.',
+      'Study fraud detection signals: velocity checks (too many txns in X min), device fingerprinting, geographic anomalies.',
+      'PhonePe asks about precision vs recall in fraud context — know when you prefer one over the other.',
+      'For root cause round: always start broad (all banks, all transaction types) then narrow down — show structured thinking.',
+      'Know basic payment regulations: RBI guidelines, PCI DSS, UPI interchange fees. Shows genuine fintech interest.',
+    ],
+  },
+  {
+    id:'razorpay', name:'Razorpay', logo:'💳', color:'#2962FF', industry:'Fintech',
+    difficulty:'Hard', salary:'12L–22L', successRate:13,
+    roles:['Data Analyst','Analytics Engineer','Product Analyst'],
+    rounds:[
+      {round:'Online Screening',duration:'60 min',desc:'SQL + Python on HackerRank. Latency analysis (percentiles), merchant activation funnel queries.'},
+      {round:'Technical Round 1',duration:'60 min',desc:'Advanced SQL: P50/P90/P99 latency calculation, chargeback rate analysis, payment gateway performance metrics.'},
+      {round:'Technical Round 2',duration:'60 min',desc:'Python + data modelling: ETL pipeline design, dbt concepts, analytical engineering patterns.'},
+      {round:'Case Study Round',duration:'45 min',desc:'"Smart routing reduced success rates instead of improving them — diagnose." A/B test analysis + causal reasoning.'},
+      {round:'Culture Round',duration:'30 min',desc:'High-ownership culture. They want people who identify problems proactively and ship fast.'},
+    ],
+    topics:['Payment Latency (P99)','Chargeback Analysis','SQL Percentiles','dbt Analytical Engineering','A/B Testing','Python ETL','Merchant Metrics','Statistical Significance'],
+    tips:[
+      'Master percentile calculations: PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY latency_ms). P99 SLA violations are a core metric.',
+      'Study dbt fundamentals: staging, intermediate, mart layers. Razorpay has shifted heavily to analytical engineering.',
+      'Understand payment routing: how acquirer selection works, why switching acquirers improves success rates.',
+      'For A/B tests: know how to calculate statistical significance, lift, and minimum detectable effect (MDE).',
+      'PCI DSS and RBI regulations come up — know what they govern (card data security, payment processing rules).',
+    ],
+  },
+  {
+    id:'meesho', name:'Meesho', logo:'🛍️', color:'#8B5CF6', industry:'Social Commerce',
+    difficulty:'Medium', salary:'7L–14L', successRate:25,
+    roles:['Data Analyst','Growth Analyst','Business Analyst'],
+    rounds:[
+      {round:'Online Test',duration:'45 min',desc:'SQL + basic analytical questions. Focus on e-commerce metrics: GMV, reseller activation, return rates.'},
+      {round:'Technical Interview',duration:'60 min',desc:'SQL on reseller data: viral coefficient, activation funnels, Tier-2 city penetration analysis.'},
+      {round:'Case Study',duration:'30 min',desc:'Meesho-specific problem: "Return abuse is rising — how do you identify and handle it?" Structured thinking expected.'},
+      {round:'HR Round',duration:'30 min',desc:'Meesho values speed and frugality. Show you can work with ambiguity and ship fast with limited resources.'},
+    ],
+    topics:['Reseller Analytics','Viral Coefficient','Tier-2 City Metrics','Return Abuse Detection','SQL Aggregations','Growth Analytics','Funnel Analysis','Cost Efficiency Metrics'],
+    tips:[
+      'Understand Meesho unique model: resellers share products on WhatsApp/Facebook and earn margins. Very different from B2C.',
+      'Viral coefficient K = (invites sent per user) x (conversion rate). If K > 1, growth is viral. Practice calculating this.',
+      'Tier-2/3 city penetration is central — know how to segment by city tier and compare category adoption rates.',
+      'Return abuse is a top concern: users with >60% return rate over 90 days with 10+ orders. Practice flagging in SQL.',
+      'Meesho is frugal — in case studies, always suggest the lowest-cost solution that achieves the goal.',
+    ],
+  },
+  {
+    id:'cred', name:'CRED', logo:'💎', color:'#00C853', industry:'Fintech',
+    difficulty:'Hard', salary:'14L–28L', successRate:10,
+    roles:['Analytics Engineer','Data Analyst','Product Analyst'],
+    rounds:[
+      {round:'Technical Screen',duration:'60 min',desc:'Advanced SQL: recursive CTEs, complex window functions, query performance. CRED bar is very high — expect Hard-level questions.'},
+      {round:'Analytics Engineering Round',duration:'60 min',desc:'dbt project review or design: staging models, testing, documentation. Data modelling for credit/rewards data.'},
+      {round:'Product Analytics Round',duration:'60 min',desc:'Deep product sense + data: "How would you measure CRED coin redemption health?" North star metrics, leading indicators.'},
+      {round:'System Design (Data)',duration:'45 min',desc:'Design an event tracking pipeline for CRED Jackpot feature. Handle scale, idempotency, and late-arriving events.'},
+      {round:'Director Round',duration:'30 min',desc:'Strategic thinking, past high-impact work, how you handle ambiguity in a fast-moving product.'},
+    ],
+    topics:['dbt & Analytical Engineering','Recursive CTEs','Credit Score Analytics','Coin/Reward Metrics','Data Pipeline Design','Python Advanced','Statistical Testing','Product Metric Design'],
+    tips:[
+      'CRED has the highest SQL bar in India — practice recursive CTEs, complex window functions, and query optimisation daily.',
+      'Learn dbt deeply: models, tests, docs, snapshots, macros. CRED has one of India most mature dbt implementations.',
+      'Understand credit score segmentation: behaviour differs drastically between <650, 650-750, 750-800, 800+ segments.',
+      'CRED coin ecosystem is complex: coins earned → redeemed → purchase_completed funnel. Know how to measure each step.',
+      'For system design: focus on idempotency, event deduplication, and late-data handling in Kafka/Flink pipelines.',
+    ],
+  },
+  {
+    id:'dream11', name:'Dream11', logo:'🏏', color:'#1A73E8', industry:'Gaming',
+    difficulty:'Medium', salary:'8L–16L', successRate:22,
+    roles:['Data Analyst','Product Analyst','Growth Analyst'],
+    rounds:[
+      {round:'Online Assessment',duration:'60 min',desc:'SQL + Python. Fantasy sports context: team selection analysis, contest entry patterns, player point distributions.'},
+      {round:'Technical Round 1',duration:'60 min',desc:'SQL: team duplication rate, captain/VC selection bias, ARPU by match format (T20 vs ODI vs Test).'},
+      {round:'Technical Round 2',duration:'45 min',desc:'Python optimisation: "Build an optimal Dream11 team within Rs 100 credit budget." Linear programming or greedy approach.'},
+      {round:'Product & Culture Round',duration:'30 min',desc:'Product instinct, user behaviour. "How would you improve Dream11 retention during off-season?"'},
+    ],
+    topics:['Fantasy Sports Metrics','SQL Aggregations','Python Optimisation','User Retention','ARPU Analysis','Team Duplication Detection','PuLP Linear Programming','Contest Analytics'],
+    tips:[
+      'Understand fantasy sports fundamentals: captain (2x points) and VC (1.5x) selection, salary-cap constraints, differential picks.',
+      'Practice the team optimiser problem: given player salary and predicted points, maximise total points within Rs 100 budget using PuLP.',
+      'Dream11 key metrics: ARPU per match, contest fill rate, team duplication rate (high duplication = low differentiation = bad product).',
+      'Off-season retention is a top challenge — prepare ideas around non-cricket content (football, kabaddi) and streak-based rewards.',
+      'Contest pricing: multiple price points (Rs 9 to Rs 5000). Know how to segment users by willingness to pay.',
+    ],
+  },
+  {
+    id:'walmart', name:'Walmart Global Tech', logo:'🏪', color:'#0071CE', industry:'Retail',
+    difficulty:'Hard', salary:'10L–22L', successRate:14,
+    roles:['Data Analyst','Business Intelligence Engineer','Data Scientist'],
+    rounds:[
+      {round:'HackerRank Screen',duration:'90 min',desc:'SQL + Python. Retail context: inventory management, demand forecasting accuracy, supplier performance.'},
+      {round:'Technical Round 1',duration:'60 min',desc:'Advanced SQL: inventory turnover ratio, demand forecast MAPE, store performance benchmarking with composite scores.'},
+      {round:'Technical Round 2',duration:'60 min',desc:'Statistics + ML: demand forecasting (ARIMA, Prophet), market basket analysis (Apriori), store clustering.'},
+      {round:'Case Study — Supply Chain',duration:'45 min',desc:'"A supplier delayed shipment 2 weeks. Model the downstream stockout impact." Quantification + stakeholder communication.'},
+      {round:'Hiring Manager',duration:'30 min',desc:'Scale focus: Walmart processes petabytes daily. Show you can think at scale — partitioning, indexing, distributed computing.'},
+    ],
+    topics:['Inventory Analytics','Demand Forecasting','Market Basket Analysis','SQL at Scale','Python ML','Apriori Algorithm','Supply Chain Metrics','Store Performance'],
+    tips:[
+      'Inventory turnover = COGS / avg_inventory. Anything < 2 is slow-moving. Know how to calculate this by category and quarter.',
+      'MAPE (Mean Absolute Percentage Error) is Walmart primary forecast accuracy metric. Practice implementing in both SQL and Python.',
+      'Market basket analysis: implement Apriori using mlxtend. Know support, confidence, and lift — lift > 1 means items are complementary.',
+      'Walmart operates at massive scale — always mention partitioning, indexing, and caching when discussing query performance.',
+      'Understand shrinkage (theft/damage/admin error). It is a major retail KPI: shrinkage = (expected - actual inventory).',
+    ],
+  },
 ];
 
-/* ── Paywall view ───────────────────────────────────────────── */
-function PaywallView() {
+const DIFF_COLOR = { Easy:'#5CC8A0', Medium:'#E8A838', Hard:'#F07B6A' };
+const TOPIC_COLOR = (t) => {
+  if (/sql|cte|window|query|join/i.test(t)) return '#38bdf8';
+  if (/python|pandas|ml|model/i.test(t)) return '#FFD343';
+  if (/a\/b|test|stat/i.test(t)) return '#a78bfa';
+  if (/metric|funnel|cohort|analysis/i.test(t)) return '#5CC8A0';
+  return '#E8A838';
+};
+
+/* ── Paywall ─────────────────────────────────────── */
+function PaywallView({ navigate }) {
   return (
     <div className="page">
       <div className="page-header">
         <div className="page-title">🏢 Company Placement Material</div>
-        <div className="page-sub">Interview process, prep tips &amp; insider guides for India's top tech companies</div>
+        <div className="page-sub">Interview breakdown, prep tips and salary ranges for top companies</div>
       </div>
-
-      {/* Stats bar */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '0.8rem', marginBottom: '1.6rem' }}>
-        {[
-          { icon: '🏢', val: '10',   lbl: 'Companies',       color: '#4A90D9' },
-          { icon: '🎯', val: '40+',  lbl: 'Interview Rounds', color: '#5CC8A0' },
-          { icon: '💼', val: '4',    lbl: 'Job Types',        color: '#E8A838' },
-          { icon: '👑', val: 'Pro',  lbl: 'Members Only',     color: '#E8A838' },
-        ].map((s, i) => (
-          <div key={s.lbl} style={{
-            background: 'rgba(255,255,255,0.03)', border: `1px solid ${s.color}28`,
-            borderRadius: 14, padding: '1rem', textAlign: 'center',
-            animation: `popIn 0.35s ${i * 0.07}s ease both`,
-          }}>
-            <div style={{ fontSize: 24, marginBottom: 4 }}>{s.icon}</div>
-            <div style={{ fontSize: 22, fontWeight: 900, color: s.color, lineHeight: 1 }}>{s.val}</div>
-            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 3 }}>{s.lbl}</div>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'0.8rem', marginBottom:'1.6rem' }}>
+        {[{icon:'🏢',val:'10',lbl:'Companies',color:'#4A90D9'},{icon:'📋',val:'40+',lbl:'Interview Rounds',color:'#5CC8A0'},{icon:'💡',val:'50+',lbl:'Prep Tips',color:'#E8A838'},{icon:'💰',val:'Live',lbl:'Salary Data',color:'#a78bfa'}].map((s,i)=>(
+          <div key={i} style={{background:'rgba(20,27,56,0.88)',border:`1px solid ${s.color}28`,borderRadius:14,padding:'1rem',textAlign:'center'}}>
+            <div style={{fontSize:22,marginBottom:4}}>{s.icon}</div>
+            <div style={{fontSize:20,fontWeight:900,color:s.color,lineHeight:1}}>{s.val}</div>
+            <div style={{fontSize:11,color:'rgba(255,255,255,0.35)',marginTop:3}}>{s.lbl}</div>
           </div>
         ))}
       </div>
 
-      {/* Blurred company cards grid */}
-      <div style={{ position: 'relative', marginBottom: '1.8rem' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '0.9rem', filter: 'blur(5px)', pointerEvents: 'none', userSelect: 'none', opacity: 0.5 }}>
-          {PREVIEW_COMPANIES.map(co => {
-            const diff = DIFFICULTY_CONFIG[co.difficulty] || DIFFICULTY_CONFIG.Hard;
-            return (
-              <div key={co.name} style={{
-                background: 'rgba(20,27,56,0.88)',
-                border: `1px solid ${co.color}35`,
-                borderRadius: 16, padding: '1.2rem',
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                  <div style={{
-                    width: 44, height: 44, borderRadius: 12,
-                    background: `${co.color}20`, border: `1px solid ${co.color}40`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0,
-                  }}>{co.logo}</div>
-                  <div>
-                    <div style={{ fontWeight: 800, fontSize: 15, color: '#fff' }}>{co.name}</div>
-                    <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.4)', marginTop: 1 }}>{co.industry}</div>
-                  </div>
-                  <span style={{
-                    marginLeft: 'auto', fontSize: 10, fontWeight: 700, padding: '3px 9px',
-                    background: diff.bg, border: `1px solid ${diff.border}`,
-                    borderRadius: 20, color: diff.color,
-                  }}>{co.difficulty}</span>
-                </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>
-                  {co.roles.slice(0, 2).map(r => (
-                    <span key={r} style={{ fontSize: 11, padding: '3px 9px', borderRadius: 20, background: `${co.color}14`, border: `1px solid ${co.color}30`, color: co.color, fontWeight: 600 }}>{r}</span>
-                  ))}
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: '#5CC8A0' }}>{co.salary_range}</span>
-                  <button style={{ fontSize: 12, padding: '5px 12px', borderRadius: 8, background: `${co.color}18`, border: `1px solid ${co.color}35`, color: co.color, cursor: 'pointer', fontWeight: 600 }}>
-                    View Guide →
-                  </button>
-                </div>
+      <div style={{position:'relative',marginBottom:'1.6rem'}}>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'0.9rem',filter:'blur(5px)',pointerEvents:'none',userSelect:'none',opacity:0.5}}>
+          {COMPANIES.slice(0,6).map(co=>(
+            <div key={co.id} style={{background:'rgba(20,27,56,0.88)',border:`1px solid ${co.color}28`,borderTop:`2px solid ${co.color}55`,borderRadius:16,padding:'1.2rem'}}>
+              <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
+                <div style={{width:36,height:36,borderRadius:10,background:`${co.color}20`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}}>{co.logo}</div>
+                <div><div style={{fontWeight:800,fontSize:14,color:'#fff'}}>{co.name}</div><div style={{fontSize:11,color:'rgba(255,255,255,0.38)'}}>{co.industry}</div></div>
               </div>
-            );
-          })}
+              <div style={{display:'flex',gap:5}}><span style={{fontSize:11,fontWeight:700,padding:'2px 8px',borderRadius:20,background:`${co.color}18`,color:co.color}}>{co.rounds.length} Rounds</span><span style={{fontSize:11,fontWeight:700,padding:'2px 8px',borderRadius:20,background:'rgba(255,255,255,0.06)',color:'rgba(255,255,255,0.45)'}}>{co.difficulty}</span></div>
+            </div>
+          ))}
         </div>
-
-        {/* Lock overlay */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          background: 'linear-gradient(to bottom, transparent 0%, rgba(10,14,30,0.65) 35%, rgba(10,14,30,0.97) 100%)',
-          borderRadius: 16, zIndex: 2,
-        }}>
-          <div style={{
-            background: 'rgba(232,168,56,0.10)', border: '1px solid rgba(232,168,56,0.3)',
-            borderRadius: '50%', width: 64, height: 64,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28,
-            marginBottom: 14, boxShadow: '0 0 32px rgba(232,168,56,0.22)',
-          }}>🔒</div>
-          <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 6, letterSpacing: '-0.3px', textAlign: 'center' }}>
-            Unlock placement material for Flipkart,<br />Amazon, Swiggy &amp; 7 more top companies
-          </div>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', marginBottom: 20, textAlign: 'center', maxWidth: 340, lineHeight: 1.6 }}>
-            Full interview breakdown, round-by-round prep guide, and company-specific insider tips.
-          </div>
-          <a href="/premium">
-            <button className="btn-gold" style={{ fontSize: 15, padding: '13px 32px' }}>
-              <span>👑</span> Upgrade to Pro — ₹199
+        <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:'linear-gradient(to bottom,transparent,rgba(4,6,14,0.80) 40%,rgba(4,6,14,0.97) 100%)',borderRadius:16,zIndex:2}}>
+          <div style={{textAlign:'center',padding:'2rem 1.5rem'}}>
+            <div style={{fontSize:40,marginBottom:'0.8rem'}}>🔒</div>
+            <div style={{fontSize:20,fontWeight:900,color:'#fff',marginBottom:6}}>Premium Feature</div>
+            <div style={{fontSize:14,color:'rgba(255,255,255,0.50)',marginBottom:'1.4rem',maxWidth:340}}>Unlock full interview guides for Flipkart, Amazon, Swiggy, Zomato and 6 more companies.</div>
+            {['Full interview process breakdown (4-5 rounds per company)','Round-by-round preparation guide','Company-specific insider prep tips','Key topics tested per company','Realistic salary ranges'].map(b=>(
+              <div key={b} style={{display:'flex',alignItems:'center',gap:8,fontSize:13,color:'rgba(255,255,255,0.75)',marginBottom:8,textAlign:'left'}}><span style={{color:'#5CC8A0',fontWeight:900}}>✓</span>{b}</div>
+            ))}
+            <button onClick={()=>navigate('/premium')} style={{marginTop:'0.8rem',padding:'0.75rem 2rem',borderRadius:12,background:'linear-gradient(135deg,#E8A838,#f59e0b)',border:'none',color:'#000',fontWeight:800,fontSize:15,cursor:'pointer'}}>
+              👑 Upgrade to Pro — ₹199
             </button>
-          </a>
-          <div style={{ marginTop: 10, fontSize: 11.5, color: 'rgba(255,255,255,0.25)' }}>One-time payment · No subscription · Instant access</div>
-        </div>
-      </div>
-
-      {/* Benefits list */}
-      <div style={{
-        background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: 16, padding: '1.4rem 1.6rem',
-      }}>
-        <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 14, textAlign: 'center' }}>
-          What's inside
-        </div>
-        {[
-          { icon: '📋', text: 'Full interview process breakdown for each company' },
-          { icon: '🎯', text: 'Round-by-round preparation guide with exact question types' },
-          { icon: '💡', text: 'Company-specific prep tips mentioning real products and context' },
-          { icon: '🔑', text: 'Key topics tested per company — SQL, Python, stats, product sense' },
-          { icon: '💰', text: 'Insider salary ranges for data roles at each company' },
-        ].map((b, i) => (
-          <div key={i} style={{
-            display: 'flex', alignItems: 'center', gap: 12, padding: '9px 0',
-            borderBottom: i < 4 ? '1px solid rgba(255,255,255,0.05)' : 'none',
-          }}>
-            <span style={{ fontSize: 18, flexShrink: 0 }}>{b.icon}</span>
-            <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.72)', fontWeight: 500, lineHeight: 1.4 }}>{b.text}</span>
-            <span style={{ marginLeft: 'auto', color: '#5CC8A0', fontSize: 16, flexShrink: 0 }}>✓</span>
+            <div style={{fontSize:11,color:'rgba(255,255,255,0.25)',marginTop:8}}>One-time payment · Lifetime access</div>
           </div>
-        ))}
+        </div>
       </div>
     </div>
   );
 }
 
-/* ── Company detail view ─────────────────────────────────────── */
-function CompanyDetail({ company, onBack }) {
-  const diff = DIFFICULTY_CONFIG[company.difficulty] || DIFFICULTY_CONFIG.Hard;
-
+/* ── Company Detail ───────────────────────────────── */
+function CompanyDetail({ co, onBack }) {
   return (
     <div className="page">
-      {/* Back button */}
-      <button
-        onClick={onBack}
-        style={{
-          display: 'flex', alignItems: 'center', gap: 8, marginBottom: '1.2rem',
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: 10, padding: '7px 14px', color: 'rgba(255,255,255,0.7)',
-          fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all .2s',
-        }}
-        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.09)'; e.currentTarget.style.color = '#fff'; }}
-        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)'; }}
-      >
+      <button onClick={onBack} style={{display:'flex',alignItems:'center',gap:6,background:'rgba(255,255,255,0.07)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:10,padding:'6px 14px',color:'rgba(255,255,255,0.70)',fontSize:13,fontWeight:700,cursor:'pointer',marginBottom:'1.4rem'}}>
         ← Back to Companies
       </button>
 
-      {/* Header card */}
-      <div style={{
-        background: 'rgba(20,27,56,0.88)',
-        border: `1px solid ${company.color}40`,
-        borderRadius: 18, padding: '1.6rem', marginBottom: '1.4rem',
-        boxShadow: `0 4px 32px ${company.color}12`,
-      }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
-          <div style={{
-            width: 64, height: 64, borderRadius: 16, flexShrink: 0,
-            background: `${company.color}20`, border: `2px solid ${company.color}50`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32,
-          }}>{company.logo}</div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 24, fontWeight: 900, color: '#fff', letterSpacing: '-0.5px', marginBottom: 4 }}>{company.name}</div>
-            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 10 }}>{company.industry}</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
-              <span style={{
-                fontSize: 10, fontWeight: 800, padding: '4px 12px',
-                background: diff.bg, border: `1px solid ${diff.border}`, borderRadius: 20, color: diff.color,
-              }}>{company.difficulty}</span>
-              <span style={{
-                fontSize: 13, fontWeight: 800, color: '#5CC8A0',
-                background: 'rgba(92,200,160,0.10)', border: '1px solid rgba(92,200,160,0.25)',
-                borderRadius: 20, padding: '4px 12px',
-              }}>{company.salary_range}</span>
-              <span style={{
-                fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 600,
-                background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: 20, padding: '4px 12px',
-              }}>~{company.success_rate}% of candidates get an offer</span>
+      {/* Header */}
+      <div style={{background:'rgba(20,27,56,0.92)',border:`1px solid ${co.color}30`,borderTop:`3px solid ${co.color}`,borderRadius:18,padding:'1.6rem',marginBottom:'1.4rem'}}>
+        <div style={{display:'flex',alignItems:'center',gap:14,flexWrap:'wrap'}}>
+          <div style={{width:56,height:56,borderRadius:16,background:`${co.color}20`,border:`1.5px solid ${co.color}40`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:28,flexShrink:0}}>{co.logo}</div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:22,fontWeight:900,color:'#fff',marginBottom:4}}>{co.name}</div>
+            <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+              <span style={{fontSize:12,color:'rgba(255,255,255,0.45)'}}>{co.industry}</span>
+              <span style={{fontSize:12,fontWeight:700,color:DIFF_COLOR[co.difficulty]}}>{co.difficulty}</span>
+              <span style={{fontSize:12,color:'rgba(255,255,255,0.45)'}}>💰 ₹{co.salary} LPA</span>
+              <span style={{fontSize:12,color:'rgba(255,255,255,0.45)'}}>~{co.successRate}% offer rate</span>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Roles */}
-      <div style={{
-        background: 'rgba(20,27,56,0.88)',
-        border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16,
-        padding: '1.3rem 1.4rem', marginBottom: '1.2rem',
-      }}>
-        <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 12 }}>
-          Roles They Hire For
-        </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          {company.roles.map(role => (
-            <span key={role} style={{
-              fontSize: 13, fontWeight: 700, padding: '6px 14px', borderRadius: 20,
-              background: `${company.color}18`, border: `1px solid ${company.color}40`, color: company.color,
-            }}>{role}</span>
-          ))}
+        <div style={{display:'flex',gap:8,marginTop:'1rem',flexWrap:'wrap'}}>
+          {co.roles.map(r=><span key={r} style={{fontSize:12,fontWeight:700,padding:'4px 12px',borderRadius:20,background:`${co.color}14`,border:`1px solid ${co.color}30`,color:co.color}}>{r}</span>)}
         </div>
       </div>
 
       {/* Interview Rounds */}
-      <div style={{
-        background: 'rgba(20,27,56,0.88)',
-        border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16,
-        padding: '1.3rem 1.4rem', marginBottom: '1.2rem',
-      }}>
-        <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 14 }}>
-          Interview Rounds
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {company.interview_rounds.map((r, i) => (
-            <div key={i} style={{
-              display: 'flex', gap: 14, alignItems: 'flex-start',
-              background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)',
-              borderRadius: 12, padding: '1rem 1.1rem',
-            }}>
-              {/* Round number badge */}
-              <div style={{
-                width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
-                background: `${company.color}20`, border: `2px solid ${company.color}50`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 13, fontWeight: 900, color: company.color,
-              }}>{i + 1}</div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 6 }}>
-                  <span style={{ fontSize: 14, fontWeight: 800, color: '#fff' }}>{r.round}</span>
-                  <span style={{
-                    fontSize: 10.5, fontWeight: 700, padding: '2px 9px', borderRadius: 20,
-                    background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
-                    color: 'rgba(255,255,255,0.50)',
-                  }}>⏱ {r.duration}</span>
+      <div style={{background:'rgba(20,27,56,0.88)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:16,padding:'1.4rem',marginBottom:'1.2rem'}}>
+        <div style={{fontSize:11,fontWeight:800,color:'rgba(255,255,255,0.35)',textTransform:'uppercase',letterSpacing:'1px',marginBottom:'1rem'}}>Interview Process</div>
+        <div style={{display:'flex',flexDirection:'column',gap:'0.8rem'}}>
+          {co.rounds.map((r,i)=>(
+            <div key={i} style={{display:'flex',gap:12,alignItems:'flex-start'}}>
+              <div style={{width:28,height:28,borderRadius:'50%',background:`${co.color}18`,border:`1.5px solid ${co.color}40`,display:'flex',alignItems:'center',justifyContent:'center',fontWeight:900,fontSize:12,color:co.color,flexShrink:0}}>{i+1}</div>
+              <div style={{flex:1}}>
+                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:3}}>
+                  <span style={{fontSize:13,fontWeight:800,color:'#fff'}}>{r.round}</span>
+                  <span style={{fontSize:10,fontWeight:700,padding:'1px 8px',borderRadius:20,background:'rgba(255,255,255,0.08)',color:'rgba(255,255,255,0.45)'}}>{r.duration}</span>
                 </div>
-                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.58)', lineHeight: 1.6 }}>{r.desc}</div>
+                <div style={{fontSize:12.5,color:'rgba(255,255,255,0.55)',lineHeight:1.65}}>{r.desc}</div>
               </div>
             </div>
           ))}
@@ -304,240 +309,85 @@ function CompanyDetail({ company, onBack }) {
       </div>
 
       {/* Key Topics */}
-      <div style={{
-        background: 'rgba(20,27,56,0.88)',
-        border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16,
-        padding: '1.3rem 1.4rem', marginBottom: '1.2rem',
-      }}>
-        <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 12 }}>
-          Key Topics to Master
-        </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          {company.key_topics.map(topic => {
-            const tc = getTopicColor(topic);
-            return (
-              <span key={topic} style={{
-                fontSize: 12, fontWeight: 700, padding: '5px 12px', borderRadius: 20,
-                background: `${tc}14`, border: `1px solid ${tc}35`, color: tc,
-              }}>{topic}</span>
-            );
-          })}
+      <div style={{background:'rgba(20,27,56,0.88)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:16,padding:'1.4rem',marginBottom:'1.2rem'}}>
+        <div style={{fontSize:11,fontWeight:800,color:'rgba(255,255,255,0.35)',textTransform:'uppercase',letterSpacing:'1px',marginBottom:'0.8rem'}}>Key Topics to Master</div>
+        <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
+          {co.topics.map(t=>{const c=TOPIC_COLOR(t);return(<span key={t} style={{fontSize:12,fontWeight:700,padding:'5px 12px',borderRadius:20,background:`${c}14`,border:`1px solid ${c}30`,color:c}}>{t}</span>);})}
         </div>
       </div>
 
       {/* Prep Tips */}
-      <div style={{
-        background: 'rgba(20,27,56,0.88)',
-        border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16,
-        padding: '1.3rem 1.4rem', marginBottom: '1.4rem',
-      }}>
-        <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 14 }}>
-          Preparation Tips
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {company.prep_tips.map((tip, i) => (
-            <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-              <div style={{
-                width: 24, height: 24, borderRadius: '50%', flexShrink: 0,
-                background: 'rgba(232,168,56,0.15)', border: '1px solid rgba(232,168,56,0.35)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 12, fontWeight: 900, color: '#E8A838',
-              }}>{i + 1}</div>
-              <div style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.75)', lineHeight: 1.65, flex: 1 }}>{tip}</div>
+      <div style={{background:'rgba(20,27,56,0.88)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:16,padding:'1.4rem'}}>
+        <div style={{fontSize:11,fontWeight:800,color:'rgba(255,255,255,0.35)',textTransform:'uppercase',letterSpacing:'1px',marginBottom:'0.8rem'}}>Preparation Tips</div>
+        <div style={{display:'flex',flexDirection:'column',gap:'0.7rem'}}>
+          {co.tips.map((tip,i)=>(
+            <div key={i} style={{display:'flex',gap:10,alignItems:'flex-start'}}>
+              <div style={{width:22,height:22,borderRadius:'50%',background:'rgba(232,168,56,0.15)',border:'1px solid rgba(232,168,56,0.30)',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:900,fontSize:11,color:'#E8A838',flexShrink:0}}>{i+1}</div>
+              <div style={{fontSize:13,color:'rgba(255,255,255,0.72)',lineHeight:1.65}}>{tip}</div>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Back button bottom */}
-      <button
-        onClick={onBack}
-        style={{
-          display: 'flex', alignItems: 'center', gap: 8,
-          background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)',
-          borderRadius: 10, padding: '9px 18px', color: 'rgba(255,255,255,0.6)',
-          fontSize: 13, fontWeight: 600, cursor: 'pointer',
-        }}
-      >
-        ← Back to Companies
-      </button>
     </div>
   );
 }
 
-/* ── Main component ──────────────────────────────────────────── */
+/* ── Main page ───────────────────────────────────── */
 export default function CompanyPlacement() {
   const { user } = useAuth();
+  const navigate  = useNavigate();
   const isPremium = user?.is_premium === 1 || user?.role === 'admin' || user?.email === ADMIN_EMAIL;
+  const [selected, setSelected] = useState(null);
 
-  const isAdmin   = user?.role === 'admin' || user?.email === ADMIN_EMAIL;
-  const [companies, setCompanies] = useState([]);
-  const [loading,   setLoading]   = useState(true);
-  const [seeding,   setSeeding]   = useState(false);
-  const [selected,  setSelected]  = useState(null);
-  const [error,     setError]     = useState('');
-
-  function loadData() {
-    if (!isPremium) { setLoading(false); return; }
-    setLoading(true);
-    setError('');
-    api.get('/placement')
-      .then(r => { setCompanies(r.data.companies || []); })
-      .catch(e => {
-        if (e.response?.status === 403) { setLoading(false); return; }
-        setError('API error — if you are admin, click Seed Data below.');
-      })
-      .finally(() => setLoading(false));
-  }
-
-  async function forceSeed() {
-    setSeeding(true);
-    try {
-      await api.post('/placement/force-seed');
-      await loadData();
-    } catch(e) {
-      alert('Seed error: ' + (e.response?.data?.error || e.message));
-    } finally { setSeeding(false); }
-  }
-
-  useEffect(() => { loadData(); }, [isPremium]);
-
-  if (!isPremium) return <PaywallView />;
-
-  if (loading) return <div className="loading"><div className="spinner" />Loading placement guides...</div>;
-
-  if (selected) {
-    return <CompanyDetail company={selected} onBack={() => setSelected(null)} />;
-  }
+  if (!isPremium) return <PaywallView navigate={navigate} />;
+  if (selected)   return <CompanyDetail co={selected} onBack={() => setSelected(null)} />;
 
   return (
     <div className="page">
-      <div className="page-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: '0.3rem' }}>
-          <div className="page-title" style={{ margin: 0 }}>🏢 Company Placement Material</div>
-          <span className="premium-badge">👑 Pro</span>
+      <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',flexWrap:'wrap',gap:12,marginBottom:'1.6rem'}}>
+        <div>
+          <div className="page-title">🏢 Company Placement Material</div>
+          <div className="page-sub">Interview breakdown, prep tips and salary ranges for {COMPANIES.length} top companies</div>
         </div>
-        <div className="page-sub">Interview breakdown, prep tips &amp; salary ranges for {companies.length} top companies</div>
+        <span style={{fontSize:12,fontWeight:700,padding:'4px 12px',borderRadius:20,background:'rgba(232,168,56,0.15)',border:'1px solid rgba(232,168,56,0.30)',color:'#E8A838'}}>👑 Pro</span>
       </div>
 
-      {/* Stats row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '0.8rem', marginBottom: '1.6rem' }}>
-        {[
-          { icon: '🏢', val: `${companies.length}`,  lbl: 'Companies',       color: '#4A90D9' },
-          { icon: '🎯', val: '40+',                   lbl: 'Interview Rounds', color: '#5CC8A0' },
-          { icon: '💡', val: '50+',                   lbl: 'Prep Tips',        color: '#E8A838' },
-          { icon: '💰', val: 'Live',                  lbl: 'Salary Data',      color: '#a78bfa' },
-        ].map((s, i) => (
-          <div key={s.lbl} style={{
-            background: 'rgba(20,27,56,0.88)', border: `1px solid ${s.color}28`,
-            borderRadius: 14, padding: '1rem', textAlign: 'center',
-            animation: `popIn 0.35s ${i * 0.07}s ease both`,
-          }}>
-            <div style={{ fontSize: 22, marginBottom: 4 }}>{s.icon}</div>
-            <div style={{ fontSize: 22, fontWeight: 900, color: s.color, lineHeight: 1 }}>{s.val}</div>
-            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 3 }}>{s.lbl}</div>
+      {/* Stats */}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'0.8rem',marginBottom:'1.6rem'}}>
+        {[{icon:'🏢',val:COMPANIES.length,lbl:'Companies',color:'#4A90D9'},{icon:'📋',val:`${COMPANIES.reduce((s,c)=>s+c.rounds.length,0)}+`,lbl:'Interview Rounds',color:'#5CC8A0'},{icon:'💡',val:`${COMPANIES.reduce((s,c)=>s+c.tips.length,0)}+`,lbl:'Prep Tips',color:'#E8A838'},{icon:'💰',val:'Live',lbl:'Salary Data',color:'#a78bfa'}].map((s,i)=>(
+          <div key={i} style={{background:'rgba(20,27,56,0.88)',border:`1px solid ${s.color}28`,borderTop:`2px solid ${s.color}60`,borderRadius:14,padding:'1rem',textAlign:'center',animation:`popIn 0.35s ${i*0.07}s ease both`}}>
+            <div style={{fontSize:22,marginBottom:4}}>{s.icon}</div>
+            <div style={{fontSize:20,fontWeight:900,color:s.color,lineHeight:1}}>{s.val}</div>
+            <div style={{fontSize:11,color:'rgba(255,255,255,0.35)',marginTop:3}}>{s.lbl}</div>
           </div>
         ))}
       </div>
 
-      {error && (
-        <div style={{ background: 'rgba(240,123,106,0.08)', border: '1px solid rgba(240,123,106,0.25)', borderRadius: 12, padding: '1rem 1.2rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-          <div style={{ color: '#F07B6A', fontSize: 13 }}>⚠️ {error}</div>
-          <button onClick={loadData} style={{ padding: '6px 14px', borderRadius: 8, background: 'rgba(240,123,106,0.15)', border: '1px solid rgba(240,123,106,0.35)', color: '#F07B6A', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
-            🔄 Retry
-          </button>
-        </div>
-      )}
-
-      {/* Admin seed button — shown when 0 companies */}
-      {isAdmin && !loading && companies.length === 0 && (
-        <div style={{ background: 'rgba(232,168,56,0.08)', border: '1px solid rgba(232,168,56,0.25)', borderRadius: 14, padding: '1.2rem 1.4rem', marginBottom: '1.4rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-          <div>
-            <div style={{ fontWeight: 700, color: '#E8A838', fontSize: 14, marginBottom: 3 }}>⚠️ No companies seeded yet</div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>Click to insert all 10 companies into the database.</div>
-          </div>
-          <button onClick={forceSeed} disabled={seeding} style={{ padding: '0.6rem 1.2rem', borderRadius: 10, background: 'linear-gradient(135deg,#E8A838,#f59e0b)', border: 'none', color: '#000', fontWeight: 800, fontSize: 13, cursor: 'pointer', whiteSpace: 'nowrap', opacity: seeding ? 0.6 : 1 }}>
-            {seeding ? 'Seeding…' : '🌱 Seed Data'}
-          </button>
-        </div>
-      )}
-
-      {/* Company cards grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
-        {companies.map((co, i) => {
-          const diff = DIFFICULTY_CONFIG[co.difficulty] || DIFFICULTY_CONFIG.Hard;
-          return (
-            <div
-              key={co.id}
-              style={{
-                background: 'rgba(20,27,56,0.88)',
-                border: `1px solid ${co.color}35`,
-                borderRadius: 16, padding: '1.3rem',
-                cursor: 'pointer',
-                transition: 'transform .18s ease, box-shadow .18s ease, border-color .18s ease',
-                animation: `fadeInUp 0.38s ${i * 0.05}s ease both`,
-              }}
-              onClick={() => setSelected(co)}
-              onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translateY(-3px)';
-                e.currentTarget.style.boxShadow = `0 8px 32px ${co.color}22`;
-                e.currentTarget.style.borderColor = `${co.color}60`;
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-                e.currentTarget.style.borderColor = `${co.color}35`;
-              }}
-            >
-              {/* Company header */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                <div style={{
-                  width: 44, height: 44, borderRadius: 12, flexShrink: 0,
-                  background: `${co.color}20`, border: `1.5px solid ${co.color}45`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22,
-                }}>{co.logo}</div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 800, fontSize: 15, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{co.name}</div>
-                  <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.40)', marginTop: 1 }}>{co.industry}</div>
-                </div>
-                <span style={{
-                  fontSize: 10, fontWeight: 800, padding: '3px 9px', borderRadius: 20, flexShrink: 0,
-                  background: diff.bg, border: `1px solid ${diff.border}`, color: diff.color,
-                }}>{co.difficulty}</span>
-              </div>
-
-              {/* Role pills */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
-                {co.roles.slice(0, 2).map(r => (
-                  <span key={r} style={{
-                    fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 20,
-                    background: `${co.color}14`, border: `1px solid ${co.color}30`, color: co.color,
-                  }}>{r}</span>
-                ))}
-                {co.roles.length > 2 && (
-                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', padding: '3px 6px' }}>+{co.roles.length - 2} more</span>
-                )}
-              </div>
-
-              {/* Footer row */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: 13, fontWeight: 800, color: '#5CC8A0' }}>{co.salary_range}</span>
-                <button
-                  style={{
-                    fontSize: 12, fontWeight: 700, padding: '5px 13px', borderRadius: 8,
-                    background: `${co.color}18`, border: `1px solid ${co.color}35`,
-                    color: co.color, cursor: 'pointer', transition: 'background .15s',
-                  }}
-                  onClick={e => { e.stopPropagation(); setSelected(co); }}
-                  onMouseEnter={e => { e.currentTarget.style.background = `${co.color}28`; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = `${co.color}18`; }}
-                >
-                  View Guide →
-                </button>
+      {/* Company grid */}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(260px,1fr))',gap:'1rem'}}>
+        {COMPANIES.map((co,i)=>(
+          <div key={co.id} onClick={()=>setSelected(co)}
+            style={{background:'rgba(20,27,56,0.88)',border:`1px solid ${co.color}28`,borderTop:`2px solid ${co.color}60`,borderRadius:16,padding:'1.3rem',cursor:'pointer',transition:'all 0.2s',animation:`popIn 0.35s ${i*0.05}s ease both`}}
+            onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-4px)';e.currentTarget.style.boxShadow=`0 12px 32px rgba(0,0,0,0.40), 0 0 0 1px ${co.color}35`;}}
+            onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='';}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:'0.9rem'}}>
+              <div style={{width:42,height:42,borderRadius:12,background:`${co.color}18`,border:`1px solid ${co.color}35`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>{co.logo}</div>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontWeight:800,fontSize:15,color:'#fff',marginBottom:2}}>{co.name}</div>
+                <div style={{fontSize:11,color:'rgba(255,255,255,0.40)'}}>{co.industry}</div>
               </div>
             </div>
-          );
-        })}
+            <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:'0.8rem'}}>
+              <span style={{fontSize:11,fontWeight:700,padding:'3px 9px',borderRadius:20,background:`${co.color}14`,color:co.color}}>{co.rounds.length} Rounds</span>
+              <span style={{fontSize:11,fontWeight:700,padding:'3px 9px',borderRadius:20,background:`${DIFF_COLOR[co.difficulty]}14`,color:DIFF_COLOR[co.difficulty]}}>{co.difficulty}</span>
+              <span style={{fontSize:11,fontWeight:700,padding:'3px 9px',borderRadius:20,background:'rgba(92,200,160,0.12)',color:'#5CC8A0'}}>₹{co.salary}</span>
+            </div>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+              <span style={{fontSize:11,color:'rgba(255,255,255,0.35)'}}>~{co.successRate}% offer rate</span>
+              <span style={{fontSize:12,color:co.color,fontWeight:700}}>View Guide →</span>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
