@@ -45,55 +45,62 @@ function StatCard({ icon, label, val, color, bg, delay = '0s' }) {
 function PodiumCard({ p, rank, color }) {
   const t = tier(p.xp || 0);
   const cfg = {
-    1: { h: 170, sz: 82, fs: 24, crown: true,  bg: 'linear-gradient(180deg, rgba(232,168,56,0.35) 0%, rgba(232,168,56,0.10) 100%)', border: 'rgba(232,168,56,0.55)', glow: 'rgba(232,168,56,0.5)', medal: '🥇' },
-    2: { h: 125, sz: 66, fs: 18, crown: false, bg: 'linear-gradient(180deg, rgba(148,163,184,0.25) 0%, rgba(148,163,184,0.08) 100%)', border: 'rgba(148,163,184,0.40)', glow: 'rgba(148,163,184,0.4)', medal: '🥈' },
-    3: { h: 100, sz: 58, fs: 16, crown: false, bg: 'linear-gradient(180deg, rgba(205,127,50,0.25)  0%, rgba(205,127,50,0.08)  100%)', border: 'rgba(205,127,50,0.40)',  glow: 'rgba(205,127,50,0.4)',  medal: '🥉' },
+    1: { h: 180, sz: 80, fs: 22, blockBg: 'linear-gradient(180deg, #b8860b 0%, #8B6914 50%, #5a4009 100%)', border: '#E8A838', glow: 'rgba(232,168,56,0.60)', label: '#E8A838', labelBg: 'rgba(232,168,56,0.15)', numColor: '#FFD700', medal: '🥇', rankText: '1ST' },
+    2: { h: 130, sz: 66, fs: 18, blockBg: 'linear-gradient(180deg, #6b7280 0%, #4b5563 50%, #374151 100%)', border: '#9ca3af', glow: 'rgba(156,163,175,0.45)', label: '#d1d5db', labelBg: 'rgba(148,163,184,0.12)', numColor: '#C0C0C0', medal: '🥈', rankText: '2ND' },
+    3: { h: 105, sz: 58, fs: 16, blockBg: 'linear-gradient(180deg, #92400e 0%, #78350f 50%, #451a03 100%)', border: '#cd7f32', glow: 'rgba(205,127,50,0.45)', label: '#d97706', labelBg: 'rgba(205,127,50,0.12)', numColor: '#CD7F32', medal: '🥉', rankText: '3RD' },
   }[rank];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: rank === 1 ? 210 : 172 }}>
-      {cfg.crown && (
-        <div style={{ fontSize: 32, marginBottom: 8, filter: 'drop-shadow(0 0 14px rgba(232,168,56,0.9))' }}>👑</div>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: rank === 1 ? 200 : 168 }}>
+
+      {/* Crown for #1 */}
+      {rank === 1 && (
+        <div style={{ fontSize: 28, marginBottom: 6, filter: 'drop-shadow(0 0 16px rgba(232,168,56,1))' }}>👑</div>
       )}
+
       {/* Avatar */}
       <div style={{
         width: cfg.sz, height: cfg.sz, borderRadius: '50%',
-        background: `linear-gradient(135deg, ${color}55, ${color}22)`,
-        border: `2.5px solid ${color}`,
+        background: `linear-gradient(135deg, ${color}60, ${color}25)`,
+        border: `3px solid ${cfg.border}`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: cfg.fs, fontWeight: 900, color,
-        boxShadow: `0 0 0 4px ${color}22, 0 0 30px ${cfg.glow}`,
-        marginBottom: 12, position: 'relative',
+        fontSize: cfg.fs, fontWeight: 900, color: '#fff',
+        boxShadow: `0 0 0 5px ${cfg.border}25, 0 0 28px ${cfg.glow}, 0 4px 16px rgba(0,0,0,0.5)`,
+        marginBottom: 10, position: 'relative', flexShrink: 0,
       }}>
         {initials(p.name)}
-        {rank === 1 && (
-          <div style={{ position: 'absolute', inset: -4, borderRadius: '50%', border: `1px solid ${color}33`, animation: 'ringPulse 2s ease-in-out infinite' }} />
-        )}
+        {rank === 1 && <div style={{ position: 'absolute', inset: -5, borderRadius: '50%', border: `1px solid ${cfg.border}40`, animation: 'ringPulse 2s ease-in-out infinite' }} />}
       </div>
 
-      <div style={{ fontSize: rank === 1 ? 15 : 13, fontWeight: 800, color: '#f1f5f9', textAlign: 'center', marginBottom: 4 }}>{p.name}</div>
-
-      <span style={{
-        fontSize: 10, fontWeight: 700, padding: '2px 10px',
-        background: t.bg, border: `1px solid ${t.border}`,
-        borderRadius: 20, color: t.color, marginBottom: 6,
-      }}>{t.label}</span>
-
-      <div style={{ fontSize: rank === 1 ? 16 : 13, fontWeight: 900, color, marginBottom: 3, letterSpacing: '-0.5px' }}>
-        {(p.xp || 0).toLocaleString()} <span style={{ fontSize: 10, fontWeight: 700, opacity: 0.7 }}>XP</span>
-      </div>
-      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', marginBottom: 12 }}>🔥 {p.streak}d streak</div>
-
-      {/* Podium block */}
+      {/* Name card */}
       <div style={{
-        width: '100%', height: cfg.h, borderRadius: '14px 14px 0 0',
-        background: cfg.bg,
-        border: `1.5px solid ${cfg.border}`,
-        borderBottom: 'none',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        boxShadow: `inset 0 1px 0 ${cfg.border}`,
+        background: 'rgba(14,20,40,0.92)', border: `1px solid ${cfg.border}40`,
+        borderRadius: 12, padding: '8px 14px', textAlign: 'center', marginBottom: 0, width: '100%',
+        boxShadow: `0 4px 20px rgba(0,0,0,0.40), 0 0 0 1px ${cfg.border}20`,
       }}>
-        <span style={{ fontSize: rank === 1 ? 42 : 30, filter: `drop-shadow(0 0 12px ${cfg.glow})` }}>{cfg.medal}</span>
+        <div style={{ fontSize: rank === 1 ? 14 : 12, fontWeight: 800, color: '#fff', marginBottom: 3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 9, fontWeight: 700, padding: '1px 7px', background: t.bg, border: `1px solid ${t.border}`, borderRadius: 20, color: t.color }}>{t.label}</span>
+          <span style={{ fontSize: rank === 1 ? 13 : 11, fontWeight: 900, color: cfg.numColor, letterSpacing: '-0.3px' }}>{(p.xp || 0).toLocaleString()} <span style={{ fontSize: 9, opacity: 0.7 }}>XP</span></span>
+        </div>
+        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.38)', marginTop: 2 }}>🔥 {p.streak}d streak</div>
+      </div>
+
+      {/* Podium block — solid, 3D look */}
+      <div style={{
+        width: '100%', height: cfg.h, borderRadius: '10px 10px 0 0',
+        background: cfg.blockBg,
+        border: `1.5px solid ${cfg.border}70`,
+        borderBottom: 'none',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start',
+        paddingTop: 12,
+        boxShadow: `inset 0 2px 0 ${cfg.border}60, inset 0 -2px 8px rgba(0,0,0,0.4), 0 0 24px ${cfg.glow}`,
+        position: 'relative', overflow: 'hidden',
+      }}>
+        {/* Glossy top shine */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40%', background: 'linear-gradient(180deg, rgba(255,255,255,0.12), transparent)', borderRadius: '10px 10px 0 0', pointerEvents: 'none' }} />
+        <div style={{ fontSize: rank === 1 ? 28 : 22, filter: `drop-shadow(0 0 10px ${cfg.glow})`, position: 'relative', zIndex: 1 }}>{cfg.medal}</div>
+        <div style={{ fontSize: rank === 1 ? 22 : 18, fontWeight: 900, color: cfg.border, letterSpacing: '-0.5px', position: 'relative', zIndex: 1, marginTop: 4 }}>{cfg.rankText}</div>
       </div>
     </div>
   );
@@ -168,19 +175,22 @@ export default function Leaderboard() {
       {/* ── Podium ──────────────────────────────────── */}
       {top3.length === 3 && (
         <div style={{
-          marginBottom: '2rem',
-          background: 'linear-gradient(180deg, rgba(232,168,56,0.08) 0%, rgba(127,119,221,0.06) 60%, rgba(15,18,35,0) 100%)',
-          border: '1px solid rgba(232,168,56,0.18)',
+          marginBottom: 0,
+          background: 'linear-gradient(180deg, rgba(12,18,40,0.98) 0%, rgba(18,26,52,0.96) 100%)',
+          border: '1px solid rgba(232,168,56,0.28)',
           borderBottom: 'none',
-          borderRadius: '22px 22px 0 0',
-          padding: '2.5rem 2rem 0',
+          borderRadius: '20px 20px 0 0',
+          padding: '2rem 2rem 0',
           position: 'relative', overflow: 'hidden',
+          boxShadow: '0 -4px 40px rgba(232,168,56,0.06), inset 0 1px 0 rgba(232,168,56,0.20)',
           animation: 'fadeInUp 0.5s 0.15s ease both',
         }}>
-          {/* Spotlight */}
-          <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 300, height: 200, background: 'radial-gradient(ellipse, rgba(232,168,56,0.12), transparent)', pointerEvents: 'none' }} />
+          {/* Stage floor glow */}
+          <div style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: 500, height: 80, background: 'radial-gradient(ellipse, rgba(232,168,56,0.10), transparent)', pointerEvents: 'none' }} />
+          {/* Spotlight beam */}
+          <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 220, height: 160, background: 'radial-gradient(ellipse, rgba(232,168,56,0.08), transparent)', pointerEvents: 'none' }} />
 
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '1rem' }}>
             {podium.map((p, idx) => (
               <PodiumCard key={p.id} p={p} rank={podiumRanks[idx]} color={COLORS[lb.indexOf(p) % COLORS.length]} />
             ))}
