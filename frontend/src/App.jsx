@@ -24,6 +24,7 @@ const Onboarding          = lazy(() => import('./pages/Onboarding'));
 const CaseStudies         = lazy(() => import('./pages/CaseStudies'));
 const Help                = lazy(() => import('./pages/Help'));
 const InterviewExperiences = lazy(() => import('./pages/InterviewExperiences'));
+const CompanyPlacement     = lazy(() => import('./pages/CompanyPlacement'));
 
 /* Fallback shown while a chunk loads */
 const PageLoader = () => (
@@ -68,6 +69,7 @@ export default function App() {
           <Route path="case-studies"               element={<CaseStudies />} />
           <Route path="help"                       element={<Help />} />
           <Route path="interview-experiences"      element={<InterviewExperiences />} />
+          <Route path="company-placement"         element={<CompanyPlacement />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" />} />

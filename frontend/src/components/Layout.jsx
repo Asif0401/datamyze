@@ -230,6 +230,12 @@ const Icons = {
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
     </svg>
   ),
+  Placement: () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  ),
   SignOut: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -259,8 +265,9 @@ const PROGRESS_NAV = [
 ];
 
 const PRO_NAV = [
-  { to: '/premium',           Icon: Icons.Premium,  label: 'Pro Hub',         className: 'nav-premium-item' },
-  { to: '/jobs',              Icon: Icons.Jobs,     label: 'Job Board',       className: 'nav-premium-item' },
+  { to: '/premium',           Icon: Icons.Premium,   label: 'Pro Hub',            className: 'nav-premium-item' },
+  { to: '/jobs',              Icon: Icons.Jobs,      label: 'Job Board',          className: 'nav-premium-item' },
+  { to: '/company-placement', Icon: Icons.Placement, label: 'Placement Material', className: 'nav-premium-item' },
 ];
 
 const MORE_NAV = [
@@ -586,7 +593,7 @@ export default function Layout() {
                 { to:'/certificates',       icon:<Icons.Certificates />, label:'Certificates', color:'#5CC8A0' },
                 { to:'/case-studies',       icon:<Icons.CaseStudies />,  label:'Case Studies', color:'#a78bfa' },
                 { to:'/jobs',               icon:<Icons.Jobs />,         label:'Job Board',    color:'#FC8019' },
-                { to:'/premium',            icon:<Icons.Premium />,      label:'Pro Hub',      color:'#F6C443' },
+                { to:'/company-placement',  icon:<Icons.Placement />,    label:'Placement',    color:'#5CC8A0' },
                 { to:'/settings',           icon:<Icons.Settings />,     label:'Settings',     color:'#94a3b8' },
               ].map(item => (
                 <NavLink key={item.to} to={item.to}
