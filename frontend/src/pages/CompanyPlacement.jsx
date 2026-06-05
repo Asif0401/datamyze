@@ -264,44 +264,68 @@ function PaywallView({ navigate }) {
 
 /* ── Company Detail ───────────────────────────────── */
 function CompanyDetail({ co, onBack }) {
+  const diffColor = DIFF_COLOR[co.difficulty];
+
   return (
     <div className="page">
-      <button onClick={onBack} style={{display:'flex',alignItems:'center',gap:6,background:'rgba(255,255,255,0.07)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:10,padding:'6px 14px',color:'rgba(255,255,255,0.70)',fontSize:13,fontWeight:700,cursor:'pointer',marginBottom:'1.4rem'}}>
-        ← Back to Companies
+      <button onClick={onBack} style={{display:'inline-flex',alignItems:'center',gap:6,background:'rgba(20,27,56,0.88)',border:'1px solid rgba(255,255,255,0.14)',borderRadius:10,padding:'7px 16px',color:'rgba(255,255,255,0.70)',fontSize:13,fontWeight:700,cursor:'pointer',marginBottom:'1.4rem',transition:'all .15s'}}
+        onMouseEnter={e=>{e.currentTarget.style.background='rgba(28,36,68,0.95)';e.currentTarget.style.color='#fff';}}
+        onMouseLeave={e=>{e.currentTarget.style.background='rgba(20,27,56,0.88)';e.currentTarget.style.color='rgba(255,255,255,0.70)';}}>
+        ← Back
       </button>
 
-      {/* Header */}
-      <div style={{background:'rgba(20,27,56,0.92)',border:`1px solid ${co.color}30`,borderTop:`3px solid ${co.color}`,borderRadius:18,padding:'1.6rem',marginBottom:'1.4rem'}}>
-        <div style={{display:'flex',alignItems:'center',gap:14,flexWrap:'wrap'}}>
-          <div style={{width:56,height:56,borderRadius:16,background:`${co.color}20`,border:`1.5px solid ${co.color}40`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:28,flexShrink:0}}>{co.logo}</div>
+      {/* Hero Header */}
+      <div style={{background:`linear-gradient(135deg, ${co.color}22 0%, rgba(20,27,56,0.96) 100%)`,border:`1px solid ${co.color}40`,borderTop:`3px solid ${co.color}`,borderRadius:20,padding:'1.8rem',marginBottom:'1.4rem',boxShadow:`0 8px 32px rgba(0,0,0,0.40), 0 0 0 1px ${co.color}18`}}>
+        <div style={{display:'flex',alignItems:'center',gap:16,flexWrap:'wrap',marginBottom:'1.2rem'}}>
+          {/* Logo */}
+          <div style={{width:64,height:64,borderRadius:18,background:`${co.color}25`,border:`2px solid ${co.color}55`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:32,flexShrink:0,boxShadow:`0 0 24px ${co.color}30`}}>{co.logo}</div>
           <div style={{flex:1}}>
-            <div style={{fontSize:22,fontWeight:900,color:'#fff',marginBottom:4}}>{co.name}</div>
-            <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
-              <span style={{fontSize:12,color:'rgba(255,255,255,0.45)'}}>{co.industry}</span>
-              <span style={{fontSize:12,fontWeight:700,color:DIFF_COLOR[co.difficulty]}}>{co.difficulty}</span>
-              <span style={{fontSize:12,color:'rgba(255,255,255,0.45)'}}>💰 ₹{co.salary} LPA</span>
-              <span style={{fontSize:12,color:'rgba(255,255,255,0.45)'}}>~{co.successRate}% offer rate</span>
+            <div style={{fontSize:24,fontWeight:900,color:'#fff',marginBottom:6,letterSpacing:'-0.5px'}}>{co.name}</div>
+            <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}}>
+              <span style={{fontSize:12,color:'rgba(255,255,255,0.50)',background:'rgba(255,255,255,0.06)',padding:'2px 10px',borderRadius:20,border:'1px solid rgba(255,255,255,0.10)'}}>{co.industry}</span>
+              <span style={{fontSize:12,fontWeight:800,padding:'2px 10px',borderRadius:20,background:`${diffColor}15`,border:`1px solid ${diffColor}35`,color:diffColor}}>{co.difficulty}</span>
             </div>
           </div>
         </div>
-        <div style={{display:'flex',gap:8,marginTop:'1rem',flexWrap:'wrap'}}>
-          {co.roles.map(r=><span key={r} style={{fontSize:12,fontWeight:700,padding:'4px 12px',borderRadius:20,background:`${co.color}14`,border:`1px solid ${co.color}30`,color:co.color}}>{r}</span>)}
+
+        {/* Stats row */}
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'0.6rem',marginBottom:'1.1rem'}}>
+          {[{icon:'💰',label:'Salary Range',val:`₹${co.salary} LPA`},{icon:'🎯',label:'Offer Rate',val:`~${co.successRate}%`},{icon:'📋',label:'Interview Rounds',val:`${co.rounds.length} rounds`}].map(s=>(
+            <div key={s.label} style={{background:'rgba(14,20,40,0.80)',border:'1px solid rgba(255,255,255,0.10)',borderRadius:12,padding:'0.75rem',textAlign:'center'}}>
+              <div style={{fontSize:18,marginBottom:3}}>{s.icon}</div>
+              <div style={{fontSize:14,fontWeight:900,color:'#fff',letterSpacing:'-0.3px'}}>{s.val}</div>
+              <div style={{fontSize:10,color:'rgba(255,255,255,0.35)',marginTop:2,textTransform:'uppercase',letterSpacing:'0.5px'}}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Roles */}
+        <div>
+          <div style={{fontSize:10,fontWeight:800,color:'rgba(255,255,255,0.30)',textTransform:'uppercase',letterSpacing:'1px',marginBottom:8}}>Roles they hire</div>
+          <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+            {co.roles.map(r=><span key={r} style={{fontSize:12,fontWeight:700,padding:'5px 14px',borderRadius:20,background:`${co.color}20`,border:`1px solid ${co.color}45`,color:co.color}}>{r}</span>)}
+          </div>
         </div>
       </div>
 
       {/* Interview Rounds */}
-      <div style={{background:'rgba(20,27,56,0.88)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:16,padding:'1.4rem',marginBottom:'1.2rem'}}>
-        <div style={{fontSize:11,fontWeight:800,color:'rgba(255,255,255,0.35)',textTransform:'uppercase',letterSpacing:'1px',marginBottom:'1rem'}}>Interview Process</div>
-        <div style={{display:'flex',flexDirection:'column',gap:'0.8rem'}}>
+      <div style={{marginBottom:'1.2rem'}}>
+        <div style={{fontSize:11,fontWeight:800,color:'rgba(255,255,255,0.35)',textTransform:'uppercase',letterSpacing:'1.5px',marginBottom:'0.8rem'}}>📋 Interview Process</div>
+        <div style={{display:'flex',flexDirection:'column',gap:'0.7rem'}}>
           {co.rounds.map((r,i)=>(
-            <div key={i} style={{display:'flex',gap:12,alignItems:'flex-start'}}>
-              <div style={{width:28,height:28,borderRadius:'50%',background:`${co.color}18`,border:`1.5px solid ${co.color}40`,display:'flex',alignItems:'center',justifyContent:'center',fontWeight:900,fontSize:12,color:co.color,flexShrink:0}}>{i+1}</div>
-              <div style={{flex:1}}>
-                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:3}}>
+            <div key={i} style={{display:'flex',gap:0,alignItems:'stretch'}}>
+              {/* Number column + connector */}
+              <div style={{display:'flex',flexDirection:'column',alignItems:'center',width:44,flexShrink:0}}>
+                <div style={{width:36,height:36,borderRadius:'50%',background:`${co.color}20`,border:`2px solid ${co.color}60`,display:'flex',alignItems:'center',justifyContent:'center',fontWeight:900,fontSize:13,color:co.color,flexShrink:0}}>{i+1}</div>
+                {i < co.rounds.length-1 && <div style={{width:2,flex:1,minHeight:12,background:`linear-gradient(${co.color}40, transparent)`,marginTop:4}} />}
+              </div>
+              {/* Card */}
+              <div style={{flex:1,background:'rgba(20,27,56,0.90)',border:`1px solid ${co.color}22`,borderLeft:`3px solid ${co.color}60`,borderRadius:'0 14px 14px 0',padding:'0.9rem 1.1rem',marginBottom: i < co.rounds.length-1 ? 0 : 0}}>
+                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:5}}>
                   <span style={{fontSize:13,fontWeight:800,color:'#fff'}}>{r.round}</span>
-                  <span style={{fontSize:10,fontWeight:700,padding:'1px 8px',borderRadius:20,background:'rgba(255,255,255,0.08)',color:'rgba(255,255,255,0.45)'}}>{r.duration}</span>
+                  <span style={{fontSize:10,fontWeight:700,padding:'2px 8px',borderRadius:20,background:`${co.color}15`,border:`1px solid ${co.color}30`,color:co.color,whiteSpace:'nowrap'}}>{r.duration}</span>
                 </div>
-                <div style={{fontSize:12.5,color:'rgba(255,255,255,0.55)',lineHeight:1.65}}>{r.desc}</div>
+                <div style={{fontSize:12.5,color:'rgba(255,255,255,0.62)',lineHeight:1.70}}>{r.desc}</div>
               </div>
             </div>
           ))}
@@ -309,21 +333,23 @@ function CompanyDetail({ co, onBack }) {
       </div>
 
       {/* Key Topics */}
-      <div style={{background:'rgba(20,27,56,0.88)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:16,padding:'1.4rem',marginBottom:'1.2rem'}}>
-        <div style={{fontSize:11,fontWeight:800,color:'rgba(255,255,255,0.35)',textTransform:'uppercase',letterSpacing:'1px',marginBottom:'0.8rem'}}>Key Topics to Master</div>
+      <div style={{background:'rgba(20,27,56,0.90)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:16,padding:'1.3rem',marginBottom:'1.2rem'}}>
+        <div style={{fontSize:11,fontWeight:800,color:'rgba(255,255,255,0.35)',textTransform:'uppercase',letterSpacing:'1.5px',marginBottom:'0.9rem'}}>🏷️ Key Topics to Master</div>
         <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
-          {co.topics.map(t=>{const c=TOPIC_COLOR(t);return(<span key={t} style={{fontSize:12,fontWeight:700,padding:'5px 12px',borderRadius:20,background:`${c}14`,border:`1px solid ${c}30`,color:c}}>{t}</span>);})}
+          {co.topics.map(t=>{const c=TOPIC_COLOR(t);return(
+            <span key={t} style={{fontSize:12,fontWeight:700,padding:'6px 14px',borderRadius:20,background:`${c}15`,border:`1px solid ${c}35`,color:c}}>{t}</span>
+          );})}
         </div>
       </div>
 
       {/* Prep Tips */}
-      <div style={{background:'rgba(20,27,56,0.88)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:16,padding:'1.4rem'}}>
-        <div style={{fontSize:11,fontWeight:800,color:'rgba(255,255,255,0.35)',textTransform:'uppercase',letterSpacing:'1px',marginBottom:'0.8rem'}}>Preparation Tips</div>
-        <div style={{display:'flex',flexDirection:'column',gap:'0.7rem'}}>
+      <div style={{background:'rgba(20,27,56,0.90)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:16,padding:'1.3rem'}}>
+        <div style={{fontSize:11,fontWeight:800,color:'rgba(255,255,255,0.35)',textTransform:'uppercase',letterSpacing:'1.5px',marginBottom:'0.9rem'}}>💡 Preparation Tips</div>
+        <div style={{display:'flex',flexDirection:'column',gap:'0.65rem'}}>
           {co.tips.map((tip,i)=>(
-            <div key={i} style={{display:'flex',gap:10,alignItems:'flex-start'}}>
-              <div style={{width:22,height:22,borderRadius:'50%',background:'rgba(232,168,56,0.15)',border:'1px solid rgba(232,168,56,0.30)',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:900,fontSize:11,color:'#E8A838',flexShrink:0}}>{i+1}</div>
-              <div style={{fontSize:13,color:'rgba(255,255,255,0.72)',lineHeight:1.65}}>{tip}</div>
+            <div key={i} style={{display:'flex',gap:12,alignItems:'flex-start',background:'rgba(14,20,40,0.70)',border:'1px solid rgba(232,168,56,0.15)',borderLeft:'3px solid rgba(232,168,56,0.55)',borderRadius:'0 12px 12px 0',padding:'0.8rem 1rem'}}>
+              <div style={{width:22,height:22,borderRadius:'50%',background:'rgba(232,168,56,0.15)',border:'1px solid rgba(232,168,56,0.35)',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:900,fontSize:11,color:'#E8A838',flexShrink:0}}>{i+1}</div>
+              <div style={{fontSize:13,color:'rgba(255,255,255,0.78)',lineHeight:1.70}}>{tip}</div>
             </div>
           ))}
         </div>
