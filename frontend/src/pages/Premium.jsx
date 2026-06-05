@@ -1044,7 +1044,17 @@ export default function Premium() {
   const [submitting, setSubmitting] = useState(false);
   const [copied, setCopied]       = useState(false);
   const [toast, setToast]         = useState('');
-  const [cfLoading, setCfLoading] = useState(false);
+  const [cfLoading, setCfLoading]   = useState(false);
+  const [coupon, setCoupon]         = useState('');
+  const [couponMsg, setCouponMsg]   = useState(''); // '' | 'valid' | 'invalid'
+  const VALID_COUPONS               = { 'SAARANGI50': 149 };
+  const finalAmount                 = VALID_COUPONS[coupon.toUpperCase().trim()] || 199;
+
+  function applyCoupon() {
+    const c = coupon.toUpperCase().trim();
+    if (VALID_COUPONS[c]) setCouponMsg('valid');
+    else { setCouponMsg('invalid'); setTimeout(() => setCouponMsg(''), 2500); }
+  }
 
   useEffect(() => {
     api.get('/premium/status').then(r => setStatus(r.data)).catch(() => {}).finally(() => setLoading(false));
@@ -1075,7 +1085,7 @@ export default function Premium() {
     setToast('');
     try {
       // Create order on backend
-      const r = await api.post('/premium/cashfree/create-order');
+      const r = await api.post('/premium/cashfree/create-order', { coupon: coupon.toUpperCase().trim() });
       const { payment_session_id, order_id, cf_env } = r.data;
 
       // Load Cashfree JS SDK if not already loaded
@@ -1161,6 +1171,9 @@ export default function Premium() {
       copied={copied} copyUPI={copyUPI}
       toast={toast}
       cfLoading={cfLoading} handleCashfreePay={handleCashfreePay}
+      coupon={coupon} setCoupon={setCoupon}
+      couponMsg={couponMsg} applyCoupon={applyCoupon}
+      finalAmount={finalAmount}
     />
   );
 }
@@ -2697,7 +2710,7 @@ const FEATURES = [
   { icon: '🔬', label: 'Real-World Projects',      desc: '6 industry-grade projects with real datasets: e-commerce, HR, fintech, marketing & more. Build your portfolio.', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  border: 'rgba(245,158,11,0.22)'  },
 ];
 
-function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep, utr, setUtr, submitting, submitUTR, copied, copyUPI, toast, cfLoading, handleCashfreePay }) {
+function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep, utr, setUtr, submitting, submitUTR, copied, copyUPI, toast, cfLoading, handleCashfreePay, coupon, setCoupon, couponMsg, applyCoupon, finalAmount }) {
   const [payMethod, setPayMethod] = useState('cashfree');
   const [card, setCard] = useState({ number: '', expiry: '', cvv: '', name: '' });
   const [cardToast, setCardToast] = useState('');
@@ -3031,12 +3044,46 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
             {/* ── Body ── */}
             <div style={{ padding: '1.4rem 1.8rem 1.8rem' }}>
 
+              {/* Coupon code input */}
+              <div style={{ marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  <input
+                    value={coupon}
+                    onChange={e => { setCoupon(e.target.value.toUpperCase()); }}
+                    onKeyDown={e => e.key === 'Enter' && applyCoupon()}
+                    placeholder="Have a coupon code?"
+                    maxLength={20}
+                    style={{
+                      flex: 1, padding: '9px 12px', borderRadius: 9, fontSize: 13, fontWeight: 600,
+                      background: 'rgba(20,27,56,0.88)',
+                      border: couponMsg === 'valid' ? '1px solid rgba(92,200,160,0.50)' : couponMsg === 'invalid' ? '1px solid rgba(240,123,106,0.50)' : '1px solid rgba(255,255,255,0.12)',
+                      color: '#fff', outline: 'none', letterSpacing: '0.5px',
+                      fontFamily: "'JetBrains Mono', monospace",
+                    }}
+                  />
+                  <button onClick={applyCoupon} style={{ padding: '9px 16px', borderRadius: 9, background: 'rgba(74,144,217,0.18)', border: '1px solid rgba(74,144,217,0.35)', color: '#4A90D9', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
+                    Apply
+                  </button>
+                </div>
+                {couponMsg === 'valid' && (
+                  <div style={{ fontSize: 12, color: '#5CC8A0', marginTop: 5, fontWeight: 600 }}>
+                    ✅ Coupon applied! You save ₹{199 - finalAmount}
+                  </div>
+                )}
+                {couponMsg === 'invalid' && (
+                  <div style={{ fontSize: 12, color: '#F07B6A', marginTop: 5, fontWeight: 600 }}>
+                    ❌ Invalid coupon code
+                  </div>
+                )}
+              </div>
+
               {/* Price row */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: '1.2rem' }}>
-                <span style={{ fontSize: 46, fontWeight: 900, letterSpacing: '-2px', background: 'linear-gradient(135deg, #F5C842, #E8A838, #F07B6A)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1 }}>₹199</span>
+                <span style={{ fontSize: 46, fontWeight: 900, letterSpacing: '-2px', background: 'linear-gradient(135deg, #F5C842, #E8A838, #F07B6A)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1 }}>₹{finalAmount}</span>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {finalAmount < 199 && <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', textDecoration: 'line-through' }}>₹199</span>}
                   <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', textDecoration: 'line-through' }}>₹999</span>
-                  <span style={{ fontSize: 11, fontWeight: 800, padding: '2px 9px', borderRadius: 20, background: 'rgba(92,200,160,0.14)', border: '1px solid rgba(92,200,160,0.30)', color: '#5CC8A0', whiteSpace: 'nowrap' }}>80% OFF</span>
+                  <span style={{ fontSize: 11, fontWeight: 800, padding: '2px 9px', borderRadius: 20, background: 'rgba(92,200,160,0.14)', border: '1px solid rgba(92,200,160,0.30)', color: '#5CC8A0', whiteSpace: 'nowrap' }}>{finalAmount < 199 ? `${Math.round((1-finalAmount/999)*100)}% OFF` : '80% OFF'}</span>
                 </div>
               </div>
 
@@ -3068,7 +3115,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
                 >
                   {cfLoading
                     ? <><span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} /> Processing…</>
-                    : <><span>⚡</span> Pay ₹199 Now</>
+                    : <><span>⚡</span> Pay ₹{finalAmount} Now</>
                   }
                 </button>
 

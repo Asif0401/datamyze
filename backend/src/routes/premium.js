@@ -153,6 +153,8 @@ router.get('/resume/file/:filename', authMiddleware, (req, res) => {
 });
 
 // ── Cashfree: Create Payment Order ──────────────────────────────────
+const VALID_COUPONS = { 'SAARANGI50': 149 }; // coupon → final price
+
 router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
   try {
     const db = req.app.locals.db;
@@ -162,6 +164,10 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
     const existing = await get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
     if (existing?.is_premium === 1) return res.status(409).json({ error: 'Already a premium member!' });
 
+    // Apply coupon if valid
+    const coupon = (req.body?.coupon || '').toUpperCase().trim();
+    const finalAmount = VALID_COUPONS[coupon] || 199;
+
     const { Cashfree, CFEnvironment } = require('cashfree-pg');
     const cfEnv = process.env.CASHFREE_ENV === 'PRODUCTION' ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
     const cfInstance = new Cashfree(cfEnv, process.env.CASHFREE_APP_ID, process.env.CASHFREE_SECRET_KEY);
@@ -169,7 +175,7 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
     const orderId = `DQ-${req.user.id.replace(/-/g,'').slice(0,8)}-${Date.now()}`;
     const orderRequest = {
       order_id:       orderId,
-      order_amount:   199,
+      order_amount:   finalAmount,
       order_currency: 'INR',
       customer_details: {
         customer_id:    user.id.replace(/-/g, '').slice(0, 50),
@@ -189,8 +195,8 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
 
     // Persist pending order (utr_number column reused to store orderId for lookup)
     await run(db, `INSERT INTO premium_subscriptions (id, user_id, amount, utr_number, status, expires_at)
-             VALUES (?, ?, 199, ?, 'cashfree_pending', ?)`,
-      [uuidv4(), user.id, orderId, new Date(Date.now() + 365*24*60*60*1000).toISOString()]);
+             VALUES (?, ?, ?, ?, 'cashfree_pending', ?)`,
+      [uuidv4(), user.id, finalAmount, orderId, new Date(Date.now() + 365*24*60*60*1000).toISOString()]);
 
     res.json({ payment_session_id, order_id: orderId, cf_env: process.env.CASHFREE_ENV === 'PRODUCTION' ? 'production' : 'sandbox' });
   } catch (err) {
