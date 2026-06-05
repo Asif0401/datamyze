@@ -1048,7 +1048,8 @@ export default function Premium() {
   const [coupon, setCoupon]         = useState('');
   const [couponMsg, setCouponMsg]   = useState(''); // '' | 'valid' | 'invalid'
   const VALID_COUPONS               = { 'SAARANGI50': 149 };
-  const finalAmount                 = VALID_COUPONS[coupon.toUpperCase().trim()] || 199;
+  // Only apply discount when coupon is explicitly validated by clicking Apply
+  const finalAmount                 = couponMsg === 'valid' ? (VALID_COUPONS[coupon.toUpperCase().trim()] || 199) : 199;
 
   function applyCoupon() {
     const c = coupon.toUpperCase().trim();
@@ -1085,7 +1086,7 @@ export default function Premium() {
     setToast('');
     try {
       // Create order on backend
-      const r = await api.post('/premium/cashfree/create-order', { coupon: coupon.toUpperCase().trim() });
+      const r = await api.post('/premium/cashfree/create-order', { coupon: couponMsg === 'valid' ? coupon.toUpperCase().trim() : '' });
       const { payment_session_id, order_id, cf_env } = r.data;
 
       // Load Cashfree JS SDK if not already loaded
