@@ -380,10 +380,18 @@ export default function CompanyPlacement() {
     setLoading(true);
     setError('');
     api.get('/placement')
-      .then(r => setCompanies(r.data.companies || []))
+      .then(r => {
+        const list = r.data.companies || [];
+        setCompanies(list);
+        if (list.length === 0) {
+          // Auto-retry after 4s if empty (backend still seeding)
+          setTimeout(loadData, 4000);
+        }
+      })
       .catch(e => {
-        if (e.response?.status === 403) setError('');
-        else setError('Backend is warming up — this takes ~30 seconds on first load. Click retry.');
+        if (e.response?.status === 403) { setError(''); setLoading(false); return; }
+        setError('Backend warming up — retrying automatically…');
+        setTimeout(loadData, 5000); // auto-retry every 5s
       })
       .finally(() => setLoading(false));
   }

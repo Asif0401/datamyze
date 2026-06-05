@@ -680,7 +680,7 @@ async function initDb() {
   } catch(e) { console.log('Interview experiences seed error:', e.message); }
 
   // ── Placement Companies ───────────────────────────────────────────
-  await c.execute(`
+  try { await c.execute(`
     CREATE TABLE IF NOT EXISTS placement_companies (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
@@ -697,7 +697,7 @@ async function initDb() {
       is_active INTEGER DEFAULT 1,
       created_at TEXT DEFAULT (datetime('now'))
     )
-  `);
+  `); } catch(e) { console.log('placement_companies table error:', e.message); }
 
   try {
     const placementCompanies = [
