@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import CompanyLogo from '../components/CompanyLogo';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../hooks/useApi';
@@ -266,7 +267,7 @@ function CaseStudyCard({ cs, idx, onClick, parseTags }) {
       {/* Company + Difficulty header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', flexWrap: 'wrap', gap: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 22 }}>{cs.company_logo}</span>
+          <CompanyLogo company={cs.company} size={28} radius={8} color={compColor.text} />
           <span style={{
             fontSize: 12, fontWeight: 600, padding: '3px 12px', borderRadius: 20,
             background: compColor.bg, border: `1px solid ${compColor.border}`, color: compColor.text,
@@ -354,7 +355,7 @@ function DetailModal({ cs, parseTags, onClose }) {
         {/* Modal header */}
         <div style={{ marginBottom: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '0.75rem', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 28 }}>{cs.company_logo}</span>
+            <CompanyLogo company={cs.company} size={36} radius={10} color={compColor.text} />
             <span style={{
               fontSize: 13, fontWeight: 600, padding: '4px 14px', borderRadius: 20,
               background: compColor.bg, border: `1px solid ${compColor.border}`, color: compColor.text,
