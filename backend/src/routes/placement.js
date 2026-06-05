@@ -263,6 +263,21 @@ router.get('/:id', authMiddleware, async (req, res) => {
   }
 });
 
+// POST /force-seed — admin: seeds all companies (table already created at startup)
+router.post('/force-seed', authMiddleware, async (req, res) => {
+  const db = req.app.locals.db;
+  try {
+    const user = await get(db, 'SELECT role, email FROM users WHERE id = ?', [req.user.id]);
+    const isAdmin = user?.role === 'admin' || user?.email === ADMIN_EMAIL;
+    if (!isAdmin) return res.status(403).json({ error: 'Admin only' });
+    await seedPlacementCompanies(db);
+    const companies = await all(db, 'SELECT id, name FROM placement_companies WHERE is_active=1');
+    res.json({ success: true, count: companies.length });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // Admin POST / — add company
 router.post('/', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;

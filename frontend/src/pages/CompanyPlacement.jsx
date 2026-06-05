@@ -370,30 +370,34 @@ export default function CompanyPlacement() {
   const { user } = useAuth();
   const isPremium = user?.is_premium === 1 || user?.role === 'admin' || user?.email === ADMIN_EMAIL;
 
+  const isAdmin   = user?.role === 'admin' || user?.email === ADMIN_EMAIL;
   const [companies, setCompanies] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(null);
-  const [error, setError] = useState('');
+  const [loading,   setLoading]   = useState(true);
+  const [seeding,   setSeeding]   = useState(false);
+  const [selected,  setSelected]  = useState(null);
+  const [error,     setError]     = useState('');
 
   function loadData() {
     if (!isPremium) { setLoading(false); return; }
     setLoading(true);
     setError('');
     api.get('/placement')
-      .then(r => {
-        const list = r.data.companies || [];
-        setCompanies(list);
-        if (list.length === 0) {
-          // Auto-retry after 4s if empty (backend still seeding)
-          setTimeout(loadData, 4000);
-        }
-      })
+      .then(r => { setCompanies(r.data.companies || []); })
       .catch(e => {
-        if (e.response?.status === 403) { setError(''); setLoading(false); return; }
-        setError('Backend warming up — retrying automatically…');
-        setTimeout(loadData, 5000); // auto-retry every 5s
+        if (e.response?.status === 403) { setLoading(false); return; }
+        setError('API error — if you are admin, click Seed Data below.');
       })
       .finally(() => setLoading(false));
+  }
+
+  async function forceSeed() {
+    setSeeding(true);
+    try {
+      await api.post('/placement/force-seed');
+      await loadData();
+    } catch(e) {
+      alert('Seed error: ' + (e.response?.data?.error || e.message));
+    } finally { setSeeding(false); }
   }
 
   useEffect(() => { loadData(); }, [isPremium]);
@@ -437,10 +441,23 @@ export default function CompanyPlacement() {
       </div>
 
       {error && (
-        <div style={{ background: 'rgba(240,123,106,0.08)', border: '1px solid rgba(240,123,106,0.25)', borderRadius: 12, padding: '1rem 1.2rem', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+        <div style={{ background: 'rgba(240,123,106,0.08)', border: '1px solid rgba(240,123,106,0.25)', borderRadius: 12, padding: '1rem 1.2rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
           <div style={{ color: '#F07B6A', fontSize: 13 }}>⚠️ {error}</div>
-          <button onClick={loadData} style={{ padding: '6px 16px', borderRadius: 8, background: 'rgba(240,123,106,0.15)', border: '1px solid rgba(240,123,106,0.35)', color: '#F07B6A', fontWeight: 700, fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+          <button onClick={loadData} style={{ padding: '6px 14px', borderRadius: 8, background: 'rgba(240,123,106,0.15)', border: '1px solid rgba(240,123,106,0.35)', color: '#F07B6A', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
             🔄 Retry
+          </button>
+        </div>
+      )}
+
+      {/* Admin seed button — shown when 0 companies */}
+      {isAdmin && !loading && companies.length === 0 && (
+        <div style={{ background: 'rgba(232,168,56,0.08)', border: '1px solid rgba(232,168,56,0.25)', borderRadius: 14, padding: '1.2rem 1.4rem', marginBottom: '1.4rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+          <div>
+            <div style={{ fontWeight: 700, color: '#E8A838', fontSize: 14, marginBottom: 3 }}>⚠️ No companies seeded yet</div>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>Click to insert all 10 companies into the database.</div>
+          </div>
+          <button onClick={forceSeed} disabled={seeding} style={{ padding: '0.6rem 1.2rem', borderRadius: 10, background: 'linear-gradient(135deg,#E8A838,#f59e0b)', border: 'none', color: '#000', fontWeight: 800, fontSize: 13, cursor: 'pointer', whiteSpace: 'nowrap', opacity: seeding ? 0.6 : 1 }}>
+            {seeding ? 'Seeding…' : '🌱 Seed Data'}
           </button>
         </div>
       )}
