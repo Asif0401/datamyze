@@ -1056,6 +1056,7 @@ export default function Premium() {
     if (VALID_COUPONS[c]) setCouponMsg('valid');
     else { setCouponMsg('invalid'); setTimeout(() => setCouponMsg(''), 2500); }
   }
+  function removeCoupon() { setCoupon(''); setCouponMsg(''); }
 
   useEffect(() => {
     api.get('/premium/status').then(r => setStatus(r.data)).catch(() => {}).finally(() => setLoading(false));
@@ -1173,7 +1174,7 @@ export default function Premium() {
       toast={toast}
       cfLoading={cfLoading} handleCashfreePay={handleCashfreePay}
       coupon={coupon} setCoupon={setCoupon}
-      couponMsg={couponMsg} applyCoupon={applyCoupon}
+      couponMsg={couponMsg} applyCoupon={applyCoupon} removeCoupon={removeCoupon}
       finalAmount={finalAmount}
     />
   );
@@ -2711,7 +2712,7 @@ const FEATURES = [
   { icon: '🔬', label: 'Real-World Projects',      desc: '6 industry-grade projects with real datasets: e-commerce, HR, fintech, marketing & more. Build your portfolio.', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  border: 'rgba(245,158,11,0.22)'  },
 ];
 
-function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep, utr, setUtr, submitting, submitUTR, copied, copyUPI, toast, cfLoading, handleCashfreePay, coupon, setCoupon, couponMsg, applyCoupon, finalAmount }) {
+function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep, utr, setUtr, submitting, submitUTR, copied, copyUPI, toast, cfLoading, handleCashfreePay, coupon, setCoupon, couponMsg, applyCoupon, removeCoupon, finalAmount }) {
   const [payMethod, setPayMethod] = useState('cashfree');
   const [card, setCard] = useState({ number: '', expiry: '', cvv: '', name: '' });
   const [cardToast, setCardToast] = useState('');
@@ -3015,7 +3016,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
       {showModal && (
         <div className="modal-backdrop" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
           <div className="modal" style={{ maxWidth: 440, padding: 0, overflow: 'hidden' }}>
-            <button className="modal-close" style={{ zIndex: 10 }} onClick={() => { setShowModal(false); setStep(1); setPayMethod('cashfree'); }}>✕</button>
+            <button className="modal-close" style={{ zIndex: 10 }} onClick={() => { setShowModal(false); setStep(1); setPayMethod('cashfree'); removeCoupon(); }}>✕</button>
 
             {/* ── Rich Header ── */}
             <div style={{ background: 'linear-gradient(135deg, rgba(232,168,56,0.18) 0%, rgba(240,123,106,0.12) 60%, rgba(74,144,217,0.10) 100%)', borderBottom: '1px solid rgba(232,168,56,0.18)', padding: '1.6rem 1.8rem 1.3rem', textAlign: 'center', position: 'relative' }}>
@@ -3047,34 +3048,44 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
 
               {/* Coupon code input */}
               <div style={{ marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', gap: 6 }}>
-                  <input
-                    value={coupon}
-                    onChange={e => { setCoupon(e.target.value.toUpperCase()); }}
-                    onKeyDown={e => e.key === 'Enter' && applyCoupon()}
-                    placeholder="Have a coupon code?"
-                    maxLength={20}
-                    style={{
-                      flex: 1, padding: '9px 12px', borderRadius: 9, fontSize: 13, fontWeight: 600,
-                      background: 'rgba(20,27,56,0.88)',
-                      border: couponMsg === 'valid' ? '1px solid rgba(92,200,160,0.50)' : couponMsg === 'invalid' ? '1px solid rgba(240,123,106,0.50)' : '1px solid rgba(255,255,255,0.12)',
-                      color: '#fff', outline: 'none', letterSpacing: '0.5px',
-                      fontFamily: "'JetBrains Mono', monospace",
-                    }}
-                  />
-                  <button onClick={applyCoupon} style={{ padding: '9px 16px', borderRadius: 9, background: 'rgba(74,144,217,0.18)', border: '1px solid rgba(74,144,217,0.35)', color: '#4A90D9', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
-                    Apply
-                  </button>
-                </div>
-                {couponMsg === 'valid' && (
-                  <div style={{ fontSize: 12, color: '#5CC8A0', marginTop: 5, fontWeight: 600 }}>
-                    ✅ Coupon applied! You save ₹{199 - finalAmount}
+                {couponMsg === 'valid' ? (
+                  /* Applied state — show tag with remove button */
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: 'rgba(92,200,160,0.10)', border: '1px solid rgba(92,200,160,0.35)', borderRadius: 10 }}>
+                    <span style={{ fontSize: 16 }}>🏷️</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 13, fontWeight: 800, color: '#5CC8A0' }}>{coupon} applied</div>
+                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.50)' }}>You save ₹{199 - finalAmount} on this order</div>
+                    </div>
+                    <button onClick={removeCoupon} style={{ background: 'rgba(240,123,106,0.15)', border: '1px solid rgba(240,123,106,0.35)', color: '#F07B6A', borderRadius: 7, padding: '4px 10px', fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
+                      Remove
+                    </button>
                   </div>
-                )}
-                {couponMsg === 'invalid' && (
-                  <div style={{ fontSize: 12, color: '#F07B6A', marginTop: 5, fontWeight: 600 }}>
-                    ❌ Invalid coupon code
-                  </div>
+                ) : (
+                  /* Input state */
+                  <>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <input
+                        value={coupon}
+                        onChange={e => setCoupon(e.target.value.toUpperCase())}
+                        onKeyDown={e => e.key === 'Enter' && applyCoupon()}
+                        placeholder="Have a coupon code?"
+                        maxLength={20}
+                        style={{
+                          flex: 1, padding: '9px 12px', borderRadius: 9, fontSize: 13, fontWeight: 600,
+                          background: 'rgba(20,27,56,0.88)',
+                          border: couponMsg === 'invalid' ? '1px solid rgba(240,123,106,0.50)' : '1px solid rgba(255,255,255,0.12)',
+                          color: '#fff', outline: 'none', letterSpacing: '0.5px',
+                          fontFamily: "'JetBrains Mono', monospace",
+                        }}
+                      />
+                      <button onClick={applyCoupon} style={{ padding: '9px 16px', borderRadius: 9, background: 'rgba(74,144,217,0.18)', border: '1px solid rgba(74,144,217,0.35)', color: '#4A90D9', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
+                        Apply
+                      </button>
+                    </div>
+                    {couponMsg === 'invalid' && (
+                      <div style={{ fontSize: 12, color: '#F07B6A', marginTop: 5, fontWeight: 600 }}>❌ Invalid coupon code</div>
+                    )}
+                  </>
                 )}
               </div>
 
