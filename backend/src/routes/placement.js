@@ -217,30 +217,18 @@ router.get('/', authMiddleware, async (req, res) => {
       return res.status(403).json({ error: 'Premium membership required', premium_required: true });
     }
 
-    // Ensure table exists + auto-seed if empty
-    await run(db, `CREATE TABLE IF NOT EXISTS placement_companies (
-      id TEXT PRIMARY KEY, name TEXT NOT NULL, logo TEXT DEFAULT '🏢',
-      color TEXT DEFAULT '#4A90D9', industry TEXT DEFAULT 'Technology',
-      roles TEXT DEFAULT '[]', difficulty TEXT DEFAULT 'Hard',
-      interview_rounds TEXT DEFAULT '[]', key_topics TEXT DEFAULT '[]',
-      prep_tips TEXT DEFAULT '[]', salary_range TEXT DEFAULT NULL,
-      success_rate INTEGER DEFAULT 20, is_active INTEGER DEFAULT 1,
-      created_at TEXT DEFAULT (datetime('now'))
-    )`);
-
-    let companies = await all(db, 'SELECT * FROM placement_companies WHERE is_active = 1 ORDER BY name ASC', []);
+    // Auto-seed if empty (table already created in database.js initDb)
+    let companies = await all(db, 'SELECT id, name, logo, color, industry, difficulty, salary_range, success_rate, roles, key_topics FROM placement_companies WHERE is_active = 1 ORDER BY name ASC');
     if (companies.length === 0) {
       await seedPlacementCompanies(db);
-      companies = await all(db, 'SELECT * FROM placement_companies WHERE is_active = 1 ORDER BY name ASC', []);
+      companies = await all(db, 'SELECT id, name, logo, color, industry, difficulty, salary_range, success_rate, roles, key_topics FROM placement_companies WHERE is_active = 1 ORDER BY name ASC');
     }
 
     res.json({
       companies: companies.map(co => ({
         ...co,
-        roles: JSON.parse(co.roles || '[]'),
-        interview_rounds: JSON.parse(co.interview_rounds || '[]'),
-        key_topics: JSON.parse(co.key_topics || '[]'),
-        prep_tips: JSON.parse(co.prep_tips || '[]'),
+        roles:       JSON.parse(co.roles       || '[]'),
+        key_topics:  JSON.parse(co.key_topics  || '[]'),
       })),
     });
   } catch(e) {
@@ -251,24 +239,28 @@ router.get('/', authMiddleware, async (req, res) => {
 // GET /:id — get full company detail (auth + premium required)
 router.get('/:id', authMiddleware, async (req, res) => {
   const db = req.app.locals.db;
-  const user = await get(db, 'SELECT is_premium, role, email FROM users WHERE id = ?', [req.user.id]);
-  const isAdmin = user?.role === 'admin' || user?.email === ADMIN_EMAIL;
-  if (!isAdmin && !user?.is_premium) {
-    return res.status(403).json({ error: 'Premium membership required', premium_required: true });
+  try {
+    const user = await get(db, 'SELECT is_premium, role, email FROM users WHERE id = ?', [req.user.id]);
+    const isAdmin = user?.role === 'admin' || user?.email === ADMIN_EMAIL;
+    if (!isAdmin && !user?.is_premium) {
+      return res.status(403).json({ error: 'Premium membership required', premium_required: true });
+    }
+
+    const co = await get(db, 'SELECT * FROM placement_companies WHERE id = ? AND is_active = 1', [req.params.id]);
+    if (!co) return res.status(404).json({ error: 'Company not found' });
+
+    res.json({
+      company: {
+        ...co,
+        roles:            JSON.parse(co.roles            || '[]'),
+        interview_rounds: JSON.parse(co.interview_rounds || '[]'),
+        key_topics:       JSON.parse(co.key_topics       || '[]'),
+        prep_tips:        JSON.parse(co.prep_tips        || '[]'),
+      },
+    });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
   }
-
-  const co = await get(db, 'SELECT * FROM placement_companies WHERE id = ? AND is_active = 1', [req.params.id]);
-  if (!co) return res.status(404).json({ error: 'Company not found' });
-
-  res.json({
-    company: {
-      ...co,
-      roles: JSON.parse(co.roles || '[]'),
-      interview_rounds: JSON.parse(co.interview_rounds || '[]'),
-      key_topics: JSON.parse(co.key_topics || '[]'),
-      prep_tips: JSON.parse(co.prep_tips || '[]'),
-    },
-  });
 });
 
 // Admin POST / — add company
