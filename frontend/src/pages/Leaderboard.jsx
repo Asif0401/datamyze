@@ -23,7 +23,7 @@ function StatCard({ icon, label, val, color, bg, delay = '0s' }) {
     <div style={{
       textAlign: 'center',
       padding: '1.4rem 1rem',
-      background: bg || 'rgba(255,255,255,0.06)',
+      background: bg || 'rgba(20,27,56,0.88)',
       border: `1px solid ${color}33`,
       borderRadius: 18,
       position: 'relative',
@@ -232,14 +232,14 @@ export default function Leaderboard() {
                 padding: '13px 20px', gap: 12, alignItems: 'center',
                 background: isMe
                   ? 'linear-gradient(90deg, rgba(74,144,217,0.14), rgba(74,144,217,0.06))'
-                  : i % 2 === 0 ? 'rgba(255,255,255,0.025)' : 'transparent',
+                  : i % 2 === 0 ? 'rgba(20,27,56,0.88)' : 'rgba(14,20,42,0.92)',
                 borderBottom: '1px solid rgba(255,255,255,0.05)',
                 borderLeft: isMe ? '3px solid #4A90D9' : `3px solid ${rankN <= 3 ? rankColor : 'transparent'}`,
                 transition: 'background .2s',
                 cursor: 'default',
               }}
-              onMouseEnter={e => { if (!isMe) e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
-              onMouseLeave={e => { if (!isMe) e.currentTarget.style.background = i % 2 === 0 ? 'rgba(255,255,255,0.025)' : 'transparent'; }}
+              onMouseEnter={e => { if (!isMe) e.currentTarget.style.background = 'rgba(28,36,68,0.95)'; }}
+              onMouseLeave={e => { if (!isMe) e.currentTarget.style.background = i % 2 === 0 ? 'rgba(20,27,56,0.88)' : 'rgba(14,20,42,0.92)'; }}
             >
               {/* Rank */}
               <div style={{ fontWeight: 900, fontSize: medal ? 20 : 13, textAlign: 'center', color: rankColor, letterSpacing: medal ? 0 : '-0.3px' }}>
