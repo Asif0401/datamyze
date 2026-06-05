@@ -375,13 +375,20 @@ export default function CompanyPlacement() {
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState('');
 
-  useEffect(() => {
+  function loadData() {
     if (!isPremium) { setLoading(false); return; }
+    setLoading(true);
+    setError('');
     api.get('/placement')
       .then(r => setCompanies(r.data.companies || []))
-      .catch(() => setError('Failed to load placement data. Please refresh.'))
+      .catch(e => {
+        if (e.response?.status === 403) setError('');
+        else setError('Backend is warming up — this takes ~30 seconds on first load. Click retry.');
+      })
       .finally(() => setLoading(false));
-  }, [isPremium]);
+  }
+
+  useEffect(() => { loadData(); }, [isPremium]);
 
   if (!isPremium) return <PaywallView />;
 
@@ -422,8 +429,11 @@ export default function CompanyPlacement() {
       </div>
 
       {error && (
-        <div style={{ background: 'rgba(240,123,106,0.1)', border: '1px solid rgba(240,123,106,0.3)', borderRadius: 12, padding: '1rem', marginBottom: '1.2rem', color: '#F07B6A', fontSize: 14 }}>
-          {error}
+        <div style={{ background: 'rgba(240,123,106,0.08)', border: '1px solid rgba(240,123,106,0.25)', borderRadius: 12, padding: '1rem 1.2rem', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+          <div style={{ color: '#F07B6A', fontSize: 13 }}>⚠️ {error}</div>
+          <button onClick={loadData} style={{ padding: '6px 16px', borderRadius: 8, background: 'rgba(240,123,106,0.15)', border: '1px solid rgba(240,123,106,0.35)', color: '#F07B6A', fontWeight: 700, fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+            🔄 Retry
+          </button>
         </div>
       )}
 
