@@ -1080,15 +1080,17 @@ export default function Premium() {
       const { payment_session_id, order_id, cf_env } = r.data;
 
       // Load Cashfree JS SDK if not already loaded
-      if (!window.Cashfree) {
-        await new Promise((resolve, reject) => {
-          const s = document.createElement('script');
-          s.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
-          s.onload = resolve;
-          s.onerror = reject;
-          document.head.appendChild(s);
-        });
-      }
+      // Always reload Cashfree SDK fresh — prevents stale session caching
+      delete window.Cashfree;
+      const oldScript = document.querySelector('script[src*="cashfree.js"]');
+      if (oldScript) oldScript.remove();
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
 
       const cashfree = window.Cashfree({ mode: cf_env || 'production' });
       const result = await cashfree.checkout({
