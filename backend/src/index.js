@@ -117,7 +117,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
   app.use('/api/interviews',    require('./routes/interviews'));
 
 
-  app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
+  app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString(), payment_amount: 199, version: 'v3-fixed' }));
   app.use((req, res) => res.status(404).json({ error: 'Route not found' }));
   app.use((err, req, res, next) => { console.error(err); res.status(500).json({ error: 'Internal server error' }); });
 

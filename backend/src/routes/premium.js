@@ -166,10 +166,11 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
     const cfEnv = process.env.CASHFREE_ENV === 'PRODUCTION' ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
     const cfInstance = new Cashfree(cfEnv, process.env.CASHFREE_APP_ID, process.env.CASHFREE_SECRET_KEY);
 
+    const ORDER_AMOUNT = 199; // HARDCODED — do not change this
     const orderId = `DQ-${req.user.id.replace(/-/g,'').slice(0,8)}-${Date.now()}`;
     const orderRequest = {
       order_id:       orderId,
-      order_amount:   199,
+      order_amount:   ORDER_AMOUNT,
       order_currency: 'INR',
       customer_details: {
         customer_id:    user.id.replace(/-/g, '').slice(0, 50),
@@ -190,7 +191,7 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
     // Persist pending order (utr_number column reused to store orderId for lookup)
     await run(db, `INSERT INTO premium_subscriptions (id, user_id, amount, utr_number, status, expires_at)
              VALUES (?, ?, ?, ?, 'cashfree_pending', ?)`,
-      [uuidv4(), user.id, 199, orderId, new Date(Date.now() + 365*24*60*60*1000).toISOString()]);
+      [uuidv4(), user.id, ORDER_AMOUNT, orderId, new Date(Date.now() + 365*24*60*60*1000).toISOString()]);
 
     res.json({ payment_session_id, order_id: orderId, cf_env: process.env.CASHFREE_ENV === 'PRODUCTION' ? 'production' : 'sandbox' });
   } catch (err) {
