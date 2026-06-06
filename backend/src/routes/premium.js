@@ -163,9 +163,9 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
     if (existing?.is_premium === 1) return res.status(409).json({ error: 'Already a premium member!' });
 
     // Coupon validation — simple string check, never trust client-sent amount
-    const coupon = String(req.body?.coupon || '').toUpperCase().trim();
-    const finalAmount = (coupon === 'SAARANGI50') ? 149 : 199;
-    console.log(`[create-order] user=${user.email} coupon="${coupon}" finalAmount=${finalAmount}`);
+    
+    
+    
 
     const { Cashfree, CFEnvironment } = require('cashfree-pg');
     const cfEnv = process.env.CASHFREE_ENV === 'PRODUCTION' ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
@@ -174,7 +174,7 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
     const orderId = `DQ-${req.user.id.replace(/-/g,'').slice(0,8)}-${Date.now()}`;
     const orderRequest = {
       order_id:       orderId,
-      order_amount:   finalAmount,
+      order_amount:   199,
       order_currency: 'INR',
       customer_details: {
         customer_id:    user.id.replace(/-/g, '').slice(0, 50),
@@ -195,7 +195,7 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
     // Persist pending order (utr_number column reused to store orderId for lookup)
     await run(db, `INSERT INTO premium_subscriptions (id, user_id, amount, utr_number, status, expires_at)
              VALUES (?, ?, ?, ?, 'cashfree_pending', ?)`,
-      [uuidv4(), user.id, finalAmount, orderId, new Date(Date.now() + 365*24*60*60*1000).toISOString()]);
+      [uuidv4(), user.id, 199, orderId, new Date(Date.now() + 365*24*60*60*1000).toISOString()]);
 
     res.json({ payment_session_id, order_id: orderId, cf_env: process.env.CASHFREE_ENV === 'PRODUCTION' ? 'production' : 'sandbox' });
   } catch (err) {
