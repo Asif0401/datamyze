@@ -160,7 +160,8 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     const existing = await get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
-    if (existing?.is_premium === 1) return res.status(409).json({ error: 'Already a premium member!' });
+    // Temporarily allow admin to test payment (remove after confirming 199 works)
+    // if (existing?.is_premium === 1) return res.status(409).json({ error: 'Already a premium member!' });
 
     const { Cashfree, CFEnvironment } = require('cashfree-pg');
     const cfEnv = process.env.CASHFREE_ENV === 'PRODUCTION' ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
@@ -182,7 +183,7 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
         return_url: `${process.env.FRONTEND_URL}/premium?order_id=${orderId}&cf_status={order_status}`,
         notify_url: `${process.env.BACKEND_URL}/api/premium/cashfree/webhook`,
       },
-      order_note: 'Datamyze Pro — Lifetime Access',
+      order_note: `Datamyze Pro v3 - AMOUNT:${ORDER_AMOUNT}`,
     };
 
     const response = await cfInstance.PGCreateOrder(orderRequest);
