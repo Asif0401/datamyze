@@ -162,11 +162,6 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
     const existing = await get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
     if (existing?.is_premium === 1) return res.status(409).json({ error: 'Already a premium member!' });
 
-    // Coupon validation — simple string check, never trust client-sent amount
-    
-    
-    
-
     const { Cashfree, CFEnvironment } = require('cashfree-pg');
     const cfEnv = process.env.CASHFREE_ENV === 'PRODUCTION' ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
     const cfInstance = new Cashfree(cfEnv, process.env.CASHFREE_APP_ID, process.env.CASHFREE_SECRET_KEY);
