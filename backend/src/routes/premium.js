@@ -194,7 +194,7 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
              VALUES (?, ?, ?, ?, 'cashfree_pending', ?)`,
       [uuidv4(), user.id, ORDER_AMOUNT, orderId, new Date(Date.now() + 365*24*60*60*1000).toISOString()]);
 
-    res.json({ payment_session_id, order_id: orderId, cf_env: process.env.CASHFREE_ENV === 'PRODUCTION' ? 'production' : 'sandbox' });
+    res.json({ payment_session_id, order_id: orderId, cf_env: process.env.CASHFREE_ENV === 'PRODUCTION' ? 'production' : 'sandbox', debug_amount: ORDER_AMOUNT });
   } catch (err) {
     console.error('Cashfree create-order error:', err?.response?.data || err.message);
     res.status(500).json({ error: 'Could not create payment order. Please try again.' });
