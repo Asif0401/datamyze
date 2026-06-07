@@ -154,7 +154,7 @@ export default function Certificates() {
               👑 Upgrade to Pro · ₹199
             </button>
             <button onClick={() => navigate('/courses')}
-              style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.65)', borderRadius: 12, fontSize: 13, padding: '11px 18px', cursor: 'pointer' }}>
+              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.65)', borderRadius: 12, fontSize: 13, padding: '11px 18px', cursor: 'pointer' }}>
               Browse Courses
             </button>
           </div>
@@ -219,7 +219,7 @@ export default function Certificates() {
           ].map((s, idx) => (
             <div key={s.step} style={{
               padding: '1.4rem 1.3rem', borderRadius: 16, position: 'relative', overflow: 'hidden',
-              background: 'rgba(20,27,56,0.88)',
+              background: 'rgba(255,255,255,0.08)',
               border: `1px solid ${s.color}35`,
               boxShadow: `0 4px 24px rgba(0,0,0,0.35), inset 0 1px 0 ${s.color}20`,
               animation: 'popIn 0.35s ease both', animationDelay: `${idx * 0.09}s`,
@@ -252,7 +252,7 @@ export default function Certificates() {
             <div key={t.title} style={{
               display: 'flex', alignItems: 'center', gap: 12,
               padding: '11px 14px', borderRadius: 12,
-              background: 'rgba(20,27,56,0.88)',
+              background: 'rgba(255,255,255,0.08)',
               border: `1px solid ${t.color}35`,
               borderLeft: `3px solid ${t.color}90`,
               boxShadow: `0 2px 12px rgba(0,0,0,0.30)`,
@@ -311,7 +311,7 @@ export default function Certificates() {
               ].map((t, i) => (
                 <div key={t.title} onClick={() => navigate('/courses')}
                   style={{
-                    background:'rgba(20,27,56,0.88)',
+                    background:'rgba(255,255,255,0.08)',
                     border:`1px solid ${t.color}35`,
                     borderTop:`2px solid ${t.color}70`,
                     borderRadius:14, padding:'1.2rem 1rem',
@@ -332,7 +332,7 @@ export default function Certificates() {
           </div>
 
           {/* Bottom trust bar */}
-          <div style={{ marginTop:'1.5rem', padding:'1rem 1.4rem', borderRadius:14, background:'rgba(20,27,56,0.88)', border:'1px solid rgba(255,255,255,0.14)', display:'flex', alignItems:'center', justifyContent:'center', gap:'2.5rem', flexWrap:'wrap' }}>
+          <div style={{ marginTop:'1.5rem', padding:'1rem 1.4rem', borderRadius:14, background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.14)', display:'flex', alignItems:'center', justifyContent:'center', gap:'2.5rem', flexWrap:'wrap' }}>
             {[
               { icon:'🏆', text:'Verified by Datamyze' },
               { icon:'💼', text:'Shareable on LinkedIn' },

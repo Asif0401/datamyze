@@ -154,7 +154,7 @@ export default function Quiz() {
             ].map((s, idx) => (
               <div key={s.label} style={{
                 textAlign: 'center', padding: '1rem 0.8rem',
-                background: 'rgba(20,27,56,0.88)',
+                background: 'rgba(255,255,255,0.08)',
                 border: `1px solid ${s.color}40`,
                 borderTop: `2px solid ${s.color}80`,
                 borderRadius: 14,
@@ -179,7 +179,7 @@ export default function Quiz() {
             <div key={s.title} style={{
               display: 'flex', alignItems: 'flex-start', gap: 12,
               padding: '14px 16px', borderRadius: 12,
-              background: 'rgba(20,27,56,0.88)',
+              background: 'rgba(255,255,255,0.08)',
               border: `1px solid ${s.color}40`,
               borderLeft: `3px solid ${s.color}90`,
               boxShadow: `0 2px 12px rgba(0,0,0,0.25)`,
@@ -210,7 +210,7 @@ export default function Quiz() {
                 key={course.id}
                 onClick={() => selectCourse(course)}
                 style={{
-                  background: 'rgba(20,27,56,0.88)',
+                  background: 'rgba(255,255,255,0.08)',
                   border: `1px solid ${course.color || '#7F77DD'}40`,
                   borderTop: `2px solid ${course.color || '#7F77DD'}80`,
                   borderRadius: 14,

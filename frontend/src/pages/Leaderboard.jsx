@@ -200,7 +200,7 @@ export default function Leaderboard() {
 
       {/* ── Full table ──────────────────────────────── */}
       <div style={{
-        background: 'rgba(20,27,56,0.88)',
+        background: 'rgba(255,255,255,0.08)',
         border: '1px solid rgba(255,255,255,0.12)',
         borderRadius: top3.length === 3 ? '0 0 20px 20px' : 20,
         overflow: 'hidden',
@@ -210,7 +210,7 @@ export default function Leaderboard() {
         <div style={{
           display: 'grid', gridTemplateColumns: '56px 52px 1fr 160px 80px 100px',
           padding: '10px 20px', gap: 12, alignItems: 'center',
-          background: 'rgba(20,27,56,0.88)',
+          background: 'rgba(255,255,255,0.08)',
           borderBottom: '1px solid rgba(255,255,255,0.12)',
         }}>
           {[
@@ -285,7 +285,7 @@ export default function Leaderboard() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(255,255,255,0.3)', marginBottom: 5 }}>
                   <span>{xpPct}% of #1</span>
                 </div>
-                <div style={{ height: 6, borderRadius: 6, background: 'rgba(20,27,56,0.75)', overflow: 'hidden' }}>
+                <div style={{ height: 6, borderRadius: 6, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
                   <div style={{
                     height: '100%', width: `${xpPct}%`, borderRadius: 6,
                     background: `linear-gradient(90deg, ${color}, ${color}88)`,

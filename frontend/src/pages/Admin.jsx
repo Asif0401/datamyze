@@ -16,7 +16,7 @@ function StatCard({ icon, label, value, sub, accent = 'blue' }) {
   const c = STAT_COLORS[accent] || STAT_COLORS.blue;
   return (
     <div style={{
-      background: 'rgba(20,27,56,0.88)',
+      background: 'rgba(255,255,255,0.08)',
       backdropFilter: 'blur(18px)',
       WebkitBackdropFilter: 'blur(18px)',
       border: `1px solid rgba(255,255,255,0.10)`,
@@ -278,7 +278,7 @@ function ActivityTab({ data }) {
             {rows.map((r, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 90, fontSize: 12, color: 'rgba(255,255,255,0.40)', flexShrink: 0 }}>{r.date}</div>
-                <div style={{ flex: 1, background: 'rgba(20,27,56,0.88)', borderRadius: 4, height: 22, position: 'relative', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div style={{ flex: 1, background: 'rgba(255,255,255,0.08)', borderRadius: 4, height: 22, position: 'relative', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)' }}>
                   <div style={{
                     width: `${Math.round(r.active_users / max * 100)}%`,
                     background: 'linear-gradient(90deg, #4A90D9, #38bdf8)',
@@ -350,7 +350,7 @@ function PaymentsTab({ data, reload }) {
                   style={{ background: 'rgba(74,144,217,0.20)', border: '1px solid rgba(74,144,217,0.35)', color: '#4A90D9', borderRadius: 8, padding: '5px 12px', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>
                   ⬇️ Download
                 </a>
-                <button onClick={() => setReceiptModal(null)} style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', borderRadius: 8, padding: '5px 10px', cursor: 'pointer', fontSize: 14 }}>✕</button>
+                <button onClick={() => setReceiptModal(null)} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', borderRadius: 8, padding: '5px 10px', cursor: 'pointer', fontSize: 14 }}>✕</button>
               </div>
             </div>
             <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginBottom: '1rem' }}>
@@ -530,7 +530,7 @@ function InstructorTab() {
       <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', marginBottom: '2rem' }}>This information appears on the Instructor page visible to all students.</div>
 
       {/* Photo section */}
-      <div style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem' }}>
+      <div style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem' }}>
         <div style={{ fontWeight: 700, fontSize: 14, marginBottom: '1.2rem', color: 'rgba(255,255,255,0.7)' }}>Profile Photo</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
           {/* Avatar preview */}
@@ -566,7 +566,7 @@ function InstructorTab() {
       </div>
 
       {/* Profile info */}
-      <div style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem' }}>
+      <div style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem' }}>
         <div style={{ fontWeight: 700, fontSize: 14, marginBottom: '1.2rem', color: 'rgba(255,255,255,0.7)' }}>Profile Info</div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           {[
@@ -594,7 +594,7 @@ function InstructorTab() {
             onChange={e => setProfile(p => ({ ...p, bio: e.target.value }))}
             placeholder="Write a short bio about yourself..."
             rows={4}
-            style={{ fontSize: 13, resize: 'vertical', background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: '10px 14px', color: '#fff', width: '100%', fontFamily: 'inherit' }}
+            style={{ fontSize: 13, resize: 'vertical', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: '10px 14px', color: '#fff', width: '100%', fontFamily: 'inherit' }}
           />
         </div>
         <button className="btn-gold" onClick={saveProfile} disabled={saving} style={{ marginTop: '1.2rem', fontSize: 13, padding: '10px 24px' }}>

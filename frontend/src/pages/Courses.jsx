@@ -368,7 +368,7 @@ function LiveSessionPanel({ courseId, courseName, initialVoted = false }) {
             style={{
               padding: '11px 20px', borderRadius: 10, cursor: 'pointer',
               fontWeight: 700, fontSize: 13, transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 8,
-              background: 'rgba(20,27,56,0.88)', color: 'rgba(255,255,255,0.65)',
+              background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.65)',
               border: '1px solid rgba(255,255,255,0.12)', textDecoration: 'none',
             }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.10)'; e.currentTarget.style.color = '#fff'; }}
@@ -380,7 +380,7 @@ function LiveSessionPanel({ courseId, courseName, initialVoted = false }) {
       </div>
 
       {/* What you get */}
-      <div style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 14, padding: '1.2rem 1.4rem' }}>
+      <div style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 14, padding: '1.2rem 1.4rem' }}>
         <div style={{ fontWeight: 700, fontSize: 13, color: '#e2e8f0', marginBottom: '0.9rem', display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ width: 24, height: 24, borderRadius: 7, background: 'rgba(74,144,217,0.18)', border: '1px solid rgba(74,144,217,0.30)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>💡</span>
           What happens in a live session
@@ -403,7 +403,7 @@ function LiveSessionPanel({ courseId, courseName, initialVoted = false }) {
           { step: '3', label: 'Get notified', desc: 'Calendar invite on email' },
           { step: '4', label: 'Join live', desc: 'Attend & ask anything' },
         ].map(s => (
-          <div key={s.step} style={{ flex: 1, background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12, padding: '10px 12px', textAlign: 'center' }}>
+          <div key={s.step} style={{ flex: 1, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12, padding: '10px 12px', textAlign: 'center' }}>
             <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'rgba(74,144,217,0.18)', border: '1px solid rgba(74,144,217,0.28)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#4A90D9', margin: '0 auto 6px' }}>{s.step}</div>
             <div style={{ fontSize: 12, fontWeight: 700, color: '#e2e8f0', marginBottom: 3 }}>{s.label}</div>
             <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{s.desc}</div>
@@ -466,7 +466,7 @@ function CourseModal({ course, onClose, onEnroll }) {
         {/* ── Lesson viewer ── */}
         {activeLesson ? (
           <div style={{ flex: 1, overflowY: 'auto', paddingRight: 4 }}>
-            <button onClick={() => setActiveLesson(null)} style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '5px 14px', fontSize: 12, color: 'var(--muted)', cursor: 'pointer', marginBottom: '1rem' }}>
+            <button onClick={() => setActiveLesson(null)} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '5px 14px', fontSize: 12, color: 'var(--muted)', cursor: 'pointer', marginBottom: '1rem' }}>
               ← Back to course
             </button>
 
@@ -591,7 +591,7 @@ function CourseModal({ course, onClose, onEnroll }) {
                   </div>
 
                   {/* Prerequisites */}
-                  <div style={{ marginBottom: '1.2rem', background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: '10px 14px' }}>
+                  <div style={{ marginBottom: '1.2rem', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: '10px 14px' }}>
                     <div style={{ fontWeight: 700, fontSize: 12, marginBottom: 4, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.05em' }}>Prerequisites</div>
                     <div style={{ fontSize: 13, color: 'var(--muted)' }}>{meta.prereqs}</div>
                   </div>
@@ -601,7 +601,7 @@ function CourseModal({ course, onClose, onEnroll }) {
                     <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 8 }}>📚 Course Modules</div>
                     <div style={{ display: 'grid', gap: 4 }}>
                       {lessons.map((l, idx) => (
-                        <div key={l.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 10px', background: 'rgba(20,27,56,0.88)', borderRadius: 7, fontSize: 12.5 }}>
+                        <div key={l.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 10px', background: 'rgba(255,255,255,0.08)', borderRadius: 7, fontSize: 12.5 }}>
                           <span style={{ width: 20, height: 20, borderRadius: '50%', background: completed.includes(l.id) ? 'rgba(92,200,160,0.2)' : 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, color: completed.includes(l.id) ? '#5CC8A0' : 'var(--muted)', fontWeight: 700, flexShrink: 0 }}>
                             {completed.includes(l.id) ? '✓' : idx + 1}
                           </span>
@@ -896,7 +896,7 @@ export default function Courses() {
               onMouseEnter={() => setHoveredCard(c.id)}
               onMouseLeave={() => setHoveredCard(null)}
               style={{
-                background: 'rgba(20,27,56,0.88)',
+                background: 'rgba(255,255,255,0.08)',
                 border: `1px solid ${isHov ? c.color + '60' : 'rgba(255,255,255,0.08)'}`,
                 borderRadius: 20, overflow: 'hidden', cursor: 'pointer',
                 display: 'flex', flexDirection: 'column',
@@ -1032,7 +1032,7 @@ export default function Courses() {
                 )}
 
                 {/* Divider */}
-                <div style={{ height: 1, background: 'rgba(20,27,56,0.88)' }} />
+                <div style={{ height: 1, background: 'rgba(255,255,255,0.08)' }} />
 
                 {/* Meta row */}
                 <div style={{ display: 'flex', gap: 12, fontSize: 11, color: 'rgba(255,255,255,0.32)' }}>
@@ -1043,7 +1043,7 @@ export default function Courses() {
 
                 {/* Progress — pinned to bottom */}
                 <div style={{ marginTop: 'auto' }}>
-                  <div style={{ height: 4, borderRadius: 99, background: 'rgba(20,27,56,0.75)', overflow: 'hidden' }}>
+                  <div style={{ height: 4, borderRadius: 99, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
                     <div style={{
                       height: '100%', borderRadius: 99,
                       width: `${prog}%`,

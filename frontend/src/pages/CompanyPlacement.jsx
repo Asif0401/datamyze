@@ -224,7 +224,7 @@ function PaywallView({ navigate }) {
       </div>
       <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'0.8rem', marginBottom:'1.6rem' }}>
         {[{icon:'🏢',val:'10',lbl:'Companies',color:'#4A90D9'},{icon:'📋',val:'40+',lbl:'Interview Rounds',color:'#5CC8A0'},{icon:'💡',val:'50+',lbl:'Prep Tips',color:'#E8A838'},{icon:'💰',val:'Live',lbl:'Salary Data',color:'#a78bfa'}].map((s,i)=>(
-          <div key={i} style={{background:'rgba(20,27,56,0.88)',border:`1px solid ${s.color}28`,borderRadius:14,padding:'1rem',textAlign:'center'}}>
+          <div key={i} style={{background:'rgba(255,255,255,0.08)',border:`1px solid ${s.color}28`,borderRadius:14,padding:'1rem',textAlign:'center'}}>
             <div style={{fontSize:22,marginBottom:4}}>{s.icon}</div>
             <div style={{fontSize:20,fontWeight:900,color:s.color,lineHeight:1}}>{s.val}</div>
             <div style={{fontSize:11,color:'rgba(255,255,255,0.35)',marginTop:3}}>{s.lbl}</div>
@@ -235,7 +235,7 @@ function PaywallView({ navigate }) {
       <div style={{position:'relative',marginBottom:'1.6rem'}}>
         <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'0.9rem',filter:'blur(5px)',pointerEvents:'none',userSelect:'none',opacity:0.5}}>
           {COMPANIES.slice(0,6).map(co=>(
-            <div key={co.id} style={{background:'rgba(20,27,56,0.88)',border:`1px solid ${co.color}28`,borderTop:`2px solid ${co.color}55`,borderRadius:16,padding:'1.2rem'}}>
+            <div key={co.id} style={{background:'rgba(255,255,255,0.08)',border:`1px solid ${co.color}28`,borderTop:`2px solid ${co.color}55`,borderRadius:16,padding:'1.2rem'}}>
               <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
                 <CompanyLogo company={co.name} size={36} radius={10} color={co.color} />
                 <div><div style={{fontWeight:800,fontSize:14,color:'#fff'}}>{co.name}</div><div style={{fontSize:11,color:'rgba(255,255,255,0.38)'}}>{co.industry}</div></div>
@@ -269,7 +269,7 @@ function CompanyDetail({ co, onBack }) {
 
   return (
     <div className="page">
-      <button onClick={onBack} style={{display:'inline-flex',alignItems:'center',gap:6,background:'rgba(20,27,56,0.88)',border:'1px solid rgba(255,255,255,0.14)',borderRadius:10,padding:'7px 16px',color:'rgba(255,255,255,0.70)',fontSize:13,fontWeight:700,cursor:'pointer',marginBottom:'1.4rem',transition:'all .15s'}}
+      <button onClick={onBack} style={{display:'inline-flex',alignItems:'center',gap:6,background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.14)',borderRadius:10,padding:'7px 16px',color:'rgba(255,255,255,0.70)',fontSize:13,fontWeight:700,cursor:'pointer',marginBottom:'1.4rem',transition:'all .15s'}}
         onMouseEnter={e=>{e.currentTarget.style.background='rgba(28,36,68,0.95)';e.currentTarget.style.color='#fff';}}
         onMouseLeave={e=>{e.currentTarget.style.background='rgba(20,27,56,0.88)';e.currentTarget.style.color='rgba(255,255,255,0.70)';}}>
         ← Back
@@ -292,7 +292,7 @@ function CompanyDetail({ co, onBack }) {
         {/* Stats row */}
         <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'0.6rem',marginBottom:'1.1rem'}}>
           {[{icon:'💰',label:'Salary Range',val:`₹${co.salary} LPA`},{icon:'🎯',label:'Offer Rate',val:`~${co.successRate}%`},{icon:'📋',label:'Interview Rounds',val:`${co.rounds.length} rounds`}].map(s=>(
-            <div key={s.label} style={{background:'rgba(14,20,40,0.80)',border:'1px solid rgba(255,255,255,0.10)',borderRadius:12,padding:'0.75rem',textAlign:'center'}}>
+            <div key={s.label} style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.10)',borderRadius:12,padding:'0.75rem',textAlign:'center'}}>
               <div style={{fontSize:18,marginBottom:3}}>{s.icon}</div>
               <div style={{fontSize:14,fontWeight:900,color:'#fff',letterSpacing:'-0.3px'}}>{s.val}</div>
               <div style={{fontSize:10,color:'rgba(255,255,255,0.35)',marginTop:2,textTransform:'uppercase',letterSpacing:'0.5px'}}>{s.label}</div>
@@ -321,7 +321,7 @@ function CompanyDetail({ co, onBack }) {
                 {i < co.rounds.length-1 && <div style={{width:2,flex:1,minHeight:12,background:`linear-gradient(${co.color}40, transparent)`,marginTop:4}} />}
               </div>
               {/* Card */}
-              <div style={{flex:1,background:'rgba(20,27,56,0.90)',border:`1px solid ${co.color}22`,borderLeft:`3px solid ${co.color}60`,borderRadius:'0 14px 14px 0',padding:'0.9rem 1.1rem',marginBottom: i < co.rounds.length-1 ? 0 : 0}}>
+              <div style={{flex:1,background:'rgba(255,255,255,0.08)',border:`1px solid ${co.color}22`,borderLeft:`3px solid ${co.color}60`,borderRadius:'0 14px 14px 0',padding:'0.9rem 1.1rem',marginBottom: i < co.rounds.length-1 ? 0 : 0}}>
                 <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:5}}>
                   <span style={{fontSize:13,fontWeight:800,color:'#fff'}}>{r.round}</span>
                   <span style={{fontSize:10,fontWeight:700,padding:'2px 8px',borderRadius:20,background:`${co.color}15`,border:`1px solid ${co.color}30`,color:co.color,whiteSpace:'nowrap'}}>{r.duration}</span>
@@ -334,7 +334,7 @@ function CompanyDetail({ co, onBack }) {
       </div>
 
       {/* Key Topics */}
-      <div style={{background:'rgba(20,27,56,0.90)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:16,padding:'1.3rem',marginBottom:'1.2rem'}}>
+      <div style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:16,padding:'1.3rem',marginBottom:'1.2rem'}}>
         <div style={{fontSize:11,fontWeight:800,color:'rgba(255,255,255,0.35)',textTransform:'uppercase',letterSpacing:'1.5px',marginBottom:'0.9rem'}}>🏷️ Key Topics to Master</div>
         <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
           {co.topics.map(t=>{const c=TOPIC_COLOR(t);return(
@@ -344,7 +344,7 @@ function CompanyDetail({ co, onBack }) {
       </div>
 
       {/* Prep Tips */}
-      <div style={{background:'rgba(20,27,56,0.90)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:16,padding:'1.3rem'}}>
+      <div style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:16,padding:'1.3rem'}}>
         <div style={{fontSize:11,fontWeight:800,color:'rgba(255,255,255,0.35)',textTransform:'uppercase',letterSpacing:'1.5px',marginBottom:'0.9rem'}}>💡 Preparation Tips</div>
         <div style={{display:'flex',flexDirection:'column',gap:'0.65rem'}}>
           {co.tips.map((tip,i)=>(
@@ -382,7 +382,7 @@ export default function CompanyPlacement() {
       {/* Stats */}
       <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'0.8rem',marginBottom:'1.6rem'}}>
         {[{icon:'🏢',val:COMPANIES.length,lbl:'Companies',color:'#4A90D9'},{icon:'📋',val:`${COMPANIES.reduce((s,c)=>s+c.rounds.length,0)}+`,lbl:'Interview Rounds',color:'#5CC8A0'},{icon:'💡',val:`${COMPANIES.reduce((s,c)=>s+c.tips.length,0)}+`,lbl:'Prep Tips',color:'#E8A838'},{icon:'💰',val:'Live',lbl:'Salary Data',color:'#a78bfa'}].map((s,i)=>(
-          <div key={i} style={{background:'rgba(20,27,56,0.88)',border:`1px solid ${s.color}28`,borderTop:`2px solid ${s.color}60`,borderRadius:14,padding:'1rem',textAlign:'center',animation:`popIn 0.35s ${i*0.07}s ease both`}}>
+          <div key={i} style={{background:'rgba(255,255,255,0.08)',border:`1px solid ${s.color}28`,borderTop:`2px solid ${s.color}60`,borderRadius:14,padding:'1rem',textAlign:'center',animation:`popIn 0.35s ${i*0.07}s ease both`}}>
             <div style={{fontSize:22,marginBottom:4}}>{s.icon}</div>
             <div style={{fontSize:20,fontWeight:900,color:s.color,lineHeight:1}}>{s.val}</div>
             <div style={{fontSize:11,color:'rgba(255,255,255,0.35)',marginTop:3}}>{s.lbl}</div>
@@ -394,7 +394,7 @@ export default function CompanyPlacement() {
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(260px,1fr))',gap:'1rem'}}>
         {COMPANIES.map((co,i)=>(
           <div key={co.id} onClick={()=>setSelected(co)}
-            style={{background:'rgba(20,27,56,0.88)',border:`1px solid ${co.color}28`,borderTop:`2px solid ${co.color}60`,borderRadius:16,padding:'1.3rem',cursor:'pointer',transition:'all 0.2s',animation:`popIn 0.35s ${i*0.05}s ease both`}}
+            style={{background:'rgba(255,255,255,0.08)',border:`1px solid ${co.color}28`,borderTop:`2px solid ${co.color}60`,borderRadius:16,padding:'1.3rem',cursor:'pointer',transition:'all 0.2s',animation:`popIn 0.35s ${i*0.05}s ease both`}}
             onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-4px)';e.currentTarget.style.boxShadow=`0 12px 32px rgba(0,0,0,0.40), 0 0 0 1px ${co.color}35`;}}
             onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='';}}>
             <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:'0.9rem'}}>

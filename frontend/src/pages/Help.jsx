@@ -123,7 +123,7 @@ export default function Help() {
           ) : (
             <form onSubmit={handleSubmit}>
               <div style={{
-                background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)',
+                background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)',
                 borderRadius: 20, padding: '1.8rem',
               }}>
                 <div style={{ fontSize: 16, fontWeight: 800, color: '#fff', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -139,7 +139,7 @@ export default function Help() {
                     value={category}
                     onChange={e => setCategory(e.target.value)}
                     style={{
-                      background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)',
+                      background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)',
                       borderRadius: 10, padding: '11px 40px 11px 14px',
                       color: category ? '#fff' : 'rgba(255,255,255,0.35)',
                       fontSize: 14, width: '100%', outline: 'none', cursor: 'pointer',
@@ -181,7 +181,7 @@ export default function Help() {
                     placeholder="Describe your issue or question in detail. The more you share, the faster we can help you."
                     rows={7}
                     style={{
-                      background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)',
+                      background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)',
                       borderRadius: 10, padding: '12px 14px', color: '#fff', width: '100%',
                       fontSize: 14, fontFamily: 'inherit', resize: 'vertical', outline: 'none', lineHeight: 1.6,
                       boxSizing: 'border-box',
@@ -192,7 +192,7 @@ export default function Help() {
                 {/* User info note */}
                 <div style={{
                   display: 'flex', alignItems: 'flex-start', gap: 10, marginTop: '0.8rem',
-                  padding: '10px 14px', background: 'rgba(20,27,56,0.88)', borderRadius: 10,
+                  padding: '10px 14px', background: 'rgba(255,255,255,0.08)', borderRadius: 10,
                   border: '1px solid rgba(74,144,217,0.25)', fontSize: 12, color: 'rgba(255,255,255,0.50)',
                 }}>
                   <span style={{ marginTop: 1 }}>ℹ️</span>
@@ -228,7 +228,7 @@ export default function Help() {
 
           {/* Quick contact card */}
           <div style={{
-            background: 'rgba(20,27,56,0.90)', border: '1px solid rgba(127,119,221,0.30)',
+            background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(127,119,221,0.30)',
             borderTop: '2px solid rgba(127,119,221,0.60)',
             borderRadius: 16, padding: '1.4rem',
           }}>
@@ -257,7 +257,7 @@ export default function Help() {
 
           {/* FAQ accordion */}
           <div style={{
-            background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)',
+            background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)',
             borderRadius: 16, overflow: 'hidden',
           }}>
             <div style={{
@@ -275,7 +275,7 @@ export default function Help() {
 
           {/* Pro tip card */}
           <div style={{
-            background: 'rgba(20,27,56,0.90)',
+            background: 'rgba(255,255,255,0.08)',
             border: '1px solid rgba(232,168,56,0.30)', borderTop: '2px solid rgba(232,168,56,0.60)', borderRadius: 16, padding: '1.2rem',
             display: 'flex', gap: 12, alignItems: 'flex-start',
           }}>

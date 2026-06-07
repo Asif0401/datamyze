@@ -1051,7 +1051,7 @@ function SectionCard({ section, accentColor }) {
 
   return (
     <div style={{
-      background: 'rgba(20,27,56,0.88)',
+      background: 'rgba(255,255,255,0.08)',
       border: '1px solid rgba(255,255,255,0.08)',
       borderLeft: `3px solid ${accentColor}`,
       borderRadius: 12,
@@ -1214,7 +1214,7 @@ export default function Cheatsheets() {
           onChange={e => setSearch(e.target.value)}
           style={{
             width: '100%', boxSizing: 'border-box',
-            background: 'rgba(20,27,56,0.88)',
+            background: 'rgba(255,255,255,0.08)',
             border: '1px solid rgba(255,255,255,0.12)',
             borderRadius: 10,
             padding: '0.7rem 1rem 0.7rem 2.5rem',
