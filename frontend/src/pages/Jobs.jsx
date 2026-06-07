@@ -233,7 +233,10 @@ export default function Jobs() {
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
                 <span className="job-source">{job.source}</span>
-                <a href={job.url} target="_blank" rel="noreferrer">
+                <a
+                  href={`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(job.title + ' ' + job.company)}&location=${encodeURIComponent(job.location || 'India')}`}
+                  target="_blank" rel="noreferrer"
+                >
                   <button className="btn-primary" style={{ padding: '7px 16px', fontSize: 13 }}>
                     Apply Now →
                   </button>
