@@ -365,7 +365,7 @@ export default function AuthPage({ mode: initialMode }) {
       <div className="auth-hero" ref={heroRef}>
 
         {/* ══════════════ SECTION 1 — HERO ══════════════ */}
-        <section style={{ minHeight:'100vh', display:'flex', flexDirection:'column', justifyContent:'center', padding:'1.5rem 4rem 2.5rem', position:'relative' }}>
+        <section style={{ minHeight:'100vh', display:'flex', flexDirection:'column', justifyContent:'center', padding:'1.5rem 2.5rem 2.5rem', position:'relative' }}>
 
           {/* Ambient glows */}
           <div style={{ position:'absolute', top:'-10%', left:'-5%', width:500, height:500, borderRadius:'50%', background:'radial-gradient(circle, rgba(74,144,217,0.12) 0%, transparent 70%)', pointerEvents:'none' }} />
@@ -392,33 +392,33 @@ export default function AuthPage({ mode: initialMode }) {
             </span>
           </div>
 
-          {/* Headline */}
-          <div style={{ marginBottom:'1.2rem' }}>
-            <div style={{ fontSize:'clamp(36px,3.8vw,58px)', fontWeight:900, letterSpacing:'-2px', lineHeight:1.05, color:'rgba(255,255,255,0.88)', animation:'fadeInUp 0.5s 0.08s ease both', marginBottom:6 }}>
+          {/* Headline — full width */}
+          <div style={{ marginBottom:'1.2rem', width:'100%' }}>
+            <div style={{ fontSize:'clamp(40px,4.5vw,62px)', fontWeight:900, letterSpacing:'-2px', lineHeight:1.05, color:'rgba(255,255,255,0.88)', animation:'fadeInUp 0.5s 0.08s ease both', marginBottom:6 }}>
               The platform that
             </div>
-            <div style={{ fontSize:'clamp(36px,3.8vw,58px)', fontWeight:900, letterSpacing:'-2px', lineHeight:1.05, animation:'fadeInUp 0.5s 0.14s ease both', marginBottom:6 }}>
+            <div style={{ fontSize:'clamp(40px,4.5vw,62px)', fontWeight:900, letterSpacing:'-2px', lineHeight:1.05, animation:'fadeInUp 0.5s 0.14s ease both', marginBottom:6 }}>
               <span style={{ color:'rgba(255,255,255,0.88)' }}>actually gets you</span>
             </div>
-            <div style={{ position:'relative', display:'inline-block', animation:'fadeInUp 0.5s 0.20s ease both' }}>
-              <span style={{ fontSize:'clamp(40px,4.2vw,64px)', fontWeight:900, letterSpacing:'-2.5px', lineHeight:1.0, background:'linear-gradient(135deg, #4A90D9 0%, #818cf8 45%, #c084fc 75%, #5CC8A0 100%)', backgroundSize:'200% auto', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', animation:'gradientShift 5s ease infinite' }}>
+            <div style={{ position:'relative', display:'block', animation:'fadeInUp 0.5s 0.20s ease both' }}>
+              <span style={{ fontSize:'clamp(44px,4.8vw,68px)', fontWeight:900, letterSpacing:'-2.5px', lineHeight:1.0, background:'linear-gradient(135deg, #4A90D9 0%, #818cf8 45%, #c084fc 75%, #5CC8A0 100%)', backgroundSize:'200% auto', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', animation:'gradientShift 5s ease infinite' }}>
                 hired in data.
               </span>
-              <span style={{ position:'absolute', bottom:-6, left:0, right:0, height:4, borderRadius:4, background:'linear-gradient(90deg,#4A90D9,#818cf8,#5CC8A0)', animation:'barIn 0.7s 0.6s ease both', transformOrigin:'left' }} />
+              <span style={{ position:'absolute', bottom:-6, left:0, width:'60%', height:4, borderRadius:4, background:'linear-gradient(90deg,#4A90D9,#818cf8,#5CC8A0)', animation:'barIn 0.7s 0.6s ease both', transformOrigin:'left' }} />
             </div>
           </div>
 
-          {/* Subtext */}
-          <div style={{ fontSize:'clamp(14px,1.3vw,16px)', color:'rgba(255,255,255,0.48)', lineHeight:1.7, maxWidth:520, marginBottom:'2rem', animation:'fadeInUp 0.5s 0.28s ease both' }}>
+          {/* Subtext — no maxWidth, fills full width */}
+          <div style={{ fontSize:'clamp(14px,1.3vw,16px)', color:'rgba(255,255,255,0.50)', lineHeight:1.75, width:'100%', marginBottom:'2rem', animation:'fadeInUp 0.5s 0.28s ease both' }}>
             Real SQL &amp; Python problems from India's top companies · 1:1 mentorship · resume review · mock interviews · 100% placement support until you get hired.
           </div>
 
-          {/* Stat chips */}
-          <div style={{ display:'flex', gap:10, flexWrap:'wrap', marginBottom:'2.5rem', animation:'fadeInUp 0.5s 0.34s ease both' }}>
+          {/* Stat chips — 4-col grid, full width */}
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:10, width:'100%', marginBottom:'2rem', animation:'fadeInUp 0.5s 0.34s ease both' }}>
             {STATS.map(s => (
-              <div key={s.lbl} style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'10px 18px', borderRadius:14, background:`${s.color}0e`, border:`1px solid ${s.color}28`, minWidth:80 }}>
-                <div style={{ fontSize:20, fontWeight:900, color:s.color, letterSpacing:'-0.5px', lineHeight:1 }}>{s.val}</div>
-                <div style={{ fontSize:10, fontWeight:600, color:'rgba(255,255,255,0.38)', textTransform:'uppercase', letterSpacing:'0.5px', marginTop:3 }}>{s.lbl}</div>
+              <div key={s.lbl} style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'12px 10px', borderRadius:14, background:`${s.color}0e`, border:`1px solid ${s.color}28` }}>
+                <div style={{ fontSize:22, fontWeight:900, color:s.color, letterSpacing:'-0.5px', lineHeight:1 }}>{s.val}</div>
+                <div style={{ fontSize:10, fontWeight:600, color:'rgba(255,255,255,0.38)', textTransform:'uppercase', letterSpacing:'0.5px', marginTop:4, textAlign:'center' }}>{s.lbl}</div>
               </div>
             ))}
           </div>

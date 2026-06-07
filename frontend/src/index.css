@@ -719,9 +719,9 @@ select option { background: #1a2035; color: var(--text); }
 /* ── Auth hero sections: centre content regardless of hero width ── */
 @media (min-width: 901px) {
   .auth-hero section {
-    /* Dynamic centred padding: keeps a ~640px content column centred */
-    padding-left:  clamp(2rem, calc(50% - 320px), 7rem) !important;
-    padding-right: clamp(2rem, calc(50% - 320px), 7rem) !important;
+    /* Use consistent padding — let content stretch naturally */
+    padding-left:  2.5rem !important;
+    padding-right: 2.5rem !important;
   }
 }
 
