@@ -1256,7 +1256,7 @@ function PremiumHub({ status, user }) {
           </div>
 
           {/* Stats block */}
-          <div style={{ display:'flex', gap:0, flexShrink:0, background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:16, overflow:'hidden' }}>
+          <div style={{ display:'flex', gap:0, flexShrink:0, background:'rgba(20,27,56,0.88)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:16, overflow:'hidden' }}>
             {[
               {val:sessions.length, lbl:'Sessions',   icon:'📅', c:'#4A90D9'},
               {val:reviews.length,  lbl:'Reviews',    icon:'📄', c:'#E8A838'},
@@ -1272,7 +1272,7 @@ function PremiumHub({ status, user }) {
       </div>
 
       {/* Tab nav */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.07)', overflowX: 'auto', paddingBottom: 0 }}>
+      <div style={{ display: 'flex', gap: 4, marginBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.12)', overflowX: 'auto', paddingBottom: 0 }}>
         {HUB_TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)} style={{
             padding: '9px 16px', background: tab === t.id ? 'rgba(74,144,217,0.12)' : 'none',
@@ -1329,7 +1329,7 @@ function OverviewTab({ sessions, reviews, navigate, setTab }) {
       {/* Value prop strip */}
       <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'0.8rem', marginBottom:'1.6rem' }}>
         {valueProps.map((v,i)=>(
-          <div key={v.stat} style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:14, padding:'0.9rem 1rem', display:'flex', alignItems:'center', gap:12, animation:`hubFadeUp 0.4s ${i*0.06}s ease both` }}>
+          <div key={v.stat} style={{ background:'rgba(20,27,56,0.88)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:14, padding:'0.9rem 1rem', display:'flex', alignItems:'center', gap:12, animation:`hubFadeUp 0.4s ${i*0.06}s ease both` }}>
             <span style={{ fontSize:24, flexShrink:0 }}>{v.icon}</span>
             <div>
               <div style={{ fontWeight:900, fontSize:18, color:'#fff', lineHeight:1 }}>{v.stat}</div>
@@ -1343,7 +1343,7 @@ function OverviewTab({ sessions, reviews, navigate, setTab }) {
       <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'1rem', marginBottom:'2rem' }}>
         {quick.map((q,i)=>(
           <div key={q.title} onClick={q.action}
-            style={{ borderRadius:18, overflow:'hidden', cursor:'pointer', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', transition:'all 0.25s cubic-bezier(.22,1,.36,1)', animation:`proCardEnter 0.5s ${i*0.07}s cubic-bezier(.22,1,.36,1) both` }}
+            style={{ borderRadius:18, overflow:'hidden', cursor:'pointer', background:'rgba(20,27,56,0.88)', border:'1px solid rgba(255,255,255,0.12)', transition:'all 0.25s cubic-bezier(.22,1,.36,1)', animation:`proCardEnter 0.5s ${i*0.07}s cubic-bezier(.22,1,.36,1) both` }}
             onMouseEnter={e=>{ e.currentTarget.style.borderColor=q.color+'52'; e.currentTarget.style.transform='translateY(-5px)'; e.currentTarget.style.boxShadow=`0 18px 44px ${q.color}1e`; }}
             onMouseLeave={e=>{ e.currentTarget.style.borderColor='rgba(255,255,255,0.08)'; e.currentTarget.style.transform='none'; e.currentTarget.style.boxShadow='none'; }}>
             {/* Banner */}
@@ -1755,7 +1755,7 @@ function InterviewTab() {
           <button key={t.id} onClick={() => setSubTab(t.id)} style={{
             padding: '9px 18px', borderRadius: 12, fontWeight: 700, fontSize: 13, cursor: 'pointer',
             border: subTab === t.id ? '1px solid rgba(74,144,217,0.50)' : '1px solid rgba(255,255,255,0.10)',
-            background: subTab === t.id ? 'rgba(74,144,217,0.15)' : 'rgba(255,255,255,0.04)',
+            background: subTab === t.id ? 'rgba(74,144,217,0.15)' : 'rgba(20,27,56,0.88)',
             color: subTab === t.id ? '#4A90D9' : 'rgba(255,255,255,0.45)',
             display: 'flex', alignItems: 'center', gap: 7, transition: 'all 0.15s',
           }}>
@@ -1804,7 +1804,7 @@ function InterviewTab() {
                   {isOpen && (
                     <div style={{ padding: '0 18px 16px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                       <div style={{ marginTop: 12, fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.30)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 8 }}>✅ Model Answer</div>
-                      <pre style={{ margin: 0, fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: '#a6e3a1', whiteSpace: 'pre-wrap', lineHeight: 1.7, background: 'rgba(0,0,0,0.35)', borderRadius: 10, padding: '12px 14px', border: '1px solid rgba(255,255,255,0.07)' }}>
+                      <pre style={{ margin: 0, fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: '#a6e3a1', whiteSpace: 'pre-wrap', lineHeight: 1.7, background: 'rgba(0,0,0,0.35)', borderRadius: 10, padding: '12px 14px', border: '1px solid rgba(255,255,255,0.12)' }}>
                         {q.a}
                       </pre>
                     </div>
@@ -1839,11 +1839,11 @@ function InterviewTab() {
                     <div key={t.id} onClick={() => set('interview_type', t.id)} style={{
                       padding: '12px 14px', borderRadius: 12, cursor: 'pointer',
                       border: `1px solid ${active ? t.color + '55' : 'rgba(255,255,255,0.09)'}`,
-                      background: active ? t.color + '14' : 'rgba(255,255,255,0.03)',
+                      background: active ? t.color + '14' : 'rgba(20,27,56,0.88)',
                       transition: 'all 0.15s', position: 'relative', overflow: 'hidden',
                     }}
                     onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = t.color + '35'; e.currentTarget.style.background = t.color + '08'; }}}
-                    onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.09)'; e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; }}}
+                    onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.09)'; e.currentTarget.style.background = 'rgba(20,27,56,0.88)'; }}}
                     >
                       {active && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${t.color}, transparent)` }} />}
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
@@ -1868,7 +1868,7 @@ function InterviewTab() {
                     <div key={d.id} onClick={() => set('difficulty', d.id)} style={{
                       flex: 1, padding: '10px 12px', borderRadius: 12, cursor: 'pointer', textAlign: 'center',
                       border: `1px solid ${active ? d.color + '55' : 'rgba(255,255,255,0.09)'}`,
-                      background: active ? d.color + '14' : 'rgba(255,255,255,0.03)',
+                      background: active ? d.color + '14' : 'rgba(20,27,56,0.88)',
                       transition: 'all 0.15s',
                     }}
                     onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = d.color + '35'; }}}
@@ -1900,7 +1900,7 @@ function InterviewTab() {
                     <button key={t} onClick={() => set('preferred_time', t)} style={{
                       padding: '8px 4px', borderRadius: 10, cursor: 'pointer', fontWeight: 700, fontSize: 12,
                       border: `1px solid ${active ? 'rgba(74,144,217,0.55)' : 'rgba(255,255,255,0.09)'}`,
-                      background: active ? 'rgba(74,144,217,0.18)' : 'rgba(255,255,255,0.03)',
+                      background: active ? 'rgba(74,144,217,0.18)' : 'rgba(20,27,56,0.88)',
                       color: active ? '#4A90D9' : 'rgba(255,255,255,0.55)',
                       transition: 'all 0.12s',
                     }}
@@ -2274,12 +2274,12 @@ function ProjectsTab() {
             {/* Right: Dataset + Skills + Deliverables */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
               {/* Dataset */}
-              <div style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '0.9rem 1rem' }}>
+              <div style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12, padding: '0.9rem 1rem' }}>
                 <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.30)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 8 }}>📦 Dataset</div>
                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.60)', lineHeight: 1.5 }}>{selected.dataset}</div>
               </div>
               {/* Skills */}
-              <div style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '0.9rem 1rem' }}>
+              <div style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12, padding: '0.9rem 1rem' }}>
                 <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.30)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 8 }}>🧠 Skills You'll Gain</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
                   {selected.skills.map(s => (
@@ -2288,7 +2288,7 @@ function ProjectsTab() {
                 </div>
               </div>
               {/* Deliverables */}
-              <div style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '0.9rem 1rem' }}>
+              <div style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12, padding: '0.9rem 1rem' }}>
                 <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.30)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 8 }}>✅ Deliverables</div>
                 {selected.deliverables.map((d, i) => (
                   <div key={i} style={{ display: 'flex', gap: 7, fontSize: 12, color: 'rgba(255,255,255,0.60)', marginBottom: 5, lineHeight: 1.4 }}>
@@ -2360,7 +2360,7 @@ function RoadmapTab() {
       {/* Course header */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: 16, marginBottom: '1.6rem',
-        background: `linear-gradient(135deg, ${course.color}18, rgba(255,255,255,0.03))`,
+        background: 'rgba(20,27,56,0.88)',
         border: `1px solid ${course.color}35`, borderRadius: 18, padding: '1rem 1.3rem',
       }}>
         <div style={{ width: 56, height: 56, borderRadius: 16, background: course.color + '25', border: `1px solid ${course.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0 }}>{course.icon}</div>
@@ -2389,7 +2389,7 @@ function RoadmapTab() {
                   onClick={() => setExpanded(isExp ? null : stage.id)}
                   style={{
                     display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer',
-                    background: isExp ? `${course.color}14` : 'rgba(255,255,255,0.04)',
+                    background: isExp ? `${course.color}14` : 'rgba(20,27,56,0.88)',
                     border: `1px solid ${isExp ? course.color + '45' : 'rgba(255,255,255,0.08)'}`,
                     borderRadius: 14, padding: '0.8rem 1rem 0.8rem 0.7rem',
                     transition: 'all 0.2s', position: 'relative', zIndex: 1,
@@ -2448,7 +2448,7 @@ function RoadmapTab() {
                     </div>
 
                     {/* Practice */}
-                    <div style={{ display: 'flex', gap: 10, padding: '9px 12px', background: 'rgba(20,27,56,0.88)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.07)' }}>
+                    <div style={{ display: 'flex', gap: 10, padding: '9px 12px', background: 'rgba(20,27,56,0.88)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.12)' }}>
                       <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>📌</span>
                       <div>
                         <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 3 }}>Practice task</div>
@@ -2485,7 +2485,7 @@ function ResourcesTab() {
         if (!inCode) { inCode = true; codeLang = line.slice(3); codeLines = []; }
         else {
           elements.push(
-            <pre key={`code-${i}`} style={{ background: 'rgba(0,0,0,0.45)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '12px 14px', fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#a6e3a1', whiteSpace: 'pre-wrap', lineHeight: 1.7, margin: '0.6rem 0', overflowX: 'auto' }}>
+            <pre key={`code-${i}`} style={{ background: 'rgba(0,0,0,0.45)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: '12px 14px', fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#a6e3a1', whiteSpace: 'pre-wrap', lineHeight: 1.7, margin: '0.6rem 0', overflowX: 'auto' }}>
               <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', display: 'block', marginBottom: 6 }}>{codeLang || 'code'}</span>
               {codeLines.join('\n')}
             </pre>
@@ -2497,7 +2497,7 @@ function ResourcesTab() {
       if (inCode) { codeLines.push(line); return; }
 
       if (line.startsWith('# ')) {
-        elements.push(<div key={i} style={{ fontWeight: 800, fontSize: 18, color: '#fff', margin: '1.2rem 0 0.5rem', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: 6 }}>{line.slice(2)}</div>);
+        elements.push(<div key={i} style={{ fontWeight: 800, fontSize: 18, color: '#fff', margin: '1.2rem 0 0.5rem', borderBottom: '1px solid rgba(255,255,255,0.12)', paddingBottom: 6 }}>{line.slice(2)}</div>);
       } else if (line.startsWith('## ')) {
         elements.push(<div key={i} style={{ fontWeight: 700, fontSize: 15, color: '#e2e8f0', margin: '1rem 0 0.4rem' }}>{line.slice(3)}</div>);
       } else if (line.startsWith('### ')) {
@@ -2509,7 +2509,7 @@ function ResourcesTab() {
         elements.push(
           <div key={i} style={{ display: 'flex', gap: 0, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
             {cells.map((cell, ci) => (
-              <div key={ci} style={{ flex: 1, padding: '5px 10px', fontSize: 12, color: isHeader ? '#e2e8f0' : 'rgba(255,255,255,0.65)', fontWeight: isHeader ? 700 : 400, background: isHeader ? 'rgba(255,255,255,0.04)' : 'transparent' }}>
+              <div key={ci} style={{ flex: 1, padding: '5px 10px', fontSize: 12, color: isHeader ? '#e2e8f0' : 'rgba(255,255,255,0.65)', fontWeight: isHeader ? 700 : 400, background: isHeader ? 'rgba(28,36,68,0.95)' : 'rgba(14,20,40,0.80)' }}>
                 {cell.trim()}
               </div>
             ))}
@@ -2538,7 +2538,7 @@ function ResourcesTab() {
       <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:'1.2rem' }}>
         {STUDY_MATERIALS.map((mat,idx)=>(
           <div key={mat.id}
-            style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', borderRadius:20, overflow:'hidden', transition:'all 0.25s cubic-bezier(.22,1,.36,1)', display:'flex', flexDirection:'column', animation:`proCardEnter 0.5s ${idx*0.07}s cubic-bezier(.22,1,.36,1) both` }}
+            style={{ background:'rgba(20,27,56,0.88)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:20, overflow:'hidden', transition:'all 0.25s cubic-bezier(.22,1,.36,1)', display:'flex', flexDirection:'column', animation:`proCardEnter 0.5s ${idx*0.07}s cubic-bezier(.22,1,.36,1) both` }}
             onMouseEnter={e=>{ e.currentTarget.style.borderColor=mat.color+'50'; e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.boxShadow=`0 18px 44px ${mat.color}1c`; }}
             onMouseLeave={e=>{ e.currentTarget.style.borderColor='rgba(255,255,255,0.08)'; e.currentTarget.style.transform='none'; e.currentTarget.style.boxShadow='none'; }}>
             {/* Banner */}
@@ -2571,9 +2571,9 @@ function ResourcesTab() {
               </button>
               <button
                 onClick={()=>{ setPreview(mat); setTimeout(()=>{ window.print(); },300); showToast("Use 'Save as PDF' in your print dialog"); }}
-                style={{ flex:1, background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.10)', borderRadius:11, color:'rgba(255,255,255,0.70)', fontSize:13, fontWeight:700, padding:'9px 0', cursor:'pointer', transition:'background 0.15s' }}
+                style={{ flex:1, background:'rgba(20,27,56,0.80)', border:'1px solid rgba(255,255,255,0.10)', borderRadius:11, color:'rgba(255,255,255,0.70)', fontSize:13, fontWeight:700, padding:'9px 0', cursor:'pointer', transition:'background 0.15s' }}
                 onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.12)'}
-                onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.06)'}
+                onMouseLeave={e=>e.currentTarget.style.background='rgba(28,36,68,0.95)'}
               >
                 ⬇️ Download PDF
               </button>
@@ -2674,7 +2674,7 @@ function SupportTab({ setToast, user }) {
             { icon: '✉️', label: 'Email', val: 'asif@dataquest.in' },
             { icon: '⏱', label: 'Response time', val: 'Within 6 hours' },
           ].map(c => (
-            <div key={c.label} style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '10px 14px', fontSize: 13 }}>
+            <div key={c.label} style={{ background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: '10px 14px', fontSize: 13 }}>
               <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, marginBottom: 3 }}>{c.icon} {c.label}</div>
               <div style={{ color: '#e2e8f0', fontWeight: 600 }}>{c.val}</div>
             </div>
@@ -2827,14 +2827,14 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
         </div>
 
         {/* Stats row */}
-        <div style={{ display:'flex', justifyContent:'center', gap:'1rem', marginTop:'2rem', paddingTop:'1.8rem', borderTop:'1px solid rgba(255,255,255,0.07)', flexWrap:'wrap', animation:'heroFadeUp 0.5s 0.4s ease both' }}>
+        <div style={{ display:'flex', justifyContent:'center', gap:'1rem', marginTop:'2rem', paddingTop:'1.8rem', borderTop:'1px solid rgba(255,255,255,0.12)', flexWrap:'wrap', animation:'heroFadeUp 0.5s 0.4s ease both' }}>
           {[
             {icon:'📅', val:'1:1', lbl:'Mentor Session',  color:'#4A90D9'},
             {icon:'💼', val:'300+', lbl:'Live Jobs',       color:'#5CC8A0'},
             {icon:'📄', val:'24h', lbl:'Resume Feedback',  color:'#E8A838'},
             {icon:'🎯', val:'100%',lbl:'Placement Assist', color:'#a78bfa'},
           ].map((s,i)=>(
-            <div key={s.lbl} style={{ display:'flex', alignItems:'center', gap:12, padding:'10px 20px', borderRadius:16, background:'rgba(255,255,255,0.04)', border:`1px solid ${s.color}28`, animation:`statSlide 0.4s ${0.5+i*0.08}s ease both` }}>
+            <div key={s.lbl} style={{ display:'flex', alignItems:'center', gap:12, padding:'10px 20px', borderRadius:16, background:'rgba(20,27,56,0.88)', border:`1px solid ${s.color}28`, animation:`statSlide 0.4s ${0.5+i*0.08}s ease both` }}>
               <span style={{ fontSize:22 }}>{s.icon}</span>
               <div style={{ textAlign:'left' }}>
                 <div style={{ fontSize:20, fontWeight:900, color:s.color, lineHeight:1 }}>{s.val}</div>
@@ -2853,7 +2853,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
             <div style={{ display:'flex', gap:16, width:'max-content', animation:'marqueeScroll 18s linear infinite' }}>
               {['Flipkart','Swiggy','Amazon India','Razorpay','Meesho','Zomato','CRED','Paytm','PhonePe','Nykaa','Dream11','MakeMyTrip','Ola','Deloitte','Wipro',
                 'Flipkart','Swiggy','Amazon India','Razorpay','Meesho','Zomato','CRED','Paytm','PhonePe','Nykaa','Dream11','MakeMyTrip','Ola','Deloitte','Wipro'].map((c,i) => (
-                <span key={i} style={{ padding:'5px 14px', borderRadius:20, background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.45)', whiteSpace:'nowrap' }}>{c}</span>
+                <span key={i} style={{ padding:'5px 14px', borderRadius:20, background:'rgba(20,27,56,0.88)', border:'1px solid rgba(255,255,255,0.12)', fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.45)', whiteSpace:'nowrap' }}>{c}</span>
               ))}
             </div>
           </div>
@@ -2866,7 +2866,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
             { text:'"The 1:1 mentor sessions gave me the confidence to crack my Swiggy interview."',             name:'Rahul M.', role:'BI Engineer',    color:'#4A90D9' },
             { text:'"Best ₹199 I ever spent. Resume review alone was worth 10x the price."',                   name:'Ankit V.', role:'Data Analyst',      color:'#a78bfa' },
           ].map(t => (
-            <div key={t.name} style={{ padding:'12px 14px', borderRadius:14, background:'rgba(255,255,255,0.03)', border:`1px solid ${t.color}20`, textAlign:'left' }}>
+            <div key={t.name} style={{ padding:'12px 14px', borderRadius:14, background:'rgba(20,27,56,0.88)', border:`1px solid ${t.color}20`, textAlign:'left' }}>
               <div style={{ fontSize:11, color:'rgba(255,255,255,0.45)', lineHeight:1.6, marginBottom:8, fontStyle:'italic' }}>{t.text}</div>
               <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                 <div style={{ width:26, height:26, borderRadius:'50%', background:t.color+'25', border:`1px solid ${t.color}50`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:10, fontWeight:800, color:t.color, flexShrink:0 }}>{t.name[0]}</div>
@@ -2892,7 +2892,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
       <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'1.2rem', marginBottom:'2.5rem' }}>
         {FEATURES.map((f,i) => (
           <div key={f.label}
-            style={{ borderRadius:18, overflow:'hidden', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', display:'flex', flexDirection:'column', cursor:'default', transition:'all 0.25s cubic-bezier(.22,1,.36,1)', animation:`upgCardEnter 0.55s ${i*0.07}s cubic-bezier(.22,1,.36,1) both` }}
+            style={{ borderRadius:18, overflow:'hidden', background:'rgba(20,27,56,0.88)', border:'1px solid rgba(255,255,255,0.12)', display:'flex', flexDirection:'column', cursor:'default', transition:'all 0.25s cubic-bezier(.22,1,.36,1)', animation:`upgCardEnter 0.55s ${i*0.07}s cubic-bezier(.22,1,.36,1) both` }}
             onMouseEnter={e=>{ e.currentTarget.style.borderColor=f.color+'48'; e.currentTarget.style.transform='translateY(-5px)'; e.currentTarget.style.boxShadow=`0 20px 48px ${f.color}1e`; }}
             onMouseLeave={e=>{ e.currentTarget.style.borderColor='rgba(255,255,255,0.08)'; e.currentTarget.style.transform='none'; e.currentTarget.style.boxShadow='none'; }}>
 
@@ -2926,7 +2926,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
 
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1.4fr', gap:0, position:'relative' }}>
             {/* Left: Price + CTA */}
-            <div style={{ padding:'2.2rem 2rem', borderRight:'1px solid rgba(255,255,255,0.07)', display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center' }}>
+            <div style={{ padding:'2.2rem 2rem', borderRight:'1px solid rgba(255,255,255,0.12)', display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center' }}>
 
               {/* Label */}
               <div style={{ fontSize:11, fontWeight:800, color:'#E8A838', textTransform:'uppercase', letterSpacing:'2px', marginBottom:14 }}>✦ Lifetime Access</div>
@@ -2986,9 +2986,9 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
               <div style={{ fontSize:11, fontWeight:800, color:'rgba(255,255,255,0.35)', textTransform:'uppercase', letterSpacing:'1.5px', marginBottom:10 }}>Everything included</div>
               <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
                 {FEATURES.map(f => (
-                  <div key={f.label} style={{ display:'flex', alignItems:'center', gap:10, padding:'7px 10px', borderRadius:10, background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.06)', transition:'background 0.15s' }}
-                    onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.06)'}
-                    onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.03)'}>
+                  <div key={f.label} style={{ display:'flex', alignItems:'center', gap:10, padding:'7px 10px', borderRadius:10, background:'rgba(20,27,56,0.88)', border:'1px solid rgba(255,255,255,0.06)', transition:'background 0.15s' }}
+                    onMouseEnter={e=>e.currentTarget.style.background='rgba(28,36,68,0.95)'}
+                    onMouseLeave={e=>e.currentTarget.style.background='rgba(20,27,56,0.88)'}>
                     <div style={{ width:30, height:30, borderRadius:8, background:f.color+'18', border:`1px solid ${f.color}30`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:15, flexShrink:0 }}>{f.icon}</div>
                     <div style={{ flex:1 }}>
                       <div style={{ fontSize:12.5, fontWeight:700, color:'#fff', lineHeight:1.3 }}>{f.label}</div>
@@ -3045,7 +3045,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
               </div>
 
               {/* Payment method toggle */}
-              <div style={{ display: 'flex', gap: 0, marginBottom: '1.2rem', background: 'rgba(20,27,56,0.88)', borderRadius: 12, padding: 4, border: '1px solid rgba(255,255,255,0.08)' }}>
+              <div style={{ display: 'flex', gap: 0, marginBottom: '1.2rem', background: 'rgba(20,27,56,0.88)', borderRadius: 12, padding: 4, border: '1px solid rgba(255,255,255,0.12)' }}>
                 {[{ id: 'cashfree', label: '⚡ Pay Online' }, { id: 'upi', label: '📱 UPI Manual' }].map(m => (
                   <button key={m.id} onClick={() => setPayMethod(m.id)}
                     style={{
@@ -3121,7 +3121,7 @@ function UpgradePage({ isPending, status, showModal, setShowModal, step, setStep
                       <li>Note the Transaction / UTR ID shown after payment</li>
                     </ol>
                     {/* NetBanking/Wallet extra option */}
-                    <div style={{ marginTop: '0.6rem', padding: '8px 12px', background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, fontSize: 12, color: 'rgba(255,255,255,0.40)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ marginTop: '0.6rem', padding: '8px 12px', background: 'rgba(20,27,56,0.88)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, fontSize: 12, color: 'rgba(255,255,255,0.40)', display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span>🏦</span>
                       <span>NetBanking / Wallet: use your bank's UPI handle or scan QR above</span>
                     </div>
