@@ -1077,8 +1077,7 @@ export default function Premium() {
     try {
       // Create order on backend
       const r = await api.post('/premium/cashfree/create-order');
-      const { payment_session_id, order_id, cf_env, debug_amount } = r.data;
-      alert(`DEBUG: Backend created order for ₹${debug_amount}. Session: ${payment_session_id?.slice(0,20)}`);
+      const { payment_session_id, order_id, cf_env } = r.data;
 
       // Load Cashfree JS SDK if not already loaded
       // Always reload Cashfree SDK fresh — prevents stale session caching

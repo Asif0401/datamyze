@@ -160,8 +160,7 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     const existing = await get(db, 'SELECT is_premium FROM users WHERE id = ?', [req.user.id]);
-    // Temporarily allow admin to test payment (remove after confirming 199 works)
-    // if (existing?.is_premium === 1) return res.status(409).json({ error: 'Already a premium member!' });
+    if (existing?.is_premium === 1) return res.status(409).json({ error: 'Already a premium member!' });
 
     const { Cashfree, CFEnvironment } = require('cashfree-pg');
     const cfEnv = process.env.CASHFREE_ENV === 'PRODUCTION' ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
@@ -194,7 +193,7 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
              VALUES (?, ?, ?, ?, 'cashfree_pending', ?)`,
       [uuidv4(), user.id, ORDER_AMOUNT, orderId, new Date(Date.now() + 365*24*60*60*1000).toISOString()]);
 
-    res.json({ payment_session_id, order_id: orderId, cf_env: process.env.CASHFREE_ENV === 'PRODUCTION' ? 'production' : 'sandbox', debug_amount: ORDER_AMOUNT });
+    res.json({ payment_session_id, order_id: orderId, cf_env: process.env.CASHFREE_ENV === 'PRODUCTION' ? 'production' : 'sandbox' });
   } catch (err) {
     console.error('Cashfree create-order error:', err?.response?.data || err.message);
     res.status(500).json({ error: 'Could not create payment order. Please try again.' });
