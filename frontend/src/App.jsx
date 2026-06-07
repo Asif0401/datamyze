@@ -25,6 +25,7 @@ const CaseStudies         = lazy(() => import('./pages/CaseStudies'));
 const Help                = lazy(() => import('./pages/Help'));
 const InterviewExperiences = lazy(() => import('./pages/InterviewExperiences'));
 const CompanyPlacement     = lazy(() => import('./pages/CompanyPlacement'));
+const Cheatsheets          = lazy(() => import('./pages/Cheatsheets'));
 
 /* Fallback shown while a chunk loads */
 const PageLoader = () => (
@@ -70,6 +71,7 @@ export default function App() {
           <Route path="help"                       element={<Help />} />
           <Route path="interview-experiences"      element={<InterviewExperiences />} />
           <Route path="company-placement"         element={<CompanyPlacement />} />
+          <Route path="cheatsheets"               element={<Cheatsheets />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" />} />
