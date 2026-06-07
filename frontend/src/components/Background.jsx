@@ -43,7 +43,7 @@ export function Particles() {
         y:       rn(H * 0.1, H * 0.88),
         barW:    Math.floor(rn(4, 9)) * scale,
         gap:     Math.floor(rn(3, 6)),
-        opacity: rn(0.05, 0.12),
+        opacity: rn(0.02, 0.06),
         scale,
         bars: Array.from({ length: barCount }, () => ({
           baseH: rn(20, 70) * scale,
@@ -68,7 +68,7 @@ export function Particles() {
       startY:  rn(H * 0.05, H * 0.88),
       segW:    rn(100, 200),
       color:   rc(),
-      opacity: rn(0.06, 0.13),
+      opacity: rn(0.02, 0.04),
       filled:  Math.random() > 0.5, // area fill under line
     }));
 
@@ -85,7 +85,7 @@ export function Particles() {
         speed: rn(0.005, 0.015),
         color: rc(),
       })),
-      opacity: rn(0.06, 0.13),
+      opacity: rn(0.02, 0.04),
     }));
 
     /* ── 4. DONUT / PIE ARCS (8) ─────────────────────── */
@@ -97,7 +97,7 @@ export function Particles() {
       sweepA:  rn(0.5, Math.PI * 1.5),
       speed:   rn(-0.005, 0.005) || 0.003,
       color:   rc(),
-      opacity: rn(0.05, 0.11),
+      opacity: rn(0.02, 0.05),
     }));
 
     /* ── 5. SPARKLINES (8) ───────────────────────────── */
@@ -112,7 +112,7 @@ export function Particles() {
         speed: rn(0.004, 0.012),
       })),
       color:   rc(),
-      opacity: rn(0.07, 0.14),
+      opacity: rn(0.02, 0.04),
     }));
 
     /* ── 6. FLOATING DATA LABELS (32) ───────────────── */
@@ -144,7 +144,7 @@ export function Particles() {
       vy:      -(rn(0.08, 0.28)),
       label:   SQL_LABELS[Math.floor(Math.random() * SQL_LABELS.length)],
       color:   rc(),
-      opacity: rn(0.06, 0.14),
+      opacity: rn(0.02, 0.04),
       size:    rn(9, 13),
     }));
 
@@ -157,7 +157,7 @@ export function Particles() {
       cw:      rn(22, 35),
       rh:      rn(12, 18),
       color:   rc(),
-      opacity: rn(0.04, 0.08),
+      opacity: rn(0.02, 0.04),
     }));
 
     let t = 0;
