@@ -423,6 +423,24 @@ export default function AuthPage({ mode: initialMode }) {
             ))}
           </div>
 
+          {/* Feature highlights — fills the blank space */}
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:'0.75rem', marginBottom:'1.8rem', animation:'fadeInUp 0.5s 0.36s ease both' }}>
+            {[
+              { icon:'🗄️', color:'#38bdf8', title:'400+ Real Problems', desc:'SQL & Python from Flipkart, Amazon, Zomato' },
+              { icon:'🎙️', color:'#a78bfa', title:'1:1 Mock Interviews', desc:'Live sessions with expert feedback' },
+              { icon:'📄', color:'#5CC8A0', title:'Resume Review', desc:'ATS-optimised in 24 hours' },
+              { icon:'💼', color:'#E8A838', title:'Job Board', desc:'300+ data analyst roles updated daily' },
+              { icon:'🏆', color:'#f9a825', title:'Certificates', desc:'LinkedIn-ready after each course' },
+              { icon:'🎯', color:'#f87171', title:'Placement Support', desc:'100% till you get hired' },
+            ].map((f,i) => (
+              <div key={i} style={{ background:'rgba(255,255,255,0.05)', border:`1px solid ${f.color}22`, borderRadius:12, padding:'0.75rem 0.9rem' }}>
+                <div style={{ fontSize:20, marginBottom:4 }}>{f.icon}</div>
+                <div style={{ fontSize:12, fontWeight:800, color:'#fff', marginBottom:2, lineHeight:1.3 }}>{f.title}</div>
+                <div style={{ fontSize:10.5, color:'rgba(255,255,255,0.40)', lineHeight:1.4 }}>{f.desc}</div>
+              </div>
+            ))}
+          </div>
+
           {/* Active users social proof */}
           <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:'1.6rem', animation:'fadeInUp 0.5s 0.38s ease both' }}>
             <div style={{ display:'flex', alignItems:'center', gap:8, padding:'7px 14px', borderRadius:20, background:'rgba(56,189,248,0.07)', border:'1px solid rgba(56,189,248,0.18)', fontSize:12.5, fontWeight:600, color:'rgba(255,255,255,0.65)' }}>
