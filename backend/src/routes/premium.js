@@ -167,7 +167,8 @@ router.post('/cashfree/create-order', authMiddleware, async (req, res) => {
     const cfEnv = process.env.CASHFREE_ENV === 'PRODUCTION' ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
     const cfInstance = new Cashfree(cfEnv, process.env.CASHFREE_APP_ID, process.env.CASHFREE_SECRET_KEY);
 
-    const ORDER_AMOUNT = 199; // HARDCODED — do not change this
+    const ORDER_AMOUNT = 199; // HARDCODED — env override ignored for security
+    if (parseInt(process.env.PAYMENT_AMOUNT) === 149) throw new Error('Invalid payment amount configuration');
     const orderId = `DQ-${req.user.id.replace(/-/g,'').slice(0,8)}-${Date.now()}`;
     const orderRequest = {
       order_id:       orderId,
