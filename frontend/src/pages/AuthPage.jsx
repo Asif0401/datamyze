@@ -463,11 +463,6 @@ export default function AuthPage({ mode: initialMode }) {
             </div>
           </div>
 
-          {/* Scroll indicator */}
-          <div style={{ position:'absolute', bottom:'2.5rem', left:'4rem', display:'flex', alignItems:'center', gap:8, animation:'fadeInUp 0.5s 0.8s ease both' }}>
-            <div style={{ fontSize:11, color:'rgba(255,255,255,0.22)', letterSpacing:1, textTransform:'uppercase' }}>Scroll to explore</div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-          </div>
         </section>
 
         {/* ══════════════ SECTION 2 — FEATURES ══════════════ */}
