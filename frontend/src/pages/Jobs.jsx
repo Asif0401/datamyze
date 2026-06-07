@@ -4,8 +4,9 @@ import CompanyLogo from '../components/CompanyLogo';
 
 const TYPE_FILTERS = ['All', 'Full-time', 'Remote', 'Hybrid'];
 
-/* ── Multi-portal apply URL generator ───────────────── */
+/* ── Apply URL: use direct Adzuna link if available, else fallback ── */
 function getApplyUrl(job) {
+  if (job.url) return job.url;
   const q  = encodeURIComponent(`${job.title} ${job.company}`);
   const loc = encodeURIComponent(job.location || 'India');
   const src = (job.source || '').toLowerCase();
@@ -16,7 +17,6 @@ function getApplyUrl(job) {
   if (src.includes('linkedin'))  return `https://www.linkedin.com/jobs/search/?keywords=${q}&location=${loc}`;
   if (src.includes('wellfound') || src.includes('angel')) return `https://wellfound.com/jobs?q=${q}`;
 
-  // No specific source — rotate across all major Indian portals by job index
   const portals = [
     `https://www.naukri.com/jobs-in-india?k=${q}&l=${loc}`,
     `https://www.linkedin.com/jobs/search/?keywords=${q}&location=${loc}`,
@@ -24,9 +24,18 @@ function getApplyUrl(job) {
     `https://www.glassdoor.co.in/Job/jobs.htm?suggestkw=${q}`,
     `https://wellfound.com/jobs?q=${q}`,
   ];
-  // Use company name char code to deterministically pick a portal per job
   const idx = (job.company?.charCodeAt(0) || 0) % portals.length;
   return portals[idx];
+}
+
+/* ── Human-readable posted time ── */
+function formatPostedTime(days) {
+  if (days === 0) return 'Today';
+  if (days === 1) return '1 day ago';
+  if (days < 7)  return `${days} days ago`;
+  if (days < 14) return '1 week ago';
+  if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
+  return '1 month ago';
 }
 
 function getInitials(company) {
@@ -244,11 +253,23 @@ export default function Jobs() {
                   {job.type}
                 </span>
                 <span style={{ fontSize: 11, color: 'var(--muted)' }}>
-                  {job.posted_days_ago === 1 ? '1 day ago' : `${job.posted_days_ago} days ago`}
+                  {formatPostedTime(job.posted_days_ago ?? 0)}
                 </span>
               </div>
 
-              <div className="job-salary">{job.salary}</div>
+              {job.description && (
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', lineHeight: 1.5, margin: '6px 0 4px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  {job.description.length > 120 ? job.description.slice(0, 120) + '...' : job.description}
+                </div>
+              )}
+
+              {(!job.salary || job.salary === 'Competitive') ? (
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 6, display: 'inline-block', padding: '2px 8px', margin: '4px 0 6px' }}>
+                  Salary: Competitive
+                </div>
+              ) : (
+                <div className="job-salary">{job.salary}</div>
+              )}
 
               <div className="job-skills">
                 {(Array.isArray(job.skills) ? job.skills : []).slice(0, 5).map(s => (

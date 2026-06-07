@@ -1,4 +1,7 @@
 require('dotenv').config();
+// Render env vars to set:
+//   ADZUNA_APP_ID=080e69d1
+//   ADZUNA_APP_KEY=2e216e236eb756fc8d4cb45bf866b412
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
