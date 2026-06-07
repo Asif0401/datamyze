@@ -4,6 +4,31 @@ import CompanyLogo from '../components/CompanyLogo';
 
 const TYPE_FILTERS = ['All', 'Full-time', 'Remote', 'Hybrid'];
 
+/* ── Multi-portal apply URL generator ───────────────── */
+function getApplyUrl(job) {
+  const q  = encodeURIComponent(`${job.title} ${job.company}`);
+  const loc = encodeURIComponent(job.location || 'India');
+  const src = (job.source || '').toLowerCase();
+
+  if (src.includes('naukri'))    return `https://www.naukri.com/jobs-in-india?k=${q}&l=${loc}`;
+  if (src.includes('indeed'))    return `https://in.indeed.com/jobs?q=${q}&l=${loc}`;
+  if (src.includes('glassdoor')) return `https://www.glassdoor.co.in/Job/jobs.htm?suggestkw=${q}`;
+  if (src.includes('linkedin'))  return `https://www.linkedin.com/jobs/search/?keywords=${q}&location=${loc}`;
+  if (src.includes('wellfound') || src.includes('angel')) return `https://wellfound.com/jobs?q=${q}`;
+
+  // No specific source — rotate across all major Indian portals by job index
+  const portals = [
+    `https://www.naukri.com/jobs-in-india?k=${q}&l=${loc}`,
+    `https://www.linkedin.com/jobs/search/?keywords=${q}&location=${loc}`,
+    `https://in.indeed.com/jobs?q=${q}&l=${loc}`,
+    `https://www.glassdoor.co.in/Job/jobs.htm?suggestkw=${q}`,
+    `https://wellfound.com/jobs?q=${q}`,
+  ];
+  // Use company name char code to deterministically pick a portal per job
+  const idx = (job.company?.charCodeAt(0) || 0) % portals.length;
+  return portals[idx];
+}
+
 function getInitials(company) {
   return company.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 }
@@ -233,10 +258,7 @@ export default function Jobs() {
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
                 <span className="job-source">{job.source}</span>
-                <a
-                  href={`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(job.title + ' ' + job.company)}&location=${encodeURIComponent(job.location || 'India')}`}
-                  target="_blank" rel="noreferrer"
-                >
+                <a href={getApplyUrl(job)} target="_blank" rel="noreferrer">
                   <button className="btn-primary" style={{ padding: '7px 16px', fontSize: 13 }}>
                     Apply Now →
                   </button>
