@@ -285,7 +285,7 @@ function RotatingSubtext() {
       }}>
         {word.text}
       </span>
-      <span style={{ color:'rgba(255,255,255,0.55)', fontWeight:500 }}>— and get hired.</span>
+      <span style={{ color:'rgba(255,255,255,0.55)', fontWeight:500 }}>- and get hired.</span>
     </div>
   );
 }
