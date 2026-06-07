@@ -245,6 +245,51 @@ const FEATURES = [
   { icon: <PythonLogo />, color: '#FFD343', title: 'Python & Pandas Track',   desc: 'Data wrangling, EDA, GroupBy and real case-study problems' },
   { icon: '🎯',           color: '#f87171', title: '100% Placement Support',  desc: 'We work alongside you until you land your first data role' },
 ];
+/* ── Rotating subtext ──────────────────────────────── */
+const ROTATE_WORDS = [
+  { text: 'crack data interviews',       color: '#38bdf8' },
+  { text: 'get your resume reviewed',    color: '#5CC8A0' },
+  { text: 'land your first data role',   color: '#a78bfa' },
+  { text: 'master SQL & Python',         color: '#E8A838' },
+  { text: 'prepare with real problems',  color: '#f9a825' },
+];
+
+function RotatingSubtext() {
+  const [idx, setIdx] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVisible(false);
+      setTimeout(() => {
+        setIdx(i => (i + 1) % ROTATE_WORDS.length);
+        setVisible(true);
+      }, 350);
+    }, 2800);
+    return () => clearInterval(interval);
+  }, []);
+
+  const word = ROTATE_WORDS[idx];
+  return (
+    <div style={{ fontSize:'clamp(15px,1.5vw,18px)', lineHeight:1.5, width:'100%', marginBottom:'2rem', animation:'fadeInUp 0.5s 0.28s ease both', display:'flex', alignItems:'center', flexWrap:'wrap', gap:6 }}>
+      <span style={{ color:'rgba(255,255,255,0.55)', fontWeight:500 }}>The platform built to help you</span>
+      <span style={{
+        color: word.color,
+        fontWeight: 800,
+        borderBottom: `2px solid ${word.color}60`,
+        paddingBottom: 1,
+        transition: 'opacity 0.35s ease, transform 0.35s ease',
+        opacity: visible ? 1 : 0,
+        display: 'inline-block',
+        transform: visible ? 'translateY(0)' : 'translateY(6px)',
+      }}>
+        {word.text}
+      </span>
+      <span style={{ color:'rgba(255,255,255,0.55)', fontWeight:500 }}>— and get hired.</span>
+    </div>
+  );
+}
+
 const STATS = [
   { val: '400+',  lbl: 'Problems',       color: '#38bdf8' },
   { val: '1:1',   lbl: 'Mentorship',     color: '#a78bfa' },
@@ -408,10 +453,8 @@ export default function AuthPage({ mode: initialMode }) {
             </div>
           </div>
 
-          {/* Subtext — no maxWidth, fills full width */}
-          <div style={{ fontSize:'clamp(14px,1.3vw,16px)', color:'rgba(255,255,255,0.50)', lineHeight:1.75, width:'100%', marginBottom:'2rem', animation:'fadeInUp 0.5s 0.28s ease both' }}>
-            Real SQL &amp; Python problems from India's top companies · 1:1 mentorship · resume review · mock interviews · 100% placement support until you get hired.
-          </div>
+          {/* Subtext — animated rotating text */}
+          <RotatingSubtext />
 
           {/* Stat chips — 4-col grid, full width */}
           <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:10, width:'100%', marginBottom:'2rem', animation:'fadeInUp 0.5s 0.34s ease both' }}>
