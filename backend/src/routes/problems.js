@@ -2,6 +2,7 @@ const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const { run, get, all } = require('../db/database');
 const { runSql } = require('../db/sampleDb');
+const { executePython } = require('../utils/pistonExec');
 const authMiddleware = require('../middleware/auth');
 const router = express.Router();
 
@@ -55,8 +56,13 @@ router.post('/:id/run', authMiddleware, async (req, res) => {
     }
   }
 
-  // Python — smart simulation
-  return res.json(simulatePython(code, problem.title));
+  // Python — real execution via Piston API
+  const result = await executePython(code);
+  if (result.success) {
+    return res.json({ success: true, output: result.output });
+  } else {
+    return res.json({ success: false, error: result.error, output: result.output || '' });
+  }
 });
 
 /* ── Get hint (deducts XP on first use) ──────────────── */
@@ -92,10 +98,18 @@ router.post('/:id/submit', authMiddleware, async (req, res) => {
       feedback = `❌ SQL Error: ${err.message.replace(/\n/g, ' ')}`;
     }
   } else {
-    // Python validation
-    const ok = validatePython(code, problem.title);
-    if (ok.pass) { status = 'accepted'; feedback = ok.message; }
-    else { feedback = ok.message; }
+    // Python — real execution via Piston API
+    try {
+      const result = await executePython(code);
+      if (result.success) {
+        status = 'accepted';
+        feedback = `✅ Accepted! Your code ran successfully.\n\n${result.output}`;
+      } else {
+        feedback = `❌ Runtime Error:\n${result.error}`;
+      }
+    } catch (err) {
+      feedback = '❌ Execution service unavailable. Please try again.';
+    }
   }
 
   // Persist submission
