@@ -492,9 +492,9 @@ export default function AuthPage({ mode: initialMode }) {
             </div>
           </div>
 
-          {/* "Students placed at" marquee */}
+          {/* "Companies hiring for data roles" marquee */}
           <div style={{ animation:'fadeInUp 0.5s 0.40s ease both' }}>
-            <div style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.28)', letterSpacing:1.5, textTransform:'uppercase', marginBottom:10 }}>Students placed at</div>
+            <div style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.28)', letterSpacing:1.5, textTransform:'uppercase', marginBottom:10 }}>Companies hiring for data roles</div>
             <div style={{ overflow:'hidden', maskImage:'linear-gradient(to right,transparent,black 8%,black 92%,transparent)', WebkitMaskImage:'linear-gradient(to right,transparent,black 8%,black 92%,transparent)' }}>
               <div className="auth-marquee-track">
                 {[...COMPANIES, ...COMPANIES].map((co, i) => (
