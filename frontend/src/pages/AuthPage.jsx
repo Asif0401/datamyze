@@ -254,7 +254,7 @@ const ROTATE_WORDS = [
   { text: 'prepare with real problems',  color: '#f9a825' },
 ];
 
-function RotatingSubtext() {
+function RotatingSubtext({ mobile = false }) {
   const [idx, setIdx] = useState(0);
   const [visible, setVisible] = useState(true);
 
@@ -271,7 +271,14 @@ function RotatingSubtext() {
 
   const word = ROTATE_WORDS[idx];
   return (
-    <div style={{ fontSize:'clamp(15px,1.5vw,18px)', lineHeight:1.5, width:'100%', marginBottom:'2rem', animation:'fadeInUp 0.5s 0.28s ease both', display:'flex', alignItems:'center', flexWrap:'wrap', gap:6 }}>
+    <div style={{
+      fontSize: mobile ? 17 : 'clamp(15px,1.5vw,18px)',
+      lineHeight: 1.55,
+      width: '100%',
+      marginBottom: mobile ? '0.6rem' : '2rem',
+      animation: 'fadeInUp 0.5s 0.28s ease both',
+      display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 6,
+    }}>
       <span style={{ color:'rgba(255,255,255,0.55)', fontWeight:500 }}>The platform built to help you</span>
       <span style={{
         color: word.color,
@@ -285,7 +292,7 @@ function RotatingSubtext() {
       }}>
         {word.text}
       </span>
-      <span style={{ color:'rgba(255,255,255,0.55)', fontWeight:500 }}>- and get hired.</span>
+      <span style={{ color:'rgba(255,255,255,0.55)', fontWeight:500 }}>— and get hired.</span>
     </div>
   );
 }
@@ -699,18 +706,8 @@ export default function AuthPage({ mode: initialMode }) {
           <span style={{ color:'#38bdf8', fontWeight:800 }}>2,000+</span> data aspirants actively learning
         </div>
 
-        {/* Headline */}
-        <div style={{ marginBottom:'0.7rem' }}>
-          <div style={{ fontSize:26, fontWeight:900, letterSpacing:'-1px', lineHeight:1.1, color:'rgba(255,255,255,0.88)', marginBottom:4 }}>
-            The platform that actually gets you
-          </div>
-          <div style={{ position:'relative', display:'inline-block' }}>
-            <span style={{ fontSize:28, fontWeight:900, letterSpacing:'-1.2px', lineHeight:1.05, background:'linear-gradient(135deg,#4A90D9 0%,#818cf8 45%,#c084fc 75%,#5CC8A0 100%)', backgroundSize:'200% auto', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', animation:'gradientShift 5s ease infinite' }}>
-              hired in data.
-            </span>
-            <span style={{ position:'absolute', bottom:-4, left:0, right:0, height:3, borderRadius:4, background:'linear-gradient(90deg,#4A90D9,#818cf8,#5CC8A0)', animation:'barIn 0.7s 0.5s ease both', transformOrigin:'left' }} />
-          </div>
-        </div>
+        {/* Headline — same rotating text as desktop */}
+        <RotatingSubtext mobile />
 
         {/* Subtext */}
         <div style={{ fontSize:13, color:'rgba(255,255,255,0.42)', lineHeight:1.6, marginBottom:'1.2rem' }}>
