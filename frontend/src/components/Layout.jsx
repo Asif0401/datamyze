@@ -297,6 +297,13 @@ export default function Layout() {
   const avatarColor = user?.avatar_color || '#4A90D9';
   const avatarSrc   = user?.avatar_url ? `/uploads/avatars/${user.avatar_url}` : null;
 
+  /* ── Theme toggle ── */
+  const [isLight, setIsLight] = useState(() => localStorage.getItem('dm_theme') === 'light');
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+    localStorage.setItem('dm_theme', isLight ? 'light' : 'dark');
+  }, [isLight]);
+
   /* Mobile "More" sheet */
   const [moreOpen, setMoreOpen] = useState(false);
   // Close sheet on route change
@@ -496,6 +503,17 @@ export default function Layout() {
         </nav>
 
         <div className="sidebar-bottom">
+          {/* ── Theme toggle ── */}
+          <button className="theme-toggle" onClick={() => setIsLight(l => !l)} title="Toggle light / dark mode">
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 15 }}>{isLight ? '☀️' : '🌙'}</span>
+              {isLight ? 'Light Mode' : 'Dark Mode'}
+            </span>
+            <span className="theme-toggle-track">
+              <span className="theme-toggle-thumb" />
+            </span>
+          </button>
+
           {/* Social links */}
           <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 10, paddingBottom: 10, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
             {/* Instagram */}
