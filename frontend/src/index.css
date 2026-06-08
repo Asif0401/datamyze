@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -134,7 +134,7 @@
 /* ── Base ───────────────────────────────────────────── */
 html { height: 100%; overflow-x: hidden; }
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: linear-gradient(160deg, #0a1628 0%, #0e1c35 50%, #0c1a2e 100%);
   background-attachment: fixed;
   color: var(--text);
@@ -142,17 +142,19 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  font-feature-settings: "ss01", "cv01", "kern";
 }
 a { color: inherit; text-decoration: none; }
 button {
   cursor: pointer; border: none;
-  font-family: inherit; font-size: 14px;
+  font-family: 'Space Grotesk', sans-serif; font-size: 14px;
   border-radius: var(--radius);
   transition: all 0.18s ease;
 }
 input, textarea, select {
-  font-family: inherit; font-size: 14px;
+  font-family: 'Space Grotesk', sans-serif; font-size: 14px;
   width: 100%;
   border: 1.5px solid var(--border);
   border-radius: var(--radius);
@@ -227,6 +229,19 @@ select option { background: #1a2035; color: var(--text); }
   border-right: 1px solid rgba(255,255,255,0.07);
 }
 
+/* ── Typography: Syne for all display/headline elements ─────────── */
+.logo-text, .logo-data, .logo-lift,
+.page-title,
+.stat-val,
+.card-title,
+.auth-hero-headline,
+.premium-hero-title,
+.auth-stats-val,
+.auth-stat-val,
+.lb-rank {
+  font-family: 'Syne', sans-serif;
+}
+
 /* ── Logo / Brand ── */
 .sidebar-logo {
   display: flex;
@@ -273,16 +288,16 @@ select option { background: #1a2035; color: var(--text); }
 }
 /* Datamyze wordmark */
 .logo-text {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.8px;
+  font-size: 23px;
+  font-weight: 900;
+  letter-spacing: -1px;
   line-height: 1;
   text-align: center;
   position: relative; z-index: 1;
 }
 .logo-data {
-  color: rgba(255,255,255,0.95);
-  font-weight: 700;
+  color: rgba(255,255,255,0.96);
+  font-weight: 800;
 }
 .logo-lift {
   background: linear-gradient(135deg, #22d3ee 0%, #a78bfa 100%);
@@ -294,16 +309,17 @@ select option { background: #1a2035; color: var(--text); }
 }
 /* Tagline */
 .logo-tagline {
-  font-size: 6.8px;
+  font-size: 6.5px;
   font-weight: 700;
-  letter-spacing: 1.6px;
+  letter-spacing: 2px;
   color: rgba(34,211,238,0.42);
   text-transform: uppercase;
   line-height: 1;
-  margin-top: 7px;
+  margin-top: 8px;
   white-space: nowrap;
   text-align: center;
   position: relative; z-index: 1;
+  font-family: 'Space Grotesk', sans-serif;
 }
 
 /* ── User profile card ── */
@@ -341,19 +357,22 @@ select option { background: #1a2035; color: var(--text); }
   box-shadow: 0 2px 12px rgba(74,144,217,0.45), 0 0 0 2px rgba(74,144,217,0.2);
 }
 .user-name {
-  font-weight: 700; font-size: 12.5px;
+  font-weight: 700; font-size: 13px;
   color: #fff;
-  letter-spacing: -0.1px;
+  letter-spacing: -0.2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 140px;
+  font-family: 'Space Grotesk', sans-serif;
 }
 .user-role {
   font-size: 10.5px; color: rgba(255,255,255,0.38);
   margin-top: 1px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   max-width: 140px;
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: 0.1px;
 }
 .xp-row {
   display: flex; justify-content: space-between;
@@ -386,10 +405,11 @@ select option { background: #1a2035; color: var(--text); }
 
 .sidebar-nav { padding: 0.6rem 0.85rem; flex: 1; }
 .nav-section {
-  font-size: 9.5px; font-weight: 700;
-  color: rgba(255,255,255,0.20); letter-spacing: 1.4px;
+  font-size: 9px; font-weight: 700;
+  color: rgba(255,255,255,0.20); letter-spacing: 2px;
   text-transform: uppercase;
   padding: 0 0.4rem; margin: 0.9rem 0 0.35rem;
+  font-family: 'Space Grotesk', sans-serif;
 }
 .nav-item {
   display: flex; align-items: center; gap: 10px;
@@ -398,6 +418,7 @@ select option { background: #1a2035; color: var(--text); }
   cursor: pointer;
   color: rgba(255,255,255,0.40);
   font-weight: 500; font-size: 13px;
+  letter-spacing: 0.1px;
   margin-bottom: 2px;
   transition: all 0.15s ease;
   position: relative;
@@ -458,9 +479,10 @@ select option { background: #1a2035; color: var(--text); }
 /* ── Page ───────────────────────────────────────────── */
 .page { padding: 2rem; max-width: 1100px; animation: fadeInUp 0.35s ease; }
 .page-header { margin-bottom: 2rem; }
-.page-title { font-size: 22px; font-weight: 800; margin-bottom: 0.2rem; letter-spacing: -0.4px; color: #fff;
+.page-title { font-size: 24px; font-weight: 800; margin-bottom: 0.2rem; letter-spacing: -0.6px; color: #fff;
+  font-family: 'Syne', sans-serif;
   animation: slideInLeft 0.35s 0.05s ease both; }
-.page-sub { color: var(--muted); font-size: 14px;
+.page-sub { color: var(--muted); font-size: 13.5px; font-weight: 400; letter-spacing: 0.1px;
   animation: fadeInUp 0.35s 0.12s ease both; }
 
 /* ── Buttons ────────────────────────────────────────── */
@@ -583,6 +605,7 @@ select option { background: #1a2035; color: var(--text); }
 .card-title {
   font-size: 15px; font-weight: 700;
   margin-bottom: 1rem; color: #fff;
+  font-family: 'Syne', sans-serif; letter-spacing: -0.2px;
   display: flex; align-items: center; justify-content: space-between;
 }
 
@@ -612,11 +635,12 @@ select option { background: #1a2035; color: var(--text); }
 .stat-card:nth-child(4) { animation-delay: 0.20s; }
 .stat-icon { font-size: 22px; margin-bottom: 0.5rem; }
 .stat-label {
-  font-size: 11px; font-weight: 700; color: var(--muted);
-  text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 4px;
+  font-size: 10px; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 5px;
+  font-family: 'Space Grotesk', sans-serif;
 }
-.stat-val { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; color: #fff; }
-.stat-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.stat-val { font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #fff; font-family: 'Syne', sans-serif; }
+.stat-sub { font-size: 12px; color: var(--muted); margin-top: 3px; font-weight: 400; }
 
 /* ── Pill / Badge ───────────────────────────────────── */
 .pill {
@@ -753,13 +777,14 @@ select option { background: #1a2035; color: var(--text); }
 }
 
 .auth-hero-headline {
-  font-size: clamp(28px, 3.0vw, 44px);
+  font-size: clamp(30px, 3.2vw, 46px);
   font-weight: 900;
   color: #fff;
-  letter-spacing: -1.2px;
-  line-height: 1.1;
+  letter-spacing: -1.5px;
+  line-height: 1.08;
   margin-bottom: 0.5rem;
   white-space: normal;
+  font-family: 'Syne', sans-serif;
 }
 
 .auth-gradient-text {
@@ -1152,7 +1177,8 @@ select option { background: #1a2035; color: var(--text); }
   transition: all 0.2s;
   background: transparent;
   color: rgba(255,255,255,0.38);
-  font-family: inherit;
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: 0.2px;
 }
 .auth-pill-btn.active {
   background: linear-gradient(135deg, rgba(74,144,217,0.85), rgba(108,99,255,0.85));
@@ -1546,7 +1572,8 @@ select option { background: #1a2035; color: var(--text); }
   animation: crownBounce 3s ease-in-out infinite;
 }
 .premium-hero-title {
-  font-size: 36px; font-weight: 900; letter-spacing: -0.8px;
+  font-family: 'Syne', sans-serif;
+  font-size: 38px; font-weight: 900; letter-spacing: -1.2px;
   background: linear-gradient(135deg, #fff 0%, #E8A838 45%, #fff 100%);
   background-size: 200% auto;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -1606,7 +1633,7 @@ select option { background: #1a2035; color: var(--text); }
 .feature-card:nth-child(4) .feature-icon { animation-delay: 1.5s; }
 .feature-card:nth-child(5) .feature-icon { animation-delay: 2s; }
 .feature-card:nth-child(6) .feature-icon { animation-delay: 2.5s; }
-.feature-title { font-size: 14px; font-weight: 700; margin-bottom: 0.4rem; color: #fff; }
+.feature-title { font-size: 14px; font-weight: 700; margin-bottom: 0.4rem; color: #fff; font-family: 'Syne', sans-serif; letter-spacing: -0.1px; }
 .feature-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
 
 .pricing-card {
@@ -1989,10 +2016,10 @@ body { background: #04060e !important; }
 .stats-grid .stat-card:nth-child(4):hover { border-color: rgba(232,168,56,0.70) !important;  box-shadow: 0 18px 52px rgba(0,0,0,0.55), 0 0 0 1px rgba(232,168,56,0.30),  0 0 44px rgba(232,168,56,0.14) !important;  }
 
 /* Vivid colored stat numbers per card */
-.stats-grid .stat-card:nth-child(1) .stat-val { color: #60a5fa !important; -webkit-text-fill-color: #60a5fa !important; font-size: 30px !important; font-weight: 900 !important; }
-.stats-grid .stat-card:nth-child(2) .stat-val { color: #34d399 !important; -webkit-text-fill-color: #34d399 !important; font-size: 30px !important; font-weight: 900 !important; }
-.stats-grid .stat-card:nth-child(3) .stat-val { color: #c084fc !important; -webkit-text-fill-color: #c084fc !important; font-size: 30px !important; font-weight: 900 !important; }
-.stats-grid .stat-card:nth-child(4) .stat-val { color: #fbbf24 !important; -webkit-text-fill-color: #fbbf24 !important; font-size: 30px !important; font-weight: 900 !important; }
+.stats-grid .stat-card:nth-child(1) .stat-val { color: #60a5fa !important; -webkit-text-fill-color: #60a5fa !important; font-size: 32px !important; font-weight: 900 !important; font-family: 'Syne', sans-serif !important; letter-spacing: -1px !important; }
+.stats-grid .stat-card:nth-child(2) .stat-val { color: #34d399 !important; -webkit-text-fill-color: #34d399 !important; font-size: 32px !important; font-weight: 900 !important; font-family: 'Syne', sans-serif !important; letter-spacing: -1px !important; }
+.stats-grid .stat-card:nth-child(3) .stat-val { color: #c084fc !important; -webkit-text-fill-color: #c084fc !important; font-size: 32px !important; font-weight: 900 !important; font-family: 'Syne', sans-serif !important; letter-spacing: -1px !important; }
+.stats-grid .stat-card:nth-child(4) .stat-val { color: #fbbf24 !important; -webkit-text-fill-color: #fbbf24 !important; font-size: 32px !important; font-weight: 900 !important; font-family: 'Syne', sans-serif !important; letter-spacing: -1px !important; }
 
 /* 7. Course card — taller thumb */
 .course-thumb { height: 148px !important; }
@@ -2000,13 +2027,14 @@ body { background: #04060e !important; }
 
 /* 8. Page title — vivid visible gradient */
 .page-title {
+  font-family: 'Syne', sans-serif !important;
   font-size: 26px !important; font-weight: 900 !important;
   color: #60a5fa !important;
   -webkit-text-fill-color: #60a5fa !important;
   background: none !important;
   -webkit-background-clip: unset !important;
   background-clip: unset !important;
-  letter-spacing: -0.5px !important;
+  letter-spacing: -0.7px !important;
 }
 
 /* 9. Sidebar */
@@ -2093,7 +2121,7 @@ input:focus, textarea:focus, select:focus {
 
 /* 24. Course card body */
 .course-body { padding: 1.1rem 1.2rem 1.3rem !important; }
-.course-name { font-size: 15px !important; font-weight: 800 !important; }
+.course-name { font-size: 15px !important; font-weight: 800 !important; font-family: 'Syne', sans-serif !important; letter-spacing: -0.2px !important; }
 
 /* 25. Mobile More sheet animation */
 @keyframes moreSheetUp {
