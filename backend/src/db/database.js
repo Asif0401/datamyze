@@ -5,10 +5,13 @@ let client;
 
 function getClient() {
   if (!client) {
-    client = createClient({
-      url: process.env.TURSO_DATABASE_URL,
-      authToken: process.env.TURSO_AUTH_TOKEN,
-    });
+    // Use local SQLite file when no Turso URL is set (free, no billing)
+    const url = process.env.TURSO_DATABASE_URL || 'file:dataquest.db';
+    const config = { url };
+    if (process.env.TURSO_AUTH_TOKEN && !url.startsWith('file:')) {
+      config.authToken = process.env.TURSO_AUTH_TOKEN;
+    }
+    client = createClient(config);
   }
   return client;
 }

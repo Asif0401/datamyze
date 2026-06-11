@@ -13,12 +13,13 @@ services:
         value: production
       - key: JWT_SECRET
         generateValue: true
+      # No TURSO_DATABASE_URL = uses local file:dataquest.db (free)
       - key: CASHFREE_APP_ID
         sync: false
       - key: CASHFREE_SECRET_KEY
         sync: false
       - key: CASHFREE_ENV
-        value: SANDBOX
+        value: PRODUCTION
       - key: SMTP_USER
         sync: false
       - key: SMTP_PASS
@@ -28,4 +29,6 @@ services:
       - key: FRONTEND_URL
         sync: false
       - key: BACKEND_URL
+        sync: false
+      - key: TWOFACTOR_API_KEY
         sync: false
